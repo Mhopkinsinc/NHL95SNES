@@ -290,10 +290,10 @@ prefmes:							; the message for penalty d0 (negative: none): penmsgbox cleared,
 	ldx.b d0
 	bpl .2
 	rtl
-.2:									; A = Penaltylist,x, X = A, A = DATA8_C3449B,x, A and $00FF, ...
+.2:									; A = Penaltylist,x, X = A, A = Penaltylist+2,x, A and $00FF, ...
 	lda.l Penaltylist,x
 	tax
-	lda.l DATA8_C3449B,x
+	lda.l Penaltylist+2,x
 	and.w #$00FF
 	dec a
 	beq .rtl

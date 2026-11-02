@@ -961,7 +961,7 @@ SetPA2:								; step the referee animation and draw its next frame
 	beq .4
 	lda.l Penaltylist,x
 	tax
-	lda.l DATA8_C3449B,x
+	lda.l Penaltylist+2,x
 	and.w #$00FF
 	sec
 	adc.b tmp0
@@ -969,7 +969,7 @@ SetPA2:								; step the referee animation and draw its next frame
 	sec
 	adc.b tmp0
 	tax
-	lda.l DATA8_C3449A,x
+	lda.l Penaltylist+1,x
 	bpl .3
 	eor.w #$FFFF
 	inc a

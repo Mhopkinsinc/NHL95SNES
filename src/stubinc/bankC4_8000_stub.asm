@@ -14,7 +14,6 @@ randoma8 = $C37EAA
 randomd0 = $C37EBF					; replace d0 with a random number below its current value
 vtoa = $C37F6D
 Penaltylist = $C34499
-DATA8_C3449B = $C3449B
 WaitTransfers = $C4CEDB
 chk4pass = $C49FBD
 ClampGoalieTargetY = $C492F8		; clamp the goalie target between goal lines and make its Y relative to d3

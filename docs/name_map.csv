@@ -1313,8 +1313,8 @@ $C3434B,Winnipeg,,new,"team record 25 (Winnipeg): not traced; it holds licensed 
 $C343B8,Washington,,new,"team record 24 (Washington): not traced; it holds licensed names",src/bankC3_4000.asm
 $C34427,DATA8_C34427,,new,"a team record not in TeamList (the same form; not traced)",src/bankC3_4000.asm
 $C34499,Penaltylist,DATA8_C34499,94S+purpose,"94S Penaltylist (the penalty name table prefmes reads); prefmes reads the offset by d0 and the text length at DATA8_C3449B",src/bankC3_4000.asm
-$C3449A,DATA8_C3449A,,new,"not traced: read by CODE_C38CAB",src/bankC3_4000.asm
-$C3449B,DATA8_C3449B,,new,"not traced: read by CODE_C38CAB, CODE_C481E2",src/bankC3_4000.asm
+$C3449A,Penaltylist+1,DATA8_C3449A,94S+purpose,"Penaltylist+1: the label is dropped; SetPA2 reads the referee animation steps after a record's name as Penaltylist+1,x (X = the record offset + name length + step)",src/bankC3_4000.asm
+$C3449B,Penaltylist+2,DATA8_C3449B,94S+purpose,"Penaltylist+2: the label is dropped; SetPA2 and prefmes read a record's name length as Penaltylist+2,x (X = the offset from Penaltylist, as 94S PenData records hang off Penaltylist)",src/bankC3_4000.asm
 $C30000,TeamList,,new,"a word per team (team number = index) to its team record, as 94S",src/bankC3_0000.asm
 $C30038,PlayerList,,new,"a word per player to its record, plus flags in bits 14-15 (0, $4000,",src/bankC3_0000.asm
 $C30596,Player619,,new,"player 619 of PlayerList: a packed name and the ratings",src/bankC3_0000.asm
