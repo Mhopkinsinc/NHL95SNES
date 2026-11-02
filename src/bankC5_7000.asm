@@ -1989,7 +1989,7 @@ PrintGoalRecords:					; Record Holders page 1: the users' goal records (name, Go
 	inc a
 	cmp.b a1
 	bne .loop
-CODE_C57F36:						; from PrintGoalRecordRow
+PrintGoalRecordsReturn:				; takes back one text row and returns after the records or an empty record
 	dec.b $6D
 	rts
 PrintGoalRecordRow:					; goal record A on row $6D: the holder's name, then the goals 'by' the
@@ -2001,7 +2001,7 @@ PrintGoalRecordRow:					; goal record A on row $6D: the holder's name, then the 
 	sta.b a3
 	tax
 	ldy.w ScratchBuf+$A,x
-	beq CODE_C57F36
+	beq PrintGoalRecordsReturn
 	ldx.w #$0010
 	stx.b $CF
 	ldx.w #$0060

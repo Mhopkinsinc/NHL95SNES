@@ -8897,3 +8897,4 @@ $C54828,CompLineEvenStrength,CODE_C54828,code,"matches 94S CompLine .4; tmap equ
 $C548C1,CompLineEnergySearch,CODE_C548C1,code,"matches 94S CompLine .6; getlinee compared with the energy threshold",src/bankC5_4000.asm
 $C552BD,PrintPauseItemsRow,CODE_C552BD,code,"shared item loop head reached after PrintPauseItemText advances the item",src/bankC5_5000.asm
 $C553D6,ShowPenaltyBoxPlayerBody,CODE_C553D6,code,"ShowPenaltyBoxPlayer branches here across rtsmenu after saving Y",src/bankC5_5000.asm
+$C57F36,PrintGoalRecordsReturn,CODE_C57F36,code,"PrintGoalRecords falls into this tail; PrintGoalRecordRow branches here for zero wins",src/bankC5_7000.asm
