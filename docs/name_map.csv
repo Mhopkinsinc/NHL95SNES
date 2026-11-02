@@ -5347,11 +5347,11 @@ $C547C7,.3,CODE_C547C7,new,"branch target only used in asseben",src/bankC5_4000.
 $C547F2,.1,CODE_C547F2,new,"branch target only used in CompLine",src/bankC5_4000.asm
 $C54809,.2,CODE_C54809,new,"branch target only used in CompLine",src/bankC5_4000.asm
 $C5480A,.3,CODE_C5480A,new,"branch target only used in CompLine",src/bankC5_4000.asm
-$C5482F,.1,CODE_C5482F,new,"branch target only used in CODE_C54828",src/bankC5_4000.asm
-$C5483F,.2,CODE_C5483F,new,"branch target only used in CODE_C54828",src/bankC5_4000.asm
-$C54878,.3,CODE_C54878,new,"branch target only used in CODE_C54828",src/bankC5_4000.asm
-$C548FC,.loop,CODE_C548FC,new,"branch target only used in CODE_C548C1",src/bankC5_4000.asm
-$C5490E,.1,CODE_C5490E,new,"branch target only used in CODE_C548C1",src/bankC5_4000.asm
+$C5482F,.1,CODE_C5482F,new,"branch target only used in CompLineEvenStrength",src/bankC5_4000.asm
+$C5483F,.2,CODE_C5483F,new,"branch target only used in CompLineEvenStrength",src/bankC5_4000.asm
+$C54878,.3,CODE_C54878,new,"branch target only used in CompLineEvenStrength",src/bankC5_4000.asm
+$C548FC,.loop,CODE_C548FC,new,"branch target only used in CompLineEnergySearch",src/bankC5_4000.asm
+$C5490E,.1,CODE_C5490E,new,"branch target only used in CompLineEnergySearch",src/bankC5_4000.asm
 $C54948,.1,CODE_C54948,new,"branch target only used in chk4lc",src/bankC5_4000.asm
 $C54966,.2,CODE_C54966,new,"branch target only used in chk4lc",src/bankC5_4000.asm
 $C54982,.3,CODE_C54982,new,"branch target only used in chk4lc",src/bankC5_4000.asm
@@ -8892,3 +8892,6 @@ $C53813,findpcSearch,CODE_C53813,code,"matches the search continuation of 94S fi
 $C53882,findpcSweepcheck,CODE_C53882,code,"matches 94S findpc .10",src/bankC5_3000.asm
 $C538BF,findpcAssign,CODE_C538BF,code,"matches 94S findpc .11",src/bankC5_3000.asm
 $C538C5,findpcReturn,CODE_C538C5,code,"shared restore after assignment or Sweepcheck; 94S findpc .12",src/bankC5_3000.asm
+$C5480F,CompLineReturn,CODE_C5480F,code,"shared restore of CompLine; matches 94S CompLine .3",src/bankC5_4000.asm
+$C54828,CompLineEvenStrength,CODE_C54828,code,"matches 94S CompLine .4; tmap equality reaches this path",src/bankC5_4000.asm
+$C548C1,CompLineEnergySearch,CODE_C548C1,code,"matches 94S CompLine .6; getlinee compared with the energy threshold",src/bankC5_4000.asm

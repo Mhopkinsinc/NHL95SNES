@@ -977,7 +977,7 @@ CompLine:							; from chk4lc and other segments
 	lda.w tmap,y
 	ldy.b a1
 	cmp.w tmap,y
-	beq CODE_C54828
+	beq CompLineEvenStrength
 	bpl .1
 	inc.b d0
 	inc.b d0
@@ -1000,7 +1000,7 @@ CompLine:							; from chk4lc and other segments
 .3:									; Y = a2, tmline,y = A
 	ldy.b a2
 	sta.w tmline,y
-CODE_C5480F:						; from CODE_C548C1, CODE_C54828
+CompLineReturn:						; restores the saved scratch registers and returns after choosing a line
 	pla
 	sta.b $65
 	pla
@@ -1018,17 +1018,18 @@ CODE_C5480F:						; from CODE_C548C1, CODE_C54828
 	pla
 	sta.b d0
 	rtl
-CODE_C54828:						; from CompLine
+CompLineEvenStrength:				; chooses an even strength line by team, control mode, period, score and
+									; energy
 	ldy.b a2
 	beq .1
-	jmp.w CODE_C548C1
+	jmp.w CompLineEnergySearch
 .1:									; if OptLine is not $0002 go to .2, if c1playernum,y < 0 go to .2, ...
 	lda.w OptLine
 	cmp.w #$0002
 	bne .2
 	lda.w c1playernum,y
 	bmi .2
-	jmp.w CODE_C548C1
+	jmp.w CompLineEnergySearch
 .2:									; d1 = $0002, $65 = $00C5, a0 = $4897, if gsp is not $0002 go to .3, ...
 	lda.w #$0002
 	sta.b d1
@@ -1063,17 +1064,18 @@ CODE_C54828:						; from CompLine
 	lda.b [a0],y
 	jsr.w getlinee
 	cmp.w #$0C01
-	bcc CODE_C548C1
+	bcc CompLineEnergySearch
 	ldy.b d1
 	lda.b [a0],y
 	ldy.b a2
 	sta.w tmline,y
-	jmp.w CODE_C5480F
+	jmp.w CompLineReturn
 DATA8_C54897:						; not traced: data between routines
 	db $00,$00,$01,$00,$02,$00,$00,$00,$01,$00,$00,$00,$01,$00,$02,$00
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$00,$00,$00,$00,$01,$00
 	db $00,$00,$00,$00,$01,$00,$00,$00,$01,$00
-CODE_C548C1:						; from CODE_C54828
+CompLineEnergySearch:				; scans the score-dependent line order for sufficient energy and stores
+									; the chosen line
 	lda.w #$0002
 	sta.b d1
 	lda.w #$00C5
@@ -1114,7 +1116,7 @@ CODE_C548C1:						; from CODE_C54828
 	ldy.b a2
 	lda.b [a0]
 	sta.w tmline,y
-	jmp.w CODE_C5480F
+	jmp.w CompLineReturn
 DATA8_C5491C:						; not traced: data between routines
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$01,$00,$00,$00,$01,$00
 	db $00,$00
