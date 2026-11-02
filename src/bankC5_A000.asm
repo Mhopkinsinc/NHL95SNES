@@ -445,7 +445,7 @@ PrintVisTeamName:					; saves VisTeam (SRVisTeam) and prints its name, thin and 
 	lda.w #$0068
 	sta.b $D1
 	lda.w VisTeam
-	jmp.w CODE_C5A48C
+	jmp.w PrintSetupTeamName
 ClearTeamNameBox:					; clears 16 tiles at text map offset A and on the row below (a team name)
 	clc
 	adc.b $D3
@@ -536,9 +536,10 @@ PrintHomeTeamName:					; saves HomeTeam (SRHomeTeam) and prints its name, thin a
 	lda.w #$00E8
 	sta.b $D1
 	lda.w HomeTeam
-CODE_C5A48C:						; from PrintVisTeamName
+PrintSetupTeamName:					; selects row thirteen for the home or visiting team name
 	ldy.w #$000D
-CODE_C5A48F:						; from PrintTeamNameLeft
+PrintTeamNameBody:					; prints team A centred on row Y, sends the map and restores the saved
+									; margins
 	asl a
 	tax
 	lda.l DATA8_C3585C,x
@@ -558,7 +559,7 @@ PrintTeamNameLeft:					; prints the name of team A on row Y, thin and centred be
 	stx.b $CF
 	ldx.w #$0068
 	stx.b $D1
-	bra CODE_C5A48F
+	bra PrintTeamNameBody
 QueueHomePaletteLong:				; QueueHomePalette for long calls
 	jsr.w QueueHomePalette
 	rtl
@@ -964,9 +965,9 @@ StandingsInput:						; the NHL Standings screen each frame (screen state 11): up
 	lda.w #$0000
 .8:									; d0 = A
 	sta.b d0
-.9:									; Y = $0270, call CODE_C5A80B
+.9:									; Y = $0270, call ClearStandingsRows
 	ldy.w #$0270
-	jsr.w CODE_C5A80B
+	jsr.w ClearStandingsRows
 .10:								; X = $77, call DeleteSprite, X = $79, call DeleteSprite, ...
 	ldx.b $77
 	jsl.l DeleteSprite
@@ -975,7 +976,7 @@ StandingsInput:						; the NHL Standings screen each frame (screen state 11): up
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	jmp.w DrawStandings
-CODE_C5A80B:						; from StandingsInput
+ClearStandingsRows:					; clears Y bytes of the text map from the standings rows
 	lda.w #$01D0
 ClearTextMapAt:						; clears Y bytes of the text map from offset A
 	clc

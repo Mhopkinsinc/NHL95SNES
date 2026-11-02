@@ -8906,3 +8906,6 @@ $C59767,NameEntryReturn,CODE_C59767,code,"RTS in the screen state table and Name
 $C59ABF,SkaterRatingRowUp,CODE_C59ABF,code,"SkaterRatingsInput up key; RatingRowPalette3 then bounded decrement",src/bankC5_9000.asm
 $C59ACB,SkaterRatingRowUpReturn,CODE_C59ACB,code,"falls through from SkaterRatingRowUp; shared with the down path",src/bankC5_9000.asm
 $C59ACC,SkaterRatingRowDown,CODE_C59ACC,code,"SkaterRatingsInput down key; bounded increment",src/bankC5_9000.asm
+$C5A48C,PrintSetupTeamName,CODE_C5A48C,code,"PrintHomeTeamName falls through; PrintVisTeamName jumps here with saved text margins",src/bankC5_A000.asm
+$C5A48F,PrintTeamNameBody,CODE_C5A48F,code,"shared continuation of PrintSetupTeamName and PrintTeamNameLeft",src/bankC5_A000.asm
+$C5A80B,ClearStandingsRows,CODE_C5A80B,code,"StandingsInput supplies length; loads offset 464 then falls into ClearTextMapAt",src/bankC5_A000.asm
