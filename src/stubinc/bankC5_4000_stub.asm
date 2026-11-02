@@ -2,7 +2,6 @@
 ;	on its own for checking against the ROM (tools/verify_segment.sh bankC5_4000). The org is in the segment
 ;	file.
 hirom
-priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
 
@@ -51,5 +50,6 @@ Mul16S = $C09035
 Mul16x8XS = $C08F95
 QueueVRAMDMALen = $C58A15
 SongLists = $CF05D4
+priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
 
 incsrc "../bankC5_4000.asm"
