@@ -69,8 +69,8 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 									; ...), run by tasks until they end
 	jsl.l Multi5Bios
 	jsl.l ReadMenuPads
-	ldx.w #DATA8_C07F7B>>16
-	lda.w #DATA8_C07F7B&$FFFF
+	ldx.w #IntroSoundList>>16
+	lda.w #IntroSoundList&$FFFF
 	jsl.l LoadSounds
 	lda.w #IntroMode7Hook
 	ldx.w #IntroMode7Hook>>16

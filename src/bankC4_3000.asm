@@ -1498,9 +1498,9 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	asl a
 	adc.b d0
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0001,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0002,y
 	lda.w #$A0A0
 	sta.w $0004,y
@@ -1510,9 +1510,9 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	asl a
 	adc.b d1
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0008,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0009,y
 	pla
 	clc

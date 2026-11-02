@@ -109,9 +109,9 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	asl a
 	tax
 	txy
-	lda.l DATA8_C09B94,x
+	lda.l GoalieRatingColumns,x
 	sta.b d4
-	lda.l DATA8_C09B94+2,x
+	lda.l GoalieRatingColumns+2,x
 	tax
 	pea.w RosterGoalieRowDone-1
 	jmp (RosterColumnTable,x)
@@ -179,9 +179,9 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	asl a
 	tax
 	txy
-	lda.l DATA8_C09B54,x
+	lda.l RatingColumns,x
 	sta.b d4
-	lda.l DATA8_C09B54+2,x
+	lda.l RatingColumns+2,x
 	tax
 	pea.w RosterSlotRowDone-1
 	jmp (RosterColumnTable,x)
@@ -1025,9 +1025,9 @@ DrawLinePlayerRow:					; draws row a3 of SelectLinePlayer's list: a player and t
 	asl a
 	tax
 	txy
-	lda.l DATA8_C09B54,x
+	lda.l RatingColumns,x
 	sta.b d4
-	lda.l DATA8_C09B54+2,x
+	lda.l RatingColumns+2,x
 	tax
 	pea.w LinePlayerRowDone-1
 	jmp (RosterColumnTable,x)
@@ -1390,9 +1390,9 @@ GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor 
 	asl a
 	tax
 	txy
-	lda.l DATA8_C09B94,x
+	lda.l GoalieRatingColumns,x
 	sta.b d4
-	lda.l DATA8_C09B94+2,x
+	lda.l GoalieRatingColumns+2,x
 	tax
 	pea.w GoalieListRowDone-1
 	jmp (RosterColumnTable,x)

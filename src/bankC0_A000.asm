@@ -38,19 +38,23 @@ DATA8_C09B31:						; not traced: the numbers 0 to 6 in an order
 	db $00,$03,$01,$02,$04,$05,$06
 DATA8_C09B38:						; not traced: the numbers 0 to 6 in an order
 	db $00,$04,$05,$03,$02,$01,$06
-DATA8_C09B3F:						; not traced: read as words by routines in banks $C4 and $C5
+linelist:							; the short line names, 3 characters each (Sc1, Sc2, Chk, PP1, PP2, PK1,
+									; PK2)
 	db $D3,$E3,$B1,$D3,$E3,$B2,$C3,$E8,$EB,$D0,$D0,$B1,$D0,$D0,$B2,$D0
 	db $CB,$B1,$D0,$CB,$B2
-DATA8_C09B54:						; not traced: records read by routines in bank $C5
+RatingColumns:						; per skater rating column (A * 4): the column routine's argument (d4),
+									; then its RosterColumnTable offset
 	dw $0000,$0000,$5DF9,$000A,$0000,$0002,$0008,$000A
 	dw $0010,$000A,$0200,$0004,$0020,$000A,$0040,$000A
 	dw $0080,$000A,$0800,$000A,$4000,$000A,$0400,$000A
 	dw $0004,$0006,$1000,$000A,$8000,$000A,$0100,$000A
-DATA8_C09B94:						; not traced: records of the same shape
+GoalieRatingColumns:				; per goalie rating column (A * 4): the column routine's argument (d4),
+									; then its RosterColumnTable offset
 	dw $0000,$0000,$F0C9,$000A,$0008,$000A,$0010,$000A
 	dw $0200,$0004,$0040,$000A,$0080,$000A,$1000,$000A
 	dw $2000,$000A,$4000,$000A,$8000,$000A,$0004,$0006
-DATA8_C09BC4:						; not traced: 16 rising 32-bit values
+MaxSpeed:							; per speed level (A * 4): the top speed squared (32 bits), from leg speed
+									; scaled by energy
 	dd $0255F490,$02933EE9,$02D386A4,$0316CBC1
 	dd $035D0E40,$03A64E21,$03F28B64,$0441C609
 	dd $0493FE10,$04E93379,$05416644,$059C9671

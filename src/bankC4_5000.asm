@@ -1440,9 +1440,9 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
+	lda.l MaxSpeed+2,x
 	sta.b $89
 	ldx.b curobj
 	lda.w position,x
@@ -1540,9 +1540,9 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
+	lda.l MaxSpeed+2,x
 	sta.b $89
 	ldx.b curobj
 	lda.w position,x
@@ -1754,9 +1754,9 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
+	lda.l MaxSpeed+2,x
 	sta.b $89
 	ldx.b curobj
 	lda.w position,x
@@ -1874,9 +1874,9 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
+	lda.l MaxSpeed+2,x
 	sta.b $89
 	ldx.b curobj
 	lda.w position,x
@@ -1975,9 +1975,9 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
+	lda.l MaxSpeed+2,x
 	sta.b $89
 	ldx.b curobj
 	lda.w position,x

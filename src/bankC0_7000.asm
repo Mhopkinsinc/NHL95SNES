@@ -35,8 +35,7 @@ TeamSongs:							; song numbers, six per team in team order (Anaheim first), $FF
 DefaultSongs:						; song numbers, one picked at random for each $FF in a team's six
 	db $81,$89,$8A,$8D,$93,$9A,$9B
 	db $FF							; after them, not picked
-DATA8_C07F7B:						; a list of sound numbers ($FF ends it) that one screen has the sound
-									; code load; the screen is not traced
+IntroSoundList:						; the sounds the intro loads (LoadSounds list; $FF ends it)
 	db $13,$14,$15,$16,$11,$10,$09,$FF
 	padbyte $CD						; unused to the end of the lower half
 	pad $C08000

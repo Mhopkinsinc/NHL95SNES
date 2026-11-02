@@ -1109,9 +1109,9 @@ PrintShooterRows:					; the shooter list's rows from picktop + 1, the row at cur
 	lda.w picktop
 	inc a
 	sta.b a3
-	lda.w #DATA8_C09BC4>>16
+	lda.w #MaxSpeed>>16
 	sta.b $79
-	lda.w #DATA8_C09BC4
+	lda.w #MaxSpeed
 	sta.b $77
 	lda.w #$0008
 	sta.b d1

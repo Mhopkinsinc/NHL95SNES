@@ -77,8 +77,8 @@ DarkBlueColoursHook:				; NMI hook: DarkBlueColours to CGRAM colours $11 on
 	ldx.b #MDMAEN_CH0
 	stx.w MDMAEN
 	rtl
-DATA8_C04AA9:						; 256 words: entry n is (n / 8) * $20 + (n & 7) * 2; read with an
-									; index times 2
+LargeSlotTiles:						; per 16 x 16 sprite slot (A * 2): its first tile, (n / 8) * $20 + (n & 7)
+									; * 2; times 16 its VRAM address
 	dw $0000,$0002,$0004,$0006,$0008,$000A,$000C,$000E,$0020,$0022,$0024,$0026,$0028,$002A,$002C,$002E
 	dw $0040,$0042,$0044,$0046,$0048,$004A,$004C,$004E,$0060,$0062,$0064,$0066,$0068,$006A,$006C,$006E
 	dw $0080,$0082,$0084,$0086,$0088,$008A,$008C,$008E,$00A0,$00A2,$00A4,$00A6,$00A8,$00AA,$00AC,$00AE
@@ -102,9 +102,10 @@ DATA8_C04CAB:						; not traced
 DivisionNames:						; the packed text of the 4 division names: Western / Pacific, Western /
 									; Central, Eastern / Atlantic, Eastern / Northeast
 	dw $46E2,$46EF,$46FC,$4709
-DATA8_C04CBF:						; 4 bytes picked by the same option
+DivisionCodes:						; per division (d1): the code the team table (DATA8_C40EDA) gives its
+									; teams
 	db $06,$0A,$21,$11
-DATA8_C04CC3:						; 4 more bytes picked by the same option
+DivisionTeamCounts:					; per division (d1): its number of teams (6, 6, 7, 7)
 	db $06,$06,$07,$07
 BitMaskTable:						; single-bit masks, bit 0 up
 	dw $0001,$0002,$0004,$0008,$0010,$0020,$0040,$0080

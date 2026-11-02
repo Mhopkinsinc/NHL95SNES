@@ -122,9 +122,9 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	asl a
 	adc.b $01,s
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0003,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0004,y
 	tya
 	ldx.w #$007E

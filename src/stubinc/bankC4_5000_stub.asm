@@ -40,7 +40,7 @@ burst = $C42D10
 CollisionSfx = $C44EE1
 getpde = $C54A0E
 setpde = $C54A2F
-DATA8_C09BC4 = $C09BC4
+MaxSpeed = $C09BC4
 DivX8S = $C09290
 
 incsrc "../bankC4_5000.asm"

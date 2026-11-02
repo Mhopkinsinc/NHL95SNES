@@ -92,12 +92,12 @@ $C04A45,BlueColours,,code,"8 colours BlueColoursHook sends to CGRAM $11",src/ban
 $C04A55,DarkBlueColours,,code,"8 colours DarkBlueColoursHook sends to CGRAM $11",src/bankC0_4000.asm
 $C04A65,BlueColoursHook,,code,"NMI hook ($C4016B sets it through SetNMIHook): DMA BlueColours to CGRAM $11",src/bankC0_4000.asm
 $C04A87,DarkBlueColoursHook,,code,"NMI hook ($C4044B sets it through SetNMIHook): DMA DarkBlueColours to CGRAM $11",src/bankC0_4000.asm
-$C04AA9,DATA8_C04AA9,,new,"256 words, entry n = (n / 8) * $20 + (n & 7) * 2; read at $C5E7F2, $C5E897, $C5EA77, $C5F012",src/bankC0_4000.asm
+$C04AA9,LargeSlotTiles,DATA8_C04AA9,code,"AllocLargeSpriteTiles and the sprite creators read entry slot * 2 and shift it left 4 for the object's VRAM address (+$14)",src/bankC0_4000.asm
 $C04CA9,BackdropColour,,code,"1 colour ($7F98) that $C52091 / $C5576A queue to CGRAM colour 0",src/bankC0_4000.asm
 $C04CAB,DATA8_C04CAB,,new,"6 words, not traced",src/bankC0_4000.asm
 $C04CB7,DivisionNames,DATA8_C04CB7,code,"4 offsets into bank $C3's packed text ($C346E2 ...); DrawStandings prints the one of division d1",src/bankC0_4000.asm
-$C04CBF,DATA8_C04CBF,,new,"4 bytes picked by $83 at $C5BFE2",src/bankC0_4000.asm
-$C04CC3,DATA8_C04CC3,,new,"4 bytes picked by $83 at $C5BFEB",src/bankC0_4000.asm
+$C04CBF,DivisionCodes,DATA8_C04CBF,code,"KeepDivisionTeams keeps the ListBuf teams whose DATA8_C40EDA byte equals entry d1",src/bankC0_4000.asm
+$C04CC3,DivisionTeamCounts,DATA8_C04CC3,code,"KeepDivisionTeams puts entry d1 in a1 as the count of the division's list",src/bankC0_4000.asm
 $C04CC7,BitMaskTable,,94S,"the 16 single-bit words, as 94S BitMaskTable (93S); $C50C08 ORs one into the save RAM flags at $30:6051",src/bankC0_4000.asm
 $C04CE7,PhotoPalettesTB,,render,"Tampa Bay: 16 colours for each of its 6 player photos (94S has one PhotoPaletteTB per team); entry 21 of the per-team photo table at $C35EAB (read 1-based as $C35EA7 + 4n at $C52EDD)",src/bankC0_4000.asm
 $C04DA7,PlayerPhotosTB,,render,"Tampa Bay: 6 player photos, packed format 2 ($1B00 bytes), 48 x 48 linear 4bpp each (94S keeps one packed photo per Card<NNN>)",src/bankC0_4000.asm
@@ -107,7 +107,7 @@ $C06E6D,PhotoPalettesVAN,,render,"Vancouver: 16 colours for each of its 6 player
 $C06F2D,PlayerPhotosVAN,,render,"Vancouver: 6 player photos, packed format 2 ($1B00 bytes), 48 x 48 linear 4bpp each",src/bankC0_6000.asm
 $C07ECB,TeamSongs,,94S,"94S TeamSongs by purpose: six songs per team, $FF none (94S: long pointers, $FFFFFFFF none); $CF0427 copies the six of team $17C9 into a list at $7E:50D4 and has $CF0162 load it; 94S slot meanings not checked for 95",src/bankC0_7000.asm
 $C07F73,DefaultSongs,,94S,"94S DefaultSongs by purpose: $CF044F replaces each $FF of TeamSongs with one of these 7, picked by the random routine $C58CCD (A = 7); an $FF follows them",src/bankC0_7000.asm
-$C07F7B,DATA8_C07F7B,,new,"a sound number list ($FF ends) that $C4B0AA passes to $CF0134; the screen is not traced",src/bankC0_7000.asm
+$C07F7B,IntroSoundList,DATA8_C07F7B,code,"IntroSequence hands it to LoadSounds before the intro starts",src/bankC0_7000.asm
 $C08000,DATA8_C08000,,new,"the sprite objects (docs/sprite_objects.md): header with the record list and palette pointer, 27-byte records, frame headers into bank $C1; read by $C5E665 and its helpers",src/bankC0_8000.asm
 $C087F2,TiledBackMap,,render,"map set for the map unpacker $C58527 (length word, width $20, height $1C, flags $8C: LZSS; $0700 bytes): a 16 x 3 block of tiles repeated; $C4D68C, $C4D7C7, $C4E1EE, $C55980, $C5916A send it to VRAM $5800",src/bankC0_8000.asm
 $C08939,DATA8_C08939,,new,"not traced: a set with the same length word ($01D5) but width byte $30, which $C58527 would reject; then 7 bytes",src/bankC0_8000.asm
@@ -218,10 +218,10 @@ $C09AC0,DATA8_C09AC0,,new,"not traced; $C5449B points at it",src/bankC0_A000.asm
 $C09B2A,DATA8_C09B2A,,new,"0-6 in an order; $C48130, $C54371",src/bankC0_A000.asm
 $C09B31,DATA8_C09B31,,new,"0-6 in an order; $C54394",src/bankC0_A000.asm
 $C09B38,DATA8_C09B38,,new,"0-6 in an order; $C54383",src/bankC0_A000.asm
-$C09B3F,DATA8_C09B3F,,new,"read as words at $C43DC4, $C43DE4, $C540E3",src/bankC0_A000.asm
-$C09B54,DATA8_C09B54,,new,"records; $C51131, $C570BB, $C57762",src/bankC0_A000.asm
-$C09B94,DATA8_C09B94,,new,"records; $C5703C, $C57A3C",src/bankC0_A000.asm
-$C09BC4,DATA8_C09BC4,,new,"16 rising 32-bit values; $C45B51 ..., CODE_C09910 stores a long pointer to it",src/bankC0_A000.asm
+$C09B3F,linelist,DATA8_C09B3F,94S+purpose,"94S linelist holds the same short names (Sc1 ...) as strings; 95 keeps 3 high-bit characters a line, read as words at line * 3 (FinishFaceoffSetup, SetLCmode2)",src/bankC0_A000.asm
+$C09B54,RatingColumns,DATA8_C09B54,code,"16 entries, one per RatingNames heading; DrawLinePlayerRow and RosterSlotRowNext load the argument into d4 and jmp (RosterColumnTable,x) with the offset (read as RatingColumns+2,x)",src/bankC0_A000.asm
+$C09B94,GoalieRatingColumns,DATA8_C09B94,code,"12 entries, one per GoalieRatingNames heading; GoalieListRowNext and RosterGoalieRowNext read it as RatingColumns does",src/bankC0_A000.asm
+$C09BC4,MaxSpeed,DATA8_C09BC4,94S+code,"94S playeracc reads MaxSpeed,x and MaxSpeed+2,x into d2 from legspd * 16 scaled by the energy; 95 PlayerAccDir* do the same; PrintShooterRows also loads this address into $77 / $79, where 94S PrintShooterNames loads its slot text pointer (a5); no 95 read of that pointer was found",src/bankC0_A000.asm
 $C09C04,dirtab,DATA8_C09C04,94S+code,"the same bytes as 94S data/tables/dirtab (8 concrete of 32, the rest symbolic there); Endfaceoff reads it where 94S Endfaceoff does (datamap.py 2/2)",src/bankC0_A000.asm
 $C09C24,BitMaskTable2,,new,"the 16 single-bit words again (BitMaskTable is at $C04CC7); $C50F53, $C571FB, $C5C6CE",src/bankC0_A000.asm
 $C09C44,jdtab8F,DATA8_C09C44,94S+code,"the same 16 bytes as 94S data/tables/jdtab8F; no reference in the traced 95 code",src/bankC0_A000.asm

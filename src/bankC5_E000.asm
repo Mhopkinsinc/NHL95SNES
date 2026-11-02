@@ -1125,11 +1125,11 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	txa
 	sta.w $0000,y
 	tay
-.10:								; A = $16,x, A * 2, X = A, A = DATA8_C04AA9,x, ...
+.10:								; A = $16,x, A * 2, X = A, A = LargeSlotTiles,x, ...
 	lda.b $16,x
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -1202,7 +1202,7 @@ AllocSpriteTiles:					; takes A sprite tiles from the allocator (SmallTileNext, 
 	sta.w $0012,y
 	rts
 AllocLargeSpriteTiles:				; takes A large sprite slots from LargeSlotNext (below $DF), sets the
-									; object's slot (+$16 / +$18) and VRAM address (+$14, by DATA8_C04AA9);
+									; object's slot (+$16 / +$18) and VRAM address (+$14, by LargeSlotTiles);
 									; with no room the small tiles just taken go back
 	clc
 	adc.w LargeSlotNext
@@ -1224,7 +1224,7 @@ AllocLargeSpriteTiles:				; takes A large sprite slots from LargeSlotNext (below
 	sta.w $0018,y
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -1504,7 +1504,7 @@ UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected
 	asl a
 	txy
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -2283,11 +2283,11 @@ CreateSpriteSharePal:				; CreateSprite, sharing the palette slot of the object 
 	txa
 	sta.w $0000,y
 	tay
-.6:									; A = $16,x, A * 2, X = A, A = DATA8_C04AA9,x, ...
+.6:									; A = $16,x, A * 2, X = A, A = LargeSlotTiles,x, ...
 	lda.b $16,x
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
