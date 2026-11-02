@@ -23,9 +23,7 @@ SmallPieces3:						; three 8 x 8 pieces: their x / y bytes, the tile counter + 2
 	ldx.b $E5
 	lda.l $CF0001,x
 	and.w #$00FF
-CODE_CFF0FF:						; called from other segments
 	sta.b $E7
-CODE_CFF101:						; called from other segments
 	lda.l $CF0002,x
 	and.w #$00FF
 	sta.b $EF
