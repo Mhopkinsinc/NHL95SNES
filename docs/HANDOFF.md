@@ -278,7 +278,10 @@
   that sets frames, the renders (framerender.py) and 95 Genesis's frame sheet, which 95 follows up to $29D. Not in a
   group: $312 and $319, the first frames of SPAflip, alone in a run where 95 Genesis has its board check frames.
   Empty slots outside the groups: $000, $059-$06E, $070-$071, $073-$07A, $18B-$1B2, $2A5-$2BC, $2F3-$329 (but $312,
-  $319), $3CC-$3EB, $3FC-$41A. The frames drawn by layout code ($1B4-$1BD, $1BF) are not rendered. The tile blocks
+  $319), $3CC-$3EB, $3FC-$41A. The less obvious groups were checked by eye on the renders: SPFPen (jumping over the
+  boards into the box or onto the bench, sitting on +6), SPFcatch, SPFpump2 (a stick pump, not 95 Genesis's cup) and
+  $312 / $319 as the start of the flip. The layout code frames render through GoalFrameLayout / PuckFrameLayout's
+  pieces (framerender.py has both). The tile blocks
   keep their index names (FrameTiles002 ...). The bank $CF frame code (DrawFrameLayoutFlip / DrawFrameLayout) adds
   FrameOffsetX / FrameOffsetXFlip and FrameOffsetY and reads the layout through FrameBankLayout+1.
 

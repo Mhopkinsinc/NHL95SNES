@@ -9345,7 +9345,7 @@ $240,SPFswingb,,genesis+purpose,"frames $240-$257; used by SPAonetimerb, SPApass
 $258,SPFflip,,94S+purpose,"frames $258-$25D; used by SPAflip; 94S SPFflip is the group of the same job (449 there); 95 Genesis has SPFflip at 600 (the same number)",src/frames95s.asm
 $25E,SPFGoalie,,94S+purpose,"frames $25E-$285; used by SPAgglovel, SPAgglover, SPAgready, SPAgready2, SPAgsprawll, SPAgsprawlr, SPAgstickl, SPAgstickr; 94S SPFGoalie is the group of the same job (534 there); 95 Genesis has SPFGoalie at 606 (the same number)",src/frames95s.asm
 $286,SPFgdive,,94S+purpose,"frames $286-$29D; used by SPAgcover, SPAgdive, SPAgpoke; 94S SPFgdive is the group of the same job (662 there); 95 Genesis has SPFgdive at 646 (the same number)",src/frames95s.asm
-$29E,SPFPen,,94S+purpose,"frames $29E-$2A4; used by SPAwallin, SPAwallout; 94S SPFPen is the group of the same job (361 there); 95 Genesis has SPFPen at 1005 (-335 here)",src/frames95s.asm
+$29E,SPFPen,,94S+purpose,"frames $29E-$2A4; used by SPAwallin, SPAwallout; the renders show a player jumping over the boards into the box or onto the bench and sitting on +6; 94S SPFPen is the group of the same job (361 there); 95 Genesis has SPFPen at 1005 (-335 here)",src/frames95s.asm
 $2BD,SPFSiren,,94S+purpose,"frames $2BD-$2CA; used by SPAsiren; 94S SPFSiren is the group of the same job (409 there); 95 Genesis has SPFSiren at 698 (+3 here)",src/frames95s.asm
 $2CB,SPFgstack,,genesis+purpose,"frames $2CB-$2F2; used by SPAgstackl, SPAgstackr, SPAgswing; 95 Genesis has SPFgstack at 712 (+3 here)",src/frames95s.asm
 $32A,SPFcrosscheck,,94S+purpose,"frames $32A-$331; used by SPAcrosscheck; 94S SPFcrosscheck is the group of the same job (518 there)",src/frames95s.asm

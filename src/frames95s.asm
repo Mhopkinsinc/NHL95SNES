@@ -35,8 +35,9 @@ SPFGoalie			=	$25E		; 40 frames: the goalie, 5 runs of 8 (one a direction): +0 S
 									; SPAgglovel, +16 SPAgglover, +24 SPAgstickl, +32 SPAgstickr
 SPFgdive			=	$286		; 24 frames: the goalie diving: 3 slots a direction, 2 of them drawn
 									; (SPAgdive, SPAgpoke, SPAgcover; puckgoalie)
-SPFPen				=	$29E		; 7 frames: over the boards (SPAwallin forward, SPAwallout back); assdopen
-									; seats a player on +6
+SPFPen				=	$29E		; 7 frames: a player jumping over the boards into the box or onto the
+									; bench and sitting (+6), forward in SPAwallin, back in SPAwallout;
+									; assdopen seats a player on +6
 SPFSiren			=	$2BD		; 14 frames: the goal light (SPAsiren)
 SPFgstack			=	$2CB		; 40 frames: the goalie: +0 stacking left, +12 stacking right, +24 the
 									; stick swing (SPAgstackl, SPAgstackr, SPAgswing)
