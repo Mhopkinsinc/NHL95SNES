@@ -8,7 +8,8 @@ SPFskate			=	$001		; 64 frames: skating: 8 slots a direction, 5 of them drawn (S
 SPFglide			=	$041		; 8 frames: gliding, one a direction (SPAglide)
 SPFstop				=	$049		; 16 frames: stopping, 2 a direction (SPAstop)
 SPFpad				=	$06F		; 1 frame: the controller stars (setupice, RestoreGameScreen)
-SPFreplay			=	$072		; 1 frame: four corner marks (RestoreGameScreen; the pad tags draw them)
+SPFreplay			=	$072		; 1 frame: the replay camera cursor, four corner marks (RestoreGameScreen;
+									; TagReplayMarker draws it)
 SPFshoulderl		=	$07B		; 8 frames: shoulder check left, one a direction (SPAshoulderchkl)
 SPFshoulderr		=	$083		; 8 frames: shoulder check right, one a direction (SPAshoulderchkr)
 SPFhook				=	$08B		; 16 frames: hooking (SPAhook, SPAhook2)

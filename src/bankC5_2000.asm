@@ -871,7 +871,7 @@ DrawPadTag:							; pad Y's tag ($0F: none): the player's screen spot, then his 
 	sta.b $0C
 	plp
 	bcc .2
-	jmp.w CODE_C52842
+	jmp.w TagReplayPoint
 .2:									; A = position,x, A and $0007, A * 2, $0E = A, ...
 	lda.w position,x
 	and.w #$0007
@@ -933,12 +933,12 @@ TagPadMarker:						; a tag continuation: the pad's marker 20 pixels up, its tile
 	ldx.b $0E
 	bne .1
 	sbc.w #$0004
-.1:									; $0A = A, if $10 is not $000C go to .2, go to CODE_C52852
+.1:									; $0A = A, if $10 is not $000C go to .2, go to TagReplayMarker
 	sta.b $0A
 	ldx.b $10
 	cpx.w #$000C
 	bne .2
-	jmp.w CODE_C52852
+	jmp.w TagReplayMarker
 .2:									; tmp2 = PadMarkerTiles,x, Y = $2A, X = $0002, A = $FFF0, ...
 	lda.l PadMarkerTiles,x
 	sta.b tmp2
@@ -1022,7 +1022,8 @@ NextPadTag:							; the next pad's tag; after pad 0, the stack and QueueBusy res
 	tcs
 	stz.b QueueBusy
 	rtl
-CODE_C52842:						; from DrawPadTag
+TagReplayPoint:						; the replay camera's free cursor point (PadControlObj $10, object 16): no
+									; roster number, the marks $0C right and $14 up, then TagReplayMarker
 	lda.b $0A
 	clc
 	adc.w #$000C
@@ -1031,7 +1032,8 @@ CODE_C52842:						; from DrawPadTag
 	sec
 	sbc.w #$0014
 	sta.b $0C
-CODE_C52852:						; from TagPadMarker
+TagReplayMarker:					; the replay camera cursor's marker (tag slot $0C): the four corner marks,
+									; SPFreplay, through DrawFrameLayout, then PadTagFrameDone
 	lda.w #$2454
 	sta.b tmp1
 	lda.w #$25E0
