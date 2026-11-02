@@ -74,7 +74,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	tya
 	lsr a
 	sta.b a1
-	lda.w #$556D
+	lda.w #LeagueLeadersPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	stz.b $69
@@ -108,7 +108,7 @@ SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (recor
 	rep #$20
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$55F1
+	lda.w #SeasonTeamStatsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801
@@ -148,7 +148,7 @@ SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and
 	rep #$20
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$5583
+	lda.w #SeasonPlayerStatsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801
@@ -192,7 +192,7 @@ StandingsScreen:					; League Menu NHL Standings: the teams of a division (pad u
 	jsl.l ClearVRAM
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$5553
+	lda.w #StandingsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	stz.b d0

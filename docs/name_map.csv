@@ -9006,3 +9006,27 @@ $C35C51,TradeOptions,,code,"the Trades setup lines: a count, then title, value l
 $C35C6B,FreeAgentOptions,,code,"the Free Agent and Release setup lines: a count, then title, value list, variable, routine; PlayModeOptionLists points here",src/bankC3_5000.asm
 $C35C7D,MakePlayerOptions,,code,"the Make Player setup lines: the Play Mode line only (a count of 1, then its row); PlayModeOptionLists points here",src/bankC3_5000.asm
 $C35C87,PracticeOptions,,code,"the Practice setup lines: a count, then title, value list, variable, routine per line; PlayModeOptionLists points here",src/bankC3_5000.asm
+$C3533B,PlayerStatsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35369,TeamRosterPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3537F,EditLinesPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35395,ChangeGoaliePage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C353AB,FreeAgentsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C353D5,ReleasePlayersPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C353FF,EvaluateTradePage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35419,SeasonAwardsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3542B,NameLogPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3543D,NameGridPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3545F,RecordHoldersPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C354F9,CopyrightPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35553,StandingsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3556D,LeagueLeadersPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35583,SeasonPlayerStatsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C355F1,SeasonTeamStatsPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3568E,GamesTodayPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C356A4,LeagueMenuPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C356CE,GameSetupPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C356DC,NameOkPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C356F2,TradePlayersPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35714,CreatePlayerPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C35746,PlayerInfoPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C357FC,ControllerSetupPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm

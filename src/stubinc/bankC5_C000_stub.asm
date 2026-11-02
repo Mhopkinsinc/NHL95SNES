@@ -69,5 +69,9 @@ QueueVisPalette = $C5A4E2
 BinToBCD = $C5B67A
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
+EvaluateTradePage = $C353FF
+FreeAgentsPage = $C353AB
+ReleasePlayersPage = $C353D5
+TradePlayersPage = $C356F2
 
 incsrc "../bankC5_C000.asm"

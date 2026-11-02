@@ -236,7 +236,7 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	stx.b $04
 	stz.b QueueBusy
 	jsl.l InitTextMap
-	lda.w #$56CE
+	lda.w #GameSetupPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	lda.w #BlueColoursHook&$FFFF
@@ -703,7 +703,7 @@ ControllerSetupScreen:				; builds the controller setup screen: a sprite for eac
 	adc.w #$03C0
 	ldy.w #$0340
 	jsl.l ClearRAM7E
-	lda.w #$57FC
+	lda.w #ControllerSetupPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0005
 	sta.w fadestep
@@ -868,7 +868,7 @@ AnswerNameOk:						; start on Is the player name ok: No (d6 not 0) starts over
 	jsl.l ClearRAM7E
 	ldy.w #$5C00
 	jsl.l QueueClearVRAM
-	lda.w #$5746
+	lda.w #PlayerInfoPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0010
 	sta.b $CF
@@ -1058,7 +1058,7 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	adc.w #$0300
 	jsl.l ClearRAM7E
 	jsl.l WaitTransfers
-	lda.w #$56DC
+	lda.w #NameOkPage&$FFFF
 	jsl.l PrintTextPage
 	inc.b $99
 	jmp.w SelectNameYes

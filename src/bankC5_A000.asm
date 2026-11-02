@@ -129,7 +129,7 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	jsl.l DeleteSprite
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$5714
+	lda.w #CreatePlayerPage&$FFFF
 	jsl.l PrintTextPage
 	sec
 	lda.b $CF
@@ -659,7 +659,7 @@ SeasonOptions:						; the League Menu (season mode): draws its page (Play Games,
 	jsr.w DeleteArrowSprites
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$56A4
+	lda.w #LeagueMenuPage&$FFFF
 	jsl.l PrintTextPage
 	clc
 	lda.b $D3
@@ -1660,7 +1660,7 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	sta.b $05,x
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$568E
+	lda.w #GamesTodayPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	lda.l SeasonDay

@@ -102,5 +102,9 @@ MakePlayerOptions = $C35C7D
 PracticeOptions = $C35C87
 SeasonOptionLines = $C35C17
 TradeOptions = $C35C51
+ControllerSetupPage = $C357FC
+GameSetupPage = $C356CE
+NameOkPage = $C356DC
+PlayerInfoPage = $C35746
 
 incsrc "../bankC5_9000.asm"

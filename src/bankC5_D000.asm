@@ -288,7 +288,7 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	lda.w $0022,y
 	and.w #$FFFE
 	sta.w $0022,y
-	lda.w #$542B
+	lda.w #NameLogPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$00A8
 	sta.b $CF
@@ -643,7 +643,7 @@ DrawNameGrid:						; draws the letter grid and its keys for EditUserName
 	jsl.l PrintItalicFixedLeft
 	lda.w #$2000
 	sta.b $D5
-	lda.w #$543D
+	lda.w #NameGridPage&$FFFF
 	jsl.l PrintTextPage
 	ldx.w #$0000
 	stx.b $69

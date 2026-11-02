@@ -89,5 +89,7 @@ TitleGoalieMap = $C22CB2
 TitleLogoMap = $C271F6
 TitlePlayersMap = $C20AB8
 ZeroFillWord = $C58A63
+CopyrightPage = $C354F9
+SeasonAwardsPage = $C35419
 
 incsrc "../bankC4_D000.asm"

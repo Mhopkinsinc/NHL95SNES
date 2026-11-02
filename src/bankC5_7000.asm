@@ -560,8 +560,8 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	ldy.w #$0018
 	ldx.w #$4F06
 	jsl.l PrintBoldLeft
-.3:									; A = $537F, call PrintTextPage, X = HomeRoster, Y = $17DB, ...
-	lda.w #$537F
+.3:									; A = EditLinesPage&$FFFF, call PrintTextPage, X = HomeRoster, ...
+	lda.w #EditLinesPage&$FFFF
 	jsl.l PrintTextPage
 	ldx.w #HomeRoster
 	ldy.w #$17DB
@@ -1210,7 +1210,7 @@ PauseGoalie:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, l
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
 	jsr.w SetupScreen
-	lda.w #$5395
+	lda.w #ChangeGoaliePage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l GetPadTeam
 	ldy.w #$2801
@@ -1736,8 +1736,8 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	tax
 	dec.b tmp0
 	bne .loop2
-.8:									; A = $545F, call PrintTextPage
-	lda.w #$545F
+.8:									; A = RecordHoldersPage&$FFFF, call PrintTextPage
+	lda.w #RecordHoldersPage&$FFFF
 	jsl.l PrintTextPage
 .9:									; if a1 is not 0 go to .10, $CF = $0010, $D1 = $00F0, $D5 = $2400, ...
 	lda.b a1

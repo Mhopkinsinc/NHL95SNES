@@ -583,7 +583,7 @@ ShowPlayerStats:					; pause menu Player Stats: the skaters of team a2 sorted by
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
 	jsr.w SetupScreen
-	lda.w #$533B
+	lda.w #PlayerStatsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l GetPadTeam
 	stz.b $7D
@@ -1734,7 +1734,7 @@ TeamRoster:							; pause menu Team Roster: the roster of team a2 (ShowRosterLin
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
 	jsr.w SetupScreen
-	lda.w #$5369
+	lda.w #TeamRosterPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l GetPadTeam
 	stz.b $7D

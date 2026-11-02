@@ -73,5 +73,8 @@ Mul16x8U = $C08F5E
 Mul8U = $C08ED9
 Div32U_hi0entry = $C091AE
 Pausemode_menu_resume = $C54EF1
+ChangeGoaliePage = $C35395
+EditLinesPage = $C3537F
+RecordHoldersPage = $C3545F
 
 incsrc "../bankC5_7000.asm"

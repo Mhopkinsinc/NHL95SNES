@@ -58,5 +58,7 @@ Div16x8U = $C09257
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
 WaitFrames_Inc = $C08D89
+PlayerStatsPage = $C3533B
+TeamRosterPage = $C35369
 
 incsrc "../bankC5_6000.asm"

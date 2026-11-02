@@ -56,5 +56,9 @@ BCDDigits4 = $C5A321
 QueueHomePalette = $C5A4B9
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
+LeagueLeadersPage = $C3556D
+SeasonPlayerStatsPage = $C35583
+SeasonTeamStatsPage = $C355F1
+StandingsPage = $C35553
 
 incsrc "../bankC5_B000.asm"

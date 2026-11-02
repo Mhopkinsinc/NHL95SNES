@@ -309,7 +309,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53AB
+	lda.w #FreeAgentsPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0010
 	sta.b $CF
@@ -1089,7 +1089,7 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53D5
+	lda.w #ReleasePlayersPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0010
 	sta.b $CF
@@ -1431,7 +1431,7 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$56F2
+	lda.w #TradePlayersPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801
@@ -1693,7 +1693,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	stz.b $8D
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53FF
+	lda.w #EvaluateTradePage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801

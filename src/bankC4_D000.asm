@@ -758,7 +758,7 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	jsl.l InitTextMap
 	lda.w #$0004
 	sta.w TextSpaceWidth
-	lda.w #$54F9
+	lda.w #CopyrightPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	lda.w #$8000
@@ -901,7 +901,7 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	jsl.l FreeWorkBuf
 	lda.w #$0002
 	sta.w BG2VScroll
-	lda.w #$5419
+	lda.w #SeasonAwardsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	jsl.l SendTextMap

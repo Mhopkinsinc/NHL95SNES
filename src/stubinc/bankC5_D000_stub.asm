@@ -43,5 +43,7 @@ LetterGridY = $C5A25B
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
 SetupHDMA = $C58AA5
+NameGridPage = $C3543D
+NameLogPage = $C3542B
 
 incsrc "../bankC5_D000.asm"
