@@ -6,8 +6,7 @@ incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
-DATA8_CFF3A0 = $CFF3A0				; layout pointers (bankCF_F000)
-DATA8_CFF3A2 = $CFF3A2				; layout pointers (bankCF_F000)
+LayoutPointers = $CFF3A2			; layout pointers (bankCF_F000)
 SmallPieces2 = $CFF0CB
 SmallPieces3 = $CFF0F6
 SmallPieces4 = $CFF137

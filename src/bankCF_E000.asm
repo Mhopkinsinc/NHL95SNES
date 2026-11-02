@@ -26,7 +26,7 @@ DrawFrameLayoutFlip:				; DrawFrameLayout for an x-flipped object: the flipped o
 	bcs .1
 	asl a
 	tax
-	lda.l DATA8_CFF3A2,x
+	lda.l LayoutPointers,x
 	tax
 	stx.b $E5
 	lda.l $CF0000,x
@@ -39,7 +39,7 @@ DrawFrameLayoutFlip:				; DrawFrameLayout for an x-flipped object: the flipped o
 	eor.w #$0001
 	asl a
 	tax
-	jmp (DATA8_CFF3A2,x)
+	jmp (LayoutPointers,x)
 .2:									; jump through $00A5
 	jmp ($00A5)
 DrawFrameLayout:					; draws frame A of a game object at x $0A / y $0C from its bank $CF layout
@@ -61,19 +61,19 @@ DrawFrameLayout:					; draws frame A of a game object at x $0A / y $0C from its 
 	bcs .1
 	asl a
 	tax
-	lda.l DATA8_CFF3A0,x
+	lda.l LayoutPointers-2,x
 	sta.b $E5
 	tax
 	lda.l $CF0000,x
 	and.w #$00FF
 	tax
 	jmp (LayoutBigPieces,x)
-.1:									; if A >= $0092 go to .2, A * 2, X = A, jump through DATA8_CFF3A0,x
+.1:									; if A >= $0092 go to .2, A * 2, X = A, jump through LayoutPointers-2,x
 	cmp.w #$0092
 	bcs .2
 	asl a
 	tax
-	jmp (DATA8_CFF3A0,x)
+	jmp (LayoutPointers-2,x)
 .2:									; jump through $00A5
 	jmp ($00A5)
 LayoutBigPieces:					; a layout record's 16 x 16 pieces by its first byte: 1, 2, 3 or 4 pieces,

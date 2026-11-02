@@ -773,8 +773,8 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	lda.b $26
 	cmp.w #$003C
 	bne .1
-	lda.w #DATA8_CF05D4&$FFFF
-	ldx.w #DATA8_CF05D4>>16
+	lda.w #SongLists&$FFFF
+	ldx.w #SongLists>>16
 	jsl.l LoadSounds
 	bra .loop
 .1:									; if A < $00C3 go to .loop, if a0 is not 0 go to .2, ...
@@ -845,8 +845,8 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 									; DrawAward, FindAwardWinner and its winner; pad left / right steps
 									; through the 8 awards, start returns
 	jsl.l SoundVolumeDown
-	lda.w #(DATA8_CF05D4+$7)&$FFFF
-	ldx.w #(DATA8_CF05D4+$7)>>16
+	lda.w #(SongLists+$7)&$FFFF
+	ldx.w #(SongLists+$7)>>16
 	ldy.w #$FF00
 	jsl.l LoadSounds
 	lda.w #$00A7

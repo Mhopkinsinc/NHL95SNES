@@ -170,8 +170,8 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	ldy.w #$0001
 	ldx.w #$4C9F
 	jsl.l PrintTitle
-	lda.w #(DATA8_CF05D4+$5)&$FFFF
-	ldx.w #(DATA8_CF05D4+$5)>>16
+	lda.w #(SongLists+$5)&$FFFF
+	ldx.w #(SongLists+$5)>>16
 	jsl.l LoadSounds
 	lda.w #$00A6
 	jsl.l StartSound

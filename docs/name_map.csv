@@ -2351,63 +2351,63 @@ $CEFE50,StanleyCupPalette,DATA8_CEFE50,render+94S+code,"its colours (16); 94S St
 $CF004B,SPCUpload,CODE_CF004B,94S+code,"send upload blocks (length, sound RAM address, bytes; length 0 ends with the start address) at X:A through the sound CPU boot loader; CODE_CF001A sends SoundRAMClear, then SoundDriver; 94S SPCUpload",src/bankCF_0000.asm
 $CF04E3,DATA8_CF04E3,,new,"the sounds (CODE_CF0313 reads entry A): a long pointer to the sound, then a flag byte ($00, or $80-$83 for the last five; not traced)",src/bankCF_0000.asm
 $CF0583,DATA8_CF0583,,new,"four lists in this bank (CODE_CF0313): records of a sample number and a word, ended by a byte of $21 or more",src/bankCF_0000.asm
-$CF058B,DATA8_CF058B,,new,"list 0 of DATA8_CF0583",src/bankCF_0000.asm
-$CF059E,DATA8_CF059E,,new,"list 1 of DATA8_CF0583",src/bankCF_0000.asm
-$CF05B1,DATA8_CF05B1,,new,"list 2 of DATA8_CF0583",src/bankCF_0000.asm
-$CF05C1,DATA8_CF05C1,,new,"list 3 of DATA8_CF0583",src/bankCF_0000.asm
-$CF05D4,DATA8_CF05D4,,new,"four byte lists ($A3 $A4, $A5, $A6, $A7), each ending in $FF, at +0 / +3 / +5 / +7; CODE_CF0134 takes one (CODE_CF04B6 and CopyrightScreen +0, the pause screen +3, ScoutingReport +5, SeasonAwards +7)",src/bankCF_0000.asm
+$CF058B,SampleVolumeOverrides0,DATA8_CF058B,code,"SampleVolumeOverrideLists entry 0 points here",src/bankCF_0000.asm
+$CF059E,SampleVolumeOverrides1,DATA8_CF059E,code,"SampleVolumeOverrideLists entry 1 points here",src/bankCF_0000.asm
+$CF05B1,SampleVolumeOverrides2,DATA8_CF05B1,code,"SampleVolumeOverrideLists entry 2 points here",src/bankCF_0000.asm
+$CF05C1,SampleVolumeOverrides3,DATA8_CF05C1,code,"SampleVolumeOverrideLists entry 3 points here",src/bankCF_0000.asm
+$CF05D4,SongLists,DATA8_CF05D4,code,"StartMenuMusic and the title load +0; ScoutingReport and the other screens load SongLists+3 / +5 / +7",src/bankCF_0000.asm
 $CF05DD,SampleList,DATA8_CF05DD,code,"the 33 sound samples: a long pointer each (dd: then a zero); CODE_CF01E0 sends sample A to the sound CPU",src/bankCF_0000.asm
 $CF0661,DATA8_CF0661,,new,"not traced (no reader found)",src/bankCF_0000.asm
 $CF0663,DATA8_CF0663,,new,"a byte list ending in $FF; CODE_CF0427 passes it to CODE_CF0134",src/bankCF_0000.asm
-$CF0679,DATA8_CF0679,,new,"sound 1 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_0000.asm
-$CF0949,DATA8_CF0949,,new,"sound 2 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_0000.asm
-$CF0AFB,DATA8_CF0AFB,,new,"sound 3 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_0000.asm
-$CF0CDC,DATA8_CF0CDC,,new,"sound 0 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_0000.asm
-$CF0E46,DATA8_CF0E46,,new,"sound 4 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_0000.asm
-$CF1099,DATA8_CF1099,,new,"sound 5 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1284,DATA8_CF1284,,new,"sound 6 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1454,DATA8_CF1454,,new,"sound 7 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1582,DATA8_CF1582,,new,"sound 8 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1718,DATA8_CF1718,,new,"sound 9 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF19C0,DATA8_CF19C0,,new,"sound 10 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1BBF,DATA8_CF1BBF,,new,"sound 11 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1D38,DATA8_CF1D38,,new,"sound 12 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF1EFB,DATA8_CF1EFB,,new,"sound 13 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_1000.asm
-$CF2123,DATA8_CF2123,,new,"sound 14 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2222,DATA8_CF2222,,new,"sound 15 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2443,DATA8_CF2443,,new,"sound 16 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF25BA,DATA8_CF25BA,,new,"sound 17 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2744,DATA8_CF2744,,new,"sound 18 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2844,DATA8_CF2844,,new,"sound 19 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2A6A,DATA8_CF2A6A,,new,"sound 20 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2CF5,DATA8_CF2CF5,,new,"sound 21 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF2F75,DATA8_CF2F75,,new,"sound 22 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_2000.asm
-$CF319B,DATA8_CF319B,,new,"sound 23 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF33DD,DATA8_CF33DD,,new,"sound 24 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF361F,DATA8_CF361F,,new,"sound 25 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF37EE,DATA8_CF37EE,,new,"sound 26 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF3AB7,DATA8_CF3AB7,,new,"sound 27 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF3D9D,DATA8_CF3D9D,,new,"sound 28 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF3F79,DATA8_CF3F79,,new,"sound 29 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_3000.asm
-$CF410C,DATA8_CF410C,,new,"sound 30 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_4000.asm
-$CF41BE,DATA8_CF41BE,,new,"sound 31 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_4000.asm
-$CF4351,DATA8_CF4351,,new,"sound 32 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_4000.asm
-$CF4402,DATA8_CF4402,,new,"sound 33 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_4000.asm
-$CF46CE,DATA8_CF46CE,,new,"sound 36 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_4000.asm
-$CF5717,DATA8_CF5717,,new,"sound 35 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_5000.asm
-$CF590B,DATA8_CF590B,,new,"sound 37 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_5000.asm
-$CF6A1A,DATA8_CF6A1A,,new,"sound 38 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_6000.asm
-$CF8145,DATA8_CF8145,,new,"sound 39 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_8000.asm
+$CF0679,Sequence01,DATA8_CF0679,code,"SoundSequenceTable entry 1 points here; named by its sound number",src/bankCF_0000.asm
+$CF0949,Sequence02,DATA8_CF0949,code,"SoundSequenceTable entry 2 points here; named by its sound number",src/bankCF_0000.asm
+$CF0AFB,Sequence03,DATA8_CF0AFB,code,"SoundSequenceTable entry 3 points here; named by its sound number",src/bankCF_0000.asm
+$CF0CDC,Sequence00,DATA8_CF0CDC,code,"SoundSequenceTable entry 0 points here; named by its sound number",src/bankCF_0000.asm
+$CF0E46,Sequence04,DATA8_CF0E46,code,"SoundSequenceTable entry 4 points here; named by its sound number",src/bankCF_0000.asm
+$CF1099,Sequence05,DATA8_CF1099,code,"SoundSequenceTable entry 5 points here; named by its sound number",src/bankCF_1000.asm
+$CF1284,Sequence06,DATA8_CF1284,code,"SoundSequenceTable entry 6 points here; named by its sound number",src/bankCF_1000.asm
+$CF1454,Sequence07,DATA8_CF1454,code,"SoundSequenceTable entry 7 points here; named by its sound number",src/bankCF_1000.asm
+$CF1582,Sequence08,DATA8_CF1582,code,"SoundSequenceTable entry 8 points here; named by its sound number",src/bankCF_1000.asm
+$CF1718,Sequence09,DATA8_CF1718,code,"SoundSequenceTable entry 9 points here; named by its sound number",src/bankCF_1000.asm
+$CF19C0,Sequence10,DATA8_CF19C0,code,"SoundSequenceTable entry 10 points here; named by its sound number",src/bankCF_1000.asm
+$CF1BBF,Sequence11,DATA8_CF1BBF,code,"SoundSequenceTable entry 11 points here; named by its sound number",src/bankCF_1000.asm
+$CF1D38,Sequence12,DATA8_CF1D38,code,"SoundSequenceTable entry 12 points here; named by its sound number",src/bankCF_1000.asm
+$CF1EFB,Sequence13,DATA8_CF1EFB,code,"SoundSequenceTable entry 13 points here; named by its sound number",src/bankCF_1000.asm
+$CF2123,Sequence14,DATA8_CF2123,code,"SoundSequenceTable entry 14 points here; named by its sound number",src/bankCF_2000.asm
+$CF2222,Sequence15,DATA8_CF2222,code,"SoundSequenceTable entry 15 points here; named by its sound number",src/bankCF_2000.asm
+$CF2443,Sequence16,DATA8_CF2443,code,"SoundSequenceTable entry 16 points here; named by its sound number",src/bankCF_2000.asm
+$CF25BA,Sequence17,DATA8_CF25BA,code,"SoundSequenceTable entry 17 points here; named by its sound number",src/bankCF_2000.asm
+$CF2744,Sequence18,DATA8_CF2744,code,"SoundSequenceTable entry 18 points here; named by its sound number",src/bankCF_2000.asm
+$CF2844,Sequence19,DATA8_CF2844,code,"SoundSequenceTable entry 19 points here; named by its sound number",src/bankCF_2000.asm
+$CF2A6A,Sequence20,DATA8_CF2A6A,code,"SoundSequenceTable entry 20 points here; named by its sound number",src/bankCF_2000.asm
+$CF2CF5,Sequence21,DATA8_CF2CF5,code,"SoundSequenceTable entry 21 points here; named by its sound number",src/bankCF_2000.asm
+$CF2F75,Sequence22,DATA8_CF2F75,code,"SoundSequenceTable entry 22 points here; named by its sound number",src/bankCF_2000.asm
+$CF319B,Sequence23,DATA8_CF319B,code,"SoundSequenceTable entry 23 points here; named by its sound number",src/bankCF_3000.asm
+$CF33DD,Sequence24,DATA8_CF33DD,code,"SoundSequenceTable entry 24 points here; named by its sound number",src/bankCF_3000.asm
+$CF361F,Sequence25,DATA8_CF361F,code,"SoundSequenceTable entry 25 points here; named by its sound number",src/bankCF_3000.asm
+$CF37EE,Sequence26,DATA8_CF37EE,code,"SoundSequenceTable entry 26 points here; named by its sound number",src/bankCF_3000.asm
+$CF3AB7,Sequence27,DATA8_CF3AB7,code,"SoundSequenceTable entry 27 points here; named by its sound number",src/bankCF_3000.asm
+$CF3D9D,Sequence28,DATA8_CF3D9D,code,"SoundSequenceTable entry 28 points here; named by its sound number",src/bankCF_3000.asm
+$CF3F79,Sequence29,DATA8_CF3F79,code,"SoundSequenceTable entry 29 points here; named by its sound number",src/bankCF_3000.asm
+$CF410C,Sequence30,DATA8_CF410C,code,"SoundSequenceTable entry 30 points here; named by its sound number",src/bankCF_4000.asm
+$CF41BE,Sequence31,DATA8_CF41BE,code,"SoundSequenceTable entry 31 points here; named by its sound number",src/bankCF_4000.asm
+$CF4351,Sequence32,DATA8_CF4351,code,"SoundSequenceTable entry 32 points here; named by its sound number",src/bankCF_4000.asm
+$CF4402,Sequence33,DATA8_CF4402,code,"SoundSequenceTable entry 33 points here; named by its sound number",src/bankCF_4000.asm
+$CF46CE,Sequence36,DATA8_CF46CE,code,"SoundSequenceTable entry 36 points here; named by its sound number",src/bankCF_4000.asm
+$CF5717,Sequence35,DATA8_CF5717,code,"SoundSequenceTable entry 35 points here; named by its sound number",src/bankCF_5000.asm
+$CF590B,Sequence37,DATA8_CF590B,code,"SoundSequenceTable entry 37 points here; named by its sound number",src/bankCF_5000.asm
+$CF6A1A,Sequence38,DATA8_CF6A1A,code,"SoundSequenceTable entry 38 points here; named by its sound number",src/bankCF_6000.asm
+$CF8145,Sequence39,DATA8_CF8145,code,"SoundSequenceTable entry 39 points here; named by its sound number",src/bankCF_8000.asm
 $CF95A4,Sample26,,new,"sound sample 26 (and 27) of SampleList: header, then BRR blocks",src/bankCF_9000.asm
 $CFAAAD,Sample31,,new,"sound sample 31 of SampleList: header, then BRR blocks",src/bankCF_A000.asm
-$CFC262,DATA8_CFC262,,new,"sound 34 of DATA8_CF04E3: a length word, then its data; CODE_CF0313 sends the samples it lists from +3 (a count, then the sample numbers)",src/bankCF_C000.asm
+$CFC262,Sequence34,DATA8_CFC262,code,"SoundSequenceTable entry 34 points here; named by its sound number",src/bankCF_C000.asm
 $CFC561,Sample23,,new,"sound sample 23 of SampleList: header, then BRR blocks",src/bankCF_C000.asm
 $CFD29C,Sample06,,new,"sound sample 6 of SampleList: header, then BRR blocks",src/bankCF_D000.asm
 $CFEEAE,LayoutBigPieces,DATA8_CFEEAE,code,"from the code: jmp (table,x) with the record's first byte from DrawFrameLayout",src/bankCF_E000.asm
 $CFF0AA,LayoutSmallPieces,DATA8_CFF0AA,code,"from the code: jmp (table,x) from LayoutSmallNext",src/bankCF_E000.asm
-$CFF27C,DATA8_CFF27C,,new,"per layout (the high byte of a DATA8_C60848 word) a size word: CODE_C5F368 queues two transfers of twice its low byte, then one of its high byte (zero parts skipped)",src/bankCF_F000.asm
-$CFF3A0,DATA8_CFF3A0,,new,"CODE_CFEE6C reads layout A at DATA8_CFF3A0+2A (layout 0 is skipped, so this word is not read); $8F-$91 jump through it",src/bankCF_F000.asm
-$CFF3A2,DATA8_CFF3A2,,new,"per layout a pointer in this bank: entries 0-141 a layout record (its first byte picks the handler in DATA8_CFEEAE), 142-145 code that CODE_CFEE25 / CODE_CFEE6C jump to",src/bankCF_F000.asm
+$CFF27C,LayoutSizes,DATA8_CFF27C,code,"QueueFrameTiles reads entry layout * 2",src/bankCF_F000.asm
+$CFF3A0,LayoutPointers-2,DATA8_CFF3A0,code,"LayoutPointers-2: DrawFrameLayout counts layouts from 1 and reads LayoutPointers-2,x; the word here (layout 0) is never read; the label is dropped",src/bankCF_F000.asm
+$CFF3A2,LayoutPointers,DATA8_CFF3A2,code,"DrawFrameLayoutFlip reads entry A * 2; DrawFrameLayout counts layouts from 1 and reads LayoutPointers-2,x",src/bankCF_F000.asm
 $CFF4C6,DATA8_CFF4C6,,new,"layout record for DATA8_CFF3A2 entry 0; not traced further",src/bankCF_F000.asm
 $CFF4D8,DATA8_CFF4D8,,new,"layout record for DATA8_CFF3A2 entry 1; not traced further",src/bankCF_F000.asm
 $CFF4EA,DATA8_CFF4EA,,new,"layout record for DATA8_CFF3A2 entry 2; not traced further",src/bankCF_F000.asm

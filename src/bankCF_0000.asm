@@ -637,18 +637,18 @@ StartSelectedTeamSong:				; starts the team song selected by tmp0, then restores
 PlayTeamSongReturn:					; PlayTeamSong's exit: X pulled, rtl
 	plx
 	rtl
-StartMenuMusic:						; reloads and starts the front end song $A4 (LoadSounds of DATA8_CF05D4,
+StartMenuMusic:						; reloads and starts the front end song $A4 (LoadSounds of SongLists,
 									; StartSound) between SoundVolumeDown and SoundVolumeUp; on its first call
 									; it only sets its flag, unless the request flag is set
 	lda.w MenuMusicPending
 	bne .1
 	lda.w MenuMusicVisited
 	beq .2
-.1:									; MenuMusicPending = 0, call SoundVolumeDown, X = DATA8_CF05D4>>16, ...
+.1:									; MenuMusicPending = 0, call SoundVolumeDown, X = SongLists>>16, ...
 	stz.w MenuMusicPending
 	jsl.l SoundVolumeDown
-	ldx.w #DATA8_CF05D4>>16
-	lda.w #DATA8_CF05D4&$FFFF
+	ldx.w #SongLists>>16
+	lda.w #SongLists&$FFFF
 	jsl.l LoadSounds
 	lda.w #$00A4
 	jsl.l StartSound
@@ -659,62 +659,62 @@ StartMenuMusic:						; reloads and starts the front end song $A4 (LoadSounds of 
 	rtl
 SoundSequenceTable:					; sequence pointers read by LoadSequence, each followed by a flag byte
 									; whose selection role is unresolved
-	dd DATA8_CF0CDC					; sound 0
-	dd DATA8_CF0679					; sound 1
-	dd DATA8_CF0949					; sound 2
-	dd DATA8_CF0AFB					; sound 3
-	dd DATA8_CF0E46					; sound 4
-	dd DATA8_CF1099					; sound 5
-	dd DATA8_CF1284					; sound 6
-	dd DATA8_CF1454					; sound 7
-	dd DATA8_CF1582					; sound 8
-	dd DATA8_CF1718					; sound 9
-	dd DATA8_CF19C0					; sound 10
-	dd DATA8_CF1BBF					; sound 11
-	dd DATA8_CF1D38					; sound 12
-	dd DATA8_CF1EFB					; sound 13
-	dd DATA8_CF2123					; sound 14
-	dd DATA8_CF2222					; sound 15
-	dd DATA8_CF2443					; sound 16
-	dd DATA8_CF25BA					; sound 17
-	dd DATA8_CF2744					; sound 18
-	dd DATA8_CF2844					; sound 19
-	dd DATA8_CF2A6A					; sound 20
-	dd DATA8_CF2CF5					; sound 21
-	dd DATA8_CF2F75					; sound 22
-	dd DATA8_CF319B					; sound 23
-	dd DATA8_CF33DD					; sound 24
-	dd DATA8_CF361F					; sound 25
-	dd DATA8_CF37EE					; sound 26
-	dd DATA8_CF3AB7					; sound 27
-	dd DATA8_CF3D9D					; sound 28
-	dd DATA8_CF3F79					; sound 29
-	dd DATA8_CF410C					; sound 30
-	dd DATA8_CF41BE					; sound 31
-	dd DATA8_CF4351					; sound 32
-	dd DATA8_CF4402					; sound 33
-	dd DATA8_CFC262					; sound 34
-	dd DATA8_CF5717|$80000000		; sound 35
-	dd DATA8_CF46CE|$80000000		; sound 36
-	dd DATA8_CF590B|$81000000		; sound 37
-	dd DATA8_CF6A1A|$82000000		; sound 38
-	dd DATA8_CF8145|$83000000		; sound 39
+	dd Sequence00					; sound 0
+	dd Sequence01					; sound 1
+	dd Sequence02					; sound 2
+	dd Sequence03					; sound 3
+	dd Sequence04					; sound 4
+	dd Sequence05					; sound 5
+	dd Sequence06					; sound 6
+	dd Sequence07					; sound 7
+	dd Sequence08					; sound 8
+	dd Sequence09					; sound 9
+	dd Sequence10					; sound 10
+	dd Sequence11					; sound 11
+	dd Sequence12					; sound 12
+	dd Sequence13					; sound 13
+	dd Sequence14					; sound 14
+	dd Sequence15					; sound 15
+	dd Sequence16					; sound 16
+	dd Sequence17					; sound 17
+	dd Sequence18					; sound 18
+	dd Sequence19					; sound 19
+	dd Sequence20					; sound 20
+	dd Sequence21					; sound 21
+	dd Sequence22					; sound 22
+	dd Sequence23					; sound 23
+	dd Sequence24					; sound 24
+	dd Sequence25					; sound 25
+	dd Sequence26					; sound 26
+	dd Sequence27					; sound 27
+	dd Sequence28					; sound 28
+	dd Sequence29					; sound 29
+	dd Sequence30					; sound 30
+	dd Sequence31					; sound 31
+	dd Sequence32					; sound 32
+	dd Sequence33					; sound 33
+	dd Sequence34					; sound 34
+	dd Sequence35|$80000000			; sound 35
+	dd Sequence36|$80000000			; sound 36
+	dd Sequence37|$81000000			; sound 37
+	dd Sequence38|$82000000			; sound 38
+	dd Sequence39|$83000000			; sound 39
 SampleVolumeOverrideLists:			; lists of sample IDs and stereo volume words applied by LoadSequence; a
 									; byte at least $21 ends each list
-	dw DATA8_CF058B&$FFFF,DATA8_CF059E&$FFFF,DATA8_CF05B1&$FFFF,DATA8_CF05C1&$FFFF
-DATA8_CF058B:						; list 0 of SampleVolumeOverrideLists
+	dw SampleVolumeOverrides0&$FFFF,SampleVolumeOverrides1&$FFFF,SampleVolumeOverrides2&$FFFF,SampleVolumeOverrides3&$FFFF
+SampleVolumeOverrides0:				; list 0 of SampleVolumeOverrideLists: sample stereo volume overrides
 	db $1C,$26,$26,$17,$2C,$2C,$1F,$3A,$3A,$1D,$20,$20,$1E,$29,$29,$19
 	db $32,$32,$21
-DATA8_CF059E:						; list 1 of SampleVolumeOverrideLists
+SampleVolumeOverrides1:				; list 1 of SampleVolumeOverrideLists: sample stereo volume overrides
 	db $1C,$32,$32,$1F,$34,$34,$17,$29,$29,$1D,$1E,$1E,$19,$37,$37,$1E
 	db $37,$37,$21
-DATA8_CF05B1:						; list 2 of SampleVolumeOverrideLists
+SampleVolumeOverrides2:				; list 2 of SampleVolumeOverrideLists: sample stereo volume overrides
 	db $1C,$32,$32,$17,$29,$29,$1F,$32,$32,$1E,$2D,$2D,$19,$37,$37,$21
-DATA8_CF05C1:						; list 3 of SampleVolumeOverrideLists
+SampleVolumeOverrides3:				; list 3 of SampleVolumeOverrideLists: sample stereo volume overrides
 	db $1C,$28,$28,$17,$2D,$2D,$1E,$32,$32,$1D,$28,$28,$1F,$2A,$2A,$19
 	db $37,$37,$21
-DATA8_CF05D4:						; four byte lists, each ending in $FF (at +0, +3, +5, +7); LoadSounds
-									; takes one
+SongLists:							; the song lists LoadSounds takes, each ending in $FF: $A3 $A4 (title,
+									; menus), then $A5, $A6, $A7 at +3, +5, +7
 	db $A3,$A4,$FF,$A5,$FF,$A6,$FF,$A7,$FF
 SampleList:							; the 33 sound samples: a long pointer each (dd: then a zero);
 									; LoadSample sends sample A to the sound CPU
@@ -756,29 +756,29 @@ DATA8_CF0661:						; not traced (no reader found)
 TeamSongSoundList:					; samples and sequence loaded by LoadTeamSongs before appending the
 									; selected team songs
 	db $02,$03,$04,$05,$06,$07,$08,$09,$0A,$0B,$0C,$0D,$0E,$0F,$10,$11,$12,$01,$1A,$1B,$A2,$FF
-DATA8_CF0679:						; sound 1 of SoundSequenceTable: a length word, then its data;
-									; LoadSequence
-									; sends the samples it lists from +3 (a count, then the sample numbers)
+Sequence01:							; sound 1 of SoundSequenceTable: a length word, then its data;
+									; LoadSequence sends the samples it lists from +3 (a count, then the
+									; sample numbers)
 	dw $02CE						; length of the data that follows
 	incbin "../Extracted/segments/bankCF_0000.bin":$67B..$949
-DATA8_CF0949:						; sound 2 of SoundSequenceTable: a length word, then its data;
-									; LoadSequence
-									; sends the samples it lists from +3 (a count, then the sample numbers)
+Sequence02:							; sound 2 of SoundSequenceTable: a length word, then its data;
+									; LoadSequence sends the samples it lists from +3 (a count, then the
+									; sample numbers)
 	dw $01B0						; length of the data that follows
 	incbin "../Extracted/segments/bankCF_0000.bin":$94B..$AFB
-DATA8_CF0AFB:						; sound 3 of SoundSequenceTable: a length word, then its data;
-									; LoadSequence
-									; sends the samples it lists from +3 (a count, then the sample numbers)
+Sequence03:							; sound 3 of SoundSequenceTable: a length word, then its data;
+									; LoadSequence sends the samples it lists from +3 (a count, then the
+									; sample numbers)
 	dw $01DF						; length of the data that follows
 	incbin "../Extracted/segments/bankCF_0000.bin":$AFD..$CDC
-DATA8_CF0CDC:						; sound 0 of SoundSequenceTable: a length word, then its data;
-									; LoadSequence
-									; sends the samples it lists from +3 (a count, then the sample numbers)
+Sequence00:							; sound 0 of SoundSequenceTable: a length word, then its data;
+									; LoadSequence sends the samples it lists from +3 (a count, then the
+									; sample numbers)
 	dw $0168						; length of the data that follows
 	incbin "../Extracted/segments/bankCF_0000.bin":$CDE..$E46
-DATA8_CF0E46:						; sound 4 of SoundSequenceTable: a length word, then its data;
-									; LoadSequence
-									; sends the samples it lists from +3 (a count, then the sample numbers)
+Sequence04:							; sound 4 of SoundSequenceTable: a length word, then its data;
+									; LoadSequence sends the samples it lists from +3 (a count, then the
+									; sample numbers)
 	dw $0251						; length of the data that follows
 	incbin "../Extracted/segments/bankCF_0000.bin":$E48..$1000
 	incbin "../Extracted/segments/bankCF_1000.bin":$0..$99

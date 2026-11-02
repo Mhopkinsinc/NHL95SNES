@@ -1818,9 +1818,9 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	bne .1
 	lda.w InIntermission
 	beq .2
-.1:									; A = (DATA8_CF05D4+$3)&$FFFF, X = (DATA8_CF05D4+$3)>>16, ...
-	lda.w #(DATA8_CF05D4+$3)&$FFFF
-	ldx.w #(DATA8_CF05D4+$3)>>16
+.1:									; A = (SongLists+$3)&$FFFF, X = (SongLists+$3)>>16, ...
+	lda.w #(SongLists+$3)&$FFFF
+	ldx.w #(SongLists+$3)>>16
 	jsl.l LoadSounds
 	lda.w #$00A5
 	jsl.l StartSound
