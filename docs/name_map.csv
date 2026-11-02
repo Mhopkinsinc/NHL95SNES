@@ -5211,9 +5211,9 @@ $C53769,.rtl,CODE_C53769,new,"branch target only used in PuckCarrierPad",src/ban
 $C53775,.rtl,CODE_C53775,new,"branch target only used in AssignPadIfFree",src/bankC5_3000.asm
 $C537A8,.1,CODE_C537A8,new,"branch target only used in AssignPadPlayer",src/bankC5_3000.asm
 $C537C3,.rtl,CODE_C537C3,new,"branch target only used in AssignPadPlayer",src/bankC5_3000.asm
-$C537F8,.1,CODE_C537F8,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
-$C53806,.2,CODE_C53806,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
-$C53811,.3,CODE_C53811,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
+$C537F8,.2,CODE_C537F8,new,"branch target only used in findpc",src/bankC5_3000.asm
+$C53806,.3,CODE_C53806,new,"branch target only used in findpc",src/bankC5_3000.asm
+$C53811,.4,CODE_C53811,new,"branch target only used in findpc",src/bankC5_3000.asm
 $C5382D,.loop,CODE_C5382D,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
 $C53849,.1,CODE_C53849,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
 $C53854,.2,CODE_C53854,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
@@ -9364,3 +9364,4 @@ $3EC,SPFpump2,,94S+purpose,"frames $3EC-$3FB; used by SPApump2; 94S SPFpump2 is 
 $41B,SPFbenchcheck,,94S+purpose,"frames $41B-$423; used by SPAbenchcheckr; 94S SPFbenchcheck is the group of the same job (896 there)",src/frames95s.asm
 $CFFD9E,GoalFrameLayout,CODE_CFFD9E,code,"LayoutPointers entries 142 / 143; the only frame with layout $8F is SPFgoal+1 (the second net, framerender.py)",src/bankCF_F000.asm
 $CFFF88,PuckFrameLayout,CODE_CFFF88,code,"LayoutPointers entries 144 / 145; the frames with layout $91 are SPFpuck+1 to +10, the ones SPApflip shows",src/bankCF_F000.asm
+$C537DE,.1,CODE_C537DE,94S+code,"findpc local: unreached in 95 (findpc loads puckc and branches to findpcSearch); the block of 94S findpc after its ldy puckc / bmi .9: position, playerpad, pfalock and the puck distance (95 puckdist < $28, 94S puckdist2 < $64), then the carrier pad side test and r0 0 / 4 from pfgoal as 94S .t1 / .1 / .2",src/bankC5_3000.asm

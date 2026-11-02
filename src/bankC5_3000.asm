@@ -1009,30 +1009,32 @@ findpc:								; from FaceoffPads and other segments
 	sta.b r0
 	ldy.w puckc
 	bra findpcSearch
-CODE_C537DE:						; no caller found (not traced)
+.1:									; unreached: 94S findpc's puck carrier test (a goalie, a player with no
+									; pad, a locked one or one $28 or more from the puck goes to .2, else
+									; findpcSweepcheck); 95 branches past it to findpcSearch
 	lda.w position,x
-	beq .1
+	beq .2
 	lda.w playerpad,x
-	bmi .1
+	bmi .2
 	lda.w pfalock,x
-	bne .1
+	bne .2
 	lda.w puckdist,x
 	cmp.w #$0028
-	bcs .1
+	bcs .2
 	jmp.w findpcSweepcheck
-.1:									; if playerpad,y < 0 go to .2, Y = A, ...
+.2:									; if playerpad,y < 0 go to .3, Y = A, ...
 	lda.w playerpad,y
-	bmi .2
+	bmi .3
 	tay
 	lda.w padside,y
 	cmp.w padside,x
 	beq findpcSearch
-.2:									; Y = $0000, if pfgoal,x is not 0 go to .3, Y = $0004
+.3:									; Y = $0000, if pfgoal,x is not 0 go to .4, Y = $0004
 	ldy.w #$0000
 	lda.w pfgoal,x
-	bne .3
+	bne .4
 	ldy.w #$0004
-.3:									; r0 = Y
+.4:									; r0 = Y
 	sty.b r0
 findpcSearch:						; searches the pad team for the eligible skater with the lowest distance
 									; and direction cost
