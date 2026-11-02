@@ -316,8 +316,7 @@
   (not decoded); DATA8_C34427 has the form of a team record but TeamList does not point at it.
 - bankC0_A000: the sample header (12 bytes: a pitch-like word, two volume-like bytes, ...) is not decoded; the samples are
   named by their index in the sample list. MaxSpeed also gets a long pointer from PrintShooterRows the way InitShooters does.
-- bankC0_9000: the game code keeps CODE_ names: menus and a list with pad input ($C097A2), a string copy to the heap
-  (CopyLenString2). Its RAM ($1878-$18B6, $0806, $2364, ...) is not named yet. There is a brk at $C09419.
+- bankC0_9000: there is a brk at $C09419 (in the ROM, not reached by the traced code).
 - asar: mvn / mvp take the operands in byte order, destination bank first (`mvn $7E,$C0` copies from $C0 to $7E).
 - Code banks: decode by recursive descent from the jsl targets in code banks (not from raw byte scans, which give false
   entries), carry M/X through calls, size jump tables against the decoded code, and skip the 6 inline parameter bytes after
