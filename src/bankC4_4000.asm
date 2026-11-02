@@ -1633,8 +1633,7 @@ PuckCollisionGoalieRange:			; test the close puck-to-player range before puckgoa
 	bpl PuckCollisionRestore
 	jsl.l puckgoalie
 	bra PuckCollisionRestore
-DATA8_C44CDD:						; not traced: a table read by PuckCollisionStickRange,
-									; PuckCollisionStickRange
+TwoThirds:							; for each index, index * 2 / 3 rounded (words)
 	db $00,$00,$01,$00,$01,$00,$02,$00,$03,$00,$03,$00,$04,$00,$05,$00
 	db $05,$00,$06,$00,$07,$00,$07,$00,$08,$00,$09,$00,$09,$00,$0A,$00
 	db $0B,$00,$0B,$00,$0C,$00,$0D,$00,$0D,$00,$0E,$00,$0F,$00,$0F,$00
@@ -1649,21 +1648,21 @@ PuckCollisionStickRange:			; test the frame hotspot reach and puck height for st
 	beq .1
 	eor.w #$FFFF
 	inc a
-.1:									; d2 = A, A * 2, X = A, d4 = DATA8_C44CDD,x, ...
+.1:									; d2 = A, A * 2, X = A, d4 = TwoThirds,x, ...
 	sta.b d2
 	asl a
 	tax
-	lda.l DATA8_C44CDD,x
+	lda.l TwoThirds,x
 	sta.b d4
 	lda.b d1
 	bit.w #$8000
 	beq .2
 	eor.w #$FFFF
 	inc a
-.2:									; A * 2, X = A, d3 = DATA8_C44CDD,x, X = curobj, ...
+.2:									; A * 2, X = A, d3 = TwoThirds,x, X = curobj, ...
 	asl a
 	tax
-	lda.l DATA8_C44CDD,x
+	lda.l TwoThirds,x
 	sta.b d3
 	ldx.b curobj
 	lda.b a2

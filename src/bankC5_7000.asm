@@ -437,12 +437,12 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 .12:								; A = X, return
 	txa
 	rts
-.13:								; A = d2, A + $91, X = A, A = DATA8_C57309,x, ...
+.13:								; A = d2, A + $91, X = A, A = RosterAttribWeights,x, ...
 	lda.b d2
 	clc
 	adc.b $91
 	tax
-	lda.l DATA8_C57309,x
+	lda.l RosterAttribWeights,x
 	ldx.b d3
 	jsl.l Mul8U
 	clc
@@ -497,7 +497,7 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	lsr a
 .21:								; go to .10
 	bra .10
-DATA8_C57309:						; not traced: a table read by CalcRosterAttrib
+RosterAttribWeights:				; AttribWeights again, read by CalcRosterAttrib and RecordOverall
 	db $00,$00,$01,$02,$03,$03,$02,$01,$02,$01,$03,$02,$01,$01,$01,$01
 	db $00,$00,$00,$09,$02,$02,$09,$09,$02,$02,$02,$02,$02,$02,$02,$02
 PauseReplay:						; pause menu Inst Replay: fade out, the game state kept, vcountmark+2 set

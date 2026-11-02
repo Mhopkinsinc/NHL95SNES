@@ -651,21 +651,21 @@ LaunchDumpIn:						; launch the puck toward the dump-in target and start the pas
 	asl a
 	sta.b d4
 	ldx.w dumpintarget
-	lda.l DATA8_C4A5FD,x
+	lda.l DumpInSpreadX,x
 	clc
 	adc.b d4
 	jsl.l randomd0s
 	clc
-	adc.l DATA8_C4A62D,x
+	adc.l DumpInTargetX,x
 	sec
 	sbc.w puckx
 	sta.b d0
-	lda.l DATA8_C4A615,x
+	lda.l DumpInSpreadY,x
 	clc
 	adc.b d4
 	jsl.l randomd0s
 	clc
-	adc.l DATA8_C4A645,x
+	adc.l DumpInTargetY,x
 	sec
 	sbc.w pucky
 	sta.b d1
@@ -738,16 +738,17 @@ LaunchDumpIn:						; launch the puck toward the dump-in target and start the pas
 	lsr a
 	sta.w lastplayer
 	jmp.w dopass_swing
-DATA8_C4A5FD:						; not traced: a table read by LaunchDumpIn
+DumpInSpreadX:						; per dump in target: the x spread (plus the rating term)
 	db $19,$00,$19,$00,$19,$00,$19,$00,$14,$00,$19,$00,$19,$00,$19,$00
 	db $19,$00,$19,$00,$14,$00,$19,$00
-DATA8_C4A615:						; not traced: a table read by LaunchDumpIn
+DumpInSpreadY:						; per dump in target: the y spread
 	db $14,$00,$19,$00,$19,$00,$46,$00,$14,$00,$46,$00,$14,$00,$19,$00
 	db $19,$00,$46,$00,$14,$00,$46,$00
-DATA8_C4A62D:						; not traced: a table read by LaunchDumpIn
+DumpInTargetX:						; per dump in target: x
 	db $00,$00,$B0,$FF,$50,$00,$B0,$FF,$00,$00,$50,$00,$00,$00,$50,$00
 	db $B0,$FF,$B0,$FF,$00,$00,$50,$00
-DATA8_C4A645:						; not traced: a table read by LaunchDumpIn
+DumpInTargetY:						; per dump in target: y toward the goal (the second half for the other
+									; end)
 	db $97,$FF,$8D,$FF,$8D,$FF,$4C,$FF,$29,$FF,$4C,$FF,$69,$00,$73,$00
 	db $73,$00,$B4,$00,$D7,$00,$B4,$00
 puckshadow:							; assignment (asstab entry 25): the puck shadow (object 15): under the

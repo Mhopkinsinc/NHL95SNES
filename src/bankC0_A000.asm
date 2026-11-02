@@ -55,13 +55,13 @@ DATA8_C09BC4:						; not traced: 16 rising 32-bit values
 	dd $035D0E40,$03A64E21,$03F28B64,$0441C609
 	dd $0493FE10,$04E93379,$05416644,$059C9671
 	dd $05FAC400,$065BEEF1,$06C01744,$07273CF9
-DATA8_C09C04:						; not traced: 8 (x, y) steps of length 250 around a circle
+dirtab:								; x / y vectors (length 250) of the 8 directions, read by Endfaceoff
 	dw 0,250,176,176,250,0,176,-176
 	dw 0,-250,-176,-176,-250,0,-176,176
 BitMaskTable2:						; single-bit masks, bit 0 up (the same words as BitMaskTable)
 	dw $0001,$0002,$0004,$0008,$0010,$0020,$0040,$0080
 	dw $0100,$0200,$0400,$0800,$1000,$2000,$4000,$8000
-DATA8_C09C44:						; not traced: 16 bytes, one per d-pad bit pattern
+jdtab8F:							; 16 bytes, the same as 94S jdtab8F; no reader found
 	db $08,$00,$04,$08,$06,$07,$05,$08,$02,$01,$03,$08,$08,$08,$08,$08
 Sample19:							; sound sample 19 of the sample list: header, then BRR blocks
 	incbin "../Extracted/segments/bankC0_9000.bin":$C54..$1000

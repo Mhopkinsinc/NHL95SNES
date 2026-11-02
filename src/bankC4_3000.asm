@@ -654,13 +654,13 @@ asswingo:							; called from other segments
 	lda.w seed
 	cmp.w #$0200
 	bcs .11
-.10:								; temp5,x = d2, Y = A, $65 = DATA8_C436DD>>16, a0 = DATA8_C436DD, ...
+.10:								; temp5,x = d2, Y = A, $65 = WingZoneSpots>>16, a0 = WingZoneSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
-	lda.w #DATA8_C436DD>>16
+	lda.w #WingZoneSpots>>16
 	sta.b $65
-	lda.w #DATA8_C436DD
+	lda.w #WingZoneSpots
 	sta.b a0
 	iny
 	iny
@@ -711,7 +711,7 @@ asswingo:							; called from other segments
 	jml.l skateto
 DATA8_C436DC:						; an rtl no traced code reaches
 	db $6B
-DATA8_C436DD:						; not traced: a table read by asswingo
+WingZoneSpots:						; per zone, the spots a wing on offence picks from (x, y spread pairs)
 	db $50,$00,$14,$00,$BA,$FF,$0A,$00,$64,$00,$14,$00,$3C,$00,$0A,$00
 	db $3C,$00,$32,$00,$E6,$00,$14,$00,$50,$00,$1E,$00,$FA,$00,$14,$00
 donothing:							; from OffensiveDefenceThink, assdefd, asswingd, ...

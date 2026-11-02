@@ -1040,7 +1040,7 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	pha
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.b tmp0
 	pla
@@ -1771,7 +1771,7 @@ MenuPlayGames:						; League Menu Play Games: when the season is over (play mode
 	lda.b d4
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.b tmp1
 	lda.b d4

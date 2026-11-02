@@ -750,7 +750,7 @@ CopyString2:						; CopyString into the second work buffer (AllocWorkBuf2)
 	plx
 	ply
 	rtl
-DATA8_C4C4A6:						; not traced: data between routines
+ByteBitMasks:						; the 8 single bit masks of a byte ($01 first)
 	db $01,$02,$04,$08,$10,$20,$40,$80
 DATA8_C4C4AE:						; not traced: a table read by CheckGlyphLeftOverlap
 	db $80,$40,$20,$10,$08,$04,$02,$01

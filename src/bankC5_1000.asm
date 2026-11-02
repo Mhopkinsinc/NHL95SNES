@@ -9,11 +9,12 @@ GetPeriodTime:						; d0 = the period length in seconds for the period length op
 	tax
 	lda.l DATA8_C51112,x
 	sta.b tmp0
-	lda.l DATA8_C5110A,x
+	lda.l GetPeriodTime_timetab,x
 	sta.b d0
 	plx
 	rtl
-DATA8_C5110A:						; not traced: a table read by GetPeriodTime
+GetPeriodTime_timetab:				; the period lengths in seconds (300, 600, 1200, 30) GetPeriodTime picks
+									; from
 	db $2C,$01,$58,$02,$B0,$04,$1E,$00
 DATA8_C51112:						; not traced: a table read by GetPeriodTime
 	db $00,$05,$00,$10,$00,$20,$30,$00
@@ -1311,11 +1312,11 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	lda.b d0
 	eor.w #$0004
 	sta.b d0
-.6:									; d0 * 2, d0 * 2, X = d0, A = DATA8_C09C04,x, ...
+.6:									; d0 * 2, d0 * 2, X = d0, A = dirtab,x, ...
 	asl.b d0
 	asl.b d0
 	ldx.b d0
-	lda.l DATA8_C09C04,x
+	lda.l dirtab,x
 	asl a
 	asl a
 	asl a

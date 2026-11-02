@@ -1354,7 +1354,7 @@ doplayeracc:						; from skatetopuck and other segments
 	asl a
 	sta.b d0
 	tax
-	lda.l DATA8_C46B26,x
+	lda.l TurnSteps,x
 	ldx.b a3
 	cmp.w #$0000
 	bne .13
@@ -1441,7 +1441,7 @@ doplayeracc:						; from skatetopuck and other segments
 	jmp.w revplayeracc
 .rtl2:								; return
 	rtl
-DATA8_C46B26:						; not traced: a table read by doplayeracc
+TurnSteps:							; the turn step for each direction difference (eight directions)
 	db $00,$00,$11,$00,$11,$00,$11,$00,$00,$00,$EF,$FF,$EF,$FF,$EF,$FF
 noturn0:							; from doplayeracc
 	lda.w #$0002
@@ -1593,11 +1593,11 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	beq .4
 	eor.w #$000A
 	sta.b tmp1
-.4:									; if tmp1 = 0 go to .5, X = tmp0, call (DATA8_C46DB0,x), X = curobj, ...
+.4:									; if tmp1 = 0 go to .5, X = tmp0, call (AvoidGoalHandlers,x), ...
 	lda.b tmp1
 	beq .5
 	ldx.b tmp0
-	jsr (DATA8_C46DB0,x)
+	jsr (AvoidGoalHandlers,x)
 	ldx.b curobj
 	rtl
 .5:									; call AvoidGoalInsideTarget, X = curobj, return
@@ -1766,7 +1766,7 @@ AvoidGoalLeftHighY:					; route from the left high-Y corner of the mirrored skat
 	lda.w #$FFCA
 	sta.b d0
 	rts
-DATA8_C46DB0:						; jump table: the routine for each index
+AvoidGoalHandlers:					; avdgoal's handler for each start code (AvoidGoal...)
 	dw AvoidGoalInsideStart,AvoidGoalHighY,AvoidGoalRightSide,AvoidGoalRightHighY
 	dw AvoidGoalLowY,$0000,AvoidGoalRightLowY,$0000
 	dw AvoidGoalLeftSide,AvoidGoalLeftHighY,$0000,$0000
@@ -1885,11 +1885,11 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	beq .3
 	eor.w #$000A
 	sta.b tmp1
-.3:									; if tmp1 = 0 go to .4, X = tmp0, call (DATA8_C46F93,x), X = curobj, ...
+.3:									; if tmp1 = 0 go to .4, X = tmp0, call (GoalieAvoidHandlers,x), ...
 	lda.b tmp1
 	beq .4
 	ldx.b tmp0
-	jsr (DATA8_C46F93,x)
+	jsr (GoalieAvoidHandlers,x)
 	ldx.b curobj
 	rtl
 .4:									; call GoalieAvoidInsideTarget, X = curobj, return
@@ -2019,7 +2019,7 @@ GoalieAvoidLeftHighY:				; route from the left high-Y corner of the mirrored goa
 	lda.w #$FFDA
 	sta.b d0
 	rts
-DATA8_C46F93:						; jump table: the routine for each index
+GoalieAvoidHandlers:				; AvoidGoalForGoalie's handler for each start code (GoalieAvoid...)
 	dw GoalieAvoidInsideStart,GoalieAvoidHighY,GoalieAvoidRightSide,GoalieAvoidRightHighY
 	dw GoalieAvoidLowY,$0000,GoalieAvoidRightLowY,$0000
 	dw GoalieAvoidLeftSide,GoalieAvoidLeftHighY,$0000,$0000

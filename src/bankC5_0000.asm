@@ -1856,11 +1856,11 @@ CalcAttrib:							; no caller found (not traced)
 	sec
 	sbc.b r3
 	sta.b r3
-.11:								; if $91 < 0 go to .15, X = p1, A = DATA8_C510CF,x, ...
+.11:								; if $91 < 0 go to .15, X = p1, A = SingleAttribWeights,x, ...
 	lda.b $91
 	bmi .15
 	ldx.b p1
-	lda.l DATA8_C510CF,x
+	lda.l SingleAttribWeights,x
 	and.w #$00FF
 	beq .14
 	lda.w #$0012
@@ -1883,12 +1883,12 @@ CalcAttrib:							; no caller found (not traced)
 	sta.b d0
 	plx
 	jmp.w .25
-.15:								; A = p1, A + r2, X = A, A = DATA8_C510AF,x, ...
+.15:								; A = p1, A + r2, X = A, A = AttribWeights,x, ...
 	lda.b p1
 	clc
 	adc.b r2
 	tax
-	lda.l DATA8_C510AF,x
+	lda.l AttribWeights,x
 	ldx.b d3
 	jsl.l Mul8U
 	clc
@@ -1973,10 +1973,10 @@ CalcAttrib:							; no caller found (not traced)
 	sta.b d0
 .rtl:								; return
 	rtl
-DATA8_C510AF:						; not traced: a table read by CalcAttrib
+AttribWeights:						; weights of the 16 skater attributes, then the goalie weights
 	db $00,$00,$01,$02,$03,$03,$02,$01,$02,$01,$03,$02,$01,$01,$01,$01
 	db $00,$00,$00,$09,$02,$02,$09,$09,$02,$02,$02,$02,$02,$02,$02,$02
-DATA8_C510CF:						; not traced: a table read by CalcAttrib
+SingleAttribWeights:				; attribute weights for the single attribute mode
 	db $00,$00,$00,$01,$01,$01,$01,$01,$01,$00,$01,$01,$01,$01,$01,$01
 GetPeriodTimeRemaining:				; called from other segments
 	lda.w gsp

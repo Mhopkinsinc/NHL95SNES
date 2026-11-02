@@ -868,8 +868,8 @@ RecordOverallLong:					; RecordOverall for long calls, tmp0, $A5 and $0A kept
 	stx.b tmp0
 	rtl
 RecordOverall:						; A = the overall rating (25-100) of the player record in mesarea: its
-									; attribute nibbles weighted (DATA8_C57309, the set by RatingMode), at
-									; most 100, below 50 made 25 + A / 2
+									; attribute nibbles weighted (RosterAttribWeights, the set by RatingMode),
+									; at most 100, below 50 made 25 + A / 2
 	ldx.w #$5DF9
 	lda.l $7E24DC
 	beq .1
@@ -901,7 +901,7 @@ RecordOverall:						; A = the overall rating (25-100) of the player record in me
 	clc
 	adc.l $7E24DC
 	tax
-	lda.l DATA8_C57309,x
+	lda.l RosterAttribWeights,x
 	tyx
 	jsl.l Mul8U
 	clc

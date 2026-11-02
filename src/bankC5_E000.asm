@@ -462,7 +462,7 @@ WriteTeamStatBit:					; writes bit 0 of tmp1 to bit r2 of the team stats bit str
 	lda.b r2
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	eor.w #$FFFF
 	sta.b $A5
@@ -476,11 +476,11 @@ WriteTeamStatBit:					; writes bit 0 of tmp1 to bit r2 of the team stats bit str
 	sta.l SRTeamStats,x
 	inc.b r2
 	rts
-.1:									; A = r2, A and $0007, X = A, A = DATA8_C4C4A6,x, ...
+.1:									; A = r2, A and $0007, X = A, A = ByteBitMasks,x, ...
 	lda.b r2
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.b $A5
 	lda.b r2

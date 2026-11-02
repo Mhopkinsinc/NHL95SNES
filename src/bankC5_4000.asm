@@ -181,7 +181,7 @@ setlccords:							; team a2's line change box: A = its map address (the side by 
 	pla
 	rts
 getlchoice:							; A = the line for line choice A of team a2 by the man advantage
-									; (DATA8_C54194, sign extended; -1 none); X and Y kept
+									; (LineChoiceTable, sign extended; -1 none); X and Y kept
 	phx
 	pha
 	lda.b a2
@@ -208,7 +208,7 @@ getlchoice:							; A = the line for line choice A of team a2 by the man advanta
 	adc.b $01,s
 	tax
 	ply
-	lda.l DATA8_C54194,x
+	lda.l LineChoiceTable,x
 	plx
 	and.w #$00FF
 	bit.w #$0080
@@ -216,7 +216,7 @@ getlchoice:							; A = the line for line choice A of team a2 by the man advanta
 	ora.w #$FF00
 .rts:								; return
 	rts
-DATA8_C54194:						; not traced: a table read by getlchoice
+LineChoiceTable:					; the lines for each line change choice ($FF: none)
 	db $00,$01,$02,$01,$02,$00,$02,$00,$01,$00,$01,$02,$00,$01,$02,$00
 	db $01,$02,$00,$01,$02,$03,$04,$FF,$03,$04,$FF,$03,$04,$FF,$03,$04
 	db $FF,$04,$03,$FF,$03,$04,$FF,$03,$04,$FF,$05,$06,$FF,$05,$06,$FF

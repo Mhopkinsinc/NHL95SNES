@@ -788,13 +788,13 @@ asscentero:							; called from other segments
 	lda.w seed+2
 	cmp.w #$0200
 	bcs .10
-.9:									; temp5,x = d2, Y = A, $65 = DATA8_C43079>>16, a0 = DATA8_C43079, ...
+.9:									; temp5,x = d2, Y = A, $65 = CenterOSpots>>16, a0 = CenterOSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
-	lda.w #DATA8_C43079>>16
+	lda.w #CenterOSpots>>16
 	sta.b $65
-	lda.w #DATA8_C43079
+	lda.w #CenterOSpots
 	sta.b a0
 	iny
 	iny
@@ -833,7 +833,7 @@ asscentero:							; called from other segments
 	jml.l skateto
 DATA8_C43078:						; an rtl no traced code reaches
 	db $6B
-DATA8_C43079:						; not traced: a table read by asscentero
+CenterOSpots:						; the centre's spots on offence, read by asscentero
 	db $00,$00,$3C,$00,$BA,$FF,$0A,$00,$00,$00,$3C,$00,$3C,$00,$0A,$00
 	db $00,$00,$28,$00,$AA,$00,$1E,$00,$00,$00,$50,$00,$AA,$00,$14,$00
 asscenterd:							; called from other segments

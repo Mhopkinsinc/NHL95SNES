@@ -468,7 +468,7 @@ DrawGameMarks:						; draws game $85 on the BG2 map at d3: a 9 x 2 tile bar in e
 	pha
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.w tmp0
 	pla

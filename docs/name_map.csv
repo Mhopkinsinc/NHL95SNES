@@ -222,9 +222,9 @@ $C09B3F,DATA8_C09B3F,,new,"read as words at $C43DC4, $C43DE4, $C540E3",src/bankC
 $C09B54,DATA8_C09B54,,new,"records; $C51131, $C570BB, $C57762",src/bankC0_A000.asm
 $C09B94,DATA8_C09B94,,new,"records; $C5703C, $C57A3C",src/bankC0_A000.asm
 $C09BC4,DATA8_C09BC4,,new,"16 rising 32-bit values; $C45B51 ..., CODE_C09910 stores a long pointer to it",src/bankC0_A000.asm
-$C09C04,DATA8_C09C04,,new,"8 (x, y) steps of length 250 around a circle; $C42D63, $C51BBC, $C4A19A",src/bankC0_A000.asm
+$C09C04,dirtab,DATA8_C09C04,94S+code,"the same bytes as 94S data/tables/dirtab (8 concrete of 32, the rest symbolic there); Endfaceoff reads it where 94S Endfaceoff does (datamap.py 2/2)",src/bankC0_A000.asm
 $C09C24,BitMaskTable2,,new,"the 16 single-bit words again (BitMaskTable is at $C04CC7); $C50F53, $C571FB, $C5C6CE",src/bankC0_A000.asm
-$C09C44,DATA8_C09C44,,new,"16 bytes, one per d-pad bit pattern; not traced",src/bankC0_A000.asm
+$C09C44,jdtab8F,DATA8_C09C44,94S+code,"the same 16 bytes as 94S data/tables/jdtab8F; no reference in the traced 95 code",src/bankC0_A000.asm
 $C09C54,Sample19,,new,"sound sample 19 of the sample list at $CF05DD: 12-byte header, BRR blocks",src/bankC0_A000.asm
 $C0A2AB,Sample20,,new,"sound sample 20 of the sample list at $CF05DD",src/bankC0_A000.asm
 $C0A965,Sample21,,new,"sound sample 21 of the sample list at $CF05DD",src/bankC0_A000.asm
@@ -614,10 +614,10 @@ $C5EEF3,CreateSpriteSharePal,,trace,"CreateSprite, but the new object shares the
 $C5F071,UnpackStream0,,trace,"unpack a format 0 stream without the 4-byte header into bank $7E (docs/sprite_objects.md): D = the DMA registers; literal runs are copied by an mvn built in the channel 2 registers (run from the bank $85 mirror, jmp DMAP2), copies by mvn $7E,$7E",src/bankC5_F000.asm
 $C5F0D1,BuildSpriteOAM,,trace,"build the OAM entries of all sprite objects: walks the active list, the frame headers and SpritePieces, with an h-flip variant (docs/sprite_objects.md)",src/bankC5_F000.asm
 $C50A00,DATA8_C50A00,,new,"not traced: data between routines (in bankC5_0000)",src/bankC5_0000.asm
-$C510AF,DATA8_C510AF,,new,"not traced: a table read by CODE_C51012 (in bankC5_0000)",src/bankC5_0000.asm
-$C510CF,DATA8_C510CF,,new,"not traced: a table read by CODE_C50FDC (in bankC5_0000)",src/bankC5_0000.asm
+$C510AF,AttribWeights,DATA8_C510AF,code,"the same 32 bytes as 94S CalcAttrib's local .18; CalcAttrib reads it",src/bankC5_0000.asm
+$C510CF,SingleAttribWeights,DATA8_C510CF,code,"the same 16 bytes as 94S CalcAttrib's local .19; CalcAttrib reads it",src/bankC5_0000.asm
 $C50000,Opening,,94S,"the cold start: Reset_Fast ends with jml Opening, as in 94S (Reset_Fast, then jml Opening); sets DB, the hooks from InitHooks, NMITIMEN, then the game",src/bankC5_0000.asm
-$C5110A,DATA8_C5110A,,new,"not traced: a table read by CODE_C510F6 (in bankC5_1000)",src/bankC5_1000.asm
+$C5110A,GetPeriodTime_timetab,DATA8_C5110A,94S+code,"the same 8 bytes as 94S GetPeriodTime_timetab (data/tables), read by GetPeriodTime in both",src/bankC5_1000.asm
 $C51112,DATA8_C51112,,new,"not traced: a table read by CODE_C510F6 (in bankC5_1000)",src/bankC5_1000.asm
 $C511B7,DATA8_C511B7,,new,"not traced: data between routines (in bankC5_1000)",src/bankC5_1000.asm
 $C51271,DATA8_C51271,,new,"not traced: data between routines (in bankC5_1000)",src/bankC5_1000.asm
@@ -636,7 +636,7 @@ $C5362D,DATA8_C5362D,,new,"not traced: data between routines (in bankC5_3000)",s
 $C53A61,DATA8_C53A61,,new,"not traced: data between routines (in bankC5_3000)",src/bankC5_3000.asm
 $C53C3F,DATA8_C53C3F,,new,"not traced: data between routines (in bankC5_3000)",src/bankC5_3000.asm
 $C5410E,DATA8_C5410E,,new,"not traced: a table read by CODE_C540C3 (in bankC5_4000)",src/bankC5_4000.asm
-$C54194,DATA8_C54194,,new,"not traced: a table read by CODE_C54171 (in bankC5_4000)",src/bankC5_4000.asm
+$C54194,LineChoiceTable,DATA8_C54194,code,"the same 63 bytes as 94S getlchoice's local .tab ('lines for each choice; $FF = none'); getlchoice reads it",src/bankC5_4000.asm
 $C54897,DATA8_C54897,,new,"not traced: data between routines (in bankC5_4000)",src/bankC5_4000.asm
 $C5491C,DATA8_C5491C,,new,"not traced: data between routines (in bankC5_4000)",src/bankC5_4000.asm
 $C54D3A,DATA8_C54D3A,,new,"jump table: the routine for each index (in bankC5_4000)",src/bankC5_4000.asm
@@ -670,7 +670,7 @@ $C56244,MonthOctober,,new,"the month name October, 0-terminated; DATA8_C561F0 po
 $C5624C,MonthNovember,,new,"the month name November, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
 $C56255,MonthDecember,,new,"the month name December, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
 $C570E8,RosterColumnTable,DATA8_C570E8,code,"from the code: ShowRosterLine, DrawLinePlayerRow and Pausemode_gnum jmp (table,x) with a pushed return point",src/bankC5_7000.asm
-$C57309,DATA8_C57309,,new,"not traced: a table read by CODE_C5729E (in bankC5_7000)",src/bankC5_7000.asm
+$C57309,RosterAttribWeights,DATA8_C57309,code,"a second copy of 94S CalcAttrib's .18 (the same 32 bytes as AttribWeights); CalcRosterAttrib and RecordOverall read this one",src/bankC5_7000.asm
 $C57810,DATA8_C57810,,new,"the routines CODE_C577F7 jumps to through a pointer, by index (in bankC5_7000)",src/bankC5_7000.asm
 $C57DCD,DATA8_C57DCD,,new,"jump table: the routine for each index (in bankC5_7000)",src/bankC5_7000.asm
 $C400FE,DATA8_C400FE,,new,"jump table: the routine for each index (in bankC4_0000)",src/bankC4_0000.asm
@@ -691,43 +691,43 @@ $C41E48,DATA8_C41E48,,new,"not traced: a table read by CODE_C4A2A3 (in bankC4_10
 $C42030,DATA8_C42030,,new,"not traced: more of the data from bankC4_1000 (pointer tables, lists) (in bankC4_2000)",src/bankC4_2000.asm
 $C42DC5,DATA8_C42DC5,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm
 $C43078,DATA8_C43078,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm
-$C43079,DATA8_C43079,,new,"not traced: a table read by CODE_C43021 (in bankC4_2000)",src/bankC4_2000.asm
+$C43079,CenterOSpots,DATA8_C43079,94S+code,"the same 32 bytes as 94S CenterOSpots (routines/snes/CenterOSpots.asm), read by asscentero in both",src/bankC4_2000.asm
 $C4311B,DATA8_C4311B,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm
 $C432A0,DATA8_C432A0,,new,"an rtl no traced code reaches (in bankC4_3000)",src/bankC4_3000.asm
 $C43345,DATA8_C43345,,new,"not traced: data between routines (in bankC4_3000)",src/bankC4_3000.asm
 $C433C3,DATA8_C433C3,,new,"an rtl no traced code reaches (in bankC4_3000)",src/bankC4_3000.asm
 $C43530,DATA8_C43530,,new,"an rtl no traced code reaches (in bankC4_3000)",src/bankC4_3000.asm
 $C436DC,DATA8_C436DC,,new,"an rtl no traced code reaches (in bankC4_3000)",src/bankC4_3000.asm
-$C436DD,DATA8_C436DD,,new,"not traced: a table read by CODE_C4366D (in bankC4_3000)",src/bankC4_3000.asm
-$C44CDD,DATA8_C44CDD,,new,"not traced: a table read by CODE_C44D4D, CODE_C44D62 (in bankC4_4000)",src/bankC4_4000.asm
+$C436DD,WingZoneSpots,DATA8_C436DD,code,"the same 32 bytes as 94S asswingo's local table .9 (a0 = .9 by zone d2); asswingo reads it in 95",src/bankC4_3000.asm
+$C44CDD,TwoThirds,DATA8_C44CDD,code,"the same 96 bytes as 94S checkpuckcoll_ccx's local .8 ('index * 2 / 3, rounded'); PuckCollisionStickRange reads it",src/bankC4_4000.asm
 $C45519,DATA8_C45519,,new,"not traced: a table read by CODE_C45413 (in bankC4_5000)",src/bankC4_5000.asm
 $C45ACD,PlayerAccOneFrame,DATA8_C45ACD,code,"playeracc jumps through it by d2 when d7 = 1",src/bankC4_5000.asm
 $C45ADD,PlayerAccFrames,DATA8_C45ADD,code,"playeracc jumps through it by d2 otherwise; its routines add the step at $0D80,x twice where PlayerAccOneFrame's add it once",src/bankC4_5000.asm
 $C45C7D,DATA8_C45C7D,,new,"jump table: the routine for each index (in bankC4_5000)",src/bankC4_5000.asm
 $C4692F,DATA8_C4692F,,new,"not traced: a table read by CODE_C45FAC, CODE_C46075, CODE_C4615F, ... (in bankC4_6000)",src/bankC4_6000.asm
 $C4693F,DATA8_C4693F,,new,"not traced: a table read by CODE_C46075, CODE_C4615F, CODE_C4624F, ... (in bankC4_6000)",src/bankC4_6000.asm
-$C46B26,DATA8_C46B26,,new,"not traced: a table read by CODE_C46A53 (in bankC4_6000)",src/bankC4_6000.asm
-$C46DB0,DATA8_C46DB0,,new,"jump table: the routine for each index (in bankC4_6000)",src/bankC4_6000.asm
-$C46F93,DATA8_C46F93,,new,"jump table: the routine for each index (in bankC4_6000)",src/bankC4_6000.asm
+$C46B26,TurnSteps,DATA8_C46B26,code,"the same 16 bytes as 94S doplayeracc's local .10 ('steps for eight directions'); doplayeracc reads it",src/bankC4_6000.asm
+$C46DB0,AvoidGoalHandlers,DATA8_C46DB0,code,"94S avdgoal's jsr (.26,x) table, the same layout; its entries are the AvoidGoal handlers; avdgoal calls through it",src/bankC4_6000.asm
+$C46F93,GoalieAvoidHandlers,DATA8_C46F93,code,"94S avdgoal's second jsr table (.47), the same layout; its entries are the GoalieAvoid handlers",src/bankC4_6000.asm
 $C48B47,DATA8_C48B47,,new,"not traced: data between routines (in bankC4_8000)",src/bankC4_8000.asm
 $C4883F,rtss,,94S,"an rtl that asstab entry 0 points at (no assignment); 94S rtss is the same (entry 0 is 0 in the 94 and the 95 Genesis order); also passed as a long pointer to CODE_C45950",src/bankC4_8000.asm
 $C4932C,DATA8_C4932C,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
-$C49B35,DATA8_C49B35,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
+$C49B35,doshot_shotsets,DATA8_C49B35,94S+code,"the same 36 bytes as 94S doshot_shotsets (routines/input/doshot_shotsets.asm); no reference in the traced 95 code",src/bankC4_9000.asm
 $C49B66,DATA8_C49B66,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
 $C49C87,DATA8_C49C87,,new,"not traced: a table read by CODE_C49BE0 (in bankC4_9000)",src/bankC4_9000.asm
 $C49CC3,DATA8_C49CC3,,new,"not traced: a table read by CODE_C49C88 (in bankC4_9000)",src/bankC4_9000.asm
 $C49DBC,DATA8_C49DBC,,new,"not traced: a table read by CODE_C49D8D (in bankC4_9000)",src/bankC4_9000.asm
 $C49DBF,DATA8_C49DBF,,new,"not traced: a table read by CODE_C49DB0 (in bankC4_9000)",src/bankC4_9000.asm
 $C49E41,DATA8_C49E41,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
-$C4A5FD,DATA8_C4A5FD,,new,"not traced: a table read by CODE_C4A52A (in bankC4_A000)",src/bankC4_A000.asm
-$C4A615,DATA8_C4A615,,new,"not traced: a table read by CODE_C4A52A (in bankC4_A000)",src/bankC4_A000.asm
-$C4A62D,DATA8_C4A62D,,new,"not traced: a table read by CODE_C4A52A (in bankC4_A000)",src/bankC4_A000.asm
-$C4A645,DATA8_C4A645,,new,"not traced: a table read by CODE_C4A52A (in bankC4_A000)",src/bankC4_A000.asm
+$C4A5FD,DumpInSpreadX,DATA8_C4A5FD,code,"the same 24 bytes as 94S assdumpin's local .6 ('by target: the x spread'); LaunchDumpIn reads it",src/bankC4_A000.asm
+$C4A615,DumpInSpreadY,DATA8_C4A615,code,"the same 24 bytes as 94S assdumpin's local .7 ('by target: the y spread'); LaunchDumpIn reads it",src/bankC4_A000.asm
+$C4A62D,DumpInTargetX,DATA8_C4A62D,code,"the same 24 bytes as 94S assdumpin's local .8 ('by target: x'); LaunchDumpIn adds it",src/bankC4_A000.asm
+$C4A645,DumpInTargetY,DATA8_C4A645,code,"the same 24 bytes as 94S assdumpin's local .ytab; LaunchDumpIn adds it",src/bankC4_A000.asm
 $C4B35D,DATA8_C4B35D,,new,"not traced: a table read by CODE_C4B32D (in bankC4_B000)",src/bankC4_B000.asm
 $C4BAD6,TextPalettes,DATA8_C4BAD6,code,"32 bytes; InitTextMap queues Y * 8 of them",src/bankC4_B000.asm
 $C4C07D,DATA8_C4C07D,,new,"the 8 routines CODE_C4BF1A runs (address - 1: pushed, then rts) (in bankC4_C000)",src/bankC4_C000.asm
 $C4C420,DATA8_C4C420,,new,"not traced: a table read by CODE_C4C419 (in bankC4_C000)",src/bankC4_C000.asm
-$C4C4A6,DATA8_C4C4A6,,new,"not traced: data between routines (in bankC4_C000)",src/bankC4_C000.asm
+$C4C4A6,ByteBitMasks,DATA8_C4C4A6,94S+code,"the same 8 bytes as 94S data/tables/ByteBitMasks; read by DrawGameMarks, GamesTodayKeys, MenuPlayGames and the save bit writers",src/bankC4_C000.asm
 $C4C4AE,DATA8_C4C4AE,,new,"not traced: a table read by CODE_C4C08D (in bankC4_C000)",src/bankC4_C000.asm
 $C4C4B6,DATA8_C4C4B6,,new,"not traced: a table read by CODE_C4BEB1 (in bankC4_C000)",src/bankC4_C000.asm
 $C4C4D7,DATA8_C4C4D7,,new,"not traced: a table read by CODE_C4C349, CODE_C4BE99 (in bankC4_C000)",src/bankC4_C000.asm

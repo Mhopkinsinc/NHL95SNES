@@ -1005,7 +1005,7 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	jsl.l assreplace
 .rtl:								; return
 	rtl
-DATA8_C49B35:						; not traced: data between routines
+doshot_shotsets:					; x offset and height for each passdir (shot sets); no reader found
 	db $00,$00,$0C,$00,$0F,$00,$0C,$00,$0F,$00,$06,$00,$0F,$00,$00,$00
 	db $00,$00,$00,$00,$F1,$FF,$00,$00,$F1,$FF,$06,$00,$F1,$FF,$0C,$00
 	db $00,$00,$06,$00
