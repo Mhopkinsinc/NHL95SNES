@@ -1116,7 +1116,7 @@ updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from 
 	ply
 	plx
 	stz.w FrameCount
-	stz.b $48
+	stz.b gameframes
 	rtl
 PracticeFaceoffDrop:				; practice mode's drop (OptPlayMode 1): the puck still at the face off
 									; spot (fox / foy), then each team's first free pad takes its goalie

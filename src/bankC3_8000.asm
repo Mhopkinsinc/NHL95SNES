@@ -349,7 +349,7 @@ StartBenchCheer:					; an rtl: called where 94S starts the bench cheer
 UpdateBenchCheer:					; an rtl: called where 94S updates the bench cheer
 	rtl
 UpdateGameObjectSprites:			; queue changed player frames and build sorted object sprites
-	lda.b $48
+	lda.b gameframes
 	lsr a
 	bcc .1
 	jmp.w .8

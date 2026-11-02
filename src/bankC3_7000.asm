@@ -460,10 +460,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	bit.w pausepad
 	bpl .1
 	stz.w pausepad
-.1:									; $2CDF = $48, $2CE1 = 0, Crowdlevel = $0000, A = $0800, ...
-	lda.b $48
-	sta.w $2CDF
-	stz.w $2CE1
+.1:									; SavedGameframes = gameframes, ReplayGameframes = 0, ...
+	lda.b gameframes
+	sta.w SavedGameframes
+	stz.w ReplayGameframes
 	lda.w #$0000
 	sta.l Crowdlevel
 	lda.w #$0800
@@ -577,8 +577,8 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	lda.w recbpr
 	sta.b a4
 	pea.w $0000
-.loop3:								; loop: $2CE1 - 1, call suba4, pull A, A + 1, ...
-	dec.w $2CE1
+.loop3:								; loop: ReplayGameframes - 1, call suba4, pull A, A + 1, ...
+	dec.w ReplayGameframes
 	jsl.l suba4
 	pla
 	inc a
@@ -588,10 +588,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	pla
 	lsr a
 	pha
-.loop4:								; loop: if $01,s = 0 go to .3, $2CE1 + 1, call adda4, pull A, ...
+.loop4:								; loop: if $01,s = 0 go to .3, ReplayGameframes + 1, call adda4, ...
 	lda.b $01,s
 	beq .3
-	inc.w $2CE1
+	inc.w ReplayGameframes
 	jsl.l adda4
 	pla
 	dec a
@@ -760,7 +760,7 @@ UpdateReplayCamera:					; track the replay camera, render the frame and continue
 	jsl.l WaitTransfers
 	stz.w replaynewframe
 ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
-	inc.w $2CE1
+	inc.w ReplayGameframes
 	ldx.b d7
 	bne .1
 	inx
@@ -1118,9 +1118,9 @@ ProcessReplayPlayback:				; handle replay stepping, play toggle and exit
 	cmp.w #$0002
 	bcc .19
 	jmp.w .19
-.19:								; $48 = $2CDF, return
-	lda.w $2CDF
-	sta.b $48
+.19:								; gameframes = SavedGameframes, return
+	lda.w SavedGameframes
+	sta.b gameframes
 	rtl
 suba4:								; from ReplayMode, ProcessReplayPlayback and other segments
 	lda.b a4
@@ -1707,8 +1707,8 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	sta.b d1
 	rtl
 RenderReplayFrame:					; build the replay frame sprites and queue display updates
-	lda.w $2CE1
-	sta.b $48
+	lda.w ReplayGameframes
+	sta.b gameframes
 	sta.b $26
 	jsl.l updatescroll
 	jsl.l DrawPlayerTags

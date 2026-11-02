@@ -233,13 +233,13 @@ Gameloop:							; the game loop: frame counts and the speed, a random team song,
 	bne .2
 	inc a
 	inx
-.2:									; push X, push A, A = $003C, X = $48, ...
+.2:									; push X, push A, A = $003C, X = gameframes, ...
 	phx
 	pha
 	lda.w #$003C
-	ldx.b $48
+	ldx.b gameframes
 	inx
-	stx.b $48
+	stx.b gameframes
 	stx.b $26
 	jsl.l Mul16x8U
 	lda.w FrameCount

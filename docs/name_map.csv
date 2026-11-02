@@ -8799,3 +8799,6 @@ $2020,FaceoffSpriteLeft,,code,"RAM: puckfaceoff2 creates it (sprite $1E) at fodr
 $2022,FaceoffSpriteRight,,code,"RAM: puckfaceoff2 creates it $59 right of FaceoffSpriteLeft with the team sprite palette and flips it; stopped when the centre with pfgoal 0 (fodir1) pulls; updatefaceoff deletes it",src/ram95s.asm
 $2024,FaceoffBoxBuf,,code,"RAM: puckfaceoff2 allocates $A00 bytes, unpacks FaceOffMap there and adds tile base $3E32; QueueFaceoffBox queues frame A from here; updatefaceoff puts it back in WorkBufMark (frees it)",src/ram95s.asm
 $2026,FaceoffBoxVRAM,,code,"RAM: puckfaceoff2 sets it from fodropx; QueueFaceoffBox sends the box frames there",src/ram95s.asm
+$0048,gameframes,,94S+code,"RAM: 94S Gameloop adds 1 to gameframes and sets gamefps = 60 * gameframes / FrameCount; 95 Gameloop does the same with dp $48 (and copies it to dp $26); updatefaceoff clears it with FrameCount as 94S does",src/ram95s.asm
+$2CDF,SavedGameframes,,code,"RAM: ReplayMode stores gameframes here at the start and puts it back at the exit; 95 only",src/ram95s.asm
+$2CE1,ReplayGameframes,,code,"RAM: ReplayMode clears it; its adda4 / suba4 steps move it with the record pointer and ReadReplayCameraInput adds 1; RenderReplayFrame copies it to gameframes and dp $26; 95 only",src/ram95s.asm
