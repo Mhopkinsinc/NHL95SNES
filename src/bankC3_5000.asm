@@ -180,33 +180,33 @@ ControllerSetupPage:				; the Controller Setup text page (ControllerSetupScreen)
 	db $C9,$47,$02,$00,$00,$00
 PracPlayerValues:					; the Home / Visitor Players values: a count (6), then texts Zero ... Five
 	dw 6
-	dw $4899,$489D,$48A1,$48A5,$48AA,$48AE
+	dw TxtZero&$FFFF,TxtOne&$FFFF,TxtTwo&$FFFF,TxtThree&$FFFF,TxtFour&$FFFF,TxtFive&$FFFF
 PenaltyValues:						; the Penalties values: a count (3), then texts Off, On, No Offsides
 	dw 3
-	dw $487F,$487C,$4B4D
+	dw TxtOff&$FFFF,TxtOn&$FFFF,TxtNoOffsides&$FFFF
 UserRecordValues:					; the User Records values: a count (2), then texts Off, On
 	dw 2
-	dw $487F,$487C
+	dw TxtOff&$FFFF,TxtOn&$FFFF
 LineChangeValues:					; the Line Changes values: a count (3), then texts Off, On, Automatic
 	dw 3
-	dw $487F,$487C,$4875
+	dw TxtOff&$FFFF,TxtOn&$FFFF,TxtAutomatic&$FFFF
 RosterValues:						; the Rosters values: a count (2), then texts Default, With Trades
 	dw 2
-	dw $478B,$4791
+	dw TxtDefault&$FFFF,TxtWithTrades&$FFFF
 GoalieValues:						; the Goalies values: a count (2), then texts Automatic, Manual
 	dw 2
-	dw $4875,$4870
+	dw TxtAutomatic&$FFFF,TxtManual&$FFFF
 PlayoffValues:						; the Playoffs values: a count (2), then texts Single Game and a multi
 									; game series
 	dw 2
-	dw $48C0,$48CA
+	dw TxtSingleGame&$FFFF,TxtMultiGame&$FFFF
 PlayModeValues:						; the Play Mode values: a count (7), then the play mode texts
 	dw 7
-	dw $481F,$4827,$482E,$4833,$4843,$4850,$48E4
+	dw TxtExhibition&$FFFF,TxtPractice&$FFFF,TxtSeason&$FFFF,TxtTrades&$FFFF,TxtFreeAgent&$FFFF,TxtRelease&$FFFF,TxtMakePlayer&$FFFF
 	db $02,$00,$55,$49,$51,$49
 PeriodLengthValues:					; the Period Length values: a count (3), then texts 5, 10, 20 Minutes
 	dw 3
-	dw $4856,$485E,$4867
+	dw Txt5Minutes&$FFFF,Txt10Minutes&$FFFF,Txt20Minutes&$FFFF
 TeamValues:							; the team lines' values: a count (28), then TeamCityNames
 	dw 28
 TeamCityNames:						; per team (A * 2): the address of its city name (packed text, bank $C3),
@@ -270,50 +270,50 @@ TeamCityNames:						; per team (A * 2): the address of its city name (packed tex
 ExhibitionOptions:					; the Exhibition setup lines: a count, then per line its title text, value
 									; list, variable and routine
 	dw 9
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
-	dw $47D9,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
-	dw $47E2,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
-	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
-	dw $47F8,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
-	dw $47FE,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
-	dw $4808,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
-	dw $480F,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
-	dw $4819,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtHomeTeam&$FFFF,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
+	dw TxtVisitingTeam&$FFFF,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+	dw TxtPeriodLength&$FFFF,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw TxtGoalies&$FFFF,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
+	dw TxtUserRecords&$FFFF,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
+	dw TxtPenalties&$FFFF,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
+	dw TxtLineChanges&$FFFF,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
+	dw TxtRosters&$FFFF,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
 SeasonOptionLines:					; the Season setup lines: a count, then title, value list, variable,
 									; routine per line
 	dw 7
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
-	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
-	dw $47F8,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
-	dw $4808,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
-	dw $480F,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
-	dw $48B2,PlayoffValues&$FFFF,OptPlayoffs,SaveOptPlayoffs&$FFFF
-	dw $47FE,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtPeriodLength&$FFFF,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw TxtGoalies&$FFFF,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
+	dw TxtPenalties&$FFFF,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
+	dw TxtLineChanges&$FFFF,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
+	dw TxtPlayoffs&$FFFF,PlayoffValues&$FFFF,OptPlayoffs,SaveOptPlayoffs&$FFFF
+	dw TxtUserRecords&$FFFF,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
 TradeOptions:						; the Trades setup lines: a count, then title, value list, variable,
 									; routine per line
 	dw 3
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
-	dw $48D4,TeamValues&$FFFF,HomeTeam,TradeTeam1Hook&$FFFF
-	dw $48DA,TeamValues&$FFFF,VisTeam,TradeTeam2Hook&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtTeam1&$FFFF,TeamValues&$FFFF,HomeTeam,TradeTeam1Hook&$FFFF
+	dw TxtTeam2&$FFFF,TeamValues&$FFFF,VisTeam,TradeTeam2Hook&$FFFF
 FreeAgentOptions:					; the Free Agent and Release setup lines: a count, then title, value list,
 									; variable, routine
 	dw 2
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
-	dw $48E0,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtTeam&$FFFF,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
 MakePlayerOptions:					; the Make Player setup lines: the Play Mode line only (a count of 1, then
 									; its row)
 	dw 1
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
 PracticeOptions:					; the Practice setup lines: a count, then title, value list, variable,
 									; routine per line
 	dw 7
-	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
-	dw $4883,PracPlayerValues&$FFFF,homepracplayers,SaveOptHomePracPlayers&$FFFF
-	dw $488D,PracPlayerValues&$FFFF,awaypracplayers,SaveOptAwayPracPlayers&$FFFF
-	dw $47D9,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
-	dw $47E2,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
-	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
-	dw $4819,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
+	dw TxtPlayMode&$FFFF,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw TxtHomePlayers&$FFFF,PracPlayerValues&$FFFF,homepracplayers,SaveOptHomePracPlayers&$FFFF
+	dw TxtVisitorPlayers&$FFFF,PracPlayerValues&$FFFF,awaypracplayers,SaveOptAwayPracPlayers&$FFFF
+	dw TxtHomeTeam&$FFFF,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
+	dw TxtVisitingTeam&$FFFF,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+	dw TxtPeriodLength&$FFFF,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw TxtRosters&$FFFF,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
 	db $01,$00,$58,$49,$4C,$58,$02,$19,$00,$00,$05,$00,$00,$00,$6E,$59
 	db $00,$00,$7A,$59,$00,$00,$87,$59,$00,$00,$9E,$59,$46,$53,$00,$00
 	db $03,$00,$00,$00,$6E,$59,$00,$00,$7A,$59,$00,$00,$9E,$59,$03,$00

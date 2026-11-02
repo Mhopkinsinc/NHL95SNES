@@ -76,5 +76,6 @@ Pausemode_menu_resume = $C54EF1
 ChangeGoaliePage = $C35395
 EditLinesPage = $C3537F
 RecordHoldersPage = $C3545F
+TxtGoalies = $C347F8
 
 incsrc "../bankC5_7000.asm"

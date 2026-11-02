@@ -70,29 +70,104 @@ Penaltylist:						; per penalty number, the offset (from here) of its record: tw
 	db $ED,$79,$88,$06,$DC,$AD,$B1,$25,$01,$D2,$B5,$6D,$D1,$5A,$3B,$90
 	db $BD,$9C,$9C,$BE,$1A,$82,$BB,$36,$51,$A3,$64,$73,$C7,$D7,$D0,$92
 	db $4F,$10,$E7,$E6,$8D,$13,$AB,$01,$92,$00,$E9,$DA,$7E,$0B,$60,$57
-	db $8A,$D4,$8D,$BB,$B9,$39,$E0,$15,$A0,$E5,$AB,$01,$83,$93,$02,$E8
-	db $9A,$1A,$96,$A3,$79,$36,$9F,$3C,$82,$41,$A4,$06,$16,$C4,$86,$9A
+	db $8A,$D4,$8D,$BB,$B9,$39,$E0,$15,$A0,$E5,$AB,$01
+TxtDefault:							; the packed text "Default"
+	db $83,$93,$02,$E8
+	db $9A,$1A
+TxtWithTrades:						; the packed text "With Trades"
+	db $96,$A3,$79,$36,$9F,$3C,$82,$41,$A4,$06,$16,$C4,$86,$9A
 	db $F1,$D7,$60,$73,$03,$18,$D9,$8C,$CA,$B9,$03,$D1,$5C,$92,$45,$C4
-	db $24,$C3,$57,$03,$8E,$2B,$80,$35,$8F,$2F,$80,$37,$67,$DC,$0D,$A2
+	db $24,$C3,$57,$03,$8E,$2B,$80,$35
+TxtPlayMode:						; the packed text "Play Mode"
+	db $8F,$2F,$80,$37,$67,$DC,$0D,$A2
 	db $01,$86,$03,$46,$36,$97,$9C,$4C,$FA,$34,$82,$BB,$36,$A3,$5B,$8B
-	db $C4,$CD,$25,$27,$93,$3E,$0D,$55,$FA,$6A,$87,$3B,$46,$36,$9F,$9C
-	db $00,$A6,$01,$95,$23,$89,$26,$6A,$66,$F3,$C9,$09,$60,$1A,$8F,$93
-	db $88,$DC,$D8,$7C,$71,$D2,$CC,$3C,$1A,$86,$3B,$B0,$10,$91,$1A,$94
-	db $4B,$12,$37,$8F,$9C,$08,$17,$87,$D4,$8F,$93,$06,$D6,$44,$44,$6A
-	db $8B,$A3,$46,$36,$17,$FC,$80,$66,$88,$D4,$91,$3B,$39,$49,$94,$1A
-	db $84,$DF,$83,$02,$9A,$C8,$35,$0D,$8F,$47,$20,$26,$12,$44,$03,$92
-	db $13,$20,$5D,$D3,$93,$47,$30,$88,$D4,$93,$47,$30,$C8,$E6,$8F,$2F
-	db $80,$49,$94,$1A,$85,$47,$42,$36,$07,$DC,$90,$36,$35,$BC,$44,$42
-	db $34,$91,$93,$45,$80,$24,$1A,$BD,$9B,$71,$D4,$E8,$24,$52,$03,$3D
-	db $1D,$9B,$71,$D4,$E8,$24,$52,$03,$5D,$1D,$9B,$71,$D4,$E8,$24,$52
-	db $03,$8C,$83,$46,$C1,$D2,$80,$D3,$E9,$18,$98,$48,$68,$8E,$37,$0D
-	db $8E,$97,$A2,$01,$87,$3B,$46,$36,$7F,$7C,$01,$4C,$A2,$D4,$95,$23
-	db $89,$A6,$8B,$9B,$3F,$BE,$00,$26,$51,$6A,$99,$93,$E8,$34,$8E,$37
-	db $A2,$01,$93,$5B,$A7,$01,$93,$9F,$48,$88,$06,$85,$3B,$1A,$35,$85
-	db $A3,$4A,$34,$8F,$2F,$80,$5D,$29,$52,$03,$88,$B7,$44,$23,$22,$52
-	db $03,$92,$A3,$66,$16,$D9,$DC,$70,$C0,$88,$06,$8C,$D3,$35,$91,$37
-	db $37,$1C,$30,$A2,$01,$93,$13,$C0,$76,$8F,$06,$93,$13,$C0,$76,$97
-	db $06,$93,$13,$C0,$34,$8C,$03,$45,$36,$7F,$7C,$01,$4C,$A2,$06,$82
+	db $C4,$CD,$25,$27,$93,$3E,$0D,$55,$FA,$6A
+TxtHomeTeam:						; the packed text "Home Team"
+	db $87,$3B,$46,$36,$9F,$9C
+	db $00,$A6,$01
+TxtVisitingTeam:					; the packed text "Visiting Team"
+	db $95,$23,$89,$26,$6A,$66,$F3,$C9,$09,$60,$1A
+TxtPeriodLength:					; the packed text "Period Length"
+	db $8F,$93
+	db $88,$DC,$D8,$7C,$71,$D2,$CC,$3C,$1A
+TxtGoalies:							; the packed text "Goalies"
+	db $86,$3B,$B0,$10,$91,$1A
+TxtUserRecords:						; the packed text "User Records"
+	db $94
+	db $4B,$12,$37,$8F,$9C,$08,$17,$87,$D4
+TxtPenalties:						; the packed text "Penalties"
+	db $8F,$93,$06,$D6,$44,$44,$6A
+TxtLineChanges:						; the packed text "Line Changes"
+	db $8B,$A3,$46,$36,$17,$FC,$80,$66,$88,$D4
+TxtRosters:							; the packed text "Rosters"
+	db $91,$3B,$39,$49,$94,$1A
+TxtExhibition:						; the packed text "Exhibition"
+	db $84,$DF,$83,$02,$9A,$C8,$35,$0D
+TxtPractice:						; the packed text "Practice"
+	db $8F,$47,$20,$26,$12,$44,$03
+TxtSeason:							; the packed text "Season"
+	db $92
+	db $13,$20,$5D,$D3
+TxtTrades:							; the packed text "Trades"
+	db $93,$47,$30,$88,$D4,$93,$47,$30,$C8,$E6,$8F,$2F
+	db $80,$49,$94,$1A
+TxtFreeAgent:						; the packed text "Free Agent"
+	db $85,$47,$42,$36,$07,$DC,$90,$36,$35,$BC,$44,$42
+	db $34
+TxtRelease:							; the packed text "Release"
+	db $91,$93,$45,$80,$24,$1A
+Txt5Minutes:						; the packed text "5 Minutes"
+	db $BD,$9B,$71,$D4,$E8,$24,$52,$03
+Txt10Minutes:						; the packed text "10 Minutes"
+	db $3D
+	db $1D,$9B,$71,$D4,$E8,$24,$52,$03
+Txt20Minutes:						; the packed text "20 Minutes"
+	db $5D,$1D,$9B,$71,$D4,$E8,$24,$52
+	db $03
+TxtManual:							; the packed text "Manual"
+	db $8C,$83,$46,$C1,$D2
+TxtAutomatic:						; the packed text "Automatic"
+	db $80,$D3,$E9,$18,$98,$48,$68
+TxtOn:								; the packed text "On"
+	db $8E,$37,$0D
+TxtOff:								; the packed text "Off"
+	db $8E,$97,$A2,$01
+TxtHomePlayers:						; the packed text "Home Players"
+	db $87,$3B,$46,$36,$7F,$7C,$01,$4C,$A2,$D4
+TxtVisitorPlayers:					; the packed text "Visitor Players"
+	db $95,$23
+	db $89,$A6,$8B,$9B,$3F,$BE,$00,$26,$51,$6A
+TxtZero:							; the packed text "Zero"
+	db $99,$93,$E8,$34
+TxtOne:								; the packed text "One"
+	db $8E,$37
+	db $A2,$01
+TxtTwo:								; the packed text "Two"
+	db $93,$5B,$A7,$01
+TxtThree:							; the packed text "Three"
+	db $93,$9F,$48,$88,$06
+TxtFour:							; the packed text "Four"
+	db $85,$3B,$1A,$35
+TxtFive:							; the packed text "Five"
+	db $85
+	db $A3,$4A,$34
+TxtPlayoffs:						; the packed text "Playoffs"
+	db $8F,$2F,$80,$5D,$29,$52,$03,$88,$B7,$44,$23,$22,$52
+	db $03
+TxtSingleGame:						; the packed text "Single Game"
+	db $92,$A3,$66,$16,$D9,$DC,$70,$C0,$88,$06
+TxtMultiGame:						; the packed text "Multi>Game"
+	db $8C,$D3,$35,$91,$37
+	db $37,$1C,$30,$A2,$01
+TxtTeam1:							; the packed text "Team 1"
+	db $93,$13,$C0,$76,$8F,$06
+TxtTeam2:							; the packed text "Team 2"
+	db $93,$13,$C0,$76,$97
+	db $06
+TxtTeam:							; the packed text "Team"
+	db $93,$13,$C0,$34
+TxtMakePlayer:						; the packed text "Make Player"
+	db $8C,$03,$45,$36,$7F,$7C,$01,$4C,$A2,$06,$82
 	db $47,$02,$26,$D9,$FC,$F1,$05,$30,$89,$1A,$85,$A3,$28,$E7,$E6,$8D
 	db $03,$46,$FC,$35,$8B,$03,$39,$37,$6F,$1C,$30,$E2,$AF,$01,$20,$88
 	db $41,$8A,$39,$48,$03,$49,$2D,$D6,$DC,$83,$51,$03,$72,$D2,$6A,$2F
@@ -130,7 +205,9 @@ Penaltylist:						; per penalty number, the offset (from here) of its record: tw
 	db $A2,$DA,$DC,$70,$C0,$88,$06,$C1,$7F,$4B,$6E,$D1,$14,$67,$F3,$C9
 	db $09,$60,$52,$03,$0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$07,$07,$58
 	db $03,$0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$25,$9F,$60,$4A,$0D,$72
-	db $82,$38,$FD,$F7,$E2,$04,$18,$4A,$36,$67,$9C,$34,$AA,$01,$8D,$BB
+	db $82,$38,$FD,$F7,$E2,$04,$18,$4A,$36,$67,$9C,$34,$AA,$01
+TxtNoOffsides:						; the packed text "No Offsides"
+	db $8D,$BB
 	db $CD,$1D,$2F,$45,$A2,$41,$A4,$06,$8F,$2F,$80,$49,$DC,$7B,$EF,$BD
 	db $F7,$DE,$BC,$71,$E7,$BB,$F9,$E4,$CC,$57,$03,$86,$3B,$B0,$A4,$06
 	db $80,$4B,$89,$E4,$94,$1A,$8F,$3B,$D4,$A6,$D4,$92,$83,$4A,$A4,$06

@@ -23,7 +23,7 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 	sta.b $D1
 	lda.b $79
 	bne .1
-	ldx.w #$47F8
+	ldx.w #TxtGoalies&$FFFF
 	bra .2
 .1:									; A * 2, X = A, A = LineNames,x, X = A
 	asl a

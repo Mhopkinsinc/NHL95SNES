@@ -9030,3 +9030,43 @@ $C356F2,TradePlayersPage,,code,"PrintTextPage reads it (margins, title, then tex
 $C35714,CreatePlayerPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
 $C35746,PlayerInfoPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
 $C357FC,ControllerSetupPage,,code,"PrintTextPage reads it (margins, title, then text and row pairs); decoded with pages.py / textdec.py",src/bankC3_5000.asm
+$C3478B,TxtDefault,,code,"textdec.py decodes $478B to this text",src/bankC3_4000.asm
+$C34791,TxtWithTrades,,code,"textdec.py decodes $4791 to this text",src/bankC3_4000.asm
+$C347B7,TxtPlayMode,,code,"textdec.py decodes $47B7 to this text",src/bankC3_4000.asm
+$C347D9,TxtHomeTeam,,code,"textdec.py decodes $47D9 to this text",src/bankC3_4000.asm
+$C347E2,TxtVisitingTeam,,code,"textdec.py decodes $47E2 to this text",src/bankC3_4000.asm
+$C347ED,TxtPeriodLength,,code,"textdec.py decodes $47ED to this text",src/bankC3_4000.asm
+$C347F8,TxtGoalies,,code,"textdec.py decodes $47F8 to this text",src/bankC3_4000.asm
+$C347FE,TxtUserRecords,,code,"textdec.py decodes $47FE to this text",src/bankC3_4000.asm
+$C34808,TxtPenalties,,code,"textdec.py decodes $4808 to this text",src/bankC3_4000.asm
+$C3480F,TxtLineChanges,,code,"textdec.py decodes $480F to this text",src/bankC3_4000.asm
+$C34819,TxtRosters,,code,"textdec.py decodes $4819 to this text",src/bankC3_4000.asm
+$C3481F,TxtExhibition,,code,"textdec.py decodes $481F to this text",src/bankC3_4000.asm
+$C34827,TxtPractice,,code,"textdec.py decodes $4827 to this text",src/bankC3_4000.asm
+$C3482E,TxtSeason,,code,"textdec.py decodes $482E to this text",src/bankC3_4000.asm
+$C34833,TxtTrades,,code,"textdec.py decodes $4833 to this text",src/bankC3_4000.asm
+$C34843,TxtFreeAgent,,code,"textdec.py decodes $4843 to this text",src/bankC3_4000.asm
+$C34850,TxtRelease,,code,"textdec.py decodes $4850 to this text",src/bankC3_4000.asm
+$C34856,Txt5Minutes,,code,"textdec.py decodes $4856 to this text",src/bankC3_4000.asm
+$C3485E,Txt10Minutes,,code,"textdec.py decodes $485E to this text",src/bankC3_4000.asm
+$C34867,Txt20Minutes,,code,"textdec.py decodes $4867 to this text",src/bankC3_4000.asm
+$C34870,TxtManual,,code,"textdec.py decodes $4870 to this text",src/bankC3_4000.asm
+$C34875,TxtAutomatic,,code,"textdec.py decodes $4875 to this text",src/bankC3_4000.asm
+$C3487C,TxtOn,,code,"textdec.py decodes $487C to this text",src/bankC3_4000.asm
+$C3487F,TxtOff,,code,"textdec.py decodes $487F to this text",src/bankC3_4000.asm
+$C34883,TxtHomePlayers,,code,"textdec.py decodes $4883 to this text",src/bankC3_4000.asm
+$C3488D,TxtVisitorPlayers,,code,"textdec.py decodes $488D to this text",src/bankC3_4000.asm
+$C34899,TxtZero,,code,"textdec.py decodes $4899 to this text",src/bankC3_4000.asm
+$C3489D,TxtOne,,code,"textdec.py decodes $489D to this text",src/bankC3_4000.asm
+$C348A1,TxtTwo,,code,"textdec.py decodes $48A1 to this text",src/bankC3_4000.asm
+$C348A5,TxtThree,,code,"textdec.py decodes $48A5 to this text",src/bankC3_4000.asm
+$C348AA,TxtFour,,code,"textdec.py decodes $48AA to this text",src/bankC3_4000.asm
+$C348AE,TxtFive,,code,"textdec.py decodes $48AE to this text",src/bankC3_4000.asm
+$C348B2,TxtPlayoffs,,code,"textdec.py decodes $48B2 to this text",src/bankC3_4000.asm
+$C348C0,TxtSingleGame,,code,"textdec.py decodes $48C0 to this text",src/bankC3_4000.asm
+$C348CA,TxtMultiGame,,code,"textdec.py decodes $48CA to this text",src/bankC3_4000.asm
+$C348D4,TxtTeam1,,code,"textdec.py decodes $48D4 to this text",src/bankC3_4000.asm
+$C348DA,TxtTeam2,,code,"textdec.py decodes $48DA to this text",src/bankC3_4000.asm
+$C348E0,TxtTeam,,code,"textdec.py decodes $48E0 to this text",src/bankC3_4000.asm
+$C348E4,TxtMakePlayer,,code,"textdec.py decodes $48E4 to this text",src/bankC3_4000.asm
+$C34B4D,TxtNoOffsides,,code,"textdec.py decodes $4B4D to this text",src/bankC3_4000.asm

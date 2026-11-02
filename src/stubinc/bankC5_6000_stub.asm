@@ -60,5 +60,6 @@ Mul8U = $C08ED9
 WaitFrames_Inc = $C08D89
 PlayerStatsPage = $C3533B
 TeamRosterPage = $C35369
+TxtGoalies = $C347F8
 
 incsrc "../bankC5_6000.asm"

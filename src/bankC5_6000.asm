@@ -1132,7 +1132,7 @@ PrintStatHead:						; prints column title X centred on row $6D, highlighted ($24
 	sta.b $CF
 	rts
 PrintGoalieStatHeads:				; prints the goalie stats headings (Goalies, the column titles)
-	ldx.w #$47F8
+	ldx.w #TxtGoalies&$FFFF
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	lda.w #$0020
