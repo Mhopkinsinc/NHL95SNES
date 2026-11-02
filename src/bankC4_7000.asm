@@ -174,9 +174,9 @@ assscore:							; assignment (asstab entry 8): celebrate a goal
 	lda.b Vpos
 	sta.w temp4,x
 .5:									; $65 = $00C4, a0 = $883F, d0 = temp3,x, d1 = temp4,x, ...
-	lda.w #$00C4
+	lda.w #rtss>>16
 	sta.b $65
-	lda.w #$883F
+	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w temp3,x
 	sta.b d0
@@ -274,9 +274,9 @@ checkfornewpen:						; from PenaltyManager and other segments
 	bit.w #$0004
 	bne .5
 	sty.b d0
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -325,9 +325,9 @@ checkfornewpen:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -505,9 +505,9 @@ chkprogress:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	clc
 	adc.b [a1],y
@@ -615,9 +615,9 @@ chkprogress:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -1102,9 +1102,9 @@ AddPenalty2:						; from AddPenalty and other segments
 	and.w #$FF00
 	ora.b d0
 	sta.b (a1)
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $65
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a0
 	ldy.b d0
 	clc
@@ -1164,9 +1164,9 @@ PenGoalStuff:						; called from other segments
 	jmp.w .5
 .1:									; Y = A, $69 = $00C3, a1 = $4499, A = [a1],y, ...
 	tay
-	lda.w #$00C3
+	lda.w #Penaltylist>>16
 	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -1632,9 +1632,9 @@ asspenalty:							; called from other segments
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
+	lda.w #rtss>>16
 	sta.b $65
-	lda.w #$883F
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jml.l skateto
 .4:									; A = Ypos,x, A - temp4,x, if A - $FFF3 < 0 go to .3, ...

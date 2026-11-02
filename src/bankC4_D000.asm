@@ -497,9 +497,9 @@ TitleHoldTextPage:					; holds the title text page, then starts its fade to blac
 	lda.b d4
 	ldy.w #$0000
 	jsl.l FillWords7E
-	lda.w #$00C4
+	lda.w #TextPalettes>>16
 	sta.b $71
-	lda.w #$BAD6
+	lda.w #TextPalettes&$FFFF
 	sta.b a3
 	ldx.w #$007E
 	lda.b d4

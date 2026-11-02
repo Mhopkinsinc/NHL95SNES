@@ -52,5 +52,6 @@ QueueVRAMDMALen = $C58A15
 SongLists = $CF05D4
 priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
 sublist = $C09AC0					; substitute lists by position (bankC0_A000)
+EvadePC = $C4342A
 
 incsrc "../bankC5_4000.asm"

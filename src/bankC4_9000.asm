@@ -835,9 +835,9 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	asl a
 	asl a
 	tay
-	lda.w #$9B35
+	lda.w #doshot_shotsets&$FFFF
 	sta.b a0
-	lda.w #$00C4
+	lda.w #doshot_shotsets>>16
 	sta.b $65
 	lda.b [a0],y
 	sec
@@ -1005,7 +1005,8 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	jsl.l assreplace
 .rtl:								; return
 	rtl
-doshot_shotsets:					; x offset and height for each passdir (shot sets); no reader found
+doshot_shotsets:					; x offset and height for each passdir (shot sets), read by doshot through
+									; a0
 	db $00,$00,$0C,$00,$0F,$00,$0C,$00,$0F,$00,$06,$00,$0F,$00,$00,$00
 	db $00,$00,$00,$00,$F1,$FF,$00,$00,$F1,$FF,$06,$00,$F1,$FF,$0C,$00
 	db $00,$00,$06,$00

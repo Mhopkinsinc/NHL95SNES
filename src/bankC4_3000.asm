@@ -243,9 +243,9 @@ DefenceSkateAndCheck:				; skate the defender to the saved target and look for a
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
+	lda.w #rtss>>16
 	sta.b $65
-	lda.w #$883F
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
 	jmp.w check4check
@@ -536,9 +536,9 @@ DefensiveWingUseLimit:				; use the selected depth limit as the defensive wing t
 	lda.b d2
 	sta.b d1
 DefensiveWingSkate:					; finish the defensive wing lateral target and skate there
-	lda.w #$00C4
+	lda.w #rtss>>16
 	sta.b $65
-	lda.w #$883F
+	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w puckx
 	eor.b d0

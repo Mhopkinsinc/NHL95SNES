@@ -27,5 +27,9 @@ check4bench = $C549A8
 getpde = $C54A0E
 setpde = $C54A2F
 Mul8XS = $C08EEC
+EvadePC = $C4342A
+asspuckc_postab = $C09A98
+dirtab = $C09C04
+rtss = $C4883F
 
 incsrc "../bankC4_2000.asm"

@@ -53,5 +53,6 @@ FadeOutWait = $C58A99
 QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
 FaceOffMap = $C1CFE2
+rtss = $C4883F
 
 incsrc "../bankC4_3000.asm"

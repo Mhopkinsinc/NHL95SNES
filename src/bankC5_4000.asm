@@ -889,9 +889,9 @@ assbench:							; asstab entry 12: an assignment routine
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
+	lda.w #EvadePC>>16
 	sta.b $65
-	lda.w #$342A
+	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
 .18:								; A = pflags,x, A and $EFFF, pflags,x = A

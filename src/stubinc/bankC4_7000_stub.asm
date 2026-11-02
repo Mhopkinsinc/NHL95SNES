@@ -51,5 +51,7 @@ Mul16S = $C09035
 Mul16x8XS = $C08F95
 Mul8U = $C08ED9
 QueueVRAMDMALen = $C58A15
+Penaltylist = $C34499
+rtss = $C4883F
 
 incsrc "../bankC4_7000.asm"
