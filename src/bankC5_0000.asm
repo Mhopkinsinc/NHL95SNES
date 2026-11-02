@@ -473,11 +473,11 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	jmp.w .33
 .13:								; if SPA,x is not $2708 go to .14, go to .44
 	lda.w SPA,x
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	bne .14
 	jmp.w .44
 .14:								; if A < $28F6 go to .15, go to .44
-	cmp.w #$28F6
+	cmp.w #SPAboardfront&$FFFF
 	bcc .15
 	jmp.w .44
 .15:								; if X is not $001C go to .16, if puckz = 0 go to .16, go to .33

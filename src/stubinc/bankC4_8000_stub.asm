@@ -50,5 +50,10 @@ QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
 priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
 assgoalie_list = $C4932C
+SPAgdive = $C41552
+SPAgready = $C4121E
+SPAgskate = $C414C0
+SPAinjury1 = $C42708
+SPAshotf = $C41C24
 
 incsrc "../bankC4_8000.asm"

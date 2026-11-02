@@ -161,7 +161,7 @@ PutSmallPiece2:						; the second 8 x 8 piece's sprite (x $E9 / y $F1), then Put
 	bcc .2
 	inx
 	and.w #$00FF
-.1:									; if A >= $0100 go to .2, tmp0 = A, A = $F1, A + $0C, if plus go to .3,
+.1:									; if A >= $0100 go to .2, tmp0 = A, A = $F1, A + $0C, ...
 									; ...
 	cmp.w #$0100
 	bcs .2

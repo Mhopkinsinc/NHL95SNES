@@ -26,10 +26,10 @@ ResetTeamPlayers:					; resets team a2: its flag $0010 cleared, then for its 6 p
 	lda.w position,x
 	bmi .5
 	bne .3
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .4
 .3:									; A = $1958
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 .4:									; call SetSPAFromA, impact,x = 0, nopuck,x = 0, A = pflags,x, ...
 	jsl.l SetSPAFromA
 	stz.w impact,x
@@ -814,10 +814,10 @@ assbench:							; asstab entry 12: an assignment routine
 	bmi .10
 	jmp.w .17
 .10:								; A = $1958, if position,x is not 0 go to .11, A = $121E
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 	ldy.w position,x
 	bne .11
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 .11:								; call SetSPAFromA, pfnc,x = $0001, if facedir,x = $0004 go to .12, ...
 	jsl.l SetSPAFromA
 	lda.w #$0001
@@ -849,7 +849,7 @@ assbench:							; asstab entry 12: an assignment routine
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$18BE
+	lda.w #SPAwallright&$FFFF
 	jsl.l SetSPAFromA
 	lda.w #$0064
 	sta.w temp1,x
@@ -941,7 +941,7 @@ asseben:							; asstab entry 10: an assignment routine
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18EC
+	lda.w #SPAwallleft&$FFFF
 	jml.l SetSPAUpdate
 .rtl:								; return
 	rtl

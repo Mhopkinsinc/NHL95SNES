@@ -909,7 +909,7 @@ EndPenaltyShot:						; called from other segments
 .rtl:								; return
 	rtl
 goalieacc:							; called from other segments
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	sta.b d1
 	lda.b d0
 	and.w #$000F
@@ -947,16 +947,16 @@ goalieacc:							; called from other segments
 	ldy.w playerpad,x
 	bmi .5
 	lda.w SPA,x
-	cmp.w #$1552
+	cmp.w #SPAgdive&$FFFF
 	bcc .5
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	bcc .6
 .5:									; if d0 = facedir,x go to .8, d2 = A, A = $121E, call SetSPAFromA, ...
 	lda.b d0
 	cmp.w facedir,x
 	beq .8
 	sta.b d2
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	jsl.l SetSPAFromA
 	jmp.w .13
 .6:									; go to stopna
@@ -994,10 +994,10 @@ goalieacc:							; called from other segments
 	lda.w goalieflags,x
 	bit.w #$0002
 	bne .11
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .12
 .11:								; A = $14C0
-	lda.w #$14C0
+	lda.w #SPAgskate&$FFFF
 .12:								; call SetSPAFromA, d2 = facedir,x
 	jsl.l SetSPAFromA
 	lda.w facedir,x
@@ -1466,7 +1466,7 @@ GoalieCheckPadDirection:			; check manual goalie direction and stop when no dire
 GoalieUpdateState:					; update goalie animation, puck holding, saves and computer movement
 	lda.w pf2aip,x
 	bne .1
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	jsl.l SetSPAFromA
 .1:									; if gmclock is not 0 go to .rtl, if temp5,x < 0 go to .4, ...
 	lda.w gmclock
@@ -1701,7 +1701,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.b d0
 .26:								; facedir,x = A, Y = $1552, A = Y, call SetSPAFromA, ...
 	sta.w facedir,x
-	ldy.w #$1552
+	ldy.w #SPAgdive&$FFFF
 	tya
 	jsl.l SetSPAFromA
 	lda.w #$0168
@@ -2172,7 +2172,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	cmp.w pfteam,y
 	beq .83
 	lda.w SPA,y
-	cmp.w #$1C24
+	cmp.w #SPAshotf&$FFFF
 	bcc .82
 	cmp.w #$1EFB
 	bcs .82

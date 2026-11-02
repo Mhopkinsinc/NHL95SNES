@@ -42,5 +42,25 @@ getpde = $C54A0E
 setpde = $C54A2F
 MaxSpeed = $C09BC4
 DivX8S = $C09290
+SPAHold = $C4224E
+SPAHold2 = $C42280
+SPAbenchcheckr = $C42ADE
+SPAboardback = $C42970
+SPAboardfront = $C428F6
+SPAboardleft = $C42A64
+SPAboardright = $C429EA
+SPAburst = $C421BC
+SPAfallback = $C42448
+SPAfallfwd = $C42376
+SPAflail = $C42344
+SPAflip = $C42588
+SPAglide = $C41958
+SPAhook = $C42684
+SPAhook2 = $C422B2
+SPAinjury1 = $C42708
+SPAstop = $C41AEE
+SPAstumble = $C425D2
+SPAsweepchk = $C42082
+SPAwallleft = $C418EC
 
 incsrc "../bankC4_5000.asm"

@@ -187,12 +187,12 @@ assscore:							; assignment (asstab entry 8): celebrate a goal
 	sbc.b d7
 	sta.w temp1,x
 	bpl CelebrationSkate
-	lda.w #$2824
+	lda.w #SPAcelebrate&$FFFF
 	sta.b d1
 	sta.w pfalock,x
 	cpx.w shotplayer
 	bne .6
-	lda.w #$27B2
+	lda.w #SPApump2&$FFFF
 	sta.b d1
 	lda.w #$FFFF
 	sta.w shotplayer
@@ -1388,7 +1388,7 @@ assepen:							; assignment (asstab entry 11): leave the penalty box
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18EC
+	lda.w #SPAwallleft&$FFFF
 	jsl.l SetSPAFromA
 	jml.l SprSort
 .3:									; facedir,x = $0004, newpnum,x = $FFFF, newpos,x = A, A = pflags,x, ...
@@ -1666,7 +1666,7 @@ asspenalty:							; called from other segments
 	lda.w #$003C
 	sta.w nopuck,x
 .5:									; pfnc,x = $1958, call SetSPAFromA, d2 = $0006, ...
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 	sta.w pfnc,x
 	jsl.l SetSPAFromA
 	lda.w #$0006
@@ -1705,7 +1705,7 @@ asspenalty:							; called from other segments
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18BE
+	lda.w #SPAwallright&$FFFF
 	jsl.l SetSPAFromA
 	lda.w pflags,x
 	and.w #$BFFF

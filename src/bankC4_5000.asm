@@ -13,17 +13,17 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	cpy.w #$0018
 	bcs .rtl
 	lda.w SPA,y
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	beq .rtl
-	cmp.w #$25D2
+	cmp.w #SPAstumble&$FFFF
 	beq .rtl
-	cmp.w #$2376
+	cmp.w #SPAfallfwd&$FFFF
 	beq .rtl
-	cmp.w #$2448
+	cmp.w #SPAfallback&$FFFF
 	beq .rtl
-	cmp.w #$2588
+	cmp.w #SPAflip&$FFFF
 	beq .rtl
-	lda.w #$25D2
+	lda.w #SPAstumble&$FFFF
 	sta.b d1
 	lda.w gmclock
 	bne .2
@@ -108,7 +108,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bit.w #$0800
 	bne .14
 .11:								; A = $29EA, go to .15
-	lda.w #$29EA
+	lda.w #SPAboardright&$FFFF
 	bra .15
 .12:								; if Ypos,y - $00F0 >= 0 go to .8, if Ypos,y - $FF0A < 0 go to .8, ...
 	lda.w Ypos,y
@@ -134,7 +134,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bit.w #$0800
 	bne .11
 .14:								; A = $2A64
-	lda.w #$2A64
+	lda.w #SPAboardleft&$FFFF
 .15:								; X = a2, pfalock,x = A, call SetSPAUpdate, A = CwdExciteLvl, ...
 	ldx.b a2
 	sta.w pfalock,x
@@ -178,7 +178,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w #$0000
 	sta.w Yvel,y
 .20:								; A = $28F6, go to .15
-	lda.w #$28F6
+	lda.w #SPAboardfront&$FFFF
 	bra .15
 .21:								; if Xpos,y - $0050 >= 0 go to .23, if Xpos,y - $FFB0 < 0 go to .23, ...
 	lda.w Xpos,y
@@ -196,7 +196,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w #$0000
 	sta.w Yvel,y
 .22:								; A = $2970, go to .15
-	lda.w #$2970
+	lda.w #SPAboardback&$FFFF
 	jmp.w .15
 .23:								; go to .39
 	jmp.w .39
@@ -211,7 +211,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	jsl.l StartBenchCheer
 	lda.w #$0002
 	sta.w benchrounds
-	lda.w #$2448
+	lda.w #SPAfallback&$FFFF
 	sta.b d1
 	ldy.b a2
 	lda.b d0
@@ -221,7 +221,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	and.w #$0007
 	cmp.w #$0003
 	bcc .26
-	lda.w #$2376
+	lda.w #SPAfallfwd&$FFFF
 	sta.b d1
 	lda.w facedir,y
 	and.w #$0003
@@ -232,7 +232,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bmi .26
 	cpx.w #$0018
 	bcs .26
-	lda.w #$2588
+	lda.w #SPAflip&$FFFF
 	sta.b d1
 .26:								; X = a2, pfalock,x = $0001, call SetSPA, X = a3, ...
 	ldx.b a2
@@ -270,7 +270,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w position,x
 	beq .28
 	lda.w SPA,y
-	cmp.w #$2448
+	cmp.w #SPAfallback&$FFFF
 	bne .28
 	lda.w facedir,y
 	and.w #$0003
@@ -302,7 +302,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	adc.w #$0006
 	jsl.l StartBenchCheer
 	ldx.b a2
-	lda.w #$2708
+	lda.w #SPAinjury1&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -344,7 +344,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 .34:								; Y = a2, if SPA,y = $25D2 go to .35, puckc = $FFFF
 	ldy.b a2
 	lda.w SPA,y
-	cmp.w #$25D2
+	cmp.w #SPAstumble&$FFFF
 	beq .35
 	lda.w #$FFFF
 	sta.w puckc
@@ -377,7 +377,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$2ADE
+	lda.w #SPAbenchcheckr&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -560,17 +560,17 @@ CheckContactHold:					; apply the holding or hooking contact response
 CheckPlayerContact:					; resolve player X checking player a2 from their animations and impact
 	ldy.b a2
 	lda.w SPA,y
-	cmp.w #$224E
+	cmp.w #SPAHold&$FFFF
 	beq CheckContactHold
-	cmp.w #$2684
+	cmp.w #SPAhook&$FFFF
 	beq CheckContactHold
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bne .1
 	jmp.w Bcheck
 .1:									; if SPA,x is not $21BC go to CheckContactReturn, if gmclock = 0 go to .2,
 									; ...
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne CheckContactReturn
 	lda.w gmclock
 	beq .2
@@ -726,7 +726,7 @@ check4check:						; called from other segments
 	lda.w position,y
 	beq .4
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .3
 	cmp.w #$2345
 	bcc .5
@@ -776,7 +776,7 @@ check4check:						; called from other segments
 	bpl .10
 .6:									; if SPA,y < $2280 go to .7, if SPA,y < $2345 go to .11
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .7
 	cmp.w #$2345
 	bcc .11
@@ -800,7 +800,7 @@ check4check:						; called from other segments
 .11:								; go to burst
 	jml.l burst
 Sweepcheck:							; start a sweep check by player X
-	lda.w #$2082
+	lda.w #SPAsweepchk&$FFFF
 	sta.w pf2aip,x
 	jml.l SetSPAFromA
 Holdplayer:							; called from other segments
@@ -809,7 +809,7 @@ Holdplayer:							; called from other segments
 	lda.w pfalock,x
 	beq .1
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne .1
 .rtl:								; return
 	rtl
@@ -868,7 +868,7 @@ Holdplayer:							; called from other segments
 	dec.b d2
 	bne .loop
 Acheck:								; from check4check and other segments
-	lda.w #$2684
+	lda.w #SPAhook&$FFFF
 	sta.b d1
 	sta.w pfalock,x
 	ldy.b a0
@@ -881,7 +881,7 @@ Acheck:								; from check4check and other segments
 	and.w #$0007
 	cmp.w #$0005
 	bcc .1
-	lda.w #$224E
+	lda.w #SPAHold&$FFFF
 	sta.b d1
 .1:									; go to SetSPA
 	jml.l SetSPA
@@ -940,7 +940,7 @@ holdcheck:							; from CheckContactHold
 	sta.w Yvel,y
 	tya
 	sta.w impactp,x
-	lda.w #$2344
+	lda.w #SPAflail&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a2
@@ -949,12 +949,12 @@ holdcheck:							; from CheckContactHold
 	stx.b a3
 	tya
 	sta.w impactp,x
-	lda.w #$2280
+	lda.w #SPAHold2&$FFFF
 	sta.w pfalock,x
 	ldy.w SPA,x
-	cpy.w #$224E
+	cpy.w #SPAHold&$FFFF
 	beq .2
-	lda.w #$22B2
+	lda.w #SPAhook2&$FFFF
 .2:									; call SetSPAFromA, call PenShotChk, if zero go to .3, ...
 	jsl.l SetSPAFromA
 	jsl.l PenShotChk
@@ -977,7 +977,7 @@ holdcheck:							; from CheckContactHold
 	lda.w #$0028
 	sta.b d0
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	beq .4
 	lda.w #$0020
 	sta.b d0
@@ -1035,7 +1035,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.b [a0],y
 	sta.b d1
 	lda.w SPA,x
-	cmp.w #$2ADE
+	cmp.w #SPAbenchcheckr&$FFFF
 	bcs .2
 	lda.w attribute,x
 	bit.w #$0800
@@ -1079,7 +1079,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.w SPA,x
 	cmp.w #$2B18
 	bcs .4
-	cmp.w #$2ADE
+	cmp.w #SPAbenchcheckr&$FFFF
 	bcs .9
 .4:									; if d1 is not 0 go to .5, SPA,x = 0
 	lda.b d1
@@ -1111,7 +1111,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$18EC
+	lda.w #SPAwallleft&$FFFF
 	jsl.l SetSPAUpdate
 	bra .8
 dostop:								; called from other segments
@@ -1126,7 +1126,7 @@ dostop:								; called from other segments
 	cmp.w #$2001
 	bmi stopna
 .1:									; A = $1958, if pfrev,x is not 0 go to .3, if X is not puckc go to .2, ...
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 	ldy.w pfrev,x
 	bne .3
 	cpx.w puckc
@@ -1138,7 +1138,7 @@ dostop:								; called from other segments
 	lda.w #$000F
 	jsl.l StartSound
 .2:									; A = $1AEE, pf2aip,x = 0
-	lda.w #$1AEE
+	lda.w #SPAstop&$FFFF
 	stz.w pf2aip,x
 .3:									; call SetSPAFromA
 	jsl.l SetSPAFromA

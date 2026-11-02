@@ -110,7 +110,7 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	rtl
 .6:									; if SPA,x >= $28F6 go to .rtl, Xpos,x = OldXpos,x, Ypos,x = OldYpos,x
 	lda.w SPA,x
-	cmp.w #$28F6
+	cmp.w #SPAboardfront&$FFFF
 	bcs .rtl
 	lda.w OldXpos,x
 	sta.w Xpos,x
@@ -961,7 +961,7 @@ CheckDislodgeGoal:					; test a burst collision for dislodging the goal and a st
 	and.w #$01C0
 	bne .1
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne .1
 	ldy.b a2
 	lda.w pucky
@@ -1176,7 +1176,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	jmp.w .17
 .3:									; if SPA,x < $2280 go to .5, if SPA,x >= $2345 go to .5, ...
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .5
 	cmp.w #$2345
 	bcs .5
@@ -1184,7 +1184,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	stz.w pf2aip,x
 	ldy.w impactp,x
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .4
 	cmp.w #$2345
 	bcs .4
@@ -1195,7 +1195,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	ldy.b a2
 .5:									; if SPA,y < $2280 go to .7, if SPA,y >= $2345 go to .7, ...
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .7
 	cmp.w #$2345
 	bcs .7
@@ -1204,7 +1204,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sta.w pf2aip,y
 	ldx.w impactp,y
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .6
 	cmp.w #$2345
 	bcs .6
@@ -1229,7 +1229,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 .8:									; d4 = A, if SPA,x < $2082 go to .10, if SPA,x >= $21BD go to .10
 	sta.b d4
 	lda.w SPA,x
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bcc .10
 	cmp.w #$21BD
 	bcs .10
@@ -1241,7 +1241,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	bra .11
 .10:								; if SPA,y < $2082 go to .11, if SPA,y < $21BD go to .9
 	lda.w SPA,y
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bcc .11
 	cmp.w #$21BD
 	bcc .9
@@ -1758,7 +1758,7 @@ puckglue:							; give player a2 puck possession and update possession statistic
 	stz.w puckvz
 	stz.w puckz
 	lda.w SPA,y
-	cmp.w #$224E
+	cmp.w #SPAHold&$FFFF
 	bcc .2
 	cmp.w #$22B3
 	bcs .2
@@ -1816,7 +1816,7 @@ puckglue:							; give player a2 puck possession and update possession statistic
 	lda.w #$008C
 	sta.w temp5,y
 	lda.w SPA,y
-	cmp.w #$1552
+	cmp.w #SPAgdive&$FFFF
 	bne .6
 	lda.w #$0005
 	sta.w temp5,y

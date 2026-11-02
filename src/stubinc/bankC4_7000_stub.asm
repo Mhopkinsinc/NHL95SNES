@@ -53,5 +53,10 @@ Mul8U = $C08ED9
 QueueVRAMDMALen = $C58A15
 Penaltylist = $C34499
 rtss = $C4883F
+SPAcelebrate = $C42824
+SPAglide = $C41958
+SPApump2 = $C427B2
+SPAwallleft = $C418EC
+SPAwallright = $C418BE
 
 incsrc "../bankC4_7000.asm"

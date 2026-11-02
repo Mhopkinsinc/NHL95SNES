@@ -8935,3 +8935,58 @@ $C5924B,SaveOptHomePracPlayers,,code,"disassembled here: sta.l SRhomepracplayers
 $C59278,AwayPracPlayersCheck,,code,"the word before SaveOptAwayPracPlayers: 0, no check routine",src/bankC5_9000.asm
 $C5927A,SaveOptAwayPracPlayers,,code,"disassembled here: the mirror of SaveOptHomePracPlayers for the visitors (SRawaypracplayers; the line above)",src/bankC5_9000.asm
 $C592A7,PlayModeCheck,,code,"the word before DrawPlayModeOptions: 0, no check routine",src/bankC5_9000.asm
+$C4121E,SPAgready,,94S+code,"the 94S SPA list of the same place: spa94.py 5/5 votes (assbench, goalieacc, puckfaceoff2)",src/bankC4_1000.asm
+$C412D0,SPAgready2,,94S+code,"the 94S SPA list of the same place: between SPAgready and SPAgglover, as in 94S",src/bankC4_1000.asm
+$C41302,SPAgglover,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 0, as 94S assgoalie_list",src/bankC4_1000.asm
+$C41334,SPAgglovel,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 1",src/bankC4_1000.asm
+$C41366,SPAgstickr,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 4",src/bankC4_1000.asm
+$C41398,SPAgstickl,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 5",src/bankC4_1000.asm
+$C413CA,SPAgstackr,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 2",src/bankC4_1000.asm
+$C4140C,SPAgstackl,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 3",src/bankC4_1000.asm
+$C4144E,SPAgswing,,94S+code,"the 94S SPA list of the same place: spa94.py (dopass_swing)",src/bankC4_1000.asm
+$C414C0,SPAgskate,,94S+code,"the 94S SPA list of the same place: spa94.py (goalieacc)",src/bankC4_1000.asm
+$C41552,SPAgdive,,94S+code,"the 94S SPA list of the same place: spa94.py (goalieacc)",src/bankC4_1000.asm
+$C41708,SPAgbutterfly,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 8",src/bankC4_1000.asm
+$C4179A,SPAgsprawll,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 7",src/bankC4_1000.asm
+$C4182C,SPAgsprawlr,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 6",src/bankC4_1000.asm
+$C418BE,SPAwallright,,94S+code,"the 94S SPA list of the same place: 94S order after SPAgsprawlr; assbench votes SPAwallright (asspenalty votes SPAgwallleft: 95 has no goalie wall lists)",src/bankC4_1000.asm
+$C418EC,SPAwallleft,,94S+code,"the 94S SPA list of the same place: 94S order; updateanim votes SPAwallleft (asseben / assepen vote the right-hand names)",src/bankC4_1000.asm
+$C4191A,SPApflip,,94S+code,"the 94S SPA list of the same place: spa94.py (puckflip)",src/bankC4_1000.asm
+$C41958,SPAglide,,94S+code,"the 94S SPA list of the same place: spa94.py 6/6 votes",src/bankC4_1000.asm
+$C4198A,SPAskatewp,,94S+code,"the 94S SPA list of the same place: spa94.py (noturn0)",src/bankC4_1000.asm
+$C41A3C,SPAskate,,94S+code,"the 94S SPA list of the same place: spa94.py (noturn0); 95 has no SPAturnl / SPAturnr lists after it",src/bankC4_1000.asm
+$C41AEE,SPAstop,,94S+code,"the 94S SPA list of the same place: spa94.py (dostop)",src/bankC4_1000.asm
+$C41B40,SPApassf,,94S+code,"the 94S SPA list of the same place: spa94.py (dopass_swing)",src/bankC4_1000.asm
+$C41BB2,SPApassb,,94S+code,"the 94S SPA list of the same place: spa94.py (dopass_swing)",src/bankC4_1000.asm
+$C41C24,SPAshotf,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2",src/bankC4_1000.asm
+$C41D36,SPAshotb,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2",src/bankC4_1000.asm
+$C41EFA,SPAonetimerb,,94S+code,"the 94S SPA list of the same place: spa94.py 3/3 (assbreakaway, asspassrec)",src/bankC4_1000.asm
+$C41F6C,SPAglideback,,94S+code,"the 94S SPA list of the same place: spa94.py 3/3",src/bankC4_1000.asm
+$C41F9E,SPAskateback,,94S+code,"the 94S SPA list of the same place: spa94.py (noturn0)",src/bankC4_1000.asm
+$C42082,SPAsweepchk,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (Sweepcheck, doplayeracc)",src/bankC4_2000.asm
+$C420F4,SPAshoulderchkl,,94S+code,"the 94S SPA list of the same place: CheckAnimByDir, as 94S checkcheck .4",src/bankC4_2000.asm
+$C42126,SPAshoulderchkr,,94S+code,"the 94S SPA list of the same place: CheckAnimByDir, as 94S checkcheck .4",src/bankC4_2000.asm
+$C42158,SPAhipchkl,,94S+code,"the 94S SPA list of the same place: CheckAnimByDir, as 94S checkcheck .4",src/bankC4_2000.asm
+$C4218A,SPAhipchkr,,94S+code,"the 94S SPA list of the same place: CheckAnimByDir, as 94S checkcheck .4",src/bankC4_2000.asm
+$C421BC,SPAburst,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (Holdplayer, burst)",src/bankC4_2000.asm
+$C4224E,SPAHold,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (Acheck, holdcheck)",src/bankC4_2000.asm
+$C42280,SPAHold2,,94S+code,"the 94S SPA list of the same place: spa94.py 4/4 (check4check, holdcheck)",src/bankC4_2000.asm
+$C422B2,SPAhook2,,94S+code,"the 94S SPA list of the same place: spa94.py (holdcheck)",src/bankC4_2000.asm
+$C42344,SPAflail,,94S+code,"the 94S SPA list of the same place: spa94.py (holdcheck)",src/bankC4_2000.asm
+$C42376,SPAfallfwd,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
+$C42448,SPAfallback,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
+$C424FA,SPAfaceoff,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (assfaceoffpl, faceoffinput)",src/bankC4_2000.asm
+$C42524,SPAfaceoffr,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (assfaceoffpl, faceoffinput)",src/bankC4_2000.asm
+$C4253E,SPAsiren,,94S+code,"the 94S SPA list of the same place: spa94.py (Goal); 95 has no SPAstanley list after it",src/bankC4_2000.asm
+$C42588,SPAflip,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
+$C425D2,SPAstumble,,94S+code,"the 94S SPA list of the same place: spa94.py 3/3",src/bankC4_2000.asm
+$C42684,SPAhook,,94S+code,"the 94S SPA list of the same place: spa94.py (Acheck)",src/bankC4_2000.asm
+$C426B6,SPAcatch,,94S+code,"the 94S SPA list of the same place: spa94.py (puckbody); 95 has no SPAbglass list after it",src/bankC4_2000.asm
+$C42708,SPAinjury1,,94S+code,"the 94S SPA list of the same place: spa94.py 3/3",src/bankC4_2000.asm
+$C427B2,SPApump2,,94S+code,"the 94S SPA list of the same place: spa94.py (assscore); 95 has no SPApump and puts SPAcelebrate after it",src/bankC4_2000.asm
+$C42824,SPAcelebrate,,94S+code,"the 94S SPA list of the same place: spa94.py (assscore)",src/bankC4_2000.asm
+$C428F6,SPAboardfront,,94S+code,"the 94S SPA list of the same place: spa94.py (updateplayers)",src/bankC4_2000.asm
+$C42970,SPAboardback,,94S+code,"the 94S SPA list of the same place: between SPAboardfront and SPAboardright, as in 94S",src/bankC4_2000.asm
+$C429EA,SPAboardright,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
+$C42A64,SPAboardleft,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
+$C42ADE,SPAbenchcheckr,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (updateanim); the last list (GlideBack follows)",src/bankC4_2000.asm

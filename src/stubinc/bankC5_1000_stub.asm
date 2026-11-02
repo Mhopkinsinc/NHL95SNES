@@ -54,5 +54,7 @@ dirtab = $C09C04
 Div16x8U = $C09257
 QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
+SPAfaceoff = $C424FA
+SPAfaceoffr = $C42524
 
 incsrc "../bankC5_1000.asm"

@@ -53,5 +53,9 @@ SongLists = $CF05D4
 priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
 sublist = $C09AC0					; substitute lists by position (bankC0_A000)
 EvadePC = $C4342A
+SPAglide = $C41958
+SPAgready = $C4121E
+SPAwallleft = $C418EC
+SPAwallright = $C418BE
 
 incsrc "../bankC5_4000.asm"

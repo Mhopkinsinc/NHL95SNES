@@ -57,5 +57,9 @@ rtss = $C4883F
 FaceoffFormations = $C5195D
 PenShotFormation = $C51975
 FaceoffSpots = $C5197D
+SPAfaceoff = $C424FA
+SPAfaceoffr = $C42524
+SPAglide = $C41958
+SPAgready = $C4121E
 
 incsrc "../bankC4_3000.asm"

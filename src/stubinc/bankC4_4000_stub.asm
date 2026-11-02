@@ -33,5 +33,11 @@ Mul16x8S = $C08FB7
 Mul16x8XS = $C08F95
 Mul8S = $C08F09
 RandomWord = $C08E48
+SPAHold = $C4224E
+SPAHold2 = $C42280
+SPAboardfront = $C428F6
+SPAburst = $C421BC
+SPAgdive = $C41552
+SPAsweepchk = $C42082
 
 incsrc "../bankC4_4000.asm"

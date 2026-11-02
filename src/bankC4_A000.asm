@@ -288,13 +288,13 @@ dopass_swing:						; from dopass, LaunchDumpIn
 	lda.w puckvy
 	sta.b d1
 	jsl.l vtoa
-	ldy.w #$144E
+	ldy.w #SPAgswing&$FFFF
 	lda.w position,x
 	beq .4
-	ldy.w #$1B40
+	ldy.w #SPApassf&$FFFF
 	jsl.l Findhittype
 	beq .4
-	ldy.w #$1BB2
+	ldy.w #SPApassb&$FFFF
 .4:									; d1 = Y, call SetSPA, pfalock,x = $0001, ...
 	sty.b d1
 	jsl.l SetSPA
@@ -881,7 +881,7 @@ puckbody:							; called from other segments
 	bne .rtl
 	inc a
 	sta.w pf2aip,y
-	lda.w #$26B6
+	lda.w #SPAcatch&$FFFF
 	ldx.b a2
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -1550,7 +1550,7 @@ Goal:								; called from other segments
 	jsl.l assreplace
 	inx
 	inx
-	lda.w #$253E
+	lda.w #SPAsiren&$FFFF
 	jsl.l SetSPAFromA
 	ldy.b a2
 	ldx.w tmsort,y

@@ -1424,7 +1424,7 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	stz.b $30,x
 .1:									; X = a3, A = $24FA, go to SetSPAFromA
 	ldx.b a3
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
 .rtl:								; return
 	rtl
@@ -1444,10 +1444,10 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	stz.b $30,x
 .3:									; X = a3, A = $24FA, go to SetSPAFromA
 	ldx.b a3
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
 .4:									; A = $2524, go to SetSPAFromA
-	lda.w #$2524
+	lda.w #SPAfaceoffr&$FFFF
 	jml.l SetSPAFromA
 puckfaceoff:						; assignment (asstab entry 27): the puck at the start of play; PeriodOver
 									; when the clock has run out, Stop4Pen for a penalty

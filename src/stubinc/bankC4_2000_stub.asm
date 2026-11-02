@@ -31,5 +31,6 @@ EvadePC = $C4342A
 asspuckc_postab = $C09A98
 dirtab = $C09C04
 rtss = $C4883F
+SPAglideback = $C41F6C
 
 incsrc "../bankC4_2000.asm"

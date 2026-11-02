@@ -18,5 +18,12 @@ setpde = $C54A2F
 MaxSpeed = $C09BC4
 ScaleSkatingSpeeds = $C45C7D
 Mul16x8S = $C08FB7
+SPAglide = $C41958
+SPAglideback = $C41F6C
+SPAskate = $C41A3C
+SPAskateback = $C41F9E
+SPAskatewp = $C4198A
+SPAstumble = $C425D2
+SPAsweepchk = $C42082
 
 incsrc "../bankC4_6000.asm"

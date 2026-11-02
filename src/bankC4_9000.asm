@@ -319,7 +319,7 @@ puckflip:							; called from other segments
 	sta.w SPAcnt+28
 	phx
 	ldx.w #$001C
-	lda.w #$191A
+	lda.w #SPApflip&$FFFF
 	jsl.l SetSPAFromA
 	plx
 	rtl
@@ -697,10 +697,10 @@ SetShotMode:						; from assshoot and other segments
 	jsl.l vtoa
 	lda.w #$000F
 	sta.w passspeed
-	ldy.w #$1C24
+	ldy.w #SPAshotf&$FFFF
 	jsl.l Findhittype
 	beq .2
-	ldy.w #$1D36
+	ldy.w #SPAshotb&$FFFF
 .2:									; d1 = Y, go to SetSPA
 	sty.b d1
 	jml.l SetSPA
@@ -732,7 +732,7 @@ ShotMode:							; shot input for the puck carrier: doshot at animation frame $18
 	cpx.w puckc
 	bne .2
 	lda.w SPA,x
-	cmp.w #$1C24
+	cmp.w #SPAshotf&$FFFF
 	bcc .2
 	cmp.w #$1EFB
 	bcs .2
@@ -783,13 +783,13 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	cpx.w puckc
 	beq .1
 	jmp.w .15
-.1:									; $01,s = $000E, A = $1000, if SPA,x is not $1D36 go to .2, $01,s = $000E
+.1:									; $01,s = $000E, A = $1000, if SPA,x is not SPAshotb&$FFFF go to .2, ...
 	lda.w #$000E
 	sta.b $01,s
 	lda.w #$1000
 	tsb.w sflags
 	lda.w SPA,x
-	cmp.w #$1D36
+	cmp.w #SPAshotb&$FFFF
 	bne .2
 	lda.w #$000E
 	sta.b $01,s
@@ -1137,7 +1137,7 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .11
-	lda.w #$1EFA
+	lda.w #SPAonetimerb&$FFFF
 	bra .12
 .11:								; A = SPAonetimerf
 	lda.w #SPAonetimerf&$FFFF
@@ -1389,7 +1389,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	lda.w SPA,x
 	cmp.w #SPAonetimerf&$FFFF
 	beq .7
-	cmp.w #$1EFA
+	cmp.w #SPAonetimerb&$FFFF
 	beq .7
 	phy
 	ldy.w #$0000
@@ -1421,7 +1421,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .4
-	lda.w #$1EFA
+	lda.w #SPAonetimerb&$FFFF
 	bra .5
 .4:									; A = SPAonetimerf
 	lda.w #SPAonetimerf&$FFFF

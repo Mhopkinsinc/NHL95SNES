@@ -106,5 +106,7 @@ RandomWord = $C08E48
 ScreenOn = $C08E99
 asstab = $C09A24
 forceblack = $C08E93
+SPAboardfront = $C428F6
+SPAinjury1 = $C42708
 
 incsrc "../bankC5_0000.asm"

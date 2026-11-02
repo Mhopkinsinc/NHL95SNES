@@ -822,7 +822,7 @@ assfaceoffpl:						; called from other segments
 	pla
 	cmp.w #$0000
 	bne .rtl
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	sta.b d1
 	lda.w temp1+$1C
 	cmp.w #$0011
@@ -831,7 +831,7 @@ assfaceoffpl:						; called from other segments
 	and.w #$0007
 	sta.b d0
 	beq .6
-	lda.w #$2524
+	lda.w #SPAfaceoffr&$FFFF
 	sta.b d1
 	lda.w #$0001
 	sta.w pf2aip,x
@@ -1251,10 +1251,10 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w SPA,x
 	lda.w position,x
 	bne .28
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .29
 .28:								; A = $1958
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 .29:								; call SetSPAFromA, call updateanim
 	jsl.l SetSPAFromA
 	jsl.l updateanim
