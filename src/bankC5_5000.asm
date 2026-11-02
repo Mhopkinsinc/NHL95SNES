@@ -452,7 +452,7 @@ PrintPauseItems:					; prints pause item list X (bank $C3: a count to pauseitems
 	lda.l $C30000,x
 	sta.w pauseitems
 	sta.b tmp0
-CODE_C552BD:						; from PrintPauseItemText
+PrintPauseItemsRow:					; saves the item and row, then dispatches its callback or reads its text
 	phx
 	phy
 	lda.l $C30002,x
@@ -494,7 +494,7 @@ PrintPauseItemText:					; prints item text A (bank $C3, length-prefixed; 0 leave
 	adc.w #$0004
 	tax
 	dec.b tmp0
-	bne CODE_C552BD
+	bne PrintPauseItemsRow
 	rts
 GoalieModeItemText:					; the Options tab's goalie mode item: the manual goalie text when
 									; goaliemode1 of the pad's team (GetPadTeam) is set, else the auto goalie
@@ -607,12 +607,12 @@ ShowPenaltyBoxPlayer:				; player X's jersey number and penalty time (tmpdst A) 
 	phy
 	ldy.b tmp2
 	cpy.w #$0200
-	bcc CODE_C553D6
+	bcc ShowPenaltyBoxPlayerBody
 	ply
 rtsmenu:							; the rts ShowPenaltyBox's second pass and a full ShowPenaltyBoxPlayer
 									; leave through
 	rts
-CODE_C553D6:						; from ShowPenaltyBoxPlayer
+ShowPenaltyBoxPlayerBody:			; draws the penalty box player after the row limit check
 	pha
 	txa
 	asl a

@@ -5418,7 +5418,7 @@ $C550D2,.loop,CODE_C550D2,new,"branch target only used in InitPauseScreen",src/b
 $C55153,.loop,CODE_C55153,new,"branch target only used in PauseScreenDraw",src/bankC5_5000.asm
 $C55237,.loop,CODE_C55237,new,"branch target only used in FillPauseMapTileRun",src/bankC5_5000.asm
 $C5527D,.loop,CODE_C5527D,new,"branch target only used in CopyPauseTabTileRow",src/bankC5_5000.asm
-$C552CA,.1,CODE_C552CA,new,"branch target only used in CODE_C552BD",src/bankC5_5000.asm
+$C552CA,.1,CODE_C552CA,new,"branch target only used in PrintPauseItemsRow",src/bankC5_5000.asm
 $C552E1,.loop,CODE_C552E1,new,"branch target only used in PrintPauseItemText",src/bankC5_5000.asm
 $C552F9,.1,CODE_C552F9,new,"branch target only used in PrintPauseItemText",src/bankC5_5000.asm
 $C5531B,.1,CODE_C5531B,new,"branch target only used in GoalieModeItemText",src/bankC5_5000.asm
@@ -5429,10 +5429,10 @@ $C55363,.2,CODE_C55363,new,"branch target only used in OtherScoresItemText",src/
 $C55391,.loop,CODE_C55391,new,"branch target only used in ShowPenaltyBox",src/bankC5_5000.asm
 $C553AE,.1,CODE_C553AE,new,"branch target only used in ShowPenaltyBox",src/bankC5_5000.asm
 $C553AF,.loop2,CODE_C553AF,new,"branch target only used in ShowPenaltyBox",src/bankC5_5000.asm
-$C553E8,.1,CODE_C553E8,new,"branch target only used in CODE_C553D6",src/bankC5_5000.asm
-$C5541C,.loop,CODE_C5541C,new,"branch target only used in CODE_C553D6",src/bankC5_5000.asm
-$C55437,.loop2,CODE_C55437,new,"branch target only used in CODE_C553D6",src/bankC5_5000.asm
-$C5544E,.2,CODE_C5544E,new,"branch target only used in CODE_C553D6",src/bankC5_5000.asm
+$C553E8,.1,CODE_C553E8,new,"branch target only used in ShowPenaltyBoxPlayerBody",src/bankC5_5000.asm
+$C5541C,.loop,CODE_C5541C,new,"branch target only used in ShowPenaltyBoxPlayerBody",src/bankC5_5000.asm
+$C55437,.loop2,CODE_C55437,new,"branch target only used in ShowPenaltyBoxPlayerBody",src/bankC5_5000.asm
+$C5544E,.2,CODE_C5544E,new,"branch target only used in ShowPenaltyBoxPlayerBody",src/bankC5_5000.asm
 $C55524,.1,CODE_C55524,new,"branch target only used in RestoreGameScreen",src/bankC5_5000.asm
 $C556FA,.2,CODE_C556FA,new,"branch target only used in RestoreGameScreen",src/bankC5_5000.asm
 $C55702,.3,CODE_C55702,new,"branch target only used in RestoreGameScreen",src/bankC5_5000.asm
@@ -8895,3 +8895,5 @@ $C538C5,findpcReturn,CODE_C538C5,code,"shared restore after assignment or Sweepc
 $C5480F,CompLineReturn,CODE_C5480F,code,"shared restore of CompLine; matches 94S CompLine .3",src/bankC5_4000.asm
 $C54828,CompLineEvenStrength,CODE_C54828,code,"matches 94S CompLine .4; tmap equality reaches this path",src/bankC5_4000.asm
 $C548C1,CompLineEnergySearch,CODE_C548C1,code,"matches 94S CompLine .6; getlinee compared with the energy threshold",src/bankC5_4000.asm
+$C552BD,PrintPauseItemsRow,CODE_C552BD,code,"shared item loop head reached after PrintPauseItemText advances the item",src/bankC5_5000.asm
+$C553D6,ShowPenaltyBoxPlayerBody,CODE_C553D6,code,"ShowPenaltyBoxPlayer branches here across rtsmenu after saving Y",src/bankC5_5000.asm
