@@ -345,11 +345,11 @@ wallcollb:							; from WallStraightEdges, WallCornerNormal and other segments
 wallcollb_out:						; from wallcollb, WallPuckOutResponse
 	lda.w #$0040
 	tsb.w sflags
-	sta.w $109C
+	sta.w pfnc+28
 	lda.w pucky
 	bpl .1
 	lda.w #$8000
-	tsb.w $08FC
+	tsb.w attribute+28
 .1:									; frame+$1E = 0, if gmclock is not 0 go to .2, A = ltplayer, A * 2, ...
 	stz.w frame+$1E
 	lda.w gmclock
@@ -1404,7 +1404,7 @@ checkpuckcoll:						; called from other segments
 	sec
 	sbc.w #$0010
 	bpl .rtl
-	ldy.w $10DC
+	ldy.w OOlistpos+28
 .loop:								; loop: d1 = Y, if Y = $000F go to .1, A = OOlist+1,y, A and $00FF, ...
 	sty.b d1
 	cpy.w #$000F
@@ -1422,8 +1422,8 @@ checkpuckcoll:						; called from other segments
 	ldy.b d1
 	iny
 	bra .loop
-.1:									; if $10DC = 0 go to .rtl
-	ldy.w $10DC
+.1:									; if OOlistpos+28 = 0 go to .rtl
+	ldy.w OOlistpos+28
 	beq .rtl
 .loop2:								; loop: d1 = Y, A = $10DF,y, A and $00FF, Y = A, ...
 	sty.b d1

@@ -686,7 +686,7 @@ PuckCarrierAvoidThreats:			; count opponents near the predicted puck position an
 	eor.w #$0004
 	cmp.b d0
 	bne .6
-	lda.w $04B2
+	lda.w seed+2
 	and.w #$0001
 	clc
 	adc.b d0
@@ -781,11 +781,11 @@ asscentero:							; called from other segments
 	bmi .8
 	lda.w #$0018
 	sta.b d2
-.8:									; if d2 is not temp5,x go to .9, if $04B2 >= $0200 go to .10
+.8:									; if d2 is not temp5,x go to .9, if seed+2 >= $0200 go to .10
 	lda.b d2
 	cmp.w temp5,x
 	bne .9
-	lda.w $04B2
+	lda.w seed+2
 	cmp.w #$0200
 	bcs .10
 .9:									; temp5,x = d2, Y = A, $65 = DATA8_C43079>>16, a0 = DATA8_C43079, ...

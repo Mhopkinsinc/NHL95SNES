@@ -314,7 +314,7 @@ puckflip:							; called from other segments
 	and.w #$0003
 	sta.w facedir+28
 	lda.w #$FFFF
-	sta.w $0CDC
+	sta.w SPAcnt+28
 	phx
 	ldx.w #$001C
 	lda.w #$191A
@@ -322,7 +322,7 @@ puckflip:							; called from other segments
 	plx
 	rtl
 pucknothing:						; from pucknorm_move and other segments
-	lda.w $0CBC
+	lda.w SPAnum+28
 	cmp.w #$0008
 	bcc .1
 	cmp.w #$0018
@@ -330,12 +330,12 @@ pucknothing:						; from pucknorm_move and other segments
 	lda.w facedir+28
 	eor.w #$0002
 	sta.w facedir+28
-.1:									; A = $0004, $0CBC = 0, $0CDC = $FFFF, return
+.1:									; A = $0004, SPAnum+28 = 0, SPAcnt+28 = $FFFF, return
 	lda.w #$0004
 	tsb.w facedir+28
-	stz.w $0CBC
+	stz.w SPAnum+28
 	lda.w #$FFFF
-	sta.w $0CDC
+	sta.w SPAcnt+28
 	rtl
 skatetopuckinit:					; called from other segments
 	lda.w puckvx

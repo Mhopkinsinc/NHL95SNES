@@ -1543,7 +1543,7 @@ Goal:								; called from other segments
 	lda.w #$FFFF
 	sta.w puckcross+2
 	sta.w puckcross+6
-	sta.w $109C
+	sta.w pfnc+28
 	lda.w #$001A
 	sta.b d0
 	jsl.l assreplace

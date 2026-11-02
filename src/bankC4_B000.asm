@@ -44,11 +44,11 @@ IntroMode7Hook:						; writes the intro Mode 7 scale, centre, control and main-s
 	sep #$20
 	lda.w introM7Scale
 	sta.w M7A
-	lda.w $18D1
+	lda.w introM7Scale+1
 	sta.w M7A
 	lda.w introM7Scale
 	sta.w M7D
-	lda.w $18D1
+	lda.w introM7Scale+1
 	sta.w M7D
 	lda.w introM7X
 	sta.w M7X

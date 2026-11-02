@@ -439,7 +439,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w Hpos
 	sta.b WMDATA&$FF
-	lda.w $00CC
+	lda.w Hpos+1
 	sta.b WMDATA&$FF
 	lda.w Vpos
 	sta.b WMDATA&$FF
@@ -1309,9 +1309,9 @@ adda43:								; from adda4 and other segments
 	ora.w attribute+5,x
 	sta.w attribute+5,x
 	ldx.w #$0000
-.loop2:								; loop: $082C,x = $80, r3 = $80, A and $000F, ...
+.loop2:								; loop: Xpos+24,x = $80, r3 = $80, A and $000F, ...
 	lda.b $80
-	sta.w $082C,x
+	sta.w Xpos+24,x
 	lda.b $80
 	sta.w r3
 	and.w #$000F
@@ -1404,8 +1404,8 @@ adda43:								; from adda4 and other segments
 	bra .13
 .12:								; A = $0000
 	lda.w #$0000
-.13:								; $08DB = A, recsfx = $80, recsfxpitch = $80, recsfxpitch+1 = $80, ...
-	sta.w $08DB
+.13:								; shadowz+1 = A, recsfx = $80, recsfxpitch = $80, recsfxpitch+1 = $80, ...
+	sta.w shadowz+1
 	lda.b $80
 	sta.w recsfx
 	lda.b $80
@@ -1599,8 +1599,8 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	bra .8
 .7:									; A = $00
 	lda.b #$00
-.8:									; $08DB = A, recsfx = WMDATA, recsfxpitch = WMDATA, ...
-	sta.w $08DB
+.8:									; shadowz+1 = A, recsfx = WMDATA, recsfxpitch = WMDATA, ...
+	sta.w shadowz+1
 	lda.l WMDATA
 	sta.w recsfx
 	lda.l WMDATA

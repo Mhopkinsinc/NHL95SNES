@@ -1263,7 +1263,7 @@ doplayeracc:						; from skatetopuck and other segments
 	sta.b d0
 	lda.w Ypos,x
 	sta.b d3
-	lda.w $09DD
+	lda.w puckvy+1
 	and.w #$00FF
 	cmp.w #$0080
 	bcc .6

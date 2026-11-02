@@ -400,7 +400,7 @@ EvadePC:							; passed as a long pointer (lda #bank, lda #low) to skateto
 	bpl .rtl
 	lda.w Yvel+1,x
 	sec
-	sbc.w $09DD
+	sbc.w puckvy+1
 	and.w #$00FF
 	bit.w #$0080
 	beq .2
@@ -992,7 +992,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w puckvz
 	stz.w $09B8
 	stz.w $09D8
-	stz.w $082C
+	stz.w Xpos+24
 	lda.w #$0117
 	sta.w Ypos+24
 	stz.w $09BA
@@ -1004,7 +1004,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	sta.w frame+$1E
 	stz.w $0C9E
 	stz.w attribute+$1E
-	stz.w $08FC
+	stz.w attribute+28
 	lda.w #$0040
 	trb.w sflags
 	lda.w #$0064

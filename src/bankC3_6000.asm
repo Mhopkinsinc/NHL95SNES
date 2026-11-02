@@ -281,7 +281,7 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 .1:									; pausepad + 1, pausepad + 1, if minus go to .2, A = PadRaw2, ...
 	inc.w pausepad
 	inc.w pausepad
-	bit.w $1527
+	bit.w padside+2
 	bmi .2
 	lda.b PadRaw2
 	and.w #$FFF0
@@ -289,7 +289,7 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 .2:									; pausepad + 1, pausepad + 1, if minus go to .3, A = $C5, ...
 	inc.w pausepad
 	inc.w pausepad
-	bit.w $1529
+	bit.w padside+4
 	bmi .3
 	lda.b $C5
 	and.w #$FFF0
@@ -297,7 +297,7 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 .3:									; pausepad + 1, pausepad + 1, if minus go to .4, A = $C7, ...
 	inc.w pausepad
 	inc.w pausepad
-	bit.w $152B
+	bit.w padside+6
 	bmi .4
 	lda.b $C7
 	and.w #$FFF0
@@ -305,7 +305,7 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 .4:									; pausepad + 1, pausepad + 1, if minus go to .5, A = $C9, ...
 	inc.w pausepad
 	inc.w pausepad
-	bit.w $152D
+	bit.w padside+8
 	bmi .5
 	lda.b $C9
 	and.w #$FFF0
