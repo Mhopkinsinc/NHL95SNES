@@ -784,8 +784,7 @@ asspuckc:							; assignment (asstab entry 17): the puck carrier; others and pad
 	bmi PuckCarrierThink
 .1:									; go to assexit
 	jmp.w assexit
-DATA8_C42DC5:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 PuckCarrierGlideStopped:			; start backward glide and stand still while play is stopped
 	jsl.l GlideBack
 	jmp.w donothing
@@ -1107,8 +1106,7 @@ asscentero:							; called from other segments
 	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
-DATA8_C43078:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 CenterOSpots:						; the centre's spots on offence, read by asscentero
 	db $00,$00,$3C,$00,$BA,$FF,$0A,$00,$00,$00,$3C,$00,$3C,$00,$0A,$00
 	db $00,$00,$28,$00,$AA,$00,$1E,$00,$00,$00,$50,$00,$AA,$00,$14,$00
@@ -1174,8 +1172,7 @@ asscenterd:							; called from other segments
 	ror a
 	sta.b d1
 	bra CenterDefenceSkate
-DATA8_C4311B:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 CenterDefenceTopTarget:				; adjust the defensive center target toward the puck at the top end
 	lda.w #$005C
 	sec

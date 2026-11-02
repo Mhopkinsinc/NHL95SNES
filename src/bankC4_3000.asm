@@ -179,8 +179,7 @@ assdefd:							; called from other segments
 	bpl DefenceSkateAndCheck
 	stz.w temp3,x
 	bra DefenceSkateAndCheck
-DATA8_C432A0:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 DefenceScanTopThreats:				; scan opponents for the top-end defensive depth target
 	sty.b a0
 	lda.w pflags,y
@@ -262,8 +261,7 @@ assdefo:							; called from other segments
 	jmp.w assreplace
 OffensiveDefenceReturn:				; return from the offensive defender assignment
 	rtl
-DATA8_C43345:						; not traced: data between routines
-	db $4C,$FD,$36
+	jmp.w donothing					; unreached: no code branches, falls or points here
 DefenceTakePuckAssignment:			; insert the puck carrier assignment for the defender
 	lda.w #$0011
 	sta.b d0
@@ -322,8 +320,7 @@ OffensiveDefenceThink:				; update computer offensive defender movement
 	bmi OffensiveDefenceBlendX
 	lda.w puckx
 	bra OffensiveDefenceTargetY
-DATA8_C433C3:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 OffensiveDefenceBlendX:				; blend the puck X position into the defender lateral target
 	lda.w puckx
 	pha
@@ -499,8 +496,7 @@ asswingd:							; called from other segments
 	lda.w pucky
 	sta.b d1
 	bra DefensiveWingSkate
-DATA8_C43530:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 DefensiveWingBottomLimit:			; limit the defensive wing target at the bottom goal line
 	lda.w #$FEF2
 	sta.b d2
@@ -709,8 +705,7 @@ asswingo:							; called from other segments
 	lda.w #EvadePC
 	sta.b a0
 	jml.l skateto
-DATA8_C436DC:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 WingZoneSpots:						; per zone, the spots a wing on offence picks from (x, y spread pairs)
 	db $50,$00,$14,$00,$BA,$FF,$0A,$00,$64,$00,$14,$00,$3C,$00,$0A,$00
 	db $3C,$00,$32,$00,$E6,$00,$14,$00,$50,$00,$1E,$00,$FA,$00,$14,$00

@@ -678,8 +678,7 @@ ClearCreatedGoals:					; ClearPlayerGoals for each created player slot in use (i
 	cpy.w #$0C30
 	bcc .loop
 	rtl
-DATA8_C5E499:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 ShowPleaseWait:						; fades out and shows the Please Wait= screen, then waits for the fade in
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers

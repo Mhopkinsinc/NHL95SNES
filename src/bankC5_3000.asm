@@ -778,12 +778,10 @@ loadTeamStruct:						; from SetLCmode and other segments
 	sta.b a1
 	stz.b a2
 	rtl
-DATA8_C5362B:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 InitScores:							; an rtl: called where 94S sets random scores for the round's other games
 	rtl
-DATA8_C5362D:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 GetPlayerCount:						; returns team a2 roster count in d0
 	ldy.w #HomeRoster
 	lda.b a2

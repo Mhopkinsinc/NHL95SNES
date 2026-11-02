@@ -1418,8 +1418,7 @@ assgoalie:							; assignment (asstab entry 7): the goalie
 	sta.b d1
 .9:									; go to skateto
 	jml.l skateto
-DATA8_C48B47:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 GoalieCheckManualState:				; update the goalie control state before movement
 	lda.w gmclock
 	bne .1

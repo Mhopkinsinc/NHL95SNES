@@ -62,8 +62,8 @@ setpads:							; called from other segments
 	ldy.b d4
 	sta.w PadControlObj,y
 	rtl
-DATA8_C3804B:						; not traced: data between routines
-	db $6B,$6B
+	rtl								; unreached: no code branches, falls or points here
+	rtl
 SetupScrollIRQ:						; no caller found (not traced): the three BG1 scroll splits at the
 									; lines A, X and Y; the scroll values start at $FFFF
 	sta.w irqline1

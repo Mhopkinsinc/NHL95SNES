@@ -359,10 +359,9 @@
   number); $0004 (the CGRAM queue stack pointer, dp $04 unnamed); $7E8F3C / $8F5C (a palette inside the unpacked bracket
   map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
   puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
-- 29 DATA8_ labels left after the data table pass (../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
-  - Not tables: unreached rtl / rts / jmp bytes after an exit (C42DC5, C43078, C4311B, C432A0, C433C3, C43530, C436DC,
-    C48B47, C49B66, C49E41, C511B7, C5362B, C5362D, C5E499, C59A4A, C59F0F, C59050, C43345, C5C655); 94S has such
-    bare rtls too.
+- 9 DATA8_ labels left after the data table pass (../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
+  - Not tables: 20 runs of unreached rtl / rts / pla / jmp bytes after an exit (C42DC5 ... C5C655, and C3804B's two
+    rtls) are written as instructions with an "unreached" comment, their labels dropped; 94S has such bare rtls too.
   - No reader found: C5AE40 (a high-bits mask series), C0491A, C04CAB, C08939, C08B17 (16 colours), C104E0 (the
     $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
   - The SPA lists (bank $C4, 59 of them) carry 94S names (SPAgpoke / SPAgcover from GoalieUpdateState, which is

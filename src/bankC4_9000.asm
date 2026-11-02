@@ -1020,8 +1020,7 @@ assbreakaway:						; assignment (asstab entry 16): the puck carrier on a breakaw
 	bmi BreakawayFollowPath
 .1:									; go to assexit
 	jmp.w assexit
-DATA8_C49B66:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 BreakawayGlideStopped:				; glide and suspend puck pickup while breakaway play is stopped
 	jsl.l GlideBack
 	lda.w #$003C
@@ -1348,8 +1347,7 @@ asspassrec:							; called from other segments
 	lda.w #$7FFF
 	sta.w OneTimerDist
 	bra PassReceiverOneTimer
-DATA8_C49E41:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 PassReceiverTryOneTimer:			; let a computer pass receiver request a one-timer in the attacking zone
 	ldy.b a2
 	lda.w teampads,y

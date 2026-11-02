@@ -807,8 +807,7 @@ SignMarkedAgents:					; start on Hire Free Agents: each marked free agent (Scrat
 	sta.l SRPlayerTeams,x
 	ldx.b a1
 	jmp.w .1
-DATA8_C5C655:						; not traced: data between routines
-	db $4C,$32,$8D
+	jmp.w GameSetUp					; unreached: no code branches, falls or points here
 JerseyNumberTaken:					; carry set when a player of VisTeam in SRPlayerTeams already has number
 									; tmp2 (tmp1 = VisTeam * 16)
 	ldx.w #$0000

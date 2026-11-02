@@ -101,8 +101,7 @@ Mod100:								; from printscores1_per and other segments
 .1:									; d0 = A, return
 	sta.b d0
 	rtl
-DATA8_C511B7:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 SetScore:							; the score of the other game a0 for the ticker: its period stepped and
 									; both scores raised from the teams' strengths (SimPeriodGoals), or the
 									; game ended

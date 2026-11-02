@@ -74,8 +74,8 @@ SetupOptionRunRoutine:				; pushes the option routine minus one before drawing t
 	phx
 DrawSetupLineJump:					; jumps to DrawSetupLine: the option value routines' shared tail
 	jmp.w DrawSetupLine
-DATA8_C59050:						; not reached by the traced code (data or unused code)
-	db $68,$60
+	pla								; unreached: no code branches, falls or points here
+	rts
 UpdateTeamLogos:					; setup screen state 0 (SetupScreenStates): replaces the home logo sprite
 									; (d7) or the visiting one ($9D) at the same place when HomeTeam or
 									; VisTeam has changed, its colours queued
@@ -1257,8 +1257,7 @@ EditRatingLeft:						; rating d6 (CreateRatings + 2 * d6) one step down to at le
 	ldx.w #mesarea
 	jsl.l PrintBoldRightStr
 	jmp.w PrintCreatedOverall
-DATA8_C59A4A:						; not reached by the traced code (data or unused code)
-	db $60
+	rts								; unreached: no code branches, falls or points here
 EditRatingRight:					; rating d6 one step up while below 15 and d2 has 5 points to give, then
 									; the value printed (RatingText) and the overall (PrintCreatedOverall)
 	lda.b d6
@@ -1861,8 +1860,7 @@ EditPosLeft:						; position line, left: d0 one back (5 after 0), then FieldPos
 StorePosField:						; d0 = the position (0-5), then FieldPos
 	sta.b d0
 	jmp.w FieldPos
-DATA8_C59F0F:						; not reached by the traced code (data or unused code)
-	db $60
+	rts								; unreached: no code branches, falls or points here
 EditPosRight:						; position line, right: d0 one on (0 after 5), then FieldPos
 	lda.b d0
 	inc a
