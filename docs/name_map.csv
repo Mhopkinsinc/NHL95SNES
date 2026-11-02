@@ -8930,3 +8930,8 @@ $C5A3BF,VisTeamCheck,DATA8_C5A3BF,code,"as TradeTeam2Check",src/bankC5_A000.asm
 $C5A3FD,TradeTeam1Check,DATA8_C5A3FD,code,"as TradeTeam2Check",src/bankC5_A000.asm
 $C5A468,HomeTeamCheck,DATA8_C5A468,code,"as TradeTeam2Check",src/bankC5_A000.asm
 $C5939C,OAMClearByte,DATA8_C5939C,code,"ProcessQueuedTransfers sets the DMA source to it (A1T0L $939C, then $C593 to A1T0H / A1B0: written OAMClearByte&$FFFF and OAMClearByte>>8), fixed (DMAP0 $08) to OAMDATA, before it sends the used part of OAMBuf",src/bankC5_9000.asm
+$C59249,HomePracPlayersCheck,DATA8_C59249,code,"the word before SaveOptHomePracPlayers that PrevOptionValue / NextOptionValue read: 0, no check routine; the bank $C3 option list points at $C5924B / $C5927A / $C592A9; the decoder had left the 96 bytes as data (DATA8_C59249)",src/bankC5_9000.asm
+$C5924B,SaveOptHomePracPlayers,,code,"disassembled here: sta.l SRhomepracplayers like the other SaveOpt routines, then gives the visitors 1 player when both are 0 and redraws that line (DrawSetupLine, SetupLinePalette3); the bank $C3 option list points at $C5924B / $C5927A / $C592A9; the decoder had left the 96 bytes as data (DATA8_C59249)",src/bankC5_9000.asm
+$C59278,AwayPracPlayersCheck,,code,"the word before SaveOptAwayPracPlayers: 0, no check routine",src/bankC5_9000.asm
+$C5927A,SaveOptAwayPracPlayers,,code,"disassembled here: the mirror of SaveOptHomePracPlayers for the visitors (SRawaypracplayers; the line above)",src/bankC5_9000.asm
+$C592A7,PlayModeCheck,,code,"the word before DrawPlayModeOptions: 0, no check routine",src/bankC5_9000.asm

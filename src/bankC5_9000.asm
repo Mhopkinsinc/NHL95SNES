@@ -287,13 +287,63 @@ CreateSetupArrows:					; creates the setup screen's two arrow sprites (object $1
 	lda.w #$0002
 	jsl.l SetSpriteAnim
 	rts
-DATA8_C59249:						; not reached by the traced code (data or unused code)
-	db $00,$00,$AD,$06,$19,$8F,$45,$60,$30,$D0,$23,$AD,$08,$19,$D0,$1E
-	db $1A,$8D,$08,$19,$D4,$97,$AD,$0E,$01,$48,$1A,$1A,$8D,$0E,$01,$E6
-	db $97,$20,$75,$8F,$20,$9A,$90,$68,$8D,$0E,$01,$68,$85,$97,$60,$00
-	db $00,$AD,$08,$19,$8F,$47,$60,$30,$D0,$23,$AD,$06,$19,$D0,$1E,$1A
-	db $8D,$06,$19,$D4,$97,$AD,$0E,$01,$48,$3A,$3A,$8D,$0E,$01,$C6,$97
-	db $20,$75,$8F,$20,$9A,$90,$68,$8D,$0E,$01,$68,$85,$97,$60,$00,$00
+HomePracPlayersCheck:				; the Home Players line's check routine: none (0); the word before
+									; SaveOptHomePracPlayers
+	dw $0000
+SaveOptHomePracPlayers:				; stores homepracplayers in save RAM; with both teams at 0 players, gives
+									; the visitors 1 and redraws the Visitor Players line (the next line)
+	lda.w homepracplayers
+	sta.l SRhomepracplayers
+	bne .rts
+	lda.w awaypracplayers
+	bne .rts
+	inc a
+	sta.w awaypracplayers
+	pei ($97)
+	lda.w SetupLineRow
+	pha
+	inc a
+	inc a
+	sta.w SetupLineRow
+	inc.b d6
+	jsr.w DrawSetupLine
+	jsr.w SetupLinePalette3
+	pla
+	sta.w SetupLineRow
+	pla
+	sta.b d6
+.rts:								; return
+	rts
+AwayPracPlayersCheck:				; the Visitor Players line's check routine: none (0); the word before
+									; SaveOptAwayPracPlayers
+	dw $0000
+SaveOptAwayPracPlayers:				; stores awaypracplayers in save RAM; with both teams at 0 players, gives
+									; the home team 1 and redraws the Home Players line (the line above)
+	lda.w awaypracplayers
+	sta.l SRawaypracplayers
+	bne .rts
+	lda.w homepracplayers
+	bne .rts
+	inc a
+	sta.w homepracplayers
+	pei ($97)
+	lda.w SetupLineRow
+	pha
+	dec a
+	dec a
+	sta.w SetupLineRow
+	dec.b d6
+	jsr.w DrawSetupLine
+	jsr.w SetupLinePalette3
+	pla
+	sta.w SetupLineRow
+	pla
+	sta.b d6
+.rts:								; return
+	rts
+PlayModeCheck:						; the Play Mode line's check routine: none (0); the word before
+									; DrawPlayModeOptions
+	dw $0000
 DrawPlayModeOptions:				; the Play Mode line's routine (setoptions calls it too): ClampRosterTeams
 									; past Practice, VisTeam moved on when Trades has it equal to HomeTeam,
 									; then the mode's option list (PlayModeOptionLists, DrawOptionList)
