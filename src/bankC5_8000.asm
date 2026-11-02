@@ -694,10 +694,10 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	beq .2
 .1:									; continue
 	brk #$00						; a trap: this header form is not handled
-.2:									; if a $0004 bit set go to .3, go to CODE_C586CA
+.2:									; if a $0004 bit set go to .3, go to MapSetMode7ToVRAM
 	bit.w #$0004
 	bne .3
-	jmp.w CODE_C586CA
+	jmp.w MapSetMode7ToVRAM
 .3:									; if $0080 bits clear go to .4, pull X, Y = $0005, A = [r1],y, ...
 	bit.w #$0080
 	beq .4
@@ -881,7 +881,8 @@ NextMapSetChunk:					; r1 (bank $32) to the next chunk of the map set: + its len
 	inc.b $32
 .rts:								; return
 	rts
-CODE_C586CA:						; from MapSetToVRAMBody
+MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VRAM bytes, then
+									; loads the palette
 	bit.w #$0080
 	bne .1
 	brk #$00						; a trap: this header form is not handled
@@ -1321,7 +1322,8 @@ QueueVRAMDMALen:					; queue a DMA to VRAM at Y of the bytes at X:A after their 
 	stx.b $02
 	stz.b QueueBusy
 	rtl
-CODE_C58A3F:						; called from other segments
+SetupMode3Screen:					; sets mode 3 with BG1 and sprites, configures the maps and clears map and
+									; tile VRAM
 	lda.w #$0003
 	sta.l BGMODE
 	lda.w #$0011
@@ -1963,7 +1965,7 @@ SetupLineDown:						; setup screen down: the line below (d6 + 1, below the line 
 	lda.b $08,x
 	adc.w #$0010
 	cmp.w #$00CC
-	bcc CODE_C58FD2
+	bcc SetupLineDownPlaceCursor
 	ldx.b a4
 	lda.b $22,x
 	ora.w #$0001
@@ -2016,7 +2018,7 @@ DrawSetupLine:						; draws setup line d6 on its text row (SetupLineRow): the ti
 .2:									; call SendTextMap, return
 	jsl.l SendTextMap
 	rts
-CODE_C58FD2:						; from SetupLineDown
+SetupLineDownPlaceCursor:			; stores the cursor y position and applies palette 0 to the new setup line
 	sta.b $08,x
 	jsr.w SetupLinePalette0
 SetupLineDownReturn:				; the shared rts of SetupLineDown

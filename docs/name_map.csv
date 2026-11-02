@@ -5799,15 +5799,15 @@ $C5869B,.loop6,CODE_C5869B,new,"branch target only used in MapSetToVRAMBody",src
 $C586A9,.loop7,CODE_C586A9,new,"branch target only used in MapSetToVRAMBody",src/bankC5_8000.asm
 $C586C0,.1,CODE_C586C0,new,"branch target only used in NextMapSetChunk",src/bankC5_8000.asm
 $C586C9,.rts,CODE_C586C9,new,"branch target only used in NextMapSetChunk",src/bankC5_8000.asm
-$C586D1,.1,CODE_C586D1,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C5871B,.loop,CODE_C5871B,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C5871D,.loop2,CODE_C5871D,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C5877A,.2,CODE_C5877A,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C5877C,.3,CODE_C5877C,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C587B8,.loop3,CODE_C587B8,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C587EE,.4,CODE_C587EE,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C587F0,.5,CODE_C587F0,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
-$C587FE,.loop4,CODE_C587FE,new,"branch target only used in CODE_C586CA",src/bankC5_8000.asm
+$C586D1,.1,CODE_C586D1,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C5871B,.loop,CODE_C5871B,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C5871D,.loop2,CODE_C5871D,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C5877A,.2,CODE_C5877A,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C5877C,.3,CODE_C5877C,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C587B8,.loop3,CODE_C587B8,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C587EE,.4,CODE_C587EE,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C587F0,.5,CODE_C587F0,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
+$C587FE,.loop4,CODE_C587FE,new,"branch target only used in MapSetMode7ToVRAM",src/bankC5_8000.asm
 $C5882B,.1,CODE_C5882B,new,"branch target only used in MapSetToWRAM",src/bankC5_8000.asm
 $C58867,.loop,CODE_C58867,new,"branch target only used in MapSetToWRAM",src/bankC5_8000.asm
 $C5888E,.rts,CODE_C5888E,new,"branch target only used in NextMapSetChunkWRAM",src/bankC5_8000.asm
@@ -8898,3 +8898,6 @@ $C548C1,CompLineEnergySearch,CODE_C548C1,code,"matches 94S CompLine .6; getlinee
 $C552BD,PrintPauseItemsRow,CODE_C552BD,code,"shared item loop head reached after PrintPauseItemText advances the item",src/bankC5_5000.asm
 $C553D6,ShowPenaltyBoxPlayerBody,CODE_C553D6,code,"ShowPenaltyBoxPlayer branches here across rtsmenu after saving Y",src/bankC5_5000.asm
 $C57F36,PrintGoalRecordsReturn,CODE_C57F36,code,"PrintGoalRecords falls into this tail; PrintGoalRecordRow branches here for zero wins",src/bankC5_7000.asm
+$C586CA,MapSetMode7ToVRAM,CODE_C586CA,code,"MapSetToVRAMBody alternate path; map stride 128 and separate VMDATAL and VMDATAH writes",src/bankC5_8000.asm
+$C58A3F,SetupMode3Screen,CODE_C58A3F,code,"BGMODE 3; TM 17; SetBGMapRegs and two ClearVRAM calls; no traced caller",src/bankC5_8000.asm
+$C58FD2,SetupLineDownPlaceCursor,CODE_C58FD2,code,"SetupLineDown branches here with the new cursor y coordinate",src/bankC5_8000.asm
