@@ -1749,7 +1749,7 @@ ReadPlayoffPlayerGoals:				; returns the seven-bit playoff goals total for playe
 	txa
 	asl a
 	tax
-	lda.l DATA8_C40D76,x
+	lda.l PlayoffStatBitOffsets,x
 	adc.b tmp0
 	tay
 	lsr a
@@ -1779,7 +1779,7 @@ ReadPlayoffPlayerAssists:			; returns the seven-bit playoff assists total for pl
 	txa
 	asl a
 	tax
-	lda.l DATA8_C40D76,x
+	lda.l PlayoffStatBitOffsets,x
 	adc.b tmp0
 	tay
 	lsr a

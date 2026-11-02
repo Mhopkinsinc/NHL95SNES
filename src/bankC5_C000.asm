@@ -2,7 +2,7 @@
 ; their callers), jump tables and the data tables the code reads with long addresses.
 org $C5BFE0
 KeepDivisionTeams:					; keeps only the teams of division d1 in the sorted list at ListBuf
-									; (DATA8_C40EDA by team against DivisionCodes), a1 = the count from
+									; (TeamDivisionCodes by team against DivisionCodes), a1 = the count from
 									; DivisionTeamCounts
 	ldx.b d1
 	lda.l DivisionCodes,x
@@ -12,11 +12,11 @@ KeepDivisionTeams:					; keeps only the teams of division d1 in the sorted list 
 	and.w #$00FF
 	sta.b a1
 	ldy.w #$0032
-.loop:								; loop: X = ListBuf,y, A = $000C,x, X = A, A = DATA8_C40EDA,x, ...
+.loop:								; loop: X = ListBuf,y, A = $000C,x, X = A, A = TeamDivisionCodes,x, ...
 	ldx.w ListBuf,y
 	lda.w $000C,x
 	tax
-	lda.l DATA8_C40EDA,x
+	lda.l TeamDivisionCodes,x
 	and.w #$00FF
 	cmp.b tmp0
 	beq .1

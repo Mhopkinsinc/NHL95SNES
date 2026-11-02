@@ -1,27 +1,30 @@
 ; Segment bankC4_1000: data tables (not traced yet), labelled where code reads them with a long address. From
 ; DATA8_C41E48 they look like animation lists: word pointers per direction to (frame, value) pairs.
 org $C41006
-DATA8_C41006:						; not traced: a table read by UpdateBracketWindows
+BracketWin1CellX:					; per bracket cell (BracketCursorCell * 2): window 1's x on the map
 	db $18,$00,$92,$00,$0A,$01,$27,$01,$EB,$01,$61,$02,$DA,$02,$18,$00
 	db $92,$00,$0A,$01,$27,$01,$EB,$01,$61,$02,$DA,$02,$18,$00,$92,$00
 	db $0A,$01,$27,$01,$EB,$01,$61,$02,$DA,$02,$18,$00,$92,$00,$0A,$01
 	db $27,$01,$EB,$01,$61,$02,$DA,$02
-DATA8_C4103E:						; not traced: a table read by UpdateBracketWindows
+BracketWin2CellX:					; per bracket cell (BracketWin2Cell * 2): window 2's x on the map; it
+									; differs from window 1's only in column 3
 	db $18,$00,$92,$00,$0A,$01,$C6,$01,$EB,$01,$61,$02,$DA,$02,$18,$00
 	db $92,$00,$0A,$01,$C6,$01,$EB,$01,$61,$02,$DA,$02,$18,$00,$92,$00
 	db $0A,$01,$C6,$01,$EB,$01,$61,$02,$DA,$02,$18,$00,$92,$00,$0A,$01
 	db $C6,$01,$EB,$01,$61,$02,$DA,$02
-DATA8_C41076:						; not traced: a table read by UpdateBracketWindows
+BracketWin1CellY:					; per bracket cell (BracketCursorCell * 2): window 1's y on the map
 	db $09,$00,$1D,$00,$22,$00,$4A,$00,$21,$00,$1C,$00,$09,$00,$31,$00
 	db $1D,$00,$22,$00,$4A,$00,$21,$00,$1C,$00,$31,$00,$61,$00,$75,$00
 	db $22,$00,$4A,$00,$21,$00,$75,$00,$61,$00,$89,$00,$75,$00,$22,$00
 	db $4A,$00,$21,$00,$75,$00,$89,$00
-DATA8_C410AE:						; not traced: a table read by UpdateBracketWindows
+BracketWin2CellY:					; per bracket cell (BracketWin2Cell * 2): window 2's y on the map; below
+									; window 1's in columns 2 and 4
 	db $09,$00,$1D,$00,$72,$00,$4A,$00,$72,$00,$1C,$00,$09,$00,$31,$00
 	db $1D,$00,$72,$00,$4A,$00,$72,$00,$1C,$00,$31,$00,$61,$00,$75,$00
 	db $72,$00,$4A,$00,$72,$00,$75,$00,$61,$00,$89,$00,$75,$00,$72,$00
 	db $4A,$00,$72,$00,$75,$00,$89,$00
-DATA8_C410E6:						; not traced: a table read by CODE_C409C0
+TeamBarRoundCells:					; per playoff team (SRPOTeams index * 8) and round (* 2): the rinkmapbuf
+									; offset of its name bar in that round's column
 	db $90,$01,$3E,$03,$EC,$04,$DA,$08,$20,$03,$3E,$03,$EC,$04,$DA,$08
 	db $78,$05,$96,$05,$EC,$04,$DA,$08,$08,$07,$96,$05,$EC,$04,$DA,$08
 	db $28,$0A,$D6,$0B,$BC,$0C,$DA,$08,$B8,$0B,$D6,$0B,$BC,$0C,$DA,$08
@@ -30,19 +33,23 @@ DATA8_C410E6:						; not traced: a table read by CODE_C409C0
 	db $28,$06,$0A,$06,$24,$05,$06,$09,$B8,$07,$0A,$06,$24,$05,$06,$09
 	db $D8,$0A,$4A,$0C,$F4,$0C,$06,$09,$68,$0C,$4A,$0C,$F4,$0C,$06,$09
 	db $C0,$0E,$A2,$0E,$F4,$0C,$06,$09,$50,$10,$A2,$0E,$F4,$0C,$06,$09
-DATA8_C41166:						; not traced: a table read by DrawBracketSeriesSummary, BracketMarkSeries
-	db $00,$00,$04,$00,$06,$00,$07,$00,$08,$00,$09,$00,$0B,$00,$01,$00
-	db $04,$00,$06,$00,$07,$00,$08,$00,$09,$00,$0C,$00,$02,$00,$05,$00
-	db $06,$00,$07,$00,$08,$00,$0A,$00,$0D,$00,$03,$00,$05,$00,$06,$00
-	db $07,$00,$08,$00,$0A,$00,$0E,$00,$00,$00,$04,$00,$06,$00,$07,$00
-	db $0F,$00,$04,$00,$06,$00,$07,$00,$01,$00,$13,$00,$06,$00,$07,$00
-	db $10,$00,$13,$00,$06,$00,$07,$00,$02,$00,$05,$00,$15,$00,$07,$00
-	db $11,$00,$05,$00,$15,$00,$07,$00,$03,$00,$14,$00,$15,$00,$07,$00
-	db $12,$00,$14,$00,$15,$00,$07,$00,$0B,$00,$09,$00,$08,$00,$16,$00
-	db $1A,$00,$09,$00,$08,$00,$16,$00,$0C,$00,$18,$00,$08,$00,$16,$00
-	db $1B,$00,$18,$00,$08,$00,$16,$00,$0D,$00,$0A,$00,$17,$00,$16,$00
-	db $1C,$00,$0A,$00,$17,$00,$16,$00,$0E,$00,$19,$00,$17,$00,$16,$00
-	db $1D,$00,$19,$00,$17,$00,$16,$00,$30,$12,$44,$12,$58,$12,$6C,$12
+BracketCellSeries:					; per bracket cell (BracketCursorCell * 2: column + 7 a row, 4 rows): the
+									; series it shows (0-14)
+	dw $0000,$0004,$0006,$0007,$0008,$0009,$000B
+	dw $0001,$0004,$0006,$0007,$0008,$0009,$000C
+	dw $0002,$0005,$0006,$0007,$0008,$000A,$000D
+	dw $0003,$0005,$0006,$0007,$0008,$000A,$000E
+TeamRoundSlots:						; per playoff team (SRPOTeams index * 8) and round (* 2): its bracket slot
+									; (BracketSlotTeams index: the series, + 15 for its second team)
+	dw $0000,$0004,$0006,$0007,$000F,$0004,$0006,$0007
+	dw $0001,$0013,$0006,$0007,$0010,$0013,$0006,$0007
+	dw $0002,$0005,$0015,$0007,$0011,$0005,$0015,$0007
+	dw $0003,$0014,$0015,$0007,$0012,$0014,$0015,$0007
+	dw $000B,$0009,$0008,$0016,$001A,$0009,$0008,$0016
+	dw $000C,$0018,$0008,$0016,$001B,$0018,$0008,$0016
+	dw $000D,$000A,$0017,$0016,$001C,$000A,$0017,$0016
+	dw $000E,$0019,$0017,$0016,$001D,$0019,$0017,$0016
+	db $30,$12,$44,$12,$58,$12,$6C,$12
 	db $80,$12,$94,$12,$A8,$12,$BC,$12,$01,$00,$BA,$03,$78,$00,$BB,$03
 	db $14,$00,$BA,$03,$0A,$00,$BC,$03,$14,$00,$BA,$03,$F7,$FF,$BD,$03
 	db $78,$00,$BE,$03,$14,$00,$BD,$03,$0A,$00,$BF,$03,$14,$00,$BD,$03

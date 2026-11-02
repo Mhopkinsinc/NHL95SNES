@@ -90,7 +90,7 @@ BracketMarkSeries:					; toggles BracketSeriesMarks for the selected series when
 	lda.w BracketCursorCell
 	asl a
 	tax
-	lda.l DATA8_C41166,x
+	lda.l BracketCellSeries,x
 	tay
 	asl a
 	tax
@@ -121,14 +121,15 @@ BracketMarkSeries:					; toggles BracketSeriesMarks for the selected series when
 .rts:								; return
 	rts
 BracketCursorUp:					; moves the bracket cursor up a row ($69) by its column's step
-									; (DATA8_C400FE)
+									; (BracketUpByColumn)
 	lda.b $69
 	beq BracketCursorUpReturn
 	lda.b a1
 	asl a
 	tax
-	jmp (DATA8_C400FE,x)
-DATA8_C400FE:						; jump table: the routine for each index
+	jmp (BracketUpByColumn,x)
+BracketUpByColumn:					; per bracket column (a1 * 2): how up moves the cursor: a row in columns 0
+									; and 6, to the top row in 1 and 5, not at all in 2-4
 	dw BracketRowUp,BracketRowUpToEdge,BracketRowNoMove,BracketRowNoMove
 	dw BracketRowNoMove,BracketRowUpToEdge,BracketRowUp
 BracketRowUp:						; the bracket cursor one row up: BracketCursorCell / BracketWin2Cell - 7,
@@ -146,15 +147,16 @@ BracketRowUpToEdge:					; repeats upward row movement until the top edge
 BracketCursorUpReturn:				; the rts BracketCursorUp and BracketCursorDown share
 	rts
 BracketCursorDown:					; moves the bracket cursor down a row ($69, below 3) by its column's step
-									; (DATA8_C40130)
+									; (BracketDownByColumn)
 	lda.b $69
 	cmp.w #$0003
 	bcs BracketCursorUpReturn
 	lda.b a1
 	asl a
 	tax
-	jmp (DATA8_C40130,x)
-DATA8_C40130:						; jump table: the routine for each index
+	jmp (BracketDownByColumn,x)
+BracketDownByColumn:				; per bracket column (a1 * 2): how down moves the cursor: a row in columns
+									; 0 and 6, to the bottom row in 1 and 5, not at all in 2-4
 	dw BracketRowDown,BracketRowDownToEdge,BracketRowNoMove,BracketRowNoMove
 	dw BracketRowNoMove,BracketRowDownToEdge,BracketRowDown
 BracketRowDown:						; the bracket cursor one row down: BracketCursorCell / BracketWin2Cell +
@@ -381,7 +383,7 @@ DrawBracketSeriesSummary:			; queues the selected series teams and win counts in
 	lda.w BracketCursorCell
 	asl a
 	tax
-	lda.l DATA8_C41166,x
+	lda.l BracketCellSeries,x
 	tax
 	lda.l SRPOWins,x
 	tay
@@ -457,13 +459,13 @@ DrawBracketSeriesSummary:			; queues the selected series teams and win counts in
 	stz.b QueueBusy
 	rts
 ScrollBracketToCursor:				; moves the bracket's scroll position ($65) toward the cursor column's
-									; (DATA8_C40FF8): one step when near, a larger one when far, the map
-									; columns queued
+									; (BracketColumnScroll): one step when near, a larger one when far, the
+									; map columns queued
 	lda.b a1
 	asl a
 	tax
 	sec
-	lda.l DATA8_C40FF8,x
+	lda.l BracketColumnScroll,x
 	sbc.b $65
 	beq .4
 	sta.b tmp0
@@ -943,14 +945,14 @@ UpdateBracketWindows:				; updates the two moving bracket window shapes in alter
 	stx.w BracketWin1Phase
 	ldy.w BracketCursorCell
 	jsr.w GetBracketWindowOffset
-	lda.l DATA8_C41006,x
+	lda.l BracketWin1CellX,x
 	adc.b tmp0
 	sec
 	sbc.w BG2HScroll
 	sta.b tmp0
 	clc
 	lda.b tmp1
-	adc.l DATA8_C41076,x
+	adc.l BracketWin1CellY,x
 	sta.b tmp1
 	ldx.w #BracketWin1X
 	jsr.w ApproachBracketWindowTarget
@@ -967,14 +969,14 @@ UpdateBracketWindows:				; updates the two moving bracket window shapes in alter
 	stx.w BracketWin2Phase
 	ldy.w BracketWin2Cell
 	jsr.w GetBracketWindowOffset
-	lda.l DATA8_C4103E,x
+	lda.l BracketWin2CellX,x
 	adc.b tmp0
 	sec
 	sbc.w BG2HScroll
 	sta.b tmp0
 	clc
 	lda.b tmp1
-	adc.l DATA8_C410AE,x
+	adc.l BracketWin2CellY,x
 	sta.b tmp1
 	ldx.w #BracketWin2X
 	jsr.w ApproachBracketWindowTarget
@@ -983,7 +985,7 @@ UpdateBracketWindows:				; updates the two moving bracket window shapes in alter
 	jmp.w WriteBracketWindowShape
 GetBracketWindowOffset:				; reads signed horizontal and vertical animation offsets and indexes the
 									; selected cell
-	lda.l DATA8_C40EF4,x
+	lda.l BracketWindowPath,x
 	tax
 	ora.w #$FF00
 	bit.w #$0080
@@ -1080,12 +1082,12 @@ WriteBracketWindowShape:			; writes clipped window edges for the bracket shape i
 	asl a
 	tay
 	ldx.w #$0054
-.2:									; if zero go to .6, A = DATA8_C40F94,x, A and $00FF, A + tmp0, ...
+.2:									; if zero go to .6, A = BracketWindowShape,x, A and $00FF, A + tmp0, ...
 	lda.w ScratchBuf,y
 	cmp.w #$00FF
 	clc
 	beq .6
-	lda.l DATA8_C40F94,x
+	lda.l BracketWindowShape,x
 	and.w #$00FF
 	adc.b tmp0
 	bpl .3
@@ -1096,7 +1098,7 @@ WriteBracketWindowShape:			; writes clipped window edges for the bracket shape i
 	sep #$20
 	sta.w ScratchBuf+$2,y
 	rep #$21
-	lda.l DATA8_C40F95,x
+	lda.l BracketWindowShape+1,x
 	and.w #$00FF
 	adc.b tmp0
 	bpl .4
@@ -1112,8 +1114,8 @@ WriteBracketWindowShape:			; writes clipped window edges for the bracket shape i
 	sta.w ScratchBuf+$3,y
 	rep #$20
 	bra .10
-.6:									; A = DATA8_C40F94,x, A and $00FF, A + tmp0, ...
-	lda.l DATA8_C40F94,x
+.6:									; A = BracketWindowShape,x, A and $00FF, A + tmp0, ...
+	lda.l BracketWindowShape,x
 	and.w #$00FF
 	adc.b tmp0
 	bpl .7
@@ -1124,7 +1126,7 @@ WriteBracketWindowShape:			; writes clipped window edges for the bracket shape i
 	sep #$20
 	sta.w ScratchBuf,y
 	rep #$21
-	lda.l DATA8_C40F95,x
+	lda.l BracketWindowShape+1,x
 	and.w #$00FF
 	adc.b tmp0
 	bpl .8
@@ -1211,13 +1213,13 @@ PopulateBracketTeams:				; places playoff teams and their name bars through the 
 	asl a
 	asl a
 	tax
-.loop2:								; loop: A = $C4119E,x, A * 2, Y = A, BracketSlotTeams,y = tmp2, ...
-	lda.l $C4119E,x
+.loop2:								; loop: A = TeamRoundSlots,x, A * 2, Y = A, BracketSlotTeams,y = tmp2, ...
+	lda.l TeamRoundSlots,x
 	asl a
 	tay
 	lda.b tmp2
 	sta.w BracketSlotTeams,y
-	lda.l DATA8_C410E6,x
+	lda.l TeamBarRoundCells,x
 	sta.w BracketTeamBarCells,y
 	tay
 	lda.b tmp2
@@ -1663,7 +1665,7 @@ AddPlayoffTeamPlayerStats:			; adds a team's game player goals and assists to th
 	txa
 	asl a
 	tax
-	lda.l DATA8_C40D76,x
+	lda.l PlayoffStatBitOffsets,x
 	sta.b tmp2
 	lda.w #$0018
 	sta.b tmp1
@@ -1723,7 +1725,8 @@ AddPlayoffTeamPlayerStats:			; adds a team's game player goals and assists to th
 	dec.b tmp1
 	bpl .loop2
 	rts
-DATA8_C40D76:						; not traced: a table read by AddPlayoffTeamPlayerStats
+PlayoffStatBitOffsets:				; per playoff team (SRPOTeams index * 2): the bit offset of its players'
+									; 7-bit totals in SRPOGoals / SRPOAssists (175 a team: 25 players)
 	db $00,$00,$AF,$00,$5E,$01,$0D,$02,$BC,$02,$6B,$03,$1A,$04,$C9,$04
 	db $78,$05,$27,$06,$D6,$06,$85,$07,$34,$08,$E3,$08,$92,$09,$41,$0A
 SetupPlayoffs:						; starts the playoffs once the schedule has no more games: the marks
@@ -1785,11 +1788,11 @@ StorePlayoffSeeds:					; writes the eight ranked team numbers to the playoff see
 	rts
 FindPlayoffDivisionSeed:			; finds the highest remaining seed matching the division mask
 	ldy.w #$000C
-.loop:								; loop: X = ScratchBuf,y, A = $000C,x, X = A, A = DATA8_C40EDA,x, ...
+.loop:								; loop: X = ScratchBuf,y, A = $000C,x, X = A, A = TeamDivisionCodes,x, ...
 	ldx.w ScratchBuf,y
 	lda.w $000C,x
 	tax
-	lda.l DATA8_C40EDA,x
+	lda.l TeamDivisionCodes,x
 	bit.b tmp0
 	bne .rts
 	dey
@@ -1808,15 +1811,15 @@ SwapPlayoffSecondSeed:				; swaps the selected ranked entry with the second play
 GetTopPlayoffSeedMask:				; returns the conference and division mask of the top ranked team
 	ldy.w ScratchBuf+$E
 	ldx.w $000C,y
-	lda.l DATA8_C40EDA,x
+	lda.l TeamDivisionCodes,x
 	rts
 RankPlayoffConference:				; builds the ranked playoff seed list for teams matching the conference
 									; mask
 	jsr.w ClearPlayoffSeedList
 	ldy.b $81
-.loop:								; loop: X = $000C,y, A = DATA8_C40EDA,x, if tmp0 bits clear go to .1, ...
+.loop:								; loop: X = $000C,y, A = TeamDivisionCodes,x, ...
 	ldx.w $000C,y
-	lda.l DATA8_C40EDA,x
+	lda.l TeamDivisionCodes,x
 	bit.b tmp0
 	beq .1
 	jsr.w InsertPlayoffSeed
@@ -1893,10 +1896,12 @@ ClearPlayoffSeedList:				; clears the ranked playoff seed pointer list
 	lda.w #$000D
 	mvn $7E,$7E
 	rts
-DATA8_C40EDA:						; not traced: a table read by RankPlayoffConference, ...
+TeamDivisionCodes:					; per team: its conference and division bits: 1 Eastern, 2 Western, then 4
+									; Pacific, 8 Central, $10 Northeast, $20 Atlantic
 	db $06,$11,$11,$06,$0A,$0A,$0A,$06,$21,$11,$06,$11,$21,$21,$21,$11
 	db $21,$11,$11,$06,$0A,$21,$0A,$06,$21,$0A
-DATA8_C40EF4:						; not traced: a table read by GetBracketWindowOffset
+BracketWindowPath:					; per animation step (BracketWin1Phase / BracketWin2Phase, 0-$9C by 2):
+									; the window's x and y offset (signed bytes), a figure of eight
 	db $00,$00,$01,$01,$02,$02,$03,$02,$04,$02,$05,$03,$06,$03,$07,$03
 	db $08,$03,$09,$03,$0A,$03,$0B,$03,$0C,$03,$0D,$03,$0E,$03,$0F,$03
 	db $10,$02,$11,$02,$12,$02,$13,$01,$14,$00,$13,$FF,$12,$FE,$11,$FE
@@ -1907,9 +1912,10 @@ DATA8_C40EF4:						; not traced: a table read by GetBracketWindowOffset
 	db $F0,$02,$EF,$02,$EE,$02,$ED,$01,$EC,$00,$ED,$FF,$EE,$FE,$EF,$FE
 	db $F0,$FE,$F1,$FD,$F2,$FD,$F3,$FD,$F4,$FD,$F5,$FD,$F6,$FD,$F7,$FD
 	db $F8,$FD,$F9,$FD,$FA,$FD,$FB,$FD,$FC,$FE,$FD,$FE,$FE,$FE,$FF,$FF
-DATA8_C40F94:						; not traced: a table read by WriteBracketWindowShape, ...
+BracketWindowShape:					; per line of the 43-line cursor window (X * 2, read from the last): its
+									; left and right edge from the window's x; then SetupPlayoffBracket's two
+									; indirect HDMA tables
 	db $12
-DATA8_C40F95:						; not traced: a table read by WriteBracketWindowShape, ...
 	db $1A,$0F,$1D,$0C,$20,$0B,$21,$09,$23,$08,$24,$07,$25,$06,$26,$05
 	db $27,$05,$27,$04,$28,$03,$29,$03,$29,$03,$29,$02,$2A,$02,$2A,$02
 	db $2A,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01
@@ -1917,5 +1923,6 @@ DATA8_C40F95:						; not traced: a table read by WriteBracketWindowShape, ...
 	db $28,$05,$27,$05,$27,$06,$26,$07,$25,$08,$24,$09,$23,$0B,$21,$0C
 	db $20,$0F,$1D,$12,$1A,$F0,$4E,$36,$F0,$0E,$38,$00,$F0,$CE,$39,$F0
 	db $8E,$3B,$00
-DATA8_C40FF8:						; not traced: a table read by ScrollBracketToCursor
+BracketColumnScroll:				; per bracket column (a1 * 2): the scroll position ($65)
+									; ScrollBracketToCursor moves the map toward
 	db $00,$00,$28,$00,$9E,$00,$11,$01,$82,$01,$FA,$01,$20,$02

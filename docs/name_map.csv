@@ -673,20 +673,21 @@ $C570E8,RosterColumnTable,DATA8_C570E8,code,"from the code: ShowRosterLine, Draw
 $C57309,RosterAttribWeights,DATA8_C57309,code,"a second copy of 94S CalcAttrib's .18 (the same 32 bytes as AttribWeights); CalcRosterAttrib and RecordOverall read this one",src/bankC5_7000.asm
 $C57810,DATA8_C57810,,new,"the routines CODE_C577F7 jumps to through a pointer, by index (in bankC5_7000)",src/bankC5_7000.asm
 $C57DCD,DATA8_C57DCD,,new,"jump table: the routine for each index (in bankC5_7000)",src/bankC5_7000.asm
-$C400FE,DATA8_C400FE,,new,"jump table: the routine for each index (in bankC4_0000)",src/bankC4_0000.asm
-$C40130,DATA8_C40130,,new,"jump table: the routine for each index (in bankC4_0000)",src/bankC4_0000.asm
-$C40D76,DATA8_C40D76,,new,"not traced: a table read by CODE_C40CF2 (in bankC4_0000)",src/bankC4_0000.asm
-$C40EDA,DATA8_C40EDA,,new,"not traced: a table read by CODE_C40E4A, CODE_C40E3A, CODE_C40E17 (in bankC4_0000)",src/bankC4_0000.asm
-$C40EF4,DATA8_C40EF4,,new,"not traced: a table read by CODE_C4081B (in bankC4_0000)",src/bankC4_0000.asm
-$C40F94,DATA8_C40F94,,new,"not traced: a table read by CODE_C408C4, CODE_C4090B (in bankC4_0000)",src/bankC4_0000.asm
-$C40F95,DATA8_C40F95,,new,"not traced: a table read by CODE_C408DB, CODE_C40919 (in bankC4_0000)",src/bankC4_0000.asm
-$C40FF8,DATA8_C40FF8,,new,"not traced: a table read by CODE_C403C2 (in bankC4_0000)",src/bankC4_0000.asm
-$C41006,DATA8_C41006,,new,"not traced: a table read by CODE_C407B4 (in bankC4_1000)",src/bankC4_1000.asm
-$C4103E,DATA8_C4103E,,new,"not traced: a table read by CODE_C407EE (in bankC4_1000)",src/bankC4_1000.asm
-$C41076,DATA8_C41076,,new,"not traced: a table read by CODE_C407B4 (in bankC4_1000)",src/bankC4_1000.asm
-$C410AE,DATA8_C410AE,,new,"not traced: a table read by CODE_C407EE (in bankC4_1000)",src/bankC4_1000.asm
-$C410E6,DATA8_C410E6,,new,"not traced: a table read by CODE_C409C0 (in bankC4_1000)",src/bankC4_1000.asm
-$C41166,DATA8_C41166,,new,"not traced: a table read by CODE_C40322, CODE_C400AC (in bankC4_1000)",src/bankC4_1000.asm
+$C400FE,BracketUpByColumn,DATA8_C400FE,code,"BracketCursorUp jumps through it by a1; BracketRowUpToEdge repeats BracketRowUp until $69 is 0",src/bankC4_0000.asm
+$C40130,BracketDownByColumn,DATA8_C40130,code,"BracketCursorDown jumps through it by a1; BracketRowDownToEdge repeats BracketRowDown until $69 is 3",src/bankC4_0000.asm
+$C40D76,PlayoffStatBitOffsets,DATA8_C40D76,code,"AddPlayoffTeamPlayerStats, ReadPlayoffPlayerGoals and ReadPlayoffPlayerAssists add player * 7 and read the byte at offset / 8, shifted by offset & 7",src/bankC4_0000.asm
+$C40EDA,TeamDivisionCodes,DATA8_C40EDA,code,"RankPlayoffConference (tmp0 2, then 1), GetTopPlayoffSeedMask and FindPlayoffDivisionSeed test the bits of the team of a record; KeepDivisionTeams compares the byte with DivisionCodes",src/bankC4_0000.asm
+$C40EF4,BracketWindowPath,DATA8_C40EF4,code,"GetBracketWindowOffset reads it for UpdateBracketWindows; the pair at $9E is not read (the phase wraps at $9E)",src/bankC4_0000.asm
+$C40F94,BracketWindowShape,DATA8_C40F94,code,"WriteBracketWindowShape adds BracketWindowShape,x and BracketWindowShape+1,x to the window x for the HDMA buffer in ScratchBuf",src/bankC4_0000.asm
+$C40F95,BracketWindowShape+1,DATA8_C40F95,code,"BracketWindowShape+1: the right edges; the label is dropped; WriteBracketWindowShape reads BracketWindowShape+1,x",src/bankC4_0000.asm
+$C40FF8,BracketColumnScroll,DATA8_C40FF8,code,"ScrollBracketToCursor steps $65 toward entry a1, by 1 when near, by an eighth of the distance when far",src/bankC4_0000.asm
+$C41006,BracketWin1CellX,DATA8_C41006,code,"UpdateBracketWindows adds the BracketWindowPath x, subtracts BG2HScroll and moves BracketWin1X toward it (ApproachBracketWindowTarget)",src/bankC4_1000.asm
+$C4103E,BracketWin2CellX,DATA8_C4103E,code,"UpdateBracketWindows, as BracketWin1CellX for BracketWin2X",src/bankC4_1000.asm
+$C41076,BracketWin1CellY,DATA8_C41076,code,"UpdateBracketWindows adds the BracketWindowPath y and moves BracketWin1Y toward it",src/bankC4_1000.asm
+$C410AE,BracketWin2CellY,DATA8_C410AE,code,"UpdateBracketWindows, as BracketWin1CellY for BracketWin2Y",src/bankC4_1000.asm
+$C410E6,TeamBarRoundCells,DATA8_C410E6,code,"PopulateBracketTeams copies the team's bar there (CopyBracketTeamBar) for each round it reached and keeps the offset in BracketTeamBarCells",src/bankC4_1000.asm
+$C41166,BracketCellSeries,DATA8_C41166,code,"BracketMarkSeries and DrawBracketSeriesSummary read entry BracketCursorCell; TeamRoundSlots follows it (28 entries)",src/bankC4_1000.asm
+$C4119E,TeamRoundSlots,,code,"PopulateBracketTeams reads it with the TeamBarRoundCells index (slot * 8 + round * 2) and puts the team in BracketSlotTeams at that slot; SPA animation lists follow from $C4121E, under this label",src/bankC4_1000.asm
 $C41E48,DATA8_C41E48,,new,"not traced: a table read by CODE_C4A2A3 (in bankC4_1000)",src/bankC4_1000.asm
 $C42030,DATA8_C42030,,new,"not traced: more of the data from bankC4_1000 (pointer tables, lists) (in bankC4_2000)",src/bankC4_2000.asm
 $C42DC5,DATA8_C42DC5,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm

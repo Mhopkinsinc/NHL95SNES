@@ -102,7 +102,7 @@ DATA8_C04CAB:						; not traced
 DivisionNames:						; the packed text of the 4 division names: Western / Pacific, Western /
 									; Central, Eastern / Atlantic, Eastern / Northeast
 	dw $46E2,$46EF,$46FC,$4709
-DivisionCodes:						; per division (d1): the code the team table (DATA8_C40EDA) gives its
+DivisionCodes:						; per division (d1): the code the team table (TeamDivisionCodes) gives its
 									; teams
 	db $06,$0A,$21,$11
 DivisionTeamCounts:					; per division (d1): its number of teams (6, 6, 7, 7)
