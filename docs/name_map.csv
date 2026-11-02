@@ -642,23 +642,23 @@ $C54194,LineChoiceTable,DATA8_C54194,code,"the same 63 bytes as 94S getlchoice's
 $C54897,EvenStrengthLines,DATA8_C54897,code,"the same 42 bytes as 94S CompLine .5 (the line table of 'same men on ice'), read the same way: rows at +14 / +28 by the score (written (EvenStrengthLines+14)&$FFFF and +28)",src/bankC5_4000.asm
 $C5491C,EnergySearchLines,DATA8_C5491C,code,"the same 18 bytes as 94S CompLine .7, read the same way by CompLineEnergySearch (94S .6; rows at +6 / +12)",src/bankC5_4000.asm
 $C54D3A,LineBarFills,DATA8_C54D3A,code,"linebar jumps through it",src/bankC5_4000.asm
-$C55002,DATA8_C55002,,new,"the item list of each pause menu tab (Info $C35CCB, Stats $C35CEF, Options $C35D07, quit prompt $C35D21: a count, then a word pair per item, the second the offset of its length-prefixed text in bank $C3); read by CODE_C54FA9",src/bankC5_5000.asm
-$C5500A,DATA8_C5500A,,new,"the item lists in game mode 1 ($1864 = 1): Info $C35CE1, Stats, Options $C35CFD, quit prompt; read by CODE_C54FA9",src/bankC5_5000.asm
-$C55012,DATA8_C55012,,new,"game mode 1, Info tab items: Team Roster, Score Summry, Records; CODE_C54F38 jumps through it by item ($18F6)",src/bankC5_5000.asm
-$C55018,DATA8_C55018,,new,"game mode 1, Options tab items: Inst Replay, Quit Game",src/bankC5_5000.asm
-$C5501C,DATA8_C5501C,,new,"pause menu Info tab ($18F2 = 0) items: Team Roster, Score Summry, Penalties, Records, Other Scores; CODE_C54F38 jumps through it by item ($18F6) on B",src/bankC5_5000.asm
-$C55026,DATA8_C55026,,new,"pause menu Stats tab (1) items: Game Stats, Period Stats, Player Stats",src/bankC5_5000.asm
-$C5502C,DATA8_C5502C,,new,"pause menu Options tab (2) items: Inst Replay, Edit Lines, Chnge Goalie, Mnual / Auto Goalie, Time Out, Quit Game",src/bankC5_5000.asm
-$C55038,DATA8_C55038,,new,"the quit prompt (3): Resume Game (back to the Options tab), Quit Game (CODE_C5004E)",src/bankC5_5000.asm
-$C55245,DATA8_C55245,,new,"not traced: a table read by CODE_C550E2 (in bankC5_5000)",src/bankC5_5000.asm
-$C5528C,DATA8_C5528C,,new,"not traced: a table read by CODE_C5525F (in bankC5_5000)",src/bankC5_5000.asm
-$C55294,DATA8_C55294,,new,"not traced: a table read by CODE_C55256 (in bankC5_5000)",src/bankC5_5000.asm
-$C5529C,DATA8_C5529C,,new,"not traced: a table read by CODE_C5524B (in bankC5_5000)",src/bankC5_5000.asm
-$C55D6B,DATA8_C55D6B,,new,"jump table: the routine for each index (code in bankC5_6000 uses it) (in bankC5_5000)",src/bankC5_5000.asm
+$C55002,PauseTabLists,DATA8_C55002,code,"DrawPauseTab passes entry pausetab to DrawPauseItems (PrintPauseItems: a count, then a routine word and a text word an item); 95 Genesis keeps text and routine together (InfoMenus, StatsMenus, PauseMenus)",src/bankC5_5000.asm
+$C5500A,PracticePauseTabLists,DATA8_C5500A,code,"DrawPauseTab reads it instead of PauseTabLists when OptPlayMode is 1",src/bankC5_5000.asm
+$C55012,PracticeInfoJumps,DATA8_C55012,code,"RunPauseItem jumps through it when pausetab is 0 in practice",src/bankC5_5000.asm
+$C55018,PracticeOptionsJumps,DATA8_C55018,code,"RunPauseItem jumps through it when pausetab is 2 in practice",src/bankC5_5000.asm
+$C5501C,PauseInfoJumps,DATA8_C5501C,code,"RunPauseItem jumps through it when pausetab is 0",src/bankC5_5000.asm
+$C55026,PauseStatsJumps,DATA8_C55026,code,"RunPauseItem jumps through it when pausetab is 1 (in practice too)",src/bankC5_5000.asm
+$C5502C,PauseOptionsJumps,DATA8_C5502C,code,"RunPauseItem jumps through it when pausetab is 2",src/bankC5_5000.asm
+$C55038,QuitPromptJumps,DATA8_C55038,code,"RunPauseItem jumps through it when pausetab is 3 (in practice too)",src/bankC5_5000.asm
+$C55245,PauseSpriteX,DATA8_C55245,code,"PauseScreenDraw puts entry gsp in $18 before CreateSprite; 3 entries (in overtime it reads on into DeselectPauseTab's code)",src/bankC5_5000.asm
+$C5528C,PauseTabPlaces,DATA8_C5528C,code,"CopyPauseTabTiles copies the tab's look from PauseTabSelected / PauseTabPlain to PauseMapBuf + entry",src/bankC5_5000.asm
+$C55294,PauseTabSelected,DATA8_C55294,code,"SelectPauseTab passes entry pausetab to CopyPauseTabTiles",src/bankC5_5000.asm
+$C5529C,PauseTabPlain,DATA8_C5529C,code,"DeselectPauseTab passes entry pausetab to CopyPauseTabTiles",src/bankC5_5000.asm
+$C55D6B,GameStatFormats,DATA8_C55D6B,code,"DrawGameStatRow prints the row name, then runs its format for both teams (a2 0 through jsr, a2 2 through jmp)",src/bankC5_5000.asm
 $C561DB,DayNames,DATA8_C561DB,code,"from the code: MakeDateString copies 3 letters by bits 5-7 of the day's word",src/bankC5_6000.asm
 $C561F0,MonthNames,DATA8_C561F0,genesis+purpose,"95 Genesis MonthNames (the month names MakeDateString uses); here pointers to all twelve",src/bankC5_6000.asm
-$C566DE,DATA8_C566DE,,new,"jump table: the routine for each index (in bankC5_6000)",src/bankC5_6000.asm
-$C56989,DATA8_C56989,,new,"not traced: a table read by CODE_C568B3 (in bankC5_6000)",src/bankC5_6000.asm
+$C566DE,PlayerStatColumns,DATA8_C566DE,code,"PlayerStatColumn jumps through it with X = $7D",src/bankC5_6000.asm
+$C56989,StatColumnNames,DATA8_C56989,code,"PrintPlayerStatHeads prints entry $7D in italics as the sort column's name",src/bankC5_6000.asm
 $C56208,MonthJanuary,,new,"the month name January, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
 $C56210,MonthFebruary,,new,"the month name February, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
 $C56219,MonthMarch,,new,"the month name March, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
@@ -673,8 +673,8 @@ $C5624C,MonthNovember,,new,"the month name November, 0-terminated; DATA8_C561F0 
 $C56255,MonthDecember,,new,"the month name December, 0-terminated; DATA8_C561F0 points at it",src/bankC5_6000.asm
 $C570E8,RosterColumnTable,DATA8_C570E8,code,"from the code: ShowRosterLine, DrawLinePlayerRow and Pausemode_gnum jmp (table,x) with a pushed return point",src/bankC5_7000.asm
 $C57309,RosterAttribWeights,DATA8_C57309,code,"a second copy of 94S CalcAttrib's .18 (the same 32 bytes as AttribWeights); CalcRosterAttrib and RecordOverall read this one",src/bankC5_7000.asm
-$C57810,DATA8_C57810,,new,"the routines CODE_C577F7 jumps to through a pointer, by index (in bankC5_7000)",src/bankC5_7000.asm
-$C57DCD,DATA8_C57DCD,,new,"jump table: the routine for each index (in bankC5_7000)",src/bankC5_7000.asm
+$C57810,LineSlotHandlers,DATA8_C57810,code,"SetLineSlot loads entry A into tmp0 and jumps through it (jmp ($009F)) with X = the line",src/bankC5_7000.asm
+$C57DCD,RecordPages,DATA8_C57DCD,code,"RecordHoldersScreen calls entry $7D after clearing the page",src/bankC5_7000.asm
 $C400FE,BracketUpByColumn,DATA8_C400FE,code,"BracketCursorUp jumps through it by a1; BracketRowUpToEdge repeats BracketRowUp until $69 is 0",src/bankC4_0000.asm
 $C40130,BracketDownByColumn,DATA8_C40130,code,"BracketCursorDown jumps through it by a1; BracketRowDownToEdge repeats BracketRowDown until $69 is 3",src/bankC4_0000.asm
 $C40D76,PlayoffStatBitOffsets,DATA8_C40D76,code,"AddPlayoffTeamPlayerStats, ReadPlayoffPlayerGoals and ReadPlayoffPlayerAssists add player * 7 and read the byte at offset / 8, shifted by offset & 7",src/bankC4_0000.asm

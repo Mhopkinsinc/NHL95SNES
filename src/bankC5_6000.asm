@@ -425,7 +425,7 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
-	jsr (DATA8_C55D6B,x)
+	jsr (GameStatFormats,x)
 	lda.w #$0002
 	sta.b a2
 	lda.w #$0010
@@ -436,7 +436,7 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
-	jmp (DATA8_C55D6B,x)
+	jmp (GameStatFormats,x)
 ShowPeriodStats:					; pause menu Period Stats: DrawPeriodStats; B switches between goals and
 									; shots, start returns
 	lda.w #$532D
@@ -821,7 +821,7 @@ PlayerStatColumn:					; A = stat column $7D of roster player Y (+ $A5 for the aw
 	adc.b $A5
 	pha
 	ldx.b $7D
-	jmp (DATA8_C566DE,x)
+	jmp (PlayerStatColumns,x)
 StatColGoals:						; PlayerStatColumn's goals column (tmgoals)
 	plx
 	lda.w tmgoals,x
@@ -853,7 +853,8 @@ StatColPenMin:						; PlayerStatColumn's penalty minutes column (ppenmin)
 	lda.w ppenmin,x
 	and.w #$00FF
 	rts
-DATA8_C566DE:						; jump table: the routine for each index
+PlayerStatColumns:					; per player stats column ($7D): its routine: goals, assists, points,
+									; shots, penalty minutes
 	dw StatColGoals,StatColAssists,StatColPoints,StatColShots
 	dw StatColPenMin
 SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2's goalies
@@ -1055,8 +1056,8 @@ PrintGoalieShotsPct:				; prints a goalie row's shots against and save percentag
 	ldx.w #$8000
 	jmp.w PrintStatCell
 PrintPlayerStatHeads:				; prints the player stats headings (the sort column's name from
-									; DATA8_C56989, the column titles, the sort column highlighted); with $7D
-									; $FFFF the goalie ones (PrintGoalieStatHeads)
+									; StatColumnNames, the column titles, the sort column highlighted); with
+									; $7D $FFFF the goalie ones (PrintGoalieStatHeads)
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$0078
@@ -1077,8 +1078,8 @@ PrintPlayerStatHeads:				; prints the player stats headings (the sort column's n
 	cpx.w #$FFFF
 	bne .1
 	jmp.w PrintGoalieStatHeads
-.1:									; A = DATA8_C56989,x, X = A, Y = $0008, call PrintItalicLeft, ...
-	lda.l DATA8_C56989,x
+.1:									; A = StatColumnNames,x, X = A, Y = $0008, call PrintItalicLeft, ...
+	lda.l StatColumnNames,x
 	tax
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
@@ -1159,7 +1160,8 @@ PrintGoalieStatHeads:				; prints the goalie stats headings (Goalies, the column
 	ldx.w #$4F7F
 	lda.w #$8000
 	jmp.w PrintStatHead
-DATA8_C56989:						; not traced: a table read by PrintPlayerStatHeads
+StatColumnNames:					; per player stats column ($7D): its name, packed text: Goals, Assists,
+									; Points, Shots, Penalties
 	db $6A,$4B,$6F,$4B,$75,$4B,$9E,$4B,$08,$48
 ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, Time, Tm, Player,
 									; PM) as a scrolling list, No Penalties when there are none; start returns

@@ -1104,13 +1104,13 @@ PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E,
 	jsl.l PrintBoldRight
 	rts
 SetLineSlot:						; puts player $7B (+ 1) in slot A of line X of the line block at $65
-									; through the slot's handler (DATA8_C57810), the old player moved when the
-									; new one was in the line
+									; through the slot's handler (LineSlotHandlers), the old player moved when
+									; the new one was in the line
 	stx.b tmp1
 	inc.b $7B
 	asl a
 	tax
-	lda.l DATA8_C57810,x
+	lda.l LineSlotHandlers,x
 	sta.b tmp0
 	lda.b tmp1
 	asl a
@@ -1120,7 +1120,8 @@ SetLineSlot:						; puts player $7B (+ 1) in slot A of line X of the line block 
 	tax
 	sep #$20
 	jmp ($009F)
-DATA8_C57810:						; the routines SetLineSlot jumps to through a pointer, by index
+LineSlotHandlers:					; per line slot (A * 2: LD, RD, LW, C, RW): the routine SetLineSlot runs
+									; to put the player there
 	dw SetLineSlotLD,SetLineSlotRD,SetLineSlotLW,SetLineSlotC
 	dw SetLineSlotRW
 SetLineSlotLD:						; slot 0 (LD, line byte +1) = player $7B; the old LD goes to RD when the
@@ -1762,7 +1763,7 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	ldx.b $7D
-	jsr (DATA8_C57DCD,x)
+	jsr (RecordPages,x)
 .11:								; call SendTextMap, call WaitTransfers, fadestep = 0
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
@@ -1809,7 +1810,7 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	bpl .13
 	lda.w #$0004
 	bra .13
-DATA8_C57DCD:						; jump table: the routine for each index
+RecordPages:						; per records page ($7D): the routine that prints it: wins, goals, saves
 	dw PrintWinRecords,PrintGoalRecords,PrintSaveRecords
 InsertWinRecord:					; puts user record tmp1 in the win page's order list before the first one
 									; whose win % is not above A (the rest moved down); X = tmp1

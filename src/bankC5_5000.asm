@@ -30,7 +30,8 @@ PauseMenuInput:						; the pause menu's pad: left / right the tab (pausetab 0-2)
 PauseMenuReturn:					; the shared rts of PauseMenuInput and its item and tab routines
 	rts
 RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info, Stats,
-									; Options or the quit prompt (DATA8_C55012 / 18 in play mode 1)
+									; Options or the quit prompt (PracticeInfoJumps / PracticeOptionsJumps in
+									; play mode 1)
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .4
@@ -43,13 +44,13 @@ RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info
 	beq .2
 	dec a
 	beq .1
-	jmp (DATA8_C55038,x)
-.1:									; jump through DATA8_C55018,x
-	jmp (DATA8_C55018,x)
-.2:									; jump through DATA8_C55026,x
-	jmp (DATA8_C55026,x)
-.3:									; jump through DATA8_C55012,x
-	jmp (DATA8_C55012,x)
+	jmp (QuitPromptJumps,x)
+.1:									; jump through PracticeOptionsJumps,x
+	jmp (PracticeOptionsJumps,x)
+.2:									; jump through PauseStatsJumps,x
+	jmp (PauseStatsJumps,x)
+.3:									; jump through PracticeInfoJumps,x
+	jmp (PracticeInfoJumps,x)
 .4:									; A = pauseitem, A * 2, X = A, if pausetab = 0 go to .7, ...
 	lda.w pauseitem
 	asl a
@@ -60,13 +61,13 @@ RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info
 	beq .6
 	dec a
 	beq .5
-	jmp (DATA8_C55038,x)
-.5:									; jump through DATA8_C5502C,x
-	jmp (DATA8_C5502C,x)
-.6:									; jump through DATA8_C55026,x
-	jmp (DATA8_C55026,x)
-.7:									; jump through DATA8_C5501C,x
-	jmp (DATA8_C5501C,x)
+	jmp (QuitPromptJumps,x)
+.5:									; jump through PauseOptionsJumps,x
+	jmp (PauseOptionsJumps,x)
+.6:									; jump through PauseStatsJumps,x
+	jmp (PauseStatsJumps,x)
+.7:									; jump through PauseInfoJumps,x
+	jmp (PauseInfoJumps,x)
 PauseItemUp:						; the pause menu item one up (pauseitem - 1, not below 0), the tab redrawn
 	lda.w pauseitem
 	beq PauseMenuReturn
@@ -94,18 +95,18 @@ SetPauseTab:						; switches the pause menu to tab X when it is another: the old
 	pla
 	sta.w pausetab
 	stz.w pauseitem
-DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from DATA8_C55002, or
-									; DATA8_C5500A in play mode 1), the current item's row highlighted
-									; (palette $3200), queued to VRAM
+DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from PauseTabLists, or
+									; PracticePauseTabLists in play mode 1), the current item's row
+									; highlighted (palette $3200), queued to VRAM
 	asl a
 	tax
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .1
-	lda.l DATA8_C5500A,x
+	lda.l PracticePauseTabLists,x
 	bra .2
-.1:									; A = DATA8_C55002,x
-	lda.l DATA8_C55002,x
+.1:									; A = PauseTabLists,x
+	lda.l PauseTabLists,x
 .2:									; call DrawPauseItems, call SelectPauseTab, A = pauseitem, A / 2, ...
 	jsr.w DrawPauseItems
 	jsr.w SelectPauseTab
@@ -140,27 +141,30 @@ DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from DATA8_C5
 	stx.b $00
 	stz.b QueueBusy
 	jmp.w ShowPenaltyBoxes
-DATA8_C55002:						; the item list (bank $C3) of each pause menu tab: Info, Stats, Options,
-									; the quit prompt; DrawPauseTab
+PauseTabLists:						; per pause tab (pausetab * 2: Info, Stats, Options, the quit prompt): its
+									; item list in bank $C3 for DrawPauseItems
 	db $CB,$5C,$EF,$5C,$07,$5D,$21,$5D
-DATA8_C5500A:						; the same in game mode 1: shorter Info and Options lists; DrawPauseTab
+PracticePauseTabLists:				; the same in practice (OptPlayMode 1): shorter Info and Options lists
 	db $E1,$5C,$EF,$5C,$FD,$5C,$21,$5D
-DATA8_C55012:						; game mode 1, Info tab: Team Roster, Score Summry, Records (RunPauseItem
-									; jumps through it)
+PracticeInfoJumps:					; practice Info tab (OptPlayMode 1): per item (pauseitem * 2) its routine:
+									; Team Roster, Score Summry, Records
 	dw TeamRoster,ShowScoringSummary,RecordHoldersScreen
-DATA8_C55018:						; game mode 1, Options tab: Inst Replay, Quit Game
+PracticeOptionsJumps:				; practice Options tab: per item (pauseitem * 2) its routine: Inst Replay,
+									; Quit Game
 	dw PauseReplay,ShowQuitPrompt
-DATA8_C5501C:						; pause menu Info tab: Team Roster, Score Summry, Penalties, Records,
-									; Other Scores (RunPauseItem)
+PauseInfoJumps:						; pause menu Info tab: per item (pauseitem * 2) its routine: Team Roster,
+									; Score Summry, Penalties, Records, Other Scores
 	dw TeamRoster,ShowScoringSummary,ShowPenaltySummary,RecordHoldersScreen
 	dw ShowOtherScores
-DATA8_C55026:						; pause menu Stats tab: Game Stats, Period Stats, Player Stats
+PauseStatsJumps:					; pause menu Stats tab: per item (pauseitem * 2) its routine: Game Stats,
+									; Period Stats, Player Stats
 	dw ShowGameStats,ShowPeriodStats,ShowPlayerStats
-DATA8_C5502C:						; pause menu Options tab: Inst Replay, Edit Lines, Chnge Goalie, the
-									; goalie mode, Time Out, Quit Game
+PauseOptionsJumps:					; pause menu Options tab: per item (pauseitem * 2) its routine: Inst
+									; Replay, Edit Lines, Chnge Goalie, the goalie mode, Time Out, Quit Game
 	dw PauseReplay,EditLinesScreen,PauseGoalie,PauseGoalieMode
 	dw PauseTimeout,ShowQuitPrompt
-DATA8_C55038:						; the quit prompt: Resume Game (back to the Options tab), Quit Game
+QuitPromptJumps:					; the quit prompt: per item (pauseitem * 2) its routine: Resume Game (back
+									; to the Options tab), Quit Game
 	dw ResumeFromQuit,QuitGameJump
 InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, the game's text
 									; map read from VRAM into a buffer, BackupPauseBuffers, PauseScreenMap
@@ -235,7 +239,7 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	lda.w gsp
 	asl a
 	tax
-	lda.l DATA8_C55245,x
+	lda.l PauseSpriteX,x
 	sta.b $18
 	lda.w #$001F
 	jsl.l CreateSprite
@@ -390,25 +394,26 @@ FillPauseMapTileRun:				; writes consecutive tile words into the pause map at of
 	cpy.w #$000A
 	bne .loop
 	rts
-DATA8_C55245:						; not traced: a table read by PauseScreenDraw
+PauseSpriteX:						; per period (gsp * 2): the x of the sprite PauseScreenDraw creates
+									; (record $1F, y $39)
 	db $62,$01,$7D,$01,$97,$01
 DeselectPauseTab:					; copies the inactive tab tiles into the current pause tab header
 	lda.w pausetab
 	asl a
 	tax
-	lda.l DATA8_C5529C,x
+	lda.l PauseTabPlain,x
 	bra CopyPauseTabTiles
 SelectPauseTab:						; copies the active tab tiles into the current pause tab header
 	lda.w pausetab
 	asl a
 	tax
-	lda.l DATA8_C55294,x
+	lda.l PauseTabSelected,x
 CopyPauseTabTiles:					; copies a tab's two rows of eight tiles from pause map offset A to its
-									; place in the tab header (DATA8_C5528C by X); DeselectPauseTab and
+									; place in the tab header (PauseTabPlaces by X); DeselectPauseTab and
 									; SelectPauseTab end here
 	adc.w PauseMapBuf
 	tay
-	lda.l DATA8_C5528C,x
+	lda.l PauseTabPlaces,x
 	adc.w PauseMapBuf
 	tax
 	jsr.w CopyPauseTabTileRow
@@ -431,11 +436,14 @@ CopyPauseTabTileRow:				; copies eight tile words from Y to X
 	dec.b tmp0
 	bne .loop
 	rts
-DATA8_C5528C:						; not traced: a table read by CopyPauseTabTiles
+PauseTabPlaces:						; per pause tab (pausetab * 2): the pause map offset of its two rows of 8
+									; tiles in the tab header (the quit prompt uses the Options tab's)
 	db $44,$00,$58,$00,$6C,$00,$6C,$00
-DATA8_C55294:						; not traced: a table read by SelectPauseTab
+PauseTabSelected:					; per pause tab (pausetab * 2): the pause map offset of its selected look,
+									; copied into its place
 	db $C0,$07,$D0,$07,$E0,$07,$E0,$07
-DATA8_C5529C:						; not traced: a table read by DeselectPauseTab
+PauseTabPlain:						; per pause tab (pausetab * 2): the pause map offset of its plain look,
+									; copied into its place
 	db $40,$08,$50,$08,$60,$08,$60,$08
 DrawPauseItems:						; blanks the pause item rows (the bank $C3 list of seven blank items) and
 									; prints item list A (PrintPauseItems)
@@ -1734,7 +1742,8 @@ ScrollListUpAnim:					; scrolls the list up a row over 8 frames by the BG3 scrol
 	stz.w padchangeany
 ScrollListUpReturn:					; the rts ScrollListUp leaves through when the list is at its top
 	rts
-DATA8_C55D6B:						; jump table: the routine for each index (code in bankC5_6000 uses it)
+GameStatFormats:					; per game stat row format (the row's byte at +2 in bank $C3): the routine
+									; that prints a team's value: a number, a pair, a percentage, a time
 	dw DrawTeamStatNumber,DrawTeamStatPair,DrawTeamStatPercent,DrawTeamStatTime
 ClearTextRow:						; clears row $6D of the text map at $D3 (32 tiles)
 	lda.b $6D
