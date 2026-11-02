@@ -702,7 +702,7 @@ clearTeamStats:						; clears the team stats (keeping both goalies), the penalty
 	sta.w tmgoalie
 	lda.w #$FFFF
 	sta.w tmboxlist
-	sta.w $13F5
+	sta.w tmboxlist+$1A
 	stz.w tmsort
 	lda.w #$000C
 	sta.w tmsort+2

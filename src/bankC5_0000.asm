@@ -1401,7 +1401,7 @@ SeasonGameOver:						; after the user's season game: its game record (the first 
 	lda.w tmshots
 	sta.l $7F8F1C,x
 	sta.l $7F8F18,x
-	lda.w $1299
+	lda.w tmshots+2
 	sta.l $7F8F06,x
 	sta.l $7F8F2E,x
 	lda.w tmchecks
@@ -1414,7 +1414,7 @@ SeasonGameOver:						; after the user's season game: its game record (the first 
 	sta.l $7F8F0A,x
 	lda.w tmPwrGoals
 	sta.l $7F8F22,x
-	lda.w $1261
+	lda.w tmPwrGoals+2
 	sta.l $7F8F0C,x
 	lda.w tmSHShots
 	sta.l $7F8F24,x

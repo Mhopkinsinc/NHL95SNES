@@ -747,9 +747,9 @@ UpdateRecords:						; after a game, outside play mode 1 and with user records on
 	lda.w OptUserRec
 	beq .rtl
 	lda.w HomeTeam
-	sta.w $12AF
+	sta.w RecordTeams
 	lda.w VisTeam
-	sta.w $12B1
+	sta.w RecordTeams+2
 	lda.w HomeUserRec
 	bmi .1
 	ldx.w #$0000
@@ -786,19 +786,19 @@ UpdateUserRecord:					; adds the game to the user record of team X: a win, loss 
 	bcc .3
 	beq .3
 	sta.b $85
-	lda.w $12AF,x
+	lda.w RecordTeams,x
 	sta.b d2
-	lda.w $12AF,y
+	lda.w RecordTeams,y
 	sta.b $89
-.3:									; if tmscore,x < d0 go to .4, if zero go to .4, d0 = A, $81 = $12AF,x, ...
+.3:									; if tmscore,x < d0 go to .4, if zero go to .4, d0 = A, ...
 	lda.w tmscore,x
 	cmp.b d0
 	bcc .4
 	beq .4
 	sta.b d0
-	lda.w $12AF,x
+	lda.w RecordTeams,x
 	sta.b $81
-	lda.w $12AF,y
+	lda.w RecordTeams,y
 	sta.b d1
 .4:									; pull A
 	pla

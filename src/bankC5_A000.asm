@@ -1821,7 +1821,7 @@ FinishSeasonDay:					; once no user game of the day is left: Please Wait, the co
 	jsl.l ResetWorkBuf
 	lda.w #$0001
 	sta.w SeasonScoresMode
-	stz.w $1910
+	stz.w SeasonScoresExit
 	jsl.l ResetSprites
 	jsr.w ShowOtherScores
 	stz.w SeasonScoresMode
@@ -1838,18 +1838,18 @@ FinishSeasonDay:					; once no user game of the day is left: Please Wait, the co
 	sta.l SeasonDay
 	lda.w #$0000
 	sta.l SRDayPlayed
-	bit.w $1910
+	bit.w SeasonScoresExit
 	bpl .2
 	jmp.w ReturnToLeagueMenu
 .2:									; go to MenuPlayGames
 	jmp.w MenuPlayGames
-.3:									; HomeTeam = $0004,x, A = $0002,x, VisTeam = A, $2C44 = X, ...
+.3:									; HomeTeam = $0004,x, A = $0002,x, VisTeam = A, ...
 	lda.w $0004,x
 	sta.l HomeTeam
 	lda.w $0002,x
 	plb
 	sta.w VisTeam
-	stx.w $2C44
+	stx.w SeasonUserGamePtr&$FFFF
 	jsl.l ResetTransferQueues
 	jsl.l ResetWorkBuf
 	jsl.l FadeOutWait

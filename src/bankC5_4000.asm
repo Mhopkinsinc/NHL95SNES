@@ -1611,9 +1611,9 @@ getlinee:							; returns the average skater energy of line A for team a2
 	ldy.b a2
 	beq .2
 	adc.w #$0034
-.2:									; Y = A, A = $1309,y, A + r2, r2 = A, ...
+.2:									; Y = A, A = tmpde-2,y, A + r2, r2 = A, ...
 	tay
-	lda.w $1309,y
+	lda.w tmpde-2,y
 	clc
 	adc.b r2
 	sta.b r2

@@ -84,7 +84,7 @@ BracketCursorLeft:					; moves the bracket cursor one column left (a1, not below
 	sta.w BracketCursorCell
 	sta.w BracketWin2Cell
 	rts
-BracketMarkSeries:					; toggles the mark of the series under the bracket cursor ($2C46) when
+BracketMarkSeries:					; toggles BracketSeriesMarks for the selected series when
 									; both teams are known and it is not decided, and highlights its teams'
 									; bars
 	lda.w BracketCursorCell
@@ -108,14 +108,14 @@ BracketMarkSeries:					; toggles the mark of the series under the bracket cursor
 	tya
 	asl a
 	tax
-	lda.w $2C46,x
+	lda.w BracketSeriesMarks&$FFFF,x
 	eor.w #$FFFF
-	sta.w $2C46,x
-	ldy.w $2C64,x
+	sta.w BracketSeriesMarks&$FFFF,x
+	ldy.w BracketTeamBarCells&$FFFF,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
-	ldy.w $2C82,x
+	ldy.w (BracketTeamBarCells+$1E)&$FFFF,x
 	jsr.w ToggleTeamBarHighlight
 	jmp.w RefreshBracketColumns
 .rts:								; return
@@ -263,7 +263,7 @@ BuildPlayoffDay:					; the day's playoff game records from the series still runn
 	sta.w $0008,y
 	sta.w $000A,y
 	sta.w $0000,y
-	lda.l $7E2C46,x
+	lda.l BracketSeriesMarks,x
 	beq .1
 	lda.w #$0001
 	sta.w $0000,y
@@ -720,14 +720,14 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	jsl.l PrintBoldLeft
 .2:									; X = $001C
 	ldx.w #$001C
-.loop6:								; loop: if $2C46,x >= 0 go to .3, Y = $2C64,x, push X, ...
-	lda.w $2C46,x
+.loop6:								; loop: if BracketSeriesMarks&$FFFF,x >= 0 go to .3, ...
+	lda.w BracketSeriesMarks&$FFFF,x
 	bpl .3
-	ldy.w $2C64,x
+	ldy.w BracketTeamBarCells&$FFFF,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
-	ldy.w $2C82,x
+	ldy.w (BracketTeamBarCells+$1E)&$FFFF,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
@@ -1218,7 +1218,7 @@ PopulateBracketTeams:				; places playoff teams and their name bars through the 
 	lda.b tmp2
 	sta.w BracketSlotTeams,y
 	lda.l DATA8_C410E6,x
-	sta.w $2C64,y
+	sta.w BracketTeamBarCells&$FFFF,y
 	tay
 	lda.b tmp2
 	phx
@@ -1731,7 +1731,7 @@ SetupPlayoffs:						; starts the playoffs once the schedule has no more games: t
 									; (once, while it is empty)
 	lda.l SRPOTeams
 	bne .rtl
-	lda.w #$2C46
+	lda.w #BracketSeriesMarks&$FFFF
 	ldy.w #$0078
 	jsl.l ClearRAM7E
 	jsl.l RestoreWorkBuf

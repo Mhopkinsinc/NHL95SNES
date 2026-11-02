@@ -1533,10 +1533,10 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	jsr.w ScrollListDown
 .8:									; go to .loop2
 	bra .loop2
-.9:									; if SeasonScoresMode = 0 go to .loop2, $1910 - 1
+.9:									; if SeasonScoresMode = 0 go to .loop2, SeasonScoresExit - 1
 	lda.w SeasonScoresMode
 	beq .loop2
-	dec.w $1910
+	dec.w SeasonScoresExit
 .10:								; go to ExitToPauseMenu
 	jmp.w ExitToPauseMenu
 DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game and its score

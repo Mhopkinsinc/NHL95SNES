@@ -1365,7 +1365,7 @@ RemovePlayerFromList:				; remove a player from the penalty box list by shifting
 	tay
 	sep #$20
 	lda.w tmboxlist,y
-	sta.w $13DA,y
+	sta.w tmboxlist-1,y
 	rep #$30
 	bit.w #$0080
 	beq .loop

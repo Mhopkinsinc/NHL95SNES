@@ -262,7 +262,7 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	jsl.l WaitTransfers
 	lda.w #$C000
 	sta.w DMAEnShadow
-	lda.w #$2C46
+	lda.w #BracketSeriesMarks&$FFFF
 	ldy.w #$0078
 	jsl.l ClearRAM7E
 	jsl.l UpdateMenuSpritesTwice

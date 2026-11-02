@@ -8856,3 +8856,15 @@ $7E364A,pausesavebuf,,94S+purpose,"InitPauseScreen reads VRAM into allocated buf
 $7E364C,RestoreScreenBuf,,code,"RestoreGameScreen allocates tiles and map here and queues their VRAM uploads",src/ram95s.asm
 $4828,SpritePalUse+$170,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
 $482A,SpritePalUse+$172,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1910,SeasonScoresExit,,code,"RAM: FinishSeasonDay clears and tests sign; ShowOtherScores decrements on exit",src/ram95s.asm
+$12AF,RecordTeams,,code,"RAM: UpdateRecords copies HomeTeam and VisTeam; UpdateUserRecord indexes by team",src/ram95s.asm
+$7E2C44,SeasonUserGamePtr,,code,"FinishSeasonDay scans day records and saves X before starting selected game",src/ram95s.asm
+$7E2C46,BracketSeriesMarks,,code,"BracketMarkSeries toggles word by series; SetupPlayoffBracket tests sign",src/ram95s.asm
+$7E2C64,BracketTeamBarCells,,code,"PopulateBracketTeams writes cell from placement table; highlight readers use two halves",src/ram95s.asm
+$12B1,RecordTeams+2,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1261,tmPwrGoals+2,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1299,tmshots+2,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1309,tmpde-2,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$13DA,tmboxlist-1,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$13F5,tmboxlist+$1A,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$2C82,(BracketTeamBarCells+$1E)&$FFFF,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
