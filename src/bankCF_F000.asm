@@ -160,27 +160,27 @@ PutSmallPiece2:						; the second 8 x 8 piece's sprite (x $E9 / y $F1), then Put
 	adc.b $0A
 	bpl .1
 	cmp.w #$FFF9
-	bcc CODE_CFF231
+	bcc .2
 	inx
 	and.w #$00FF
-.1:									; if A >= $0100 go to CODE_CFF231
+.1:									; if A >= $0100 go to .2, tmp0 = A, A = $F1, A + $0C, if plus go to .3,
+									; ...
 	cmp.w #$0100
-	bcs CODE_CFF231
-CODE_CFF221:						; called from other segments
+	bcs .2
 	sta.b tmp0
 	lda.b $F1
 	adc.b $0C
-	bpl CODE_CFF234
+	bpl .3
 	cmp.w #$FFF9
 	and.w #$00FF
-	bcs CODE_CFF239
-CODE_CFF231:						; from PutSmallPiece2, CODE_CFF234
+	bcs .4
+.2:									; pull A, go to PutSmallPiece1
 	pla
 	bra PutSmallPiece1
-CODE_CFF234:						; from CODE_CFF221
+.3:									; if A >= $00E0 go to .2
 	cmp.w #$00E0
-	bcs CODE_CFF231
-CODE_CFF239:						; from CODE_CFF221
+	bcs .2
+.4:									; A or tmp0, push A, $00,y = X, Y + 1
 	xba
 	ora.b tmp0
 	pha

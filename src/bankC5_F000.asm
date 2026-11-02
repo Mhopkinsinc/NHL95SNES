@@ -14,13 +14,14 @@ UnpackStream0:						; unpack a format 0 stream that has no header, into bank $7E
 	sta.b $20
 	lda.w #$004C					; then jmp (opcode $4C) back to the loop
 	sta.b $23
-	lda.w #CODE_C5F097				; the copy built in the DMA registers ends with jmp here
+	lda.w #UnpackStream0Next		; the copy built in the DMA registers ends with jmp here
 	sta.b $24
-	jml.l CODE_C5F099-$400000		; run the loop from the bank $85 mirror, so jmp DMAP2 reaches
+	jml.l UnpackStream0Loop-$400000	; run the loop from the bank $85 mirror, so jmp DMAP2 reaches
 									; the DMA registers
-CODE_C5F097:						; the copy built in the DMA registers jumps back here
+UnpackStream0Next:					; the copy built in the DMA registers jumps back here: the stream pointer
+									; from X
 	stx.b $12
-CODE_C5F099:						; the command loop, run through the bank $85 mirror
+UnpackStream0Loop:					; the command loop, run through the bank $85 mirror
 	lda.b [$12]
 	bit.w #$0080
 	beq .1
@@ -36,7 +37,7 @@ CODE_C5F099:						; the command loop, run through the bank $85 mirror
 	sta.b $12
 	lda.b $15
 	mvn $7E,$7E
-	bra CODE_C5F099
+	bra UnpackStream0Loop
 .1:									; A and $007F, X = $12, X + 1, go to DMAP2
 	and.w #$007F
 	ldx.b $12

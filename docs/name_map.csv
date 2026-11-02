@@ -6542,9 +6542,9 @@ $C5F021,.loop,CODE_C5F021,new,"branch target only used in CreateSpriteSharePal",
 $C5F02F,.7,CODE_C5F02F,new,"branch target only used in CreateSpriteSharePal",src/bankC5_E000.asm
 $C5F057,.8,CODE_C5F057,new,"branch target only used in CreateSpriteSharePal",src/bankC5_E000.asm
 $C5F05B,.9,CODE_C5F05B,new,"branch target only used in CreateSpriteSharePal",src/bankC5_E000.asm
-$C5F0BC,.1,CODE_C5F0BC,new,"branch target only used in CODE_C5F099",src/bankC5_F000.asm
-$C5F0C5,.2,CODE_C5F0C5,new,"branch target only used in CODE_C5F099",src/bankC5_F000.asm
-$C5F0D0,.rts,CODE_C5F0D0,new,"branch target only used in CODE_C5F099",src/bankC5_F000.asm
+$C5F0BC,.1,CODE_C5F0BC,new,"branch target only used in UnpackStream0Loop",src/bankC5_F000.asm
+$C5F0C5,.2,CODE_C5F0C5,new,"branch target only used in UnpackStream0Loop",src/bankC5_F000.asm
+$C5F0D0,.rts,CODE_C5F0D0,new,"branch target only used in UnpackStream0Loop",src/bankC5_F000.asm
 $C5F0D7,.1,CODE_C5F0D7,new,"branch target only used in BuildSpriteOAM",src/bankC5_F000.asm
 $C5F0E2,.loop,CODE_C5F0E2,new,"branch target only used in BuildSpriteOAM",src/bankC5_F000.asm
 $C5F0EE,.2,CODE_C5F0EE,new,"branch target only used in BuildSpriteOAM",src/bankC5_F000.asm
@@ -8883,3 +8883,8 @@ $C5111D,printscores1_per,CODE_C5111D,94S+code,"the same code as 94S printscores1
 $C528D3,print,CODE_C528D3,94S+code,"printscores1_per calls it where 94S printscores1_per ends with jml print",src/bankC5_2000.asm
 $C46EDA,.2,CODE_C46EDA,94S+code,"GoalieAvoidInsideTarget local: unreached in 95; the block of 94S avdgoal at its .4 (cmp Xpos,y / bpl return / far line y to d1), no reference in the traced code",src/bankC4_6000.asm
 $C49390,.1,CODE_C49390,94S+code,"GoaliePuckVector local: unreached in 95; 94S GoaliePuckVector's .t1 entry (d0 = puckx, d1 = pucky - d4) before its goal line check, no reference in the traced code",src/bankC4_9000.asm
+$CFF231,.2,CODE_CFF231,new,"branch target only used in PutSmallPiece2",src/bankCF_F000.asm
+$CFF234,.3,CODE_CFF234,new,"branch target only used in PutSmallPiece2",src/bankCF_F000.asm
+$CFF239,.4,CODE_CFF239,new,"branch target only used in PutSmallPiece2; CODE_CFF221 (no reference, between .1 and .2) dropped so the routine is one scope",src/bankCF_F000.asm
+$C5F097,UnpackStream0Next,CODE_C5F097,code,"UnpackStream0 stores its address as the jmp target after the mvn it builds at DMAP2; the copy returns with X past the copied bytes",src/bankC5_F000.asm
+$C5F099,UnpackStream0Loop,CODE_C5F099,code,"UnpackStream0 jml's here at -$400000 so the jmp to the DMA registers stays in bank $85; each command byte copies a run (mvn) or a literal block",src/bankC5_F000.asm
