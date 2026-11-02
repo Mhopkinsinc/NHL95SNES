@@ -193,8 +193,8 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	pea.w $0000
 	pea.w $56C0
 	pea.w $1809
-	pea.w $00C5
-	pea.w $8A63
+	pea.w ZeroFillWord>>16
+	pea.w ZeroFillWord&$FFFF
 	lda.b $02
 	tsx
 	tcs

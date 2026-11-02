@@ -81,5 +81,6 @@ SeasonTeamStats = $C5B07C
 SeasonPlayerStats = $C5B0EA
 WonCheckTiles = $C03CF9
 GameSetUp_reenter = $C58D44
+WonCheckPalette = $C03EE2
 
 incsrc "../bankC5_A000.asm"

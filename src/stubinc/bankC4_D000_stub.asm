@@ -88,5 +88,6 @@ TiledBackMap = $C087F2
 TitleGoalieMap = $C22CB2
 TitleLogoMap = $C271F6
 TitlePlayersMap = $C20AB8
+ZeroFillWord = $C58A63
 
 incsrc "../bankC4_D000.asm"

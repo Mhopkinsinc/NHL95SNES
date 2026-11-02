@@ -4,7 +4,7 @@
 
 - Full build MATCH (SHA-1 `0b939f267377801d2c805b05c06a7ee6c880c5fc`, 1,048,576 bytes); `tools/verify_all.sh` MATCH (full build and
   all 256 segments built on their own from their stubs).
-- Source: bankC0_0000 (data, $C00000-$C00F48: TeamPalettes, ArrowFontTiles, GradientBarTiles, MeterFontTiles, UnusedPalette,
+- Source: bankC0_0000 (data, $C00000-$C00F48: TeamPalettes, ArrowFontTiles, GradientBarTiles, MeterFontTiles, GamePalette0,
   SoundRAMClear), bankC0_1000 ($C00F49-$C01A38: SoundDriver, SMSG 3.07w, as SPC700) and bankC0_2000 ($C01A39-$C03CF8: the
   text routine's three fonts), bankC0_3000 ($C03CF9-$C04641: WonCheckTiles, WonCheckPalette, Away/HomeUniformPalettes),
   bankC0_4000 ($C04642-$C05DAB: tile sets, HDMA tables, colour hooks, BitMaskTable, the Tampa Bay photos), bankC0_5000
@@ -274,7 +274,6 @@
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
   VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
 - GradientBarTiles: rendered bars; where they are drawn (VRAM $0640 from $C4D864, $0010 from $C59119) is not traced.
-- UnusedPalette: no operand or pointer in the ROM is $0EE5; a computed address could still reach it.
 - Home / away: $17C9 = home, $17CB = away is read from the jersey colours they get (white for $17C9, as 94S home), not from
   the setup code. The last pair of uniform palettes (after the all-star teams) is not traced. The team order is 94S's (the
   sprite logos render WSH before WPG).
@@ -356,7 +355,7 @@
     $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
   - The SPA lists (bank $C4, 59 of them) carry 94S names except two between SPAgdive and SPAgbutterfly ($C415C4,
     $C41636: two of gpoke / gcover2 / gcover); the code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
-    as in 94S. TitleScreen's pea $00C5 / pea $8A63 is ZeroFillWord. FrictionFactors has 94S updateplayers' bytes but
+    as in 94S. FrictionFactors has 94S updateplayers' bytes but
     no 95 reader.
 - 27 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,

@@ -3,7 +3,7 @@ $C00000,TeamPalettes,,render,"28 rows of 16 colours in team order (Anaheim first
 $C0027E,ArrowFontTiles,,render,"96 4bpp tiles, packed format 4: a two colour font for ASCII $20-$7F with arrows at ^ _ ~ and $7F; $C5521E loads it to VRAM $4A00 through $C58A65; the screen that uses it is not traced yet",src/bankC0_0000.asm
 $C0083D,GradientBarTiles,,render,"18 4bpp tiles, packed format 2: bars shaded dark to light; unpacked at $C401B7 / $C4D864 / $C559CC / $C59119 and queued for VRAM",src/bankC0_0000.asm
 $C00976,MeterFontTiles,,render,"128 4bpp tiles, packed format 6: meter bars in three colours, a PwrPlay label, box corners, then ASCII $20-$7F; $C521EB and $C55826 load it to VRAM $4800 through $C58A65",src/bankC0_0000.asm
-$C00EE5,UnusedPalette,,new,"16 colours after MeterFontTiles; no 16-bit operand or pointer in the ROM is $0EE5",src/bankC0_0000.asm
+$C00EE5,GamePalette0,,code,"was UnusedPalette (no operand or pointer is $0EE5); setupice and RestoreGameScreen queue $1E bytes from GamePalette0+2 to CGRAM 1 through pea pairs ($00C0 / $0EE7), then BackdropColour to colour 0",src/bankC0_0000.asm
 $C00F05,SoundRAMClear,,code,"SPC700 program at sound RAM $0020 as IPL upload blocks; $CF001A sends it through $CF004B, then the sound driver stream at $C00F49",src/bankC0_0000.asm
 $C00F09,.code,,new,SoundRAMClear: the block's bytes,src/bankC0_0000.asm
 $C00F09,.start,,new,SoundRAMClear: entry (sound RAM $0020),src/bankC0_0000.asm

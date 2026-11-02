@@ -1338,8 +1338,8 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	asl a
 	pha
 	pea.w $0000
-	pea.w $00C4
-	pea.w $BAD6
+	pea.w TextPalettes>>16
+	pea.w TextPalettes&$FFFF
 	lda.b $04
 	tsx
 	tcs

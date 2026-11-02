@@ -1599,8 +1599,8 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	sty.b $04
 	pea.w $0020
 	pea.w $0070
-	pea.w $00C0
-	pea.w $3EE2
+	pea.w WonCheckPalette>>16
+	pea.w WonCheckPalette&$FFFF
 	lda.b $04
 	tsx
 	tcs

@@ -22,8 +22,8 @@ MeterFontTiles:						; 4bpp tiles, packed: meter bars in three colours, a PwrPla
 	dw $1000						; unpacked size in bytes
 	dw $0006						; format 6: a flag byte per 8 literal runs or copies, up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$97A..$EE5
-UnusedPalette:						; 16 colours: blue, black, slate, white, green, yellow, red, then magenta;
-									; no code refers to it
+GamePalette0:						; 16 colours: blue, black, slate, white, green, yellow, red, then magenta;
+									; colours 1-15 are the game screen's CGRAM 1-15
 	dw $7C00,$0000,$45CB,$7FFF,$03E0,$03FF,$001F,$7C1F
 	dw $7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F
 SoundRAMClear:						; sound CPU program as upload blocks (length, sound RAM address, bytes;

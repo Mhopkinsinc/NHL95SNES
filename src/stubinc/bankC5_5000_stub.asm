@@ -82,5 +82,7 @@ PauseScreenMap = $C1BA31
 RefsMap = $C2CC6E
 TeamNicknameTiles = $C19B68
 TiledBackMap = $C087F2
+BackdropColour = $C04CA9
+GamePalette0 = $C00EE5
 
 incsrc "../bankC5_5000.asm"

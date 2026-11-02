@@ -95,5 +95,6 @@ BlueColoursHook = $C04A65
 GradientBarTiles = $C0083D
 TeamPalettes = $C00000
 TiledBackMap = $C087F2
+AwayUniformPalettes = $C03F02
 
 incsrc "../bankC5_9000.asm"

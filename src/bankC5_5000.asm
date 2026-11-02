@@ -1032,12 +1032,12 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	sty.b $04
 	pea.w $001E
 	pea.w $0001
-	pea.w $00C0
-	pea.w $0EE7
+	pea.w GamePalette0>>16
+	pea.w (GamePalette0+2)&$FFFF
 	pea.w $0002
 	pea.w $0000
-	pea.w $00C0
-	pea.w $4CA9
+	pea.w BackdropColour>>16
+	pea.w BackdropColour&$FFFF
 	pea.w $0040
 	pea.w $0010
 	pei ($32)

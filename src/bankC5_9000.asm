@@ -228,8 +228,8 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	stx.b $04
 	pea.w $0020
 	pea.w $0080
-	pea.w $00C0
-	pea.w $3F02
+	pea.w AwayUniformPalettes>>16
+	pea.w AwayUniformPalettes&$FFFF
 	lda.b $04
 	tsx
 	tcs

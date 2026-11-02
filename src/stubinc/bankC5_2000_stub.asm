@@ -65,5 +65,7 @@ DigitFontTiles = $C04642
 LinePieceTiles = $C04708
 MeterFontTiles = $C00976
 RefsMap = $C2CC6E
+BackdropColour = $C04CA9
+GamePalette0 = $C00EE5
 
 incsrc "../bankC5_2000.asm"
