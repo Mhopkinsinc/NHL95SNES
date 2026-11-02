@@ -138,9 +138,12 @@ ClearCreatedPlayerTeams:			; sets team $1F (no team; free agents are $1A) in the
 	dec.b tmp0
 	bpl .1
 	rts
-DATA8_C4D101:						; not traced: data between routines
+TitleMapFill:						; the title screen's map fill entry (tile $4A, attribute byte $01): the
+									; fixed-source DMA reads its low byte for the tiles, the next for the
+									; attribute bytes
 	db $4A,$01,$78,$22,$38,$22,$01,$33,$00
-DATA8_C4D10A:						; not traced: a table read by TitleFadeTextOut, DrawTitleTextPage, ...
+CreditsList:						; the title screen's credit pages: per page a count, then that many packed
+									; text addresses (bank $C3), a line each; a 0 count ends
 	db $03,$E4,$50,$F2,$50,$FE,$50,$03,$08,$51,$11,$51,$1B,$51,$03,$26
 	db $51,$2D,$51,$34,$51,$03,$26,$51,$41,$51,$4A,$51,$03,$26,$51,$55
 	db $51,$62,$51,$03,$26,$51,$6C,$51,$75,$51,$02,$26,$51,$80,$51,$03
@@ -178,14 +181,14 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	pea.w $0000
 	pea.w $5400
 	pea.w $1808
-	pea.w $00C4
-	pea.w $D101
+	pea.w TitleMapFill>>16
+	pea.w TitleMapFill&$FFFF
 	pea.w $02C0
 	pea.w $0080
 	pea.w $5400
 	pea.w $1908
-	pea.w $00C4
-	pea.w $D102
+	pea.w TitleMapFill>>16
+	pea.w (TitleMapFill+1)&$FFFF
 	pea.w $0180
 	pea.w $0000
 	pea.w $56C0
@@ -513,7 +516,7 @@ TitleFadeTextOut:					; fades out the text and selects the next page or the fina
 	jsr.w QueueFadeStep
 	bne TitleEndDelayReturn
 	ldx.b $95
-	lda.l DATA8_C4D10A,x
+	lda.l CreditsList,x
 	and.w #$00FF
 	bne .1
 	ldx.b d1
@@ -614,7 +617,7 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	ldy.w #$0700
 	jsl.l ClearRAM7E
 	ldx.b $95
-	lda.l DATA8_C4D10A,x
+	lda.l CreditsList,x
 	and.w #$00FF
 	sta.b $99
 	lda.w #$0010
@@ -625,9 +628,9 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	lda.w #$2400
 	sta.b $D5
 	inx
-.loop:								; loop: $95 = X, A = DATA8_C4D10A,x, X = A, Y = d6, ...
+.loop:								; loop: $95 = X, A = CreditsList,x, X = A, Y = d6, ...
 	stx.b $95
-	lda.l DATA8_C4D10A,x
+	lda.l CreditsList,x
 	tax
 	ldy.b d6
 	jsl.l PrintBoldCentred
@@ -1027,7 +1030,7 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	tcs
 	stx.b $00
 	ldx.b a0
-	lda.l DATA8_C4DA75,x
+	lda.l AwardPicTileCounts,x
 	and.w #$00FF
 	asl a
 	asl a
@@ -1100,7 +1103,8 @@ AwardPictures:						; the picture (map set) of each award, a long pointer; read 
 	dw ArtRossPicMap&$FFFF,ArtRossPicMap>>16	; 5: Art Ross Trophy
 	dw NorrisPicMap&$FFFF,NorrisPicMap>>16	; 6: James Norris Memorial Trophy
 	dw PresidentsPicMap&$FFFF,PresidentsPicMap>>16	; 7: Presidents Trophy
-DATA8_C4DA75:						; not traced: a table read by DrawAward
+AwardPicTileCounts:					; per award (a0): the number of tiles of its picture; DrawAward queues
+									; count * 32 bytes of them to VRAM, then the 16 colours after them
 	db $3B,$2F,$4C,$5F,$31,$52,$42,$22
 AwardNames:							; per award: the name text, then a second line or 0; DrawAward
 	dw $4FC2,$0000					; 0: Vezina Trophy

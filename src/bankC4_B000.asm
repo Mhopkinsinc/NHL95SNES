@@ -339,7 +339,7 @@ IntroColourFlashTask:				; plays the intro fixed-colour flash and removes itself
 	sep #$20
 	lda.w $0008,x
 	tax
-	lda.l DATA8_C4B35D,x
+	lda.l IntroFlashLevels,x
 	beq .1
 	sta.l $002132
 	lda.b #$01
@@ -354,7 +354,8 @@ IntroColourFlashTask:				; plays the intro fixed-colour flash and removes itself
 	sta.l $002132
 	rep #$20
 	jmp.w RemoveTask
-DATA8_C4B35D:						; not traced: a table read by IntroColourFlashTask
+IntroFlashLevels:					; per frame of the intro flash task (its frame count): the COLDATA value,
+									; red and green at intensity 4 up to 31 and back; 0 ends the flash
 	db $64,$68,$6C,$70,$74,$78,$7C,$7F,$78,$70,$68,$64,$00
 PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 tile map and
 									; positioning
@@ -1814,21 +1815,21 @@ DrawNextTextCharacter:				; read the next character and prepare its glyph for dr
 	txa
 	adc.w #$002A
 	tax
-	lda.l $C4C48B,x
+	lda.l ItalicFontWidths-$2B,x
 	bra .7
-.4:									; A = $0E, if $0004 bits clear go to .5, A = DATA8_C4C4D7,x, go to .7
+.4:									; A = $0E, if $0004 bits clear go to .5, A = ThinFontWidths,x, go to .7
 	lda.b $0E
 	bit.w #$0004
 	beq .5
-	lda.l DATA8_C4C4D7,x
+	lda.l ThinFontWidths,x
 	bra .7
-.5:									; if a $0001 bit set go to .6, A = DATA8_C4C502,x, go to .7
+.5:									; if a $0001 bit set go to .6, A = BoldFontWidths,x, go to .7
 	bit.w #$0001
 	bne .6
-	lda.l DATA8_C4C502,x
+	lda.l BoldFontWidths,x
 	bra .7
-.6:									; A = DATA8_C4C4B6,x
-	lda.l DATA8_C4C4B6,x
+.6:									; A = ItalicFontWidths,x
+	lda.l ItalicFontWidths,x
 .7:									; A and $00FF, if overflow clear go to .8, A = p0
 	and.w #$00FF
 	bit.b $0E
@@ -1902,7 +1903,7 @@ DrawGlyphRow:						; load a glyph row and dispatch by its destination pixel colu
 	and.w #$0007
 	asl a
 	tax
-	lda.l DATA8_C4C07D,x
+	lda.l GlyphPixelRoutines,x
 	pha
 	ldx.b p0
 	rts

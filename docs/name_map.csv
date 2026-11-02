@@ -724,19 +724,19 @@ $C4A5FD,DumpInSpreadX,DATA8_C4A5FD,code,"the same 24 bytes as 94S assdumpin's lo
 $C4A615,DumpInSpreadY,DATA8_C4A615,code,"the same 24 bytes as 94S assdumpin's local .7 ('by target: the y spread'); LaunchDumpIn reads it",src/bankC4_A000.asm
 $C4A62D,DumpInTargetX,DATA8_C4A62D,code,"the same 24 bytes as 94S assdumpin's local .8 ('by target: x'); LaunchDumpIn adds it",src/bankC4_A000.asm
 $C4A645,DumpInTargetY,DATA8_C4A645,code,"the same 24 bytes as 94S assdumpin's local .ytab; LaunchDumpIn adds it",src/bankC4_A000.asm
-$C4B35D,DATA8_C4B35D,,new,"not traced: a table read by CODE_C4B32D (in bankC4_B000)",src/bankC4_B000.asm
+$C4B35D,IntroFlashLevels,DATA8_C4B35D,code,"IntroColourFlashTask writes entry $0008,x (the task's frame count) to COLDATA with CGADSUB 1 (added to BG1) and removes itself at the 0",src/bankC4_B000.asm
 $C4BAD6,TextPalettes,DATA8_C4BAD6,code,"32 bytes; InitTextMap queues Y * 8 of them",src/bankC4_B000.asm
-$C4C07D,DATA8_C4C07D,,new,"the 8 routines CODE_C4BF1A runs (address - 1: pushed, then rts) (in bankC4_C000)",src/bankC4_C000.asm
-$C4C420,DATA8_C4C420,,new,"not traced: a table read by CODE_C4C419 (in bankC4_C000)",src/bankC4_C000.asm
+$C4C07D,GlyphPixelRoutines,DATA8_C4C07D,code,"DrawGlyphRow pushes entry $0A & 7 and returns into it",src/bankC4_C000.asm
+$C4C420,PackedTextSymbols,DATA8_C4C420,code,"DecodePackedText reads entry index (+ 8 / + 16) into the string",src/bankC4_C000.asm
 $C4C4A6,ByteBitMasks,DATA8_C4C4A6,94S+code,"the same 8 bytes as 94S data/tables/ByteBitMasks; read by DrawGameMarks, GamesTodayKeys, MenuPlayGames and the save bit writers",src/bankC4_C000.asm
-$C4C4AE,DATA8_C4C4AE,,new,"not traced: a table read by CODE_C4C08D (in bankC4_C000)",src/bankC4_C000.asm
-$C4C4B6,DATA8_C4C4B6,,new,"not traced: a table read by CODE_C4BEB1 (in bankC4_C000)",src/bankC4_C000.asm
-$C4C4D7,DATA8_C4C4D7,,new,"not traced: a table read by CODE_C4C349, CODE_C4BE99 (in bankC4_C000)",src/bankC4_C000.asm
-$C4C502,DATA8_C4C502,,new,"not traced: a table read by CODE_C4BEA6 (in bankC4_C000)",src/bankC4_C000.asm
-$C4D101,DATA8_C4D101,,new,"not traced: data between routines (in bankC4_D000)",src/bankC4_D000.asm
-$C4D10A,DATA8_C4D10A,,new,"not traced: a table read by CODE_C4D4F5, CODE_C4D5AC, CODE_C4D5F6 (in bankC4_D000)",src/bankC4_D000.asm
+$C4C4AE,PixelBitMasks,DATA8_C4C4AE,code,"CheckGlyphLeftOverlap tests the drawn pixels under the glyph's leading column with entry $0A & 7",src/bankC4_C000.asm
+$C4C4B6,ItalicFontWidths,DATA8_C4C4B6,code,"DrawNextTextCharacter reads it for flags $0E bit 0 without bit 2 (ItalicFontGlyphs, flags 3); with flag bit 1 a lowercase letter's width is read at ItalicFontWidths-$2B + glyph + $2A, the byte before its capital's",src/bankC4_C000.asm
+$C4C4D7,ThinFontWidths,DATA8_C4C4D7,code,"DrawNextTextCharacter (flags bit 2: ThinFontGlyphs, flags 5) and TextWidth read it; the thin font has glyphs $D-$2A",src/bankC4_C000.asm
+$C4C502,BoldFontWidths,DATA8_C4C502,code,"DrawNextTextCharacter reads it when flags $0E bits 0 and 2 are clear (BoldFontGlyphs, flags 0)",src/bankC4_C000.asm
+$C4D101,TitleMapFill,DATA8_C4D101,code,"TitleScreen queues VRAM $5400 filled from it as ClearTextMap uses TextMapFill (pea TitleMapFill / (TitleMapFill+1)&$FFFF); the 7 bytes after the pair have no reference",src/bankC4_D000.asm
+$C4D10A,CreditsList,DATA8_C4D10A,genesis+purpose,"95 Genesis CreditsList holds the same pages as strings (after its copyright lines); DrawTitleTextPage prints page $95 with PrintBoldCentred, TitleFadeTextOut goes to TitleEndDelay at the 0 count",src/bankC4_D000.asm
 $C4DA55,AwardPictures,DATA8_C4DA55,genesis+code,"the picture (map set) of each of the 8 awards, a long pointer each; CODE_C4D99C loads entry award ($63) * 4 through CODE_C5881C. 95G AwardPictures (9 awards, another order)",src/bankC4_D000.asm
-$C4DA75,DATA8_C4DA75,,new,"not traced: a table read by CODE_C4D99C (in bankC4_D000)",src/bankC4_D000.asm
+$C4DA75,AwardPicTileCounts,DATA8_C4DA75,code,"DrawAward queues the unpacked picture's tiles (work buffer + $EA) to VRAM $0000 and the 16 colours after them to CGRAM $30",src/bankC4_D000.asm
 $C4DA7D,AwardNames,DATA8_C4DA7D,genesis+code,"per award two offsets of packed text in bank $C3 (5-bit codes, decoded by CODE_C4C3BA): the name, then a second line or 0; CODE_C4D963 prints them. 95G AwardNames",src/bankC4_D000.asm
 $C4DA9D,AwardDescs,DATA8_C4DA9D,genesis+code,"per award the offset of its description (packed text in bank $C3); CODE_C4D99C prints it. 95G AwardDescs",src/bankC4_D000.asm
 $C4DC51,AwardScanTbl,DATA8_C4DC51,genesis+code,"same job as 95G AwardScanTbl (the award scans); the order is the award order of AwardNames: Vezina, Selke, Conn Smythe, Jennings, Hart, Art Ross, Norris, Presidents",src/bankC4_D000.asm

@@ -168,14 +168,15 @@ FinishTextDraw:						; record the rightmost text extent and return
 	sta.l $0018DC
 .rtl:								; return
 	rtl
-DATA8_C4C07D:						; the 8 routines DrawGlyphRow runs (address - 1: pushed, then rts)
+GlyphPixelRoutines:					; per pixel column of the glyph's left edge ($0A & 7, * 2): the
+									; DrawGlyphPixel routine DrawGlyphRow runs (address - 1: pushed, then rts)
 	dw DrawGlyphPixel0-1,DrawGlyphPixel1-1,DrawGlyphPixel2-1,DrawGlyphPixel3-1
 	dw DrawGlyphPixel4-1,DrawGlyphPixel5-1,DrawGlyphPixel6-1,DrawGlyphPixel7-1
 CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps existing text pixels
 	lda.b $0A
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4AE,x
+	lda.l PixelBitMasks,x
 	and.w #$00FF
 	sta.b $36
 	lda.b $10
@@ -544,8 +545,8 @@ TextWidth:							; the width in pixels of the text at X in the font of $0E (per 
 	bcc .3
 	sbc.w #$0020
 	tax
-.3:									; A = DATA8_C4C4D7,x, A and $007F
-	lda.l DATA8_C4C4D7,x
+.3:									; A = ThinFontWidths,x, A and $007F
+	lda.l ThinFontWidths,x
 	and.w #$007F
 .4:									; A + $0A, $0A = A, go to .1
 	clc
@@ -669,11 +670,12 @@ DecodePackedText:					; decode packed text symbols into the allocated string buf
 	rtl
 .9:									; call ReadTextThreeBits
 	jsr.w ReadTextThreeBits
-.10:								; X = A, A = DATA8_C4C420,x, go to .6
+.10:								; X = A, A = PackedTextSymbols,x, go to .6
 	tax
-	lda.l DATA8_C4C420,x
+	lda.l PackedTextSymbols,x
 	bra .6
-DATA8_C4C420:						; not traced: a table read by DecodePackedText
+PackedTextSymbols:					; the characters of packed text codes $1D-$1F (a 3-bit index, + 8 for $1E,
+									; + 16 for $1F): $30-$40, the digits, then the punctuation up to $40
 	db $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 	db $40
 ReadTextThreeBits:					; read a three-bit packed text extension
@@ -752,17 +754,21 @@ CopyString2:						; CopyString into the second work buffer (AllocWorkBuf2)
 	rtl
 ByteBitMasks:						; the 8 single bit masks of a byte ($01 first)
 	db $01,$02,$04,$08,$10,$20,$40,$80
-DATA8_C4C4AE:						; not traced: a table read by CheckGlyphLeftOverlap
+PixelBitMasks:						; per pixel column (x & 7): its bit in a glyph row byte, $80 the leftmost
 	db $80,$40,$20,$10,$08,$04,$02,$01
-DATA8_C4C4B6:						; not traced: a table read by DrawNextTextCharacter
+ItalicFontWidths:					; per glyph (character - $30): the italic font's width in pixels; it runs
+									; on into ThinFontWidths
 	db $0B,$07,$0B,$0B,$0B,$0B,$0B,$09,$0B,$0C,$05,$08,$0C,$06,$0B,$07
 	db $05,$0A,$0B,$0B,$0B,$0B,$0B,$0B,$0C,$07,$0C,$0C,$08,$0D,$0D,$0B
 	db $0B
-DATA8_C4C4D7:						; not traced: a table read by TextWidth, DrawNextTextCharacter
+ThinFontWidths:						; per glyph (character - $30): the thin font's width in pixels (bit 7
+									; clear: drawn up to 2 pixels left where that overlaps nothing); its first
+									; 13 bytes are the italic font's
 	db $0B,$0B,$0B,$0A,$0C,$09,$0C,$0B,$0A,$0B,$02,$03,$01,$83,$87,$83
 	db $84,$87,$87,$86,$87,$86,$86,$87,$86,$82,$85,$87,$85,$88,$87,$88
 	db $86,$88,$86,$85,$86,$86,$87,$88,$86,$86,$85
-DATA8_C4C502:						; not traced: a table read by DrawNextTextCharacter
+BoldFontWidths:						; per glyph (character - $30): the bold font's width in pixels (bit 7
+									; clear: drawn up to 2 pixels left where that overlaps nothing)
 	db $86,$85,$86,$86,$87,$86,$86,$86,$86,$86,$83,$83,$88,$83,$85,$83
 	db $83,$88,$87,$88,$87,$86,$86,$88,$87,$83,$86,$87,$87,$88,$87,$88
 	db $87,$88,$88,$87,$87,$87,$88,$88,$87,$87,$87,$02,$03,$01
