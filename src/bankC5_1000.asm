@@ -910,7 +910,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	pei ($6B)
 	pei ($71)
 	pei ($6F)
-	inc.w $18AA
+	inc.w LCBoxesClosed
 	lda.w #$FFFF
 	sta.w lcpad
 	sta.w lcpad+2
@@ -1490,12 +1490,12 @@ puckfaceoff:						; assignment (asstab entry 27): the puck at the start of play;
 	ora.w penshotlive
 	beq .8
 	jmp.w WaitForFaceoffLineChanges
-.8:									; lcpad = $FFFF, lcpad+2 = A, $18E2 = 0, $18E4 = 0, ...
+.8:									; lcpad = $FFFF, lcpad+2 = A, FaceoffLCClosed = 0, ...
 	lda.w #$FFFF
 	sta.w lcpad
 	sta.w lcpad+2
-	stz.w $18E2
-	stz.w $18E4
+	stz.w FaceoffLCClosed
+	stz.w FaceoffLCClosed+2
 	lda.w #$0008
 	trb.w tmflags
 	trb.w tmflags+2
@@ -1692,13 +1692,13 @@ UpdateFaceoffLineChangeTimer:		; line change timer d0 (0 home, $20 away) of the 
 	bne .3
 	phy
 	ldy.b a2
-	lda.w $18E2,y
+	lda.w FaceoffLCClosed,y
 	beq .2
 	ply
 	bra .3
-.2:									; A + 1, $18E2,y = A, pull Y, A = a3, ...
+.2:									; A + 1, FaceoffLCClosed,y = A, pull Y, A = a3, ...
 	inc a
-	sta.w $18E2,y
+	sta.w FaceoffLCClosed,y
 	ply
 	lda.b a3
 	clc

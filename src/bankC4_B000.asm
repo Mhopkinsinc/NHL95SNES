@@ -81,11 +81,11 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsr.w CheckIntroMirrorButtons
 	lda.b PadRaw2
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C5
+	lda.b PadRaw3
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C7
+	lda.b PadRaw4
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C9
+	lda.b PadRaw5
 	jsr.w CheckIntroMirrorButtons
 	jsl.l SetupMode7Screen
 	lda.w #$7FFF

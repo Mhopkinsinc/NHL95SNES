@@ -1846,7 +1846,7 @@ BuildTeamLinesPreserveTemps:		; calls BuildTeamLines while saving and restoring 
 	pei ($2E)
 	jsr.w BuildTeamLines
 	pla
-	sta.w $002E
+	sta.w r0+2
 	pla
 	sta.w r0
 	pla

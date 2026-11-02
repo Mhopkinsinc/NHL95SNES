@@ -163,9 +163,9 @@ setlccords:							; team a2's line change box: A = its map address (the side by 
 .2:									; if $0002 bits clear go to .1
 	bit.w #$0002
 	beq .1
-.3:									; Y = $5855, if $18AA = 0 go to .4, Y = $5995
+.3:									; Y = $5855, if LCBoxesClosed = 0 go to .4, Y = $5995
 	ldy.w #$5855
-	lda.w $18AA
+	lda.w LCBoxesClosed
 	beq .4
 	ldy.w #$5995
 .4:									; push Y, A = $0002, call getlchoice, Y = $0005, ...
@@ -1467,10 +1467,10 @@ CloseLCBoxes:						; closes each team's open line change box (tmflags bit 3, onl
 	lda.w #$0002
 	sta.b a2
 	jsl.l lcfound_close
-.2:									; pull A, a2 = A, $18AA + 1
+.2:									; pull A, a2 = A, LCBoxesClosed + 1
 	pla
 	sta.b a2
-	inc.w $18AA
+	inc.w LCBoxesClosed
 .rtl:								; return
 	rtl
 BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 128 capped at

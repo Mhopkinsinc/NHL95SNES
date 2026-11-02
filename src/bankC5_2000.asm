@@ -1587,7 +1587,7 @@ doinput:							; called from other segments
 	sty.b d0
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	jml.l AssignPadPlayer
 LoadGameRostersLong:				; LoadGameRosters for long calls
 	jsr.w LoadGameRosters

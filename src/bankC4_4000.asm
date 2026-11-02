@@ -81,9 +81,9 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.w OOlistpos,x
 	beq .5
 	sta.b d1
-.loop2:								; loop: Y = d1, A = $10DF,y, A and $00FF, d4 = A, ...
+.loop2:								; loop: Y = d1, A = OOlist-1,y, A and $00FF, d4 = A, ...
 	ldy.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	sta.b d4
 	tay
@@ -100,7 +100,7 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.b d4
 	sta.w OOlist,y
 	txa
-	sta.w $10DF,y
+	sta.w OOlist-1,y
 	rep #$30
 	dec.b d1
 	bne .loop2
@@ -1082,9 +1082,9 @@ checkplcoll:						; from checkcoll and other segments
 	lda.w OOlistpos,x
 	beq .rtl2
 	sta.b d1
-.loop2:								; loop: Y = d1, A = $10DF,y, A and $00FF, Y = A, ...
+.loop2:								; loop: Y = d1, A = OOlist-1,y, A and $00FF, Y = A, ...
 	ldy.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	tay
 	lda.b d3
@@ -1425,9 +1425,9 @@ checkpuckcoll:						; called from other segments
 .1:									; if OOlistpos+28 = 0 go to .rtl
 	ldy.w OOlistpos+28
 	beq .rtl
-.loop2:								; loop: d1 = Y, A = $10DF,y, A and $00FF, Y = A, ...
+.loop2:								; loop: d1 = Y, A = OOlist-1,y, A and $00FF, Y = A, ...
 	sty.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	tay
 	lda.w pucky

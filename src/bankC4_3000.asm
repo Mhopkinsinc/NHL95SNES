@@ -384,7 +384,7 @@ EvadePC:							; passed as a long pointer (lda #bank, lda #low) to skateto
 	bmi .rtl
 	lda.w Xvel+1,x
 	sec
-	sbc.w $09BD
+	sbc.w puckvx+1
 	and.w #$00FF
 	bit.w #$0080
 	beq .1
@@ -773,8 +773,8 @@ assfaceoff:							; assignment (asstab entry 22): players not in the face off wa
 	beq .1
 .rtl:								; return
 	rtl
-.1:									; $18AA = 0, go to assexit
-	stz.w $18AA
+.1:									; LCBoxesClosed = 0, go to assexit
+	stz.w LCBoxesClosed
 	jmp.w assexit
 assfaceoffpl:						; called from other segments
 	lda.w pfalock,x
@@ -836,8 +836,8 @@ assfaceoffpl:						; called from other segments
 	lda.w #$0001
 	sta.w pf2aip,x
 	jml.l SetSPA
-.5:									; $18AA = 0, nopuck,x = $0014, go to assexit
-	stz.w $18AA
+.5:									; LCBoxesClosed = 0, nopuck,x = $0014, go to assexit
+	stz.w LCBoxesClosed
 	lda.w #$0014
 	sta.w nopuck,x
 	jmp.w assexit

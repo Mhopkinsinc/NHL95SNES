@@ -703,10 +703,10 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	cmp.w #$0010
 	beq .3
 	jmp.w .loop2
-.3:									; $0A38 = $FFFF, $0A3A = A, frame+$38 = frame+$18, ...
+.3:									; position+24 = $FFFF, position+26 = A, frame+$38 = frame+$18, ...
 	lda.w #$FFFF
-	sta.w $0A38
-	sta.w $0A3A
+	sta.w position+24
+	sta.w position+26
 	lda.w frame+$18
 	sta.w frame+$38
 	lda.w frame+$1A

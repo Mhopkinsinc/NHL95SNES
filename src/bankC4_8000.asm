@@ -415,7 +415,7 @@ ShowInjuryBox:						; the injury box: a frame, its two texts (a third one when T
 	pei ($71)
 	pei ($73)
 	pei ($75)
-	inc.w $18AA
+	inc.w LCBoxesClosed
 	lda.w #$58CA
 	ldx.w #$0012
 	ldy.w #$0004

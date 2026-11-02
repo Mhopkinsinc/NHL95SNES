@@ -1341,7 +1341,7 @@ asspassrec:							; called from other segments
 	beq PassReceiverTryOneTimer
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	bra PassReceiverOneTimer
 DATA8_C49E41:						; an rtl no traced code reaches
 	db $6B
@@ -1360,7 +1360,7 @@ PassReceiverTryOneTimer:			; let a computer pass receiver request a one-timer in
 	bne .3
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	jmp.w PassReceiverOneTimer
 .2:									; if Ypos,x - $005C >= 0 go to .1
 	lda.w Ypos,x
@@ -1431,7 +1431,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	lda.w SPAnum,x
 	cmp.w #$0010
 	bcs .6
-	bit.w $0674
+	bit.w OneTimerDist
 	bmi .6
 	txa
 	jsl.l GetFrameHot
@@ -1447,8 +1447,8 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	sec
 	sbc.w pucky
 	jsl.l ApproxLength
-	cmp.w $0674
-	sta.w $0674
+	cmp.w OneTimerDist
+	sta.w OneTimerDist
 	bcs .8
 	jmp.w .14
 .8:									; A = Xpos,x, A - puckx, Y = A, A = Ypos,x, ...
@@ -1463,7 +1463,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	cmp.w #$001C
 	bcs .14
 	lda.w #$FFFF
-	sta.w $0674
+	sta.w OneTimerDist
 	stz.w puckvx
 	stz.w puckvy
 	stz.w SPAcnt,x

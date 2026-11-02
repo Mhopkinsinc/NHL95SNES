@@ -358,7 +358,7 @@ LoadTeamLines:						; copies team a2's lines into RAM through GetTeamLines; OptL
 	ply
 	lda.w OptLine
 	bne .2
-	stz.w $18AA
+	stz.w LCBoxesClosed
 	ldx.b a1
 	lda.w $006C,x
 	sta.w $0000,y

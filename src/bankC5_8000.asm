@@ -1299,7 +1299,7 @@ QueueClearVRAM:						; queues a clear of $400 words of VRAM at Y (two DMAs from 
 	rtl
 QueueVRAMDMALen:					; queue a DMA to VRAM at Y of the bytes at X:A after their length byte
 	sta.w r0
-	stx.w $002E
+	stx.w r0+2
 	dec.b QueueBusy
 	lda.b $02
 	tsx
