@@ -64,5 +64,10 @@ SetNMIHook = $C08D73
 SetupHDMA = $C58AA5
 SongLists = $CF05D4
 TiledBackMap = $C087F2
+TxtCongratulations = $C350A9
+TxtGameOfThePlayoffs = $C350D6
+TxtGoalie = $C349B8
+TxtOverall = $C34ECC
+TxtScoutingReport = $C34C9F
 
 incsrc "../bankC4_E000.asm"

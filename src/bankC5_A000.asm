@@ -139,15 +139,15 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	sta.b $D5
 	lda.w #$001A
 	ldy.w #$000C
-	ldx.w #$490D
+	ldx.w #TxtAbcdefghi&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$000F
-	ldx.w #$4914
+	ldx.w #TxtJklmnopqr&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0012
-	ldx.w #$491B
+	ldx.w #TxtStuvwxyz&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$2000
 	sta.b $D5
@@ -321,7 +321,7 @@ FieldHand:							; prints the created player's hand (Left when $85 is set, else 
 	ldx.w #$49ED
 	lda.b $85
 	beq .1
-	ldx.w #$49E9
+	ldx.w #TxtLeft&$FFFF
 .1:									; Y = $0011, call PrintItalicLeft, return
 	ldy.w #$0011
 	jsl.l PrintItalicLeft
@@ -1695,18 +1695,18 @@ NoGameSelected:						; the warning A game must be selected. / Okay (screen state
 	sta.b $D5
 	lda.w #$0032
 	sta.b $CF
-	ldx.w #$47A1
+	ldx.w #TxtAGameMustBe&$FFFF
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	ldy.w #$000A
-	ldx.w #$47AB
+	ldx.w #TxtSelected&$FFFF
 	jsl.l PrintItalicLeft
 	lda.w #$2000
 	sta.b $D5
 	lda.w #$006E
 	sta.b $CF
 	ldy.w #$000E
-	ldx.w #$47B3
+	ldx.w #TxtOkay&$FFFF
 	jsl.l PrintItalicLeft
 	jsl.l SendTextMap
 	ldx.b a0

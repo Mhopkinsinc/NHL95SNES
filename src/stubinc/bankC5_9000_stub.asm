@@ -106,5 +106,12 @@ ControllerSetupPage = $C357FC
 GameSetupPage = $C356CE
 NameOkPage = $C356DC
 PlayerInfoPage = $C35746
+TxtASeasonIsInProgress = $C34724
+TxtContinueOld = $C34764
+TxtOldSeasonWillBeLost = $C34753
+TxtStartNew = $C3476E
+TxtStartedDataFromThe = $C34743
+TxtWarning = $C3479B
+TxtWhenANewSeasonIs = $C34735
 
 incsrc "../bankC5_9000.asm"

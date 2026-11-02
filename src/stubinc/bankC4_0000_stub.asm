@@ -64,5 +64,6 @@ DarkBlueColoursHook = $C04A87
 GradientBarTiles = $C0083D
 PlayoffBracketMap = $C1DC7B
 TeamNameBarsMap = $C1E9B2
+TxtNotAvail = $C34781
 
 incsrc "../bankC4_0000.asm"

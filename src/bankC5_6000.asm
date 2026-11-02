@@ -503,8 +503,8 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	beq .1
 	inc a
 	bra .loop
-.1:									; X = $4C1C, Y = $0018, call PrintBoldCentred, a1 = $4EEF, ...
-	ldx.w #$4C1C
+.1:									; X = TxtTotal&$FFFF, Y = $0018, call PrintBoldCentred, a1 = $4EEF, ...
+	ldx.w #TxtTotal&$FFFF
 	ldy.w #$0018
 	jsl.l PrintBoldCentred
 	lda.w #$4EEF
@@ -1085,32 +1085,32 @@ PrintPlayerStatHeads:				; prints the player stats headings (the sort column's n
 	jsl.l PrintItalicLeft
 	lda.w #$0020
 	sta.b $CF
-	ldx.w #$4EF6
+	ldx.w #TxtBGoalies&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$0090
 	sta.b $D1
-	ldx.w #$4F71
+	ldx.w #TxtG&$FFFF
 	lda.w #$0000
 	jsr.w PrintStatHead
 	lda.w #$00A8
 	sta.b $D1
-	ldx.w #$4F73
+	ldx.w #TxtA&$FFFF
 	lda.w #$0002
 	jsr.w PrintStatHead
 	lda.w #$00C0
 	sta.b $D1
-	ldx.w #$4F75
+	ldx.w #TxtPt&$FFFF
 	lda.w #$0004
 	jsr.w PrintStatHead
 	lda.w #$00D8
 	sta.b $D1
-	ldx.w #$4F78
+	ldx.w #TxtSh&$FFFF
 	lda.w #$0006
 	jsr.w PrintStatHead
 	lda.w #$00F0
@@ -1137,27 +1137,27 @@ PrintGoalieStatHeads:				; prints the goalie stats headings (Goalies, the column
 	jsl.l PrintItalicLeft
 	lda.w #$0020
 	sta.b $CF
-	ldx.w #$4EFE
+	ldx.w #TxtBPlayers&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$49B8
+	ldx.w #TxtGoalie&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$0090
 	sta.b $D1
-	ldx.w #$4F7D
+	ldx.w #TxtGA&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$00A8
 	sta.b $D1
-	ldx.w #$4F78
+	ldx.w #TxtSh&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$00E0
 	sta.b $D1
-	ldx.w #$4F7F
+	ldx.w #TxtPtg&$FFFF
 	lda.w #$8000
 	jmp.w PrintStatHead
 StatColumnNames:					; per player stats column ($7D): its name, packed text: Goals, Assists,
@@ -1171,23 +1171,23 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	sta.b $CF
 	lda.w #$0030
 	sta.b $D1
-	ldx.w #$4F83
+	ldx.w #TxtPer&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$0060
 	sta.b $D1
-	ldx.w #$4F87
+	ldx.w #TxtTime&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$0080
 	sta.b $D1
-	ldx.w #$4F8B
+	ldx.w #TxtTm&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$00E0
 	sta.b $D1
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$00F8
 	sta.b $D1
-	ldx.w #$4F7B
+	ldx.w #TxtPM&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w PenSumLength
 	asl a
@@ -1200,7 +1200,7 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4C2D
+	ldx.w #TxtNoPenalties&$FFFF
 	ldy.w #$0011
 	jsl.l PrintBoldCentred
 	lda.w #$2000
@@ -1503,23 +1503,23 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	jsr.w SetupStatsPage
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F83
+	ldx.w #TxtPer&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$002E
 	sta.b $CF
-	ldx.w #$4F87
+	ldx.w #TxtTime&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$0054
 	sta.b $CF
-	ldx.w #$4F8B
+	ldx.w #TxtTm&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$0080
 	sta.b $CF
-	ldx.w #$4F91
+	ldx.w #TxtGoalAss&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$00E0
 	sta.b $CF
-	ldx.w #$4F8E
+	ldx.w #TxtPS&$FFFF
 	jsr.w PrintScoringHead
 	lda.w ScoreSumbytes
 	lsr a
@@ -1531,7 +1531,7 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4C43
+	ldx.w #TxtNoScoring&$FFFF
 	ldy.w #$0011
 	jsl.l PrintBoldCentred
 	lda.w #$2000

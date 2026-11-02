@@ -24,5 +24,6 @@ BuildTeamSeasonRecord = $C5B983
 RefreshSprites = $C5BBC0
 NextSaveBits3 = $C5D7E9
 FadeOutWait = $C58A99
+TxtPleaseWait = $C34692
 
 incsrc "../bankC5_E000.asm"

@@ -734,31 +734,31 @@ StartSeason:						; play mode Season: with a season saved, WARNING A Season is i
 	lda.w #$0008
 	sta.b $CF
 	ldy.w #$0010
-	ldx.w #$479B
+	ldx.w #TxtWarning&$FFFF
 	jsl.l PrintItalicLeft
 	lda.w #$005C
 	sta.b $CF
 	ldy.w #$0010
-	ldx.w #$4724
+	ldx.w #TxtASeasonIsInProgress&$FFFF
 	jsl.l PrintBoldLeft
 	ldy.w #$0011
-	ldx.w #$4735
+	ldx.w #TxtWhenANewSeasonIs&$FFFF
 	jsl.l PrintBoldLeft
 	ldy.w #$0012
-	ldx.w #$4743
+	ldx.w #TxtStartedDataFromThe&$FFFF
 	jsl.l PrintBoldLeft
 	ldy.w #$0013
-	ldx.w #$4753
+	ldx.w #TxtOldSeasonWillBeLost&$FFFF
 	jsl.l PrintBoldLeft
 	lda.w #$0009
 	sta.w TextSpaceWidth
 	lda.w #$0032
 	sta.b $CF
 	ldy.w #$0015
-	ldx.w #$4764
+	ldx.w #TxtContinueOld&$FFFF
 	jsl.l PrintItalicLeft
 	ldy.w #$0018
-	ldx.w #$476E
+	ldx.w #TxtStartNew&$FFFF
 	jsl.l PrintItalicLeft
 	ldx.b a0
 	lda.w #$0028

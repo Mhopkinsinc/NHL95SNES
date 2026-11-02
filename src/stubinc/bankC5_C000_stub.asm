@@ -73,5 +73,14 @@ EvaluateTradePage = $C353FF
 FreeAgentsPage = $C353AB
 ReleasePlayersPage = $C353D5
 TradePlayersPage = $C356F2
+TxtAccepted = $C34D53
+TxtAdvantage = $C34D61
+TxtEtc = $C34D4A
+TxtNoFreeAgents = $C34CE3
+TxtNoSelections = $C34D3F
+TxtPlayer = $C34F6C
+TxtPosition = $C34CD7
+TxtRating = $C34CDE
+TxtRejected = $C34D5A
 
 incsrc "../bankC5_C000.asm"

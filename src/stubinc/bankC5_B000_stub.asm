@@ -60,5 +60,6 @@ LeagueLeadersPage = $C3556D
 SeasonPlayerStatsPage = $C35583
 SeasonTeamStatsPage = $C355F1
 StandingsPage = $C35553
+TxtBSwitchToLinemen = $C355AD
 
 incsrc "../bankC5_B000.asm"

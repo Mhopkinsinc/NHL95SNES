@@ -45,5 +45,10 @@ Mul8U = $C08ED9
 SetupHDMA = $C58AA5
 NameGridPage = $C3543D
 NameLogPage = $C3542B
+TxtAbcdefghi = $C3490D
+TxtBEditName = $C34F40
+TxtJklmnopqr = $C34914
+TxtStartSelectPlayer = $C34F4A
+TxtStuvwxyz2 = $C34922
 
 incsrc "../bankC5_D000.asm"

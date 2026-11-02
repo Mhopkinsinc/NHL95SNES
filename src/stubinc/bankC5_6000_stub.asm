@@ -61,5 +61,24 @@ WaitFrames_Inc = $C08D89
 PlayerStatsPage = $C3533B
 TeamRosterPage = $C35369
 TxtGoalies = $C347F8
+TxtA = $C34F73
+TxtBGoalies = $C34EF6
+TxtBPlayers = $C34EFE
+TxtG = $C34F71
+TxtGA = $C34F7D
+TxtGoalAss = $C34F91
+TxtGoalie = $C349B8
+TxtNoPenalties = $C34C2D
+TxtNoScoring = $C34C43
+TxtPM = $C34F7B
+TxtPS = $C34F8E
+TxtPer = $C34F83
+TxtPlayer = $C34F6C
+TxtPt = $C34F75
+TxtPtg = $C34F7F
+TxtSh = $C34F78
+TxtTime = $C34F87
+TxtTm = $C34F8B
+TxtTotal = $C34C1C
 
 incsrc "../bankC5_6000.asm"

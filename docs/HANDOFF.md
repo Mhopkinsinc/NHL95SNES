@@ -237,6 +237,10 @@
     labels split a 94S table into blocks, so sublist / priolist were compared by hand); datamap.py aligns 95 / 94S
     routine pairs (as rammap.py) for table operands. A 94S local table gets a code name from what 94S says it holds.
   - Packed text pointer tables in bank $C3: textdec.py OFF... decodes the strings (city names stay out of the source).
+  - Packed texts the code prints, the setup tables and the text pages use carry Txt labels named from their words
+    (txtlabels.py: TxtPlayMode, TxtNoPenalties ...); their comments quote textdec's decoding. textdec shows the
+    symbol codes $3A-$40 as ASCII; from context the font draws = as a full stop, @ as a comma, ? as a colon and ;
+    as an exclamation mark; > (U>D, Wins>Losses>Ties, Multi>Game) and < (win<) are not settled.
   - The decoder often put several labels inside one table (fields of records, the next entry, the next segment):
     foldlabel.py LABEL BASE K drops one (operands read BASE+K, the stub line goes, the name_map row says BASE+K);
     mergetable.py folds a run of field labels and lays the records out as dw (SortObjInitTable).

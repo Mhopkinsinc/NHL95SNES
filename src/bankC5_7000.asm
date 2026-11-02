@@ -77,7 +77,7 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	sta.b $CF
 	lda.w #$0028
 	sta.b $D1
-	ldx.w #$4F71
+	ldx.w #TxtG&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldCentred
 	lda.b $D1
@@ -551,14 +551,14 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	ldx.w #$0006
 .1:									; $7B = X
 	stx.b $7B
-.2:									; if $7B = $0000 go to .3, $CF = $0010, Y = $0018, X = $4F06, ...
+.2:									; if $7B = $0000 go to .3, $CF = $0010, Y = $0018, ...
 	ldx.b $7B
 	cpx.w #$0000
 	beq .3
 	lda.w #$0010
 	sta.b $CF
 	ldy.w #$0018
-	ldx.w #$4F06
+	ldx.w #TxtPadLRChangeLine&$FFFF
 	jsl.l PrintBoldLeft
 .3:									; A = EditLinesPage&$FFFF, call PrintTextPage, X = HomeRoster, ...
 	lda.w #EditLinesPage&$FFFF
@@ -1088,7 +1088,7 @@ PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E,
 	sta.b $CF
 	lda.w #$00D0
 	sta.b $D1
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldLeft
 	lda.b $D1
@@ -1323,7 +1323,7 @@ Pausemode_gnum:						; PauseGoalie's goalie list: 'Player' and the title of stat
 	sta.b $CF
 	lda.w #$00D0
 	sta.b $D1
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldLeft
 	ldy.b $6D
@@ -1408,13 +1408,13 @@ GoalieListRowDone:					; a goalie row drawn: the next one while below a1, then t
 	cmp.b $69
 	bne .1
 	ldx.w #$2400
-.1:									; $D5 = X, $CF = $0010, $D1 = $00D0, X = $4C86, ...
+.1:									; $D5 = X, $CF = $0010, $D1 = $00D0, X = TxtNone&$FFFF, ...
 	stx.b $D5
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$00D0
 	sta.b $D1
-	ldx.w #$4C86
+	ldx.w #TxtNone&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldLeft
 	lda.w #$2000
@@ -1429,7 +1429,7 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4C95
+	ldx.w #TxtOtherScores&$FFFF
 	ldy.w #$0002
 	jsl.l PrintTitle
 	lda.l SeasonDay
@@ -1466,7 +1466,7 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	jsl.l PrintTitleBar
 	lda.w SeasonScoresMode
 	beq .3
-	ldx.w #$4717
+	ldx.w #TxtXExitMenu&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
 .3:									; d0 = DayGameCount, X = $0000, Y = X
@@ -1616,8 +1616,8 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	tax
 	jsl.l PrintBoldLeft
 	rts
-.5:									; X = $4F67, call PrintBoldLeft, return
-	ldx.w #$4F67
+.5:									; X = TxtFinal&$FFFF, call PrintBoldLeft, return
+	ldx.w #TxtFinal&$FFFF
 	jsl.l PrintBoldLeft
 	rts
 RecordHoldersScreen:				; pause menu Records: the user records (win percentages worked out and the
@@ -1748,7 +1748,7 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4D98
+	ldx.w #TxtNoRecordHolders&$FFFF
 	ldy.w #$0006
 	jsl.l PrintBoldCentred
 	lda.w #$2000
@@ -1895,23 +1895,23 @@ PrintWinRecords:					; Record Holders page 0: name, win %, wins, losses, ties of
 	sta.b $CF
 	lda.w #$0060
 	sta.b $D1
-	ldx.w #$4DA4
+	ldx.w #TxtName&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0088
 	sta.b $D1
-	ldx.w #$4DA8
+	ldx.w #TxtWin&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$00A8
 	sta.b $D1
-	ldx.w #$4DAD
+	ldx.w #TxtWin2&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$00C8
 	sta.b $D1
-	ldx.w #$4DB1
+	ldx.w #TxtLose&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$00E8
 	sta.b $D1
-	ldx.w #$4DB5
+	ldx.w #TxtTie&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
 	sta.b $6D
@@ -1973,11 +1973,11 @@ PrintGoalRecords:					; Record Holders page 1: the users' goal records (name, Go
 	sta.b $CF
 	lda.w #$0060
 	sta.b $D1
-	ldx.w #$4DA4
+	ldx.w #TxtName&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4B6A
+	ldx.w #TxtGoals&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
 	sta.b $6D
@@ -2079,11 +2079,11 @@ PrintSaveRecords:					; Record Holders page 2: the users' save records (name, Sa
 	sta.b $CF
 	lda.w #$0060
 	sta.b $D1
-	ldx.w #$4DA4
+	ldx.w #TxtName&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4B7A
+	ldx.w #TxtSaves&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
 	sta.b $6D

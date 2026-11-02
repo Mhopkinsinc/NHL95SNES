@@ -77,5 +77,20 @@ ChangeGoaliePage = $C35395
 EditLinesPage = $C3537F
 RecordHoldersPage = $C3545F
 TxtGoalies = $C347F8
+TxtFinal = $C34F67
+TxtG = $C34F71
+TxtGoals = $C34B6A
+TxtLose = $C34DB1
+TxtName = $C34DA4
+TxtNoRecordHolders = $C34D98
+TxtNone = $C34C86
+TxtOtherScores = $C34C95
+TxtPadLRChangeLine = $C34F06
+TxtPlayer = $C34F6C
+TxtSaves = $C34B7A
+TxtTie = $C34DB5
+TxtWin = $C34DA8
+TxtWin2 = $C34DAD
+TxtXExitMenu = $C34717
 
 incsrc "../bankC5_7000.asm"

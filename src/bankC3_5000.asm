@@ -11,10 +11,14 @@ org $C35000
 	db $3B,$39,$37,$7F,$DC,$A1,$36,$A5,$06,$89,$03,$46,$E4,$E6,$8D,$BB
 	db $18,$91,$D4,$81,$13,$39,$37,$1F,$9C,$14,$D2,$24,$61,$A0,$69,$8F
 	db $47,$22,$D1,$20,$6D,$4A,$0D,$81,$13,$39,$77,$24,$86,$2E,$10,$B7
-	db $24,$40,$BA,$B6,$23,$11,$2E,$0E,$0D,$C2,$35,$13,$C1,$A4,$0B,$4C
+	db $24,$40,$BA,$B6,$23,$11,$2E,$0E,$0D
+TxtCongratulations:					; the packed text "CONGRATULATIONS;"
+	db $C2,$35,$13,$C1,$A4,$0B,$4C
 	db $E4,$9A,$F4,$D3,$9B,$5B,$D4,$E4,$9E,$87,$6C,$39,$41,$5B,$04,$6F
 	db $41,$DF,$87,$06,$7C,$90,$42,$C0,$44,$CD,$6C,$0D,$9B,$A3,$B6,$E7
-	db $21,$BB,$A0,$06,$96,$06,$DC,$00,$46,$B6,$2B,$7B,$1E,$B2,$DF,$02
+	db $21,$BB,$A0,$06,$96,$06
+TxtGameOfThePlayoffs:				; the packed text "game of the playoffs"
+	db $DC,$00,$46,$B6,$2B,$7B,$1E,$B2,$DF,$02
 	db $D8,$95,$22,$35,$92,$BB,$32,$2D,$88,$64,$73,$C2,$9B,$41,$8D,$90
 	db $28,$35,$89,$03,$E9,$DA,$E6,$80,$B7,$41,$A2,$24,$4D,$03,$89,$BB
 	db $06,$CE,$E6,$92,$4F,$24,$8E,$06,$83,$13,$89,$4C,$DB,$3C,$70,$AC
@@ -121,7 +125,9 @@ LeagueLeadersPage:					; the League Leaders text page (DrawLeagueLeaders)
 SeasonPlayerStatsPage:				; the Season Player Stats text page (SeasonPlayerStats)
 	db $10,$00,$00,$01,$FB,$4A,$02,$00,$FF,$FF,$18,$00,$9D
 	db $55,$18,$80,$1F,$56,$19,$80,$BD,$55,$09,$80,$00,$00,$C1,$7F,$4B
-	db $6E,$D1,$14,$67,$4F,$B7,$B9,$E1,$0E,$2C,$44,$A4,$06,$C1,$7F,$4B
+	db $6E,$D1,$14,$67,$4F,$B7,$B9,$E1,$0E,$2C,$44,$A4,$06
+TxtBSwitchToLinemen:				; the packed text "B? Switch to Linemen"
+	db $C1,$7F,$4B
 	db $6E,$D1,$14,$67,$4F,$B7,$F9,$E2,$A8,$11,$46,$9A,$06,$8F,$2F,$80
 	db $49,$DC,$7B,$EF,$CD,$1B,$77,$BE,$9B,$1B,$BE,$A4,$EF,$E6,$80,$CB
 	db $E9,$BB,$F9,$E3,$53,$FA,$6A,$8F,$2F,$80,$49,$DC,$7B,$EF,$CD,$1B

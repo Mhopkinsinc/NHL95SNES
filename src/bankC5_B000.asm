@@ -29,7 +29,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	lda.b $85
 	lsr a
 	bcc .1
-	ldx.w #$55AD
+	ldx.w #TxtBSwitchToLinemen&$FFFF
 .1:									; $CF = $0018, call PrintBoldLeft, tmp0 = $027E
 	ldy.w #$0018
 	sty.b $CF

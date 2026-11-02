@@ -718,7 +718,7 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	cmp.w #$0005
 	bcc .loop5
 	ldy.b tmp0
-	ldx.w #$4781
+	ldx.w #TxtNotAvail&$FFFF
 	jsl.l PrintBoldLeft
 .2:									; X = $001C
 	ldx.w #$001C

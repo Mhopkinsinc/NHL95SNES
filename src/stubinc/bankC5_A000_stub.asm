@@ -85,5 +85,12 @@ WonCheckPalette = $C03EE2
 CreatePlayerPage = $C35714
 GamesTodayPage = $C3568E
 LeagueMenuPage = $C356A4
+TxtAGameMustBe = $C347A1
+TxtAbcdefghi = $C3490D
+TxtJklmnopqr = $C34914
+TxtLeft = $C349E9
+TxtOkay = $C347B3
+TxtSelected = $C347AB
+TxtStuvwxyz = $C3491B
 
 incsrc "../bankC5_A000.asm"

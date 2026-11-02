@@ -79,7 +79,7 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$50A9
+	ldx.w #TxtCongratulations&$FFFF
 	ldy.w #$0012
 	jsl.l PrintItalicCentred
 	lda.w #$2000
@@ -122,7 +122,7 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	jsl.l ConcatStringsLong
 	ldy.w #$0016
 	jsl.l PrintBoldCentredStr
-	ldx.w #$50D6
+	ldx.w #TxtGameOfThePlayoffs&$FFFF
 	ldy.w #$0017
 	jsl.l PrintBoldCentred
 	jsl.l SendTextMap
@@ -168,7 +168,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$0001
-	ldx.w #$4C9F
+	ldx.w #TxtScoutingReport&$FFFF
 	jsl.l PrintTitle
 	lda.w #(SongLists+$5)&$FFFF
 	ldx.w #(SongLists+$5)>>16
@@ -826,7 +826,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$49B8
+	ldx.w #TxtGoalie&$FFFF
 	ldy.w #$0007
 	jsl.l PrintBoldCentred
 	jsl.l WaitTransfers
@@ -880,7 +880,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4ECC
+	ldx.w #TxtOverall&$FFFF
 	ldy.w #$0008
 	jsl.l PrintBoldCentred
 	jsl.l WaitTransfers

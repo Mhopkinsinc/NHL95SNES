@@ -691,7 +691,7 @@ ShowPleaseWait:						; fades out and shows the Please Wait= screen, then waits f
 	stz.b $CF
 	lda.w #$0100
 	sta.b $D1
-	ldx.w #$4692
+	ldx.w #TxtPleaseWait&$FFFF
 	ldy.w #$000C
 	jsl.l PrintItalicCentred
 	jsl.l SendTextMap

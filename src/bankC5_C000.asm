@@ -316,21 +316,21 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	lda.w #$008C
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	jsl.l PrintBoldCentred
 	lda.w #$00A8
 	sta.b $CF
@@ -396,7 +396,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4CE3
+	ldx.w #TxtNoFreeAgents&$FFFF
 	ldy.w #$000E
 	jsl.l PrintBoldCentred
 	ldx.b a0
@@ -1096,21 +1096,21 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	lda.w #$008C
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	jsl.l PrintBoldCentred
 	lda.w #$00A8
 	sta.b $CF
@@ -1450,20 +1450,20 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	ldy.w #$0006
 	jsl.l PrintBoldCentred
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	ldy.w #$000F
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	ldy.w #$0006
 	jsl.l PrintBoldCentred
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	ldy.w #$000F
 	jsl.l PrintBoldCentred
 	lda.w OptPlayMode
@@ -1740,13 +1740,13 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	plx
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4D53
+	ldx.w #TxtAccepted&$FFFF
 	jsl.l PrintItalicLeft
 	bra .5
-.2:									; $D5 = $2800, X = $4D5A, call PrintItalicLeft, $D5 = $2000, ...
+.2:									; $D5 = $2800, X = TxtRejected&$FFFF, call PrintItalicLeft, ...
 	lda.w #$2800
 	sta.b $D5
-	ldx.w #$4D5A
+	ldx.w #TxtRejected&$FFFF
 	jsl.l PrintItalicLeft
 	lda.w #$2000
 	sta.b $D5
@@ -1755,8 +1755,8 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	beq .3
 	ldx.w #$4B7F
 	bra .4
-.3:									; X = $4D61
-	ldx.w #$4D61
+.3:									; X = TxtAdvantage&$FFFF
+	ldx.w #TxtAdvantage&$FFFF
 .4:									; Y = $0014, call PrintBoldLeft, $CF = $0061, pull A, ...
 	ldy.w #$0014
 	jsl.l PrintBoldLeft
@@ -1792,7 +1792,7 @@ PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of ea
 	bne .loop
 	cpx.w #$0000
 	bne .2
-	ldx.w #$4D3F
+	ldx.w #TxtNoSelections&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldLeft
 	rts
@@ -1834,7 +1834,7 @@ PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of ea
 	inc a
 	cmp.b tmp0
 	beq .loop2
-	ldx.w #$4D4A
+	ldx.w #TxtEtc&$FFFF
 	ldy.b $6D
 	jsl.l PrintBoldLeft
 	rts

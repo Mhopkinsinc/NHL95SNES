@@ -594,10 +594,10 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l ClearRAM7E
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F40
+	ldx.w #TxtBEditName&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
-	ldx.w #$4F4A
+	ldx.w #TxtStartSelectPlayer&$FFFF
 	ldy.w #$001A
 	jsl.l PrintBoldLeft
 	jsl.l SendTextMap
@@ -631,15 +631,15 @@ DrawNameGrid:						; draws the letter grid and its keys for EditUserName
 	sta.b $D5
 	lda.w #$001A
 	ldy.w #$000F
-	ldx.w #$490D
+	ldx.w #TxtAbcdefghi&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0012
-	ldx.w #$4914
+	ldx.w #TxtJklmnopqr&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0015
-	ldx.w #$4922
+	ldx.w #TxtStuvwxyz2&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$2000
 	sta.b $D5
