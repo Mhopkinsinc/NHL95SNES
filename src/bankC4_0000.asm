@@ -111,11 +111,11 @@ BracketMarkSeries:					; toggles BracketSeriesMarks for the selected series when
 	lda.w BracketSeriesMarks&$FFFF,x
 	eor.w #$FFFF
 	sta.w BracketSeriesMarks&$FFFF,x
-	ldy.w BracketTeamBarCells&$FFFF,x
+	ldy.w BracketTeamBarCells,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
-	ldy.w (BracketTeamBarCells+$1E)&$FFFF,x
+	ldy.w BracketTeamBarCells+$1E,x
 	jsr.w ToggleTeamBarHighlight
 	jmp.w RefreshBracketColumns
 .rts:								; return
@@ -723,11 +723,11 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 .loop6:								; loop: if BracketSeriesMarks&$FFFF,x >= 0 go to .3, ...
 	lda.w BracketSeriesMarks&$FFFF,x
 	bpl .3
-	ldy.w BracketTeamBarCells&$FFFF,x
+	ldy.w BracketTeamBarCells,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
-	ldy.w (BracketTeamBarCells+$1E)&$FFFF,x
+	ldy.w BracketTeamBarCells+$1E,x
 	phx
 	jsr.w ToggleTeamBarHighlight
 	plx
@@ -1218,7 +1218,7 @@ PopulateBracketTeams:				; places playoff teams and their name bars through the 
 	lda.b tmp2
 	sta.w BracketSlotTeams,y
 	lda.l DATA8_C410E6,x
-	sta.w BracketTeamBarCells&$FFFF,y
+	sta.w BracketTeamBarCells,y
 	tay
 	lda.b tmp2
 	phx

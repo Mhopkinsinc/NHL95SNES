@@ -999,11 +999,11 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	adc.w #$0008
 	bcc .6
 	inc.b $2E
-.6:									; r0 = A, A = $4100, call AllocWorkBuf, RestoreScreenBuf&$FFFF = A, ...
+.6:									; r0 = A, A = $4100, call AllocWorkBuf, RestoreScreenBuf = A, ...
 	sta.b r0
 	lda.w #$4100
 	jsl.l AllocWorkBuf
-	sta.w RestoreScreenBuf&$FFFF
+	sta.w RestoreScreenBuf
 	ldx.w #$007E
 	jsr.w DecompressLZSS
 	dec.b QueueBusy
@@ -1014,7 +1014,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
-	lda.w RestoreScreenBuf&$FFFF
+	lda.w RestoreScreenBuf
 	pha
 	ldy.b $00
 	tsx
@@ -1062,7 +1062,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l FreeWorkBuf
 	lda.w #$4E00
 	jsl.l AllocWorkBuf
-	sta.w RestoreScreenBuf&$FFFF
+	sta.w RestoreScreenBuf
 	sta.b r0
 	lda.w #$007E
 	sta.b $2E
@@ -1081,7 +1081,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	asl a
 	adc.w HomeTeam
 	xba
-	adc.w RestoreScreenBuf&$FFFF
+	adc.w RestoreScreenBuf
 	pha
 	ldy.b $00
 	tsx
@@ -1116,7 +1116,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l DecompressToVRAM
 	lda.w #$13E0
 	jsl.l AllocWorkBuf
-	sta.w RestoreScreenBuf&$FFFF
+	sta.w RestoreScreenBuf
 	sta.b r1
 	lda.w #$007E
 	sta.b $32
@@ -1132,7 +1132,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	pea.w $4320
 	pea.w $007E
 	clc
-	lda.w RestoreScreenBuf&$FFFF
+	lda.w RestoreScreenBuf
 	adc.w #$0A00
 	pha
 	ldy.b $00
@@ -1191,7 +1191,7 @@ FreePauseBuffers:					; frees the pause screen's work buffers (FreeWorkBuf $040E
 RestorePauseBuffers:				; copies BackupPauseBuffers' two buffers back (the sprite objects at
 									; SpriteObjRAM, the palette slots from PalSlotList) and re-uploads the
 									; frames of the objects in use
-	ldx.w PauseSpriteBackup&$FFFF
+	ldx.w PauseSpriteBackup
 	ldy.w #SpriteObjRAM
 	lda.w #$01FD
 	mvn $7E,$7E

@@ -77,7 +77,7 @@ StartGame_go:						; starts a game: fade out, the game RAM cleared, the games st
 	inx
 	cpx.w #$2375
 	bcc .loop2
-	inc.w gamesstarted&$FFFF
+	inc.w gamesstarted
 	stz.w gmode
 	stz.w gsp
 	lda.w OptPen

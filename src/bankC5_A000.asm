@@ -1849,7 +1849,7 @@ FinishSeasonDay:					; once no user game of the day is left: Please Wait, the co
 	lda.w $0002,x
 	plb
 	sta.w VisTeam
-	stx.w SeasonUserGamePtr&$FFFF
+	stx.w SeasonUserGamePtr
 	jsl.l ResetTransferQueues
 	jsl.l ResetWorkBuf
 	jsl.l FadeOutWait
