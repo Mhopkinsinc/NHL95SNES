@@ -1461,16 +1461,16 @@ $C30FBB,Player097,,new,"player 97 of PlayerList: a packed name and the ratings",
 $C30FCF,Player098,,new,"player 98 of PlayerList: a packed name and the ratings",src/bankC3_0000.asm
 $C30FE3,Player099,,new,"player 99 of PlayerList: a packed name and the ratings",src/bankC3_0000.asm
 $C30FF5,Player100,,new,"player 100 of PlayerList: a packed name and the ratings",src/bankC3_0000.asm
-$C3585C,DATA8_C3585C,,new,"not traced: read by CODE_C4DAAD, CODE_C4DBCC, CODE_C4E196, ...",src/bankC3_5000.asm
-$C35E25,DATA8_C35E25,,new,"not traced: read by CODE_C563E0, CODE_C56ABB, CODE_C56DA1, ...",src/bankC3_5000.asm
-$C35E2D,DATA8_C35E2D,,new,"not traced: read by CODE_C56E3D",src/bankC3_5000.asm
-$C35E37,DATA8_C35E37,,new,"not traced: read by CODE_C56F91, CODE_C574B8",src/bankC3_5000.asm
-$C35E47,DATA8_C35E47,,new,"not traced: read by CODE_C5705E, CODE_C57509",src/bankC3_5000.asm
-$C35E51,DATA8_C35E51,,new,"not traced: read by CODE_C4E537",src/bankC3_5000.asm
-$C35E5B,DATA8_C35E5B,,new,"not traced: read by CODE_C5C367",src/bankC3_5000.asm
-$C35E67,DATA8_C35E67,,new,"not traced: read by CODE_C56FBD, CODE_C577C3",src/bankC3_5000.asm
-$C35E87,DATA8_C35E87,,new,"not traced: read by CODE_C56F98, CODE_C57997",src/bankC3_5000.asm
-$C35E9F,DATA8_C35E9F,,new,"not traced: read by CODE_C5713B",src/bankC3_5000.asm
+$C3585C,TeamCityNames,DATA8_C3585C,code,"28 words ($585C-$5893: the 26 teams and the two all-star teams), then the packed city names they point at, then the length-prefixed tile strings QueueVRAMDMALen sends; PrintTeamNameBody and the screen row routines read entry team * 2 and print it with PrintThinCentred",src/bankC3_5000.asm
+$C35E25,PerLabels,DATA8_C35E25,94S+purpose,"94S PerLabels holds the period label strings printscores1_per walks; 95 keeps a word per label pointing at packed text (textdec.py); DrawPeriodStats, DrawPenaltyRow, DrawScoringRow and DrawOtherScoreRow read it",src/bankC3_5000.asm
+$C35E2D,ScoringStrengthTexts,DATA8_C35E2D,code,"DrawScoringRow reads it; 94S keeps the same texts as separate labels (ScoringSH2, ScoringSH, ScoringPP, ScoringPP2)",src/bankC3_5000.asm
+$C35E37,LineNames,DATA8_C35E37,code,"packed text addresses (textdec.py); ShowRosterLine and PrintLineNames read it; 94S linelist has only the short forms",src/bankC3_5000.asm
+$C35E47,PositionNames,DATA8_C35E47,94S+purpose,"94S PositionNames is the same list of strings; 95 keeps a word per name pointing at packed text; RosterSlotRowNext and PrintLineSlot read it",src/bankC3_5000.asm
+$C35E51,PositionLongNames,DATA8_C35E51,code,"packed text addresses (textdec.py); ShowMatchups reads it",src/bankC3_5000.asm
+$C35E5B,PositionGroupNames,DATA8_C35E5B,code,"packed text addresses (textdec.py); DrawFreeAgentRow reads it; 94S RosterGroups holds the three names once",src/bankC3_5000.asm
+$C35E67,RatingNames,DATA8_C35E67,94S+purpose,"94S RatingNames lists the skater headings, then the goalie ones; 95 keeps the skater half as packed text addresses (GoalieRatingNames the other); ShowRosterLine and PrintLinePlayerHeader read it",src/bankC3_5000.asm
+$C35E87,GoalieRatingNames,DATA8_C35E87,code,"the goalie half of 94S RatingNames, as packed text addresses; ShowRosterLine and Pausemode_gnum read it",src/bankC3_5000.asm
+$C35E9F,RosterStatusTexts,DATA8_C35E9F,code,"packed text addresses (textdec.py); RosterColStatus reads the first four, RosterColHand the last two",src/bankC3_5000.asm
 $C35EAB,PhotoPaletteTable,,new,"per team (team order) a long pointer to its photo set: 6 palettes,",src/bankC3_5000.asm
 $C35F60,DATA8_C35F60,,new,"not traced: read by CODE_C56168, CODE_C57A7D, CODE_C5A51C, ...",src/bankC3_5000.asm
 $C35F62,DATA8_C35F62,,new,"not traced: read by CODE_C5A8B0",src/bankC3_5000.asm

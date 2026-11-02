@@ -8,7 +8,7 @@ incsrc "../ram95s.asm"
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
 ReadPauseMenuPad = $C37065			; read the pause pad into the menu word and update the repeat timer
-DATA8_C3585C = $C3585C
+TeamCityNames = $C3585C
 BuildTeamLinesPreserveTemps = $C4EFD8
 SendTextMap = $C4C2AA
 RestoreWorkBuf = $C4C536

@@ -493,7 +493,7 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	phy
 	asl a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
 	jsl.l PrintBoldCentred
 	ply
@@ -1307,7 +1307,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	lsr a
 	lsr a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -1413,10 +1413,10 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	ldx.b a2
 	beq .1
 	lda.w VisTeam
-.1:									; A * 2, X = A, A = DATA8_C3585C,x, X = A, ...
+.1:									; A * 2, X = A, A = TeamCityNames,x, X = A, ...
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l UnpackText
 	lda.w #$007E
@@ -1652,7 +1652,7 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	lsr a
 	lsr a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -1703,10 +1703,10 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	cmp.w #$0005
 	bcc .7
 	lda.w #$0002
-.7:									; A * 2, X = A, if DATA8_C35E2D,x = $FFFF go to .8, X = A, ...
+.7:									; A * 2, X = A, if ScoringStrengthTexts,x = $FFFF go to .8, X = A, ...
 	asl a
 	tax
-	lda.l DATA8_C35E2D,x
+	lda.l ScoringStrengthTexts,x
 	cmp.w #$FFFF
 	beq .8
 	tax

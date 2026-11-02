@@ -25,10 +25,10 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 	bne .1
 	ldx.w #$47F8
 	bra .2
-.1:									; A * 2, X = A, A = DATA8_C35E37,x, X = A
+.1:									; A * 2, X = A, A = LineNames,x, X = A
 	asl a
 	tax
-	lda.l DATA8_C35E37,x
+	lda.l LineNames,x
 	tax
 .2:									; call UnpackText, push X, X = $4E7D, call UnpackText, ...
 	jsl.l UnpackText
@@ -44,10 +44,10 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 	tax
 	lda.b $79
 	bne .3
-	lda.l DATA8_C35E87,x
+	lda.l GoalieRatingNames,x
 	bra .4
-.3:									; A = DATA8_C35E67,x
-	lda.l DATA8_C35E67,x
+.3:									; A = RatingNames,x
+	lda.l RatingNames,x
 .4:									; X = A, call UnpackText, push X, X = $4EC1, ...
 	tax
 	jsl.l UnpackText
@@ -125,7 +125,7 @@ RosterGoalieRowDone:				; a goalie row drawn: the next row while goalies remain
 	bne RosterGoalieRowNext
 	rts
 ShowRosterLineSlots:				; ShowRosterLine for lines 1 up: the line's five players by slot
-									; (positions from DATA8_C35E47)
+									; (positions from PositionNames)
 	stz.b $91
 RosterSlotRowNext:					; a line slot's row: its position text, the player's name, then his stat
 									; column (RosterColumnTable), returning to RosterSlotRowDone
@@ -136,7 +136,7 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	lda.b a3
 	asl a
 	tax
-	lda.l DATA8_C35E47,x
+	lda.l PositionNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -206,7 +206,7 @@ RosterColumnTable:					; the stat column routines by column ($7D * 2): RosterCol
 	dw RosterColStatus,AttribEnergy,RosterColHand,RosterColWeight
 	dw $0000,RosterColRating
 RosterColStatus:					; TeamRoster's status column for player d0: Ice, Bench, Inj= P / Inj= G
-									; (DATA8_C35E9F) or the penalty time left (M:SS)
+									; (RosterStatusTexts) or the penalty time left (M:SS)
 	lda.b d0
 	asl a
 	ldx.b a2
@@ -241,10 +241,10 @@ RosterColStatus:					; TeamRoster's status column for player d0: Ice, Bench, Inj
 	ldy.b $6D
 	jsl.l PrintBoldCentredStr
 	rts
-.5:									; A * 2, X = A, A = DATA8_C35E9F,x, X = A, ...
+.5:									; A * 2, X = A, A = RosterStatusTexts,x, X = A, ...
 	asl a
 	tax
-	lda.l DATA8_C35E9F,x
+	lda.l RosterStatusTexts,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -285,7 +285,7 @@ RosterColHand:						; TeamRoster's shooting hand column: Left or Right by bit 0 
 	and.w #$0001
 	asl a
 	tax
-	lda.l DATA8_C35E9F+8,x
+	lda.l RosterStatusTexts+8,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -688,7 +688,7 @@ PrintLineNames:						; prints the line being edited: its title (Best Line with l
 	inc a
 	asl a
 	tax
-	lda.l DATA8_C35E37,x
+	lda.l LineNames,x
 	tax
 .2:									; Y = $0008, call PrintItalicLeft, Y = $000A, call PrintTitleBar, ...
 	ldy.w #$0008
@@ -725,7 +725,7 @@ PrintLineNames:						; prints the line being edited: its title (Best Line with l
 	sta.b $D5
 	rts
 PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position name
-									; (DATA8_C35E47) and its player
+									; (PositionNames) and its player
 	lda.w #$0020
 	sta.b $CF
 	lda.w #$0040
@@ -733,7 +733,7 @@ PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position
 	lda.b a3
 	asl a
 	tax
-	lda.l DATA8_C35E47,x
+	lda.l PositionNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldCentred
@@ -1080,7 +1080,7 @@ MoveLinePlayerCursor:				; list row A (the old cursor) back to palette 0 and cur
 .rts:								; return
 	rts
 PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E, the title of stat
-									; column $7D (DATA8_C35E67) right-aligned to x $F0
+									; column $7D (RatingNames) right-aligned to x $F0
 	lda.w #$000C
 	sta.b $6D
 	jsr.w ClearTextRow
@@ -1098,7 +1098,7 @@ PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E,
 	lda.b $7D
 	asl a
 	tax
-	lda.l DATA8_C35E67,x
+	lda.l RatingNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldRight
@@ -1335,7 +1335,7 @@ Pausemode_gnum:						; PauseGoalie's goalie list: 'Player' and the title of stat
 	lda.b $7D
 	asl a
 	tax
-	lda.l DATA8_C35E87,x
+	lda.l GoalieRatingNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldRight
@@ -1574,7 +1574,7 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	lda.l $7F8EFA,x
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldLeft
@@ -1591,7 +1591,7 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	lda.l $7F8EFC,x
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldLeft
@@ -1611,7 +1611,7 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	bmi .5
 	asl a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
 	jsl.l PrintBoldLeft
 	rts

@@ -297,7 +297,7 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	lda.b a2
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred

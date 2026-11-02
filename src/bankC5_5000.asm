@@ -1359,7 +1359,7 @@ SetupStatsPage:						; SetupScreen, then the page A (PrintTextPage) and both tea
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000C
 	jsl.l PrintThinCentred
@@ -1370,7 +1370,7 @@ SetupStatsPage:						; SetupScreen, then the page A (PrintTextPage) and both tea
 	lda.w HomeTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000C
 	jsl.l PrintThinCentred
@@ -1889,7 +1889,7 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	pla
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred

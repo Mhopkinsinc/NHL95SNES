@@ -1132,7 +1132,7 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	sta.b $CF
 	lda.w #$0070
 	sta.b $D1
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0012
 	jsl.l PrintThinCentred
@@ -1260,7 +1260,7 @@ DrawPresidentsWinner:				; winner A of the Presidents Trophy: the team's name an
 	sta.b $CF
 	lda.w #$0070
 	sta.b $D1
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0012
 	jsl.l PrintThinCentred

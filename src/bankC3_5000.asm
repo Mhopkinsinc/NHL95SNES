@@ -135,7 +135,8 @@ org $C35000
 	db $02,$00,$75,$48,$70,$48,$02,$00,$C0,$48,$CA,$48,$07,$00,$1F,$48
 	db $27,$48,$2E,$48,$33,$48,$43,$48,$50,$48,$E4,$48,$02,$00,$55,$49
 	db $51,$49,$03,$00,$56,$48,$5E,$48,$67,$48,$1C,$00
-DATA8_C3585C:						; not traced: read by DrawAwardWinner, DrawPresidentsWinner, ...
+TeamCityNames:						; per team (A * 2): the address of its city name (packed text, bank $C3),
+									; then the texts
 	db $94,$58,$9A,$58,$9F,$58,$A5,$58,$AB,$58,$B1,$58,$B6,$58,$BC,$58
 	db $C3,$58,$C9,$58,$D0,$58,$DA,$58,$E1,$58,$EA,$58,$F2,$58,$FA,$58
 	db $FF,$58,$08,$59,$10,$59,$15,$59,$1D,$59,$26,$59,$2F,$59,$35,$59
@@ -229,25 +230,32 @@ DATA8_C3585C:						; not traced: read by DrawAwardWinner, DrawPresidentsWinner, 
 	db $4B,$02,$EF,$12,$EB,$12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00
 	db $D7,$12,$FF,$FF,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12
 	db $DF,$12,$11,$4C,$04,$DB,$12,$DF,$12
-DATA8_C35E25:						; not traced: read by DrawPeriodStats, DrawPenaltyRow, DrawScoringRow, ...
+PerLabels:							; the period labels (1st, 2nd, 3rd, OT): addresses of packed texts, by
+									; period
 	db $59,$4F,$5D,$4F,$61,$4F,$65,$4F
-DATA8_C35E2D:						; not traced: read by DrawScoringRow
+ScoringStrengthTexts:				; a goal's strength mark: SH2, SH, none ($FFFF), PP, PP2 (packed text
+									; addresses)
 	db $9A,$4F,$78,$4F,$FF,$FF,$9D,$4F,$9F,$4F
-DATA8_C35E37:						; not traced: read by ShowRosterLine, PrintLineNames
+LineNames:							; the line names by line: Best Line, Scoring 1 / 2, Checking, Power Play 1
+									; / 2, Penalty Kill 1 / 2
 	db $74,$4C,$83,$4E,$8B,$4E,$4D,$4A,$93,$4E,$9E,$4E,$A9,$4E,$B5,$4E
-DATA8_C35E47:						; not traced: read by RosterSlotRowNext, PrintLineSlot
+PositionNames:						; the position abbreviations LD, RD, LW, C, RW (packed text addresses)
 	db $A2,$4F,$A4,$4F,$A6,$4F,$A8,$4F,$AA,$4F
-DATA8_C35E51:						; not traced: read by ShowMatchups
+PositionLongNames:					; the position names, Left Defense to Right Wing, in PositionNames order
 	db $BD,$49,$C7,$49,$D7,$49,$D2,$49,$E0,$49
-DATA8_C35E5B:						; not traced: read by DrawFreeAgentRow
+PositionGroupNames:					; each roster slot group's name by position: Goalie, Defense, Defense,
+									; Forward x 3
 	db $B8,$49,$F0,$4C,$F0,$4C,$F6,$4C,$F6,$4C,$F6,$4C
-DATA8_C35E67:						; not traced: read by ShowRosterLine, PrintLinePlayerHeader
+RatingNames:						; the skater rating headings: Status, Overall, Energy, Agility ...
+									; Aggression, Checking
 	db $C7,$4E,$CC,$4E,$D2,$4E,$F7,$49,$F2,$49,$D7,$4E,$04,$4A,$10,$4A
 	db $26,$4A,$2F,$4A,$3A,$4A,$1C,$4A,$DC,$4E,$FD,$49,$45,$4A,$4D,$4A
-DATA8_C35E87:						; not traced: read by ShowRosterLine, Pausemode_gnum
+GoalieRatingNames:					; the goalie rating headings: Status, Overall, Agility ... Glove Left,
+									; Weight
 	db $C7,$4E,$CC,$4E,$F7,$49,$F2,$49,$6B,$4C,$10,$4A,$54,$4A,$5E,$4A
 	db $68,$4A,$7A,$4A,$71,$4A,$DC,$4E
-DATA8_C35E9F:						; not traced: read by RosterColStatus
+RosterStatusTexts:					; the roster status words (Ice, Bench, Inj. P, Inj. G), then the hands
+									; (Right, Left)
 	db $56,$4C,$5A,$4C,$5F,$4C,$65,$4C,$ED,$49,$E9,$49
 PhotoPaletteTable:					; per team (team order) a long pointer to its photo set: 6 palettes,
 									; then the photos (as 94S PhotoPaletteTable); read 1-based (-4 + team x 4)

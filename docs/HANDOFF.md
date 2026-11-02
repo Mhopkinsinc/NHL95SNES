@@ -66,7 +66,7 @@
   routine, same bank). The pipeline writes these immediates as labels (label>>16 for the bank). ../work/ptrpairs.py
   finds the other ldx #bank / lda #address pairs before a call (MapSetToVRAM, Decompress, MapSetToWRAM ...) and writes
   those on a label (or inside the same item, label+n) as labels; the ones past the end of PhotoPaletteTable and
-  DATA8_C3585C (length-prefixed tile strings for QueueVRAMDMALen) have no label yet and stay numbers.
+  the length-prefixed tile strings for QueueVRAMDMALen after TeamCityNames' texts have no label yet and stay numbers.
 - An indexed long read from the first byte of a bank (lda.l $C30000,x, $C00000,x, $C40000,x) uses the bank as a base for
   an offset (a record, glyph or list pointer), so it stays a number even where a label sits at that address.
 - Transfer queues are separate stacks: $00 VRAM, $04 CGRAM (the $C4CC5x loop writes CGADD and DMAs to CGDATA). A record is

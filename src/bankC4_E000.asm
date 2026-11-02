@@ -196,7 +196,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000E
 	jsl.l PrintThinCentred
@@ -207,7 +207,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w HomeTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000E
 	jsl.l PrintThinCentred
@@ -666,7 +666,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w curmatchup
 	asl a
 	tax
-	lda.l DATA8_C35E51,x
+	lda.l PositionLongNames,x
 	tax
 	ldy.w #$0007
 	jsl.l PrintBoldCentred

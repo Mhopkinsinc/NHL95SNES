@@ -542,7 +542,7 @@ PrintTeamNameBody:					; prints team A centred on row Y, sends the map and resto
 									; margins
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l PrintThinCentred
 	jsl.l SendTextMap
@@ -1335,7 +1335,7 @@ DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	phy
 	jsl.l PrintThinCentred
@@ -1343,7 +1343,7 @@ DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	pla
 	adc.w #$0003

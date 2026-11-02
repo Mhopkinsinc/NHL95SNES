@@ -302,7 +302,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	jsr.w QueueTeamPalette
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l PrintThinCentred
 	pla
@@ -312,7 +312,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	jsr.w QueueTeamPalette
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	pla
 	adc.w #$0003
@@ -333,7 +333,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	jsr.w QueueTeamPalette
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l PrintThinCentred
 	clc
@@ -354,7 +354,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	jsr.w QueueTeamPalette
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	pla
 	adc.w #$0003
@@ -1631,7 +1631,7 @@ DrawStatsTeam:						; the stats screens' team: HomeTeam's logo sprite (d7) at $1
 	lda.w HomeTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0006
 	jsl.l PrintThinCentred
@@ -1860,7 +1860,7 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	pha
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.b $6D
 	jsl.l PrintBoldLeft

@@ -8,13 +8,13 @@ incsrc "../ram95s.asm"
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
 ReplayMode = $C3736B				; open instant replay and restore the live frame on exit
-DATA8_C3585C = $C3585C
-DATA8_C35E25 = $C35E25
-DATA8_C35E37 = $C35E37
-DATA8_C35E47 = $C35E47
-DATA8_C35E67 = $C35E67
-DATA8_C35E87 = $C35E87
-DATA8_C35E9F = $C35E9F
+TeamCityNames = $C3585C
+PerLabels = $C35E25
+LineNames = $C35E37
+PositionNames = $C35E47
+RatingNames = $C35E67
+GoalieRatingNames = $C35E87
+RosterStatusTexts = $C35E9F
 DATA8_C35F60 = $C35F60
 ReadMenuPads = $C36C2D
 PhotoPaletteTable = $C35EAB

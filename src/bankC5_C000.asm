@@ -339,7 +339,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -433,11 +433,11 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	ldy.w #$2C00
 .2:									; $D5 = Y
 	sty.b $D5
-.3:									; A and $000F, A * 2, X = A, A = DATA8_C35E5B,x, ...
+.3:									; A and $000F, A * 2, X = A, A = PositionGroupNames,x, ...
 	and.w #$000F
 	asl a
 	tax
-	lda.l DATA8_C35E5B,x
+	lda.l PositionGroupNames,x
 	tax
 	lda.w #$008C
 	sta.b $CF
@@ -1119,7 +1119,7 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -1712,7 +1712,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0005
 	jsl.l PrintThinCentred
@@ -1765,7 +1765,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	pla
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0014
 	jsl.l PrintBoldLeft
