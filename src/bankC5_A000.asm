@@ -641,7 +641,7 @@ SeasonOptions:						; the League Menu (season mode): draws its page (Play Games,
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	bne .1
 	jsl.l SetupPlayoffs
 	inc.w OptPlayMode
@@ -1060,11 +1060,11 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	dec.b d0
 	jsr.w DrawDayGames
 	jmp.w PrintGamesTodayDate
-.7:									; A = d0, A * 2, X = A, if DATA8_C35F62,x = 0 go to .rts, ...
+.7:									; A = d0, A * 2, X = A, if SeasonDates+2,x = 0 go to .rts, ...
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C35F62,x
+	lda.l SeasonDates+2,x
 	beq .rts
 	inc.b d0
 	jsr.w DrawDayGames
@@ -1738,7 +1738,7 @@ MenuPlayGames:						; League Menu Play Games: when the season is over (play mode
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	bne .2
 	jsl.l SetupPlayoffs
 	inc.w OptPlayMode

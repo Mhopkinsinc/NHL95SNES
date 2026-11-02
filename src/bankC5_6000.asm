@@ -221,7 +221,7 @@ MakeDateString:						; the date of season day A as text in mesarea: the day name
 									; the day of the month
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	tay
 	and.w #$001F
 	tax

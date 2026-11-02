@@ -1436,7 +1436,7 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	tay
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	bne .1
 	lda.w #$000D
 	ldx.w #$5F52
