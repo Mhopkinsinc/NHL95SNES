@@ -143,9 +143,10 @@ DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from PauseTab
 	jmp.w ShowPenaltyBoxes
 PauseTabLists:						; per pause tab (pausetab * 2: Info, Stats, Options, the quit prompt): its
 									; item list in bank $C3 for DrawPauseItems
-	db $CB,$5C,$EF,$5C,$07,$5D,$21,$5D
+	dw PauseInfoItems&$FFFF,PauseStatsItems&$FFFF,PauseOptionsItems&$FFFF,QuitPromptItems&$FFFF
 PracticePauseTabLists:				; the same in practice (OptPlayMode 1): shorter Info and Options lists
-	db $E1,$5C,$EF,$5C,$FD,$5C,$21,$5D
+	dw PracticeInfoItems&$FFFF,PauseStatsItems&$FFFF,PracticeOptionsItems&$FFFF
+	dw QuitPromptItems&$FFFF
 PracticeInfoJumps:					; practice Info tab (OptPlayMode 1): per item (pauseitem * 2) its routine:
 									; Team Roster, Score Summry, Records
 	dw TeamRoster,ShowScoringSummary,RecordHoldersScreen
@@ -448,7 +449,7 @@ PauseTabPlain:						; per pause tab (pausetab * 2): the pause map offset of its 
 DrawPauseItems:						; blanks the pause item rows (the bank $C3 list of seven blank items) and
 									; prints item list A (PrintPauseItems)
 	pha
-	ldx.w #$5D41
+	ldx.w #BlankPauseItems&$FFFF
 	jsr.w PrintPauseItems
 	plx
 PrintPauseItems:					; prints pause item list X (bank $C3: a count to pauseitems, then a

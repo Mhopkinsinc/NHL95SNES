@@ -356,15 +356,41 @@ TeamCityNames:						; per team (A * 2): the address of its city name (packed tex
 	db $03,$AC,$01,$93,$BB,$E8,$DA,$74,$1A,$95,$83,$26,$1C,$AD,$24,$6A
 	db $96,$03,$79,$50,$33,$D3,$35,$0D,$96,$A3,$D6,$D0,$23,$46,$03,$80
 	db $AF,$B5,$B9,$E4,$13,$44,$B9,$39,$F1,$D5,$80,$AF,$B5,$B9,$E4,$13
-	db $44,$B9,$B9,$F5,$D5,$0C,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	db $A0,$A0,$0B,$D4,$E5,$E1,$ED,$A0,$D2,$EF,$F3,$F4,$E5,$F2,$0C,$D3
-	db $E3,$EF,$F2,$E5,$A0,$D3,$F5,$ED,$ED,$F2,$F9,$09,$D0,$E5,$EE,$E1
+	db $44,$B9,$B9,$F5,$D5
+StrBlank12:							; the pause item string "12 spaces" (a length byte, then the characters)
+	db $0C,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	db $A0,$A0
+StrTeamRoster:						; the pause item string "Team Roster" (a length byte, then the characters)
+	db $0B,$D4,$E5,$E1,$ED,$A0,$D2,$EF,$F3,$F4,$E5,$F2
+StrScoreSummry:						; the pause item string "Score Summry" (a length byte, then the
+									; characters)
+	db $0C,$D3
+	db $E3,$EF,$F2,$E5,$A0,$D3,$F5,$ED,$ED,$F2,$F9
+StrPenalties:						; the pause item string "Penalties" (a length byte, then the characters)
+	db $09,$D0,$E5,$EE,$E1
 	db $EC,$F4,$E9,$E5,$F3,$0C,$CF,$F4,$E8,$E5,$F2,$A0,$D3,$E3,$EF,$F2
-	db $E5,$F3,$07,$D2,$E5,$E3,$EF,$F2,$E4,$F3,$0A,$C7,$E1,$ED,$E5,$A0
-	db $D3,$F4,$E1,$F4,$F3,$0C,$D0,$E5,$F2,$E9,$EF,$E4,$A0,$D3,$F4,$E1
-	db $F4,$F3,$0C,$D0,$EC,$E1,$F9,$E5,$F2,$A0,$D3,$F4,$E1,$F4,$F3,$0B
-	db $C9,$EE,$F3,$F4,$A0,$D2,$E5,$F0,$EC,$E1,$F9,$0A,$C5,$E4,$E9,$F4
-	db $A0,$CC,$E9,$EE,$E5,$F3,$0C,$C3,$E8,$EE,$E7,$E5,$A0,$C7,$EF,$E1
+	db $E5,$F3
+StrRecords:							; the pause item string "Records" (a length byte, then the characters)
+	db $07,$D2,$E5,$E3,$EF,$F2,$E4,$F3
+StrGameStats:						; the pause item string "Game Stats" (a length byte, then the characters)
+	db $0A,$C7,$E1,$ED,$E5,$A0
+	db $D3,$F4,$E1,$F4,$F3
+StrPeriodStats:						; the pause item string "Period Stats" (a length byte, then the
+									; characters)
+	db $0C,$D0,$E5,$F2,$E9,$EF,$E4,$A0,$D3,$F4,$E1
+	db $F4,$F3
+StrPlayerStats:						; the pause item string "Player Stats" (a length byte, then the
+									; characters)
+	db $0C,$D0,$EC,$E1,$F9,$E5,$F2,$A0,$D3,$F4,$E1,$F4,$F3
+StrInstReplay:						; the pause item string "Inst Replay" (a length byte, then the characters)
+	db $0B
+	db $C9,$EE,$F3,$F4,$A0,$D2,$E5,$F0,$EC,$E1,$F9
+StrEditLines:						; the pause item string "Edit Lines" (a length byte, then the characters)
+	db $0A,$C5,$E4,$E9,$F4
+	db $A0,$CC,$E9,$EE,$E5,$F3
+StrChngeGoalie:						; the pause item string "Chnge Goalie" (a length byte, then the
+									; characters)
+	db $0C,$C3,$E8,$EE,$E7,$E5,$A0,$C7,$EF,$E1
 	db $EC,$E9,$E5,$0C,$CD,$EE,$F5,$E1,$EC,$A0,$C7,$EF,$E1,$EC,$E9,$E5
 	db $0B,$C1,$F5,$F4,$EF,$A0,$C7,$EF,$E1,$EC,$E9,$E5,$08,$D4,$E9,$ED
 	db $E5,$A0,$CF,$F5,$F4,$02,$E2,$F9,$11,$D3,$F4,$E1,$F2,$F3,$A0,$EF
@@ -493,29 +519,76 @@ PracticeOptions:					; the Practice setup lines: a count, then title, value list
 	dw TxtVisitingTeam&$FFFF,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
 	dw TxtPeriodLength&$FFFF,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
 	dw TxtRosters&$FFFF,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
-	db $01,$00,$58,$49,$4C,$58,$02,$19,$00,$00,$05,$00,$00,$00,$6E,$59
-	db $00,$00,$7A,$59,$00,$00,$87,$59,$00,$00,$9E,$59,$46,$53,$00,$00
-	db $03,$00,$00,$00,$6E,$59,$00,$00,$7A,$59,$00,$00,$9E,$59,$03,$00
-	db $00,$00,$A6,$59,$00,$00,$B1,$59,$00,$00,$BE,$59,$02,$00,$00,$00
-	db $CB,$59,$00,$00,$37,$5D,$06,$00,$00,$00,$CB,$59,$00,$00,$D7,$59
-	db $00,$00,$E2,$59,$08,$53,$00,$00,$20,$53,$00,$00,$00,$00,$37,$5D
-	db $02,$00,$00,$00,$2B,$5D,$00,$00,$37,$5D,$0B,$D2,$E5,$F3,$F5,$ED
-	db $E5,$A0,$C7,$E1,$ED,$E5,$09,$D1,$F5,$E9,$F4,$A0,$C7,$E1,$ED,$E5
-	db $07,$00,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00
-	db $61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$11,$99
-	db $4B,$00,$AB,$12,$FF,$FF,$9E,$4B,$00,$97,$12,$FF,$FF,$A3,$4B,$04
-	db $AB,$12,$97,$12,$AE,$4B,$02,$5F,$12,$63,$12,$B7,$4B,$06,$73,$12
-	db $FF,$FF,$BF,$4B,$00,$77,$12,$FF,$FF,$C6,$4B,$00,$7F,$12,$FF,$FF
-	db $CD,$4B,$00,$7B,$12,$FF,$FF,$D4,$4B,$02,$E7,$12,$E3,$12,$DC,$4B
-	db $02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF,$12,$EB,$12,$F0,$4B,$00,$B3
-	db $12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$08,$48,$00,$67,$12,$6B
-	db $12,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF,$12,$11
-	db $4C,$04,$DB,$12,$DF,$12,$0B,$99,$4B,$00,$AB,$12,$FF,$FF,$9E,$4B
-	db $00,$97,$12,$FF,$FF,$A3,$4B,$04,$AB,$12,$97,$12,$D4,$4B,$02,$E7
-	db $12,$E3,$12,$DC,$4B,$02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF,$12,$EB
-	db $12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$01
-	db $4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF,$12,$11,$4C,$04
-	db $DB,$12,$DF,$12
+	db $01,$00,$58,$49,$4C,$58,$02,$19,$00,$00
+PauseInfoItems:						; the Info tab: Team Roster, Score Summry, Penalties, Records, the other
+									; scores, a list for PrintPauseItems: a count, then a routine and a string
+									; per item
+	dw 5
+	dw 0,StrTeamRoster&$FFFF
+	dw 0,StrScoreSummry&$FFFF
+	dw 0,StrPenalties&$FFFF
+	dw 0,StrRecords&$FFFF
+	dw OtherScoresItemText&$FFFF,0
+PracticeInfoItems:					; the Info tab in practice: Team Roster, Score Summry, Records, a list for
+									; PrintPauseItems: a count, then a routine and a string per item
+	dw 3
+	dw 0,StrTeamRoster&$FFFF
+	dw 0,StrScoreSummry&$FFFF
+	dw 0,StrRecords&$FFFF
+PauseStatsItems:					; the Stats tab: Game Stats, Period Stats, Player Stats, a list for
+									; PrintPauseItems: a count, then a routine and a string per item
+	dw 3
+	dw 0,StrGameStats&$FFFF
+	dw 0,StrPeriodStats&$FFFF
+	dw 0,StrPlayerStats&$FFFF
+PracticeOptionsItems:				; the Options tab in practice: Inst Replay, Quit Game, a list for
+									; PrintPauseItems: a count, then a routine and a string per item
+	dw 2
+	dw 0,StrInstReplay&$FFFF
+	dw 0,StrQuitGame&$FFFF
+PauseOptionsItems:					; the Options tab: Inst Replay, Edit Lines, Chnge Goalie, goalie mode,
+									; timeout, Quit Game, a list for PrintPauseItems: a count, then a routine
+									; and a string per item
+	dw 6
+	dw 0,StrInstReplay&$FFFF
+	dw 0,StrEditLines&$FFFF
+	dw 0,StrChngeGoalie&$FFFF
+	dw GoalieModeItemText&$FFFF,0
+	dw TimeoutItemText&$FFFF,0
+	dw 0,StrQuitGame&$FFFF
+QuitPromptItems:					; the quit prompt: Resume Game, Quit Game, a list for PrintPauseItems: a
+									; count, then a routine and a string per item
+	dw 2
+	dw 0,StrResumeGame&$FFFF
+	dw 0,StrQuitGame&$FFFF
+StrResumeGame:						; the pause item string "Resume Game" (a length byte, then the characters)
+	db $0B,$D2,$E5,$F3,$F5,$ED
+	db $E5,$A0,$C7,$E1,$ED,$E5
+StrQuitGame:						; the pause item string "Quit Game" (a length byte, then the characters)
+	db $09,$D1,$F5,$E9,$F4,$A0,$C7,$E1,$ED,$E5
+BlankPauseItems:					; seven blank items (12 spaces each): clear the item rows, a list for
+									; PrintPauseItems: a count, then a routine and a string per item
+	dw 7
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	dw 0,StrBlank12&$FFFF
+	db $11,$99,$4B,$00,$AB,$12,$FF,$FF,$9E,$4B,$00,$97,$12,$FF,$FF,$A3
+	db $4B,$04,$AB,$12,$97,$12,$AE,$4B,$02,$5F,$12,$63,$12,$B7,$4B,$06
+	db $73,$12,$FF,$FF,$BF,$4B,$00,$77,$12,$FF,$FF,$C6,$4B,$00,$7F,$12
+	db $FF,$FF,$CD,$4B,$00,$7B,$12,$FF,$FF,$D4,$4B,$02,$E7,$12,$E3,$12
+	db $DC,$4B,$02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF,$12,$EB,$12,$F0,$4B
+	db $00,$B3,$12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$08,$48,$00,$67
+	db $12,$6B,$12,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF
+	db $12,$11,$4C,$04,$DB,$12,$DF,$12,$0B,$99,$4B,$00,$AB,$12,$FF,$FF
+	db $9E,$4B,$00,$97,$12,$FF,$FF,$A3,$4B,$04,$AB,$12,$97,$12,$D4,$4B
+	db $02,$E7,$12,$E3,$12,$DC,$4B,$02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF
+	db $12,$EB,$12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF
+	db $FF,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF,$12,$11
+	db $4C,$04,$DB,$12,$DF,$12
 PerLabels:							; the period labels (1st, 2nd, 3rd, OT): addresses of packed texts, by
 									; period
 	dw Txt1st&$FFFF,Txt2nd&$FFFF,Txt3rd&$FFFF,TxtOT&$FFFF

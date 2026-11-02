@@ -206,5 +206,8 @@ TxtXExitMenu = $C34717
 TxtYSwitchTeams = $C34A84
 TxtYToGoBack = $C3493D
 TxtYes = $C34951
+GoalieModeItemText = $C55308
+OtherScoresItemText = $C55346
+TimeoutItemText = $C55320
 
 incsrc "../bankC3_5000.asm"

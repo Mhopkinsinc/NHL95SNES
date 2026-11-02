@@ -84,5 +84,12 @@ TeamNicknameTiles = $C19B68
 TiledBackMap = $C087F2
 BackdropColour = $C04CA9
 GamePalette0 = $C00EE5
+BlankPauseItems = $C35D41
+PauseInfoItems = $C35CCB
+PauseOptionsItems = $C35D07
+PauseStatsItems = $C35CEF
+PracticeInfoItems = $C35CE1
+PracticeOptionsItems = $C35CFD
+QuitPromptItems = $C35D21
 
 incsrc "../bankC5_5000.asm"

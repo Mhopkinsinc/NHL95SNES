@@ -1399,7 +1399,7 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	dec a
 	sta.w tmtimeouts,x
 	jsl.l reenergizeteam
-	ldx.w #$5D41
+	ldx.w #BlankPauseItems&$FFFF
 	jsr.w PrintPauseItems
 	lda.w #$00C3
 	sta.b $2E

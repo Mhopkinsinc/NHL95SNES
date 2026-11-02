@@ -9281,3 +9281,23 @@ $C35B7C,TxtCopyright17,,code,"textdec.py decodes $5B7C to this text",src/bankC3_
 $C35B97,TxtCopyright18,,code,"textdec.py decodes $5B97 to this text",src/bankC3_5000.asm
 $C35BAE,TxtCopyright19,,code,"textdec.py decodes $5BAE to this text",src/bankC3_5000.asm
 $C35BC3,TxtCopyright20,,code,"textdec.py decodes $5BC3 to this text",src/bankC3_5000.asm
+$C35961,StrBlank12,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C3596E,StrTeamRoster,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C3597A,StrScoreSummry,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C35987,StrPenalties,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C3599E,StrRecords,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359A6,StrGameStats,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359B1,StrPeriodStats,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359BE,StrPlayerStats,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359CB,StrInstReplay,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359D7,StrEditLines,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C359E2,StrChngeGoalie,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C35CCB,PauseInfoItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35CE1,PracticeInfoItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35CEF,PauseStatsItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35CFD,PracticeOptionsItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35D07,PauseOptionsItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35D21,QuitPromptItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C35D2B,StrResumeGame,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C35D37,StrQuitGame,,code,"an item of the pause item lists",src/bankC3_5000.asm
+$C35D41,BlankPauseItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
