@@ -412,14 +412,21 @@ OAMHighBytes		=	$1E00		; size / X bit 8 of each sprite, a byte each (PackOAMHigh
 SoundQueueHead		=	$1EA1		; the CPU sound command queue's head (QueueSoundCmd adds there)
 SoundQueueTail		=	$1EA3		; the CPU sound command queue's tail (the next command sent)
 CrowdSoundOn		=	$1EA5		; set while the crowd sound plays (StartCrowdSound; LoadSounds clears it)
+carriedy			=	$2000		; the carried puck's y: updateplayers stores pucky while puckc >= 0
 ltplayer			=	$2002		; a2touchpuck: the last player to touch the puck (index / 2)
 ltx					=	$2004		; a2touchpuck: that player's Xpos; Stop4Pen's face off x
 lty					=	$2006		; a2touchpuck: that player's Ypos; Stop4Pen's face off y
+PlList				=	$2008		; players wanted on the ice (SetPlList clears three words)
+FaceoffBoxTimer		=	$2014		; face off box animation count (box frame = count / 4, 3 at most)
 fobox				=	$2016		; set while the face off box is up (puckfaceoff2); Endfaceoff clears it
 fodir1				=	$2018		; faceoffinput: pad direction of the centre with pfgoal 0; Endfaceoff
 fodir2				=	$201A		; faceoffinput: pad direction of the centre with pfgoal set
 fodropx				=	$201C		; face off box x ($36 or $BE by fox's side; puckfaceoff2)
 fodropy				=	$201E		; face off box y ($5C; puckfaceoff2)
+FaceoffSpriteLeft	=	$2020		; face off box sprite on the left (the centre with pfgoal set)
+FaceoffSpriteRight	=	$2022		; face off box sprite on the right, mirrored (pfgoal 0 centre)
+FaceoffBoxBuf		=	$2024		; work buffer address of the face off box frames (FaceOffMap)
+FaceoffBoxVRAM		=	$2026		; VRAM map address of the face off box ($5860 + (fodropx - $2E) / 8)
 fofdata2			=	$2028		; face off pull frame / attribute pairs of the two centres (+4 the second)
 fofdata				=	$2030		; face off ref frame / attribute: updatefaceoff stores the drop frame
 fox					=	$2034		; face off spot x: Stop4Pen sets it, puckfaceoff2 puts it in puckx

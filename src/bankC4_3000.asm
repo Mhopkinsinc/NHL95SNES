@@ -841,12 +841,12 @@ assfaceoffpl:						; called from other segments
 	lda.w #$0014
 	sta.w nopuck,x
 	jmp.w assexit
-.6:									; A = pfgoal,x, A / 2, if carry clear go to .7, X = $2020
+.6:									; A = pfgoal,x, A / 2, if carry clear go to .7, X = FaceoffSpriteLeft
 	lda.w pfgoal,x
 	lsr a
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	bcc .7
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 .7:									; if OptPlayMode = $0001 go to .8, $30,x = 0
 	lda.w OptPlayMode
 	cmp.w #$0001
@@ -1345,7 +1345,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lsr a
 	clc
 	adc.w #$5860
-	sta.w $2026
+	sta.w FaceoffBoxVRAM
 	lda.w #$005C
 	sta.w fodropy
 	jsl.l SeatPenaltyBox
@@ -1364,7 +1364,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	jsl.l RestoreWorkBuf
 	lda.w #$0A00
 	jsl.l AllocWorkBuf
-	sta.w $2024
+	sta.w FaceoffBoxBuf
 	sta.b r1
 	jsl.l MarkWorkBuf
 	lda.w #$007E
@@ -1372,7 +1372,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w #FaceOffMap&$FFFF
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	tax
 	ldy.w #$04FF
 	clc
@@ -1385,7 +1385,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	dey
 	bpl .loop5
 	lda.w #$0000
-	sta.w $2014
+	sta.w FaceoffBoxTimer
 	jsl.l QueueFaceoffBox
 	dec.b QueueBusy
 	lda.b $00
@@ -1396,7 +1396,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	pea.w $4320
 	pea.w $007E
 	clc
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	adc.w #$0A00
 	pha
 	ldy.b $00
@@ -1426,7 +1426,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	sta.b $18
 	lda.w #$001E
 	jsl.l CreateSpriteSharePal
-	stx.w $2020
+	stx.w FaceoffSpriteLeft
 	clc
 	lda.b $18
 	adc.w #$0059
@@ -1440,7 +1440,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	jsl.l UseSpritePalette
 	lda.w #$001E
 	jsl.l CreateSpriteSharePal
-	stx.w $2022
+	stx.w FaceoffSpriteRight
 	lda.b $36,x
 	eor.w #$4000
 	sta.b $36,x

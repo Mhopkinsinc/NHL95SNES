@@ -1073,9 +1073,9 @@ updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from 
 	beq .2
 	phx
 	phy
-	lda.w $2014
+	lda.w FaceoffBoxTimer
 	inc a
-	sta.w $2014
+	sta.w FaceoffBoxTimer
 	lsr a
 	lsr a
 	cmp.w #$0004
@@ -1105,11 +1105,11 @@ updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from 
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .4
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 	jsl.l DeleteSprite
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	jsl.l DeleteSprite
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	sta.w WorkBufMark
 .4:									; pull A, pull Y, pull X, FrameCount = 0, ...
 	pla
@@ -1407,7 +1407,7 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .1
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 	stz.b $30,x
 .1:									; X = a3, A = $24FA, go to SetSPAFromA
 	ldx.b a3
@@ -1427,7 +1427,7 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .3
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	stz.b $30,x
 .3:									; X = a3, A = $24FA, go to SetSPAFromA
 	ldx.b a3

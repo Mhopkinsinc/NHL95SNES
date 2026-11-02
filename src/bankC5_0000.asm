@@ -1157,11 +1157,11 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$013E
 	sta.w pucky
 	sta.w Ypos+$1E
-.77:								; if puckc < 0 go to .rtl, $2000 = pucky
+.77:								; if puckc < 0 go to .rtl, carriedy = pucky
 	lda.w puckc
 	bmi .rtl
 	lda.w pucky
-	sta.w $2000
+	sta.w carriedy
 .rtl:								; return
 	rtl
 DATA8_C50A00:						; not traced: data between routines

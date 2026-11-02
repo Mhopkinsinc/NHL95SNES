@@ -263,7 +263,7 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	sta.b d4
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
 .1:									; Y = d4, A = [a4],y, A and $00FF, d5 = A, ...
 	ldy.b d4
@@ -323,7 +323,7 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	sta.b d4
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
 .6:									; Y = d4, A = [a4],y, A and $00FF, d5 = A, ...
 	ldy.b d4
@@ -433,9 +433,9 @@ CODE_C54320:						; no caller found: a label inside setpersonel's register resto
 SetPlList:							; from setpersonel and other segments
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
-	stz.w $2008
+	stz.w PlList
 	stz.w $200A
 	stz.w $200C
 	lda.w #$00C0

@@ -1,8 +1,8 @@
 ; Segment bankC5_2000: game code (not traced to a job yet: the routines keep their address as a name, with
 ; their callers), jump tables and the data tables the code reads with long addresses.
 org $C52008
-QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from the box buffer
-									; ($2024 + DATA8_C5202F by frame) to the box's address ($2026)
+QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from FaceoffBoxBuf (+
+									; DATA8_C5202F by frame) to FaceoffBoxVRAM
 	asl a
 	tax
 	lda.l $7E2024
@@ -14,7 +14,7 @@ QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from the 
 	tcs
 	stx.b $00
 	pea.w $0280
-	lda.w $2026
+	lda.w FaceoffBoxVRAM
 	pha
 	pea.w $007E
 	phy
