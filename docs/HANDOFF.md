@@ -232,6 +232,19 @@
   - Left as numbers on purpose: offsets from a base in X / Y (PutClockDigit's $0700,x ... into the pause map,
     CheckGlyphLeftOverlap's glyph buffer, EditLinesScreen / PrintPositionCounts text map cells, the roster bonus fields
     $0430-$043C), and the code that moves D.
+- Data tables (PR #3): ../work/datasurvey.py lists the DATA8_ labels (size, comment, references; --list FILE...).
+  - 94S names by content: data94.py compares each table with every labelled db / dw block of the 94S source (local
+    labels split a 94S table into blocks, so sublist / priolist were compared by hand); datamap.py aligns 95 / 94S
+    routine pairs (as rammap.py) for table operands. A 94S local table gets a code name from what 94S says it holds.
+  - Packed text pointer tables in bank $C3: textdec.py OFF... decodes the strings (city names stay out of the source).
+  - The decoder often put several labels inside one table (fields of records, the next entry, the next segment):
+    foldlabel.py LABEL BASE K drops one (operands read BASE+K, the stub line goes, the name_map row says BASE+K);
+    mergetable.py folds a run of field labels and lays the records out as dw (SortObjInitTable).
+  - Tables named by index where the content is not traced: Layout000-Layout141 (LayoutPointers entry), FrameTiles002
+    -FrameTiles423 (frame number), Sequence00-Sequence39 (SoundSequenceTable entry).
+  - Raw pointer pairs (lda #$00BB / sta P+2, lda #$XXXX / sta P): ptrpairs2.py lists those that start a label and
+    writes #LABEL>>16 / #LABEL&$FFFF (--skip / --nolabel for chance matches: a pair in the unreachable
+    printscores1_per falls on RatingColumns). stubfix.py adds the outside labels a segment stub then needs.
 - Parallel work: the repo is the T3 project "NHL95SNES"; a Codex thread on its own worktree branch (codex/<topic>)
   works beside the main checkout and is merged by cherry-pick (name_map.csv conflicts: keep both sides,
   ../work/resolve_namemap.py). Brief it with the rules and the tools that are safe to run (side.py only reads).
