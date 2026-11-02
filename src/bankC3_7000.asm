@@ -860,20 +860,20 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	asl.b d0
 	asl.b d0
 	ldx.b d0
-	lda.l DATA8_C377BB,x
+	lda.l ReplayCursorSteps,x
 	adc.w Xpos+32
 	sta.b d2
 	ldy.w #$0020
-	lda.l DATA8_C377BB,x
+	lda.l ReplayCursorSteps,x
 	xba
 	and.w #$FF00
 	sta.w Xvel,y
 	pha
-	lda.l DATA8_C377BD,x
+	lda.l ReplayCursorSteps+2,x
 	clc
 	adc.w Ypos+32
 	sta.b d3
-	lda.l DATA8_C377BD,x
+	lda.l ReplayCursorSteps+2,x
 	xba
 	and.w #$FF00
 	sta.w Yvel,y
@@ -961,9 +961,9 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	lda.w #$0010
 	sta.w PadControlObj+12
 	jmp.w UpdateReplayCamera
-DATA8_C377BB:						; not traced: a table read by ReadReplayCameraInput
+ReplayCursorSteps:					; per pad direction (d0 * 4): the replay camera cursor's x step, then its
+									; y step (words)
 	db $00,$00
-DATA8_C377BD:						; not traced: a table read by ReadReplayCameraInput
 	db $02,$00,$00,$00,$02,$00,$02,$00,$00,$00,$02,$00,$00,$00,$00,$00
 	db $FE,$FF,$00,$00,$FE,$FF,$FE,$FF,$00,$00,$FE,$FF,$00,$00
 ProcessReplayPlayback:				; handle replay stepping, play toggle and exit

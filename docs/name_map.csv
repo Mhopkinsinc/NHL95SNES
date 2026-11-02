@@ -1477,8 +1477,8 @@ $C35F62,SeasonDates+2,DATA8_C35F62,code,"SeasonDates+2: the label is dropped; Ga
 $C36000,SeasonDates+$A0,DATA8_C36000,code,"SeasonDates+$A0: the rest of SeasonDates in the next segment (no reference); the label is dropped",src/bankC3_6000.asm
 $C360D4,SeasonSchedule,DATA8_C360D4,genesis+purpose,"95 Genesis SeasonSchedule holds the same day entries (count byte, then 2 bytes a game) as one list; the SNES puts a word per day in front pointing at each entry; DayFirstGame, DrawDayGames and MenuPlayGames read entry day * 2, then the count at $C30000,x",src/bankC3_6000.asm
 $C36D2A,PadDirection,DATA8_C36D2A,94S+code,"the same 16 bytes as 94S PadDirection; ReadPads reads it",src/bankC3_6000.asm
-$C377BB,DATA8_C377BB,,new,"not traced: a table read by CODE_C376CE (in bankC3_7000)",src/bankC3_7000.asm
-$C377BD,DATA8_C377BD,,new,"not traced: a table read by CODE_C376CE (in bankC3_7000)",src/bankC3_7000.asm
+$C377BB,ReplayCursorSteps,DATA8_C377BB,code,"ReadReplayCameraInput adds entry d0 to the cursor object's Xpos+32 / Ypos+32 and puts it in its Xvel / Yvel high byte; the y step is read as ReplayCursorSteps+2,x",src/bankC3_7000.asm
+$C377BD,ReplayCursorSteps+2,DATA8_C377BD,code,"ReplayCursorSteps+2: the y steps; the label is dropped; ReadReplayCameraInput reads ReplayCursorSteps+2,x",src/bankC3_7000.asm
 $C3803D,DATA8_C3803D,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
 $C3804B,DATA8_C3804B,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
 $C3847C,ObjSmallTiles,DATA8_C3847C,code,"DrawSortedGameObject loads it into tmp1, the tile word PutSmallPiece1-4 use; objects get 4 tiles each from tile 0",src/bankC3_8000.asm
