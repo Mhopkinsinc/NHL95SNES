@@ -8901,3 +8901,8 @@ $C57F36,PrintGoalRecordsReturn,CODE_C57F36,code,"PrintGoalRecords falls into thi
 $C586CA,MapSetMode7ToVRAM,CODE_C586CA,code,"MapSetToVRAMBody alternate path; map stride 128 and separate VMDATAL and VMDATAH writes",src/bankC5_8000.asm
 $C58A3F,SetupMode3Screen,CODE_C58A3F,code,"BGMODE 3; TM 17; SetBGMapRegs and two ClearVRAM calls; no traced caller",src/bankC5_8000.asm
 $C58FD2,SetupLineDownPlaceCursor,CODE_C58FD2,code,"SetupLineDown branches here with the new cursor y coordinate",src/bankC5_8000.asm
+$C5904B,SetupOptionRunRoutine,CODE_C5904B,code,"PrevOptionValue and NextOptionValue share dex and phx; DrawSetupLine returns into the option routine",src/bankC5_9000.asm
+$C59767,NameEntryReturn,CODE_C59767,code,"RTS in the screen state table and NameEntry delay branch; no fall-through from the preceding tail jump",src/bankC5_9000.asm
+$C59ABF,SkaterRatingRowUp,CODE_C59ABF,code,"SkaterRatingsInput up key; RatingRowPalette3 then bounded decrement",src/bankC5_9000.asm
+$C59ACB,SkaterRatingRowUpReturn,CODE_C59ACB,code,"falls through from SkaterRatingRowUp; shared with the down path",src/bankC5_9000.asm
+$C59ACC,SkaterRatingRowDown,CODE_C59ACC,code,"SkaterRatingsInput down key; bounded increment",src/bankC5_9000.asm

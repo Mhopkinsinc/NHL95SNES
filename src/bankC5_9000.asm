@@ -27,7 +27,7 @@ PrevOptionValue:					; setup screen left: the variable of line d6 one value back
 	beq .2
 	tax
 	lda.l $C4FFFE,x
-	beq CODE_C5904B
+	beq SetupOptionRunRoutine
 	dex
 	phx
 	pea.w $904C
@@ -62,14 +62,14 @@ NextOptionValue:					; setup screen right: the variable of line d6 one value on 
 	beq DrawSetupLineJump
 	tax
 	lda.l $C4FFFE,x
-	beq CODE_C5904B
+	beq SetupOptionRunRoutine
 	dex
 	phx
 	pea.w $904C
 	dec a
 	pha
 	rts
-CODE_C5904B:						; from PrevOptionValue, NextOptionValue
+SetupOptionRunRoutine:				; pushes the option routine minus one before drawing the line
 	dex
 	phx
 DrawSetupLineJump:					; jumps to DrawSetupLine: the option value routines' shared tail
@@ -749,7 +749,7 @@ ScreenStateLoop:					; the front end loop: each frame the transfers, the pads an
 DATA8_C5967A:						; the front end screen handlers, ...
 									; the one of the current state each frame)
 	dw NameEntry,NameEntry,AskNameOk,EditPlayerInfo
-	dw ModifyRatings,CODE_C59767,SeasonOptionsInput,GamesTodayInput
+	dw ModifyRatings,NameEntryReturn,SeasonOptionsInput,GamesTodayInput
 	dw LeagueLeadersInput,SeasonTeamStatsInput,SeasonPlayerStatsInput,StandingsInput
 	dw NoGameSelectedInput,StartSeasonInput
 AskNameOk:							; Is the player name ok: up / down Yes / No; start: No starts over
@@ -844,7 +844,7 @@ AnswerNameOk:						; start on Is the player name ok: No (d6 not 0) starts over
 	jsr.w SetRowPalette3
 	lda.w #$0011
 	jmp.w SetRowPalette3
-CODE_C59767:						; from DATA8_C5967A, NameEntry
+NameEntryReturn:					; returns for the idle screen state or the name entry repeat delay
 	rts
 NameEntry:							; Create Player name entry, screen states 0 and 1 (first and last name):
 									; pad to a letter, B to select, Y to go back, start when done, X cancels;
@@ -852,7 +852,7 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	lda.w repeatdelayframes
 	beq .1
 	cmp.w #$0014
-	bcc CODE_C59767
+	bcc NameEntryReturn
 	lda.w #$0010
 	sta.w repeatdelayframes
 .1:									; A = padchangeany, if a $0800 bit set go to .4, ...
@@ -1132,14 +1132,14 @@ SkaterRatingsInput:					; the skater ratings page's keys: the cursor on rating d
 	bit.w #$0040
 	beq .2
 	jmp.w ExitCreatePlayer3
-.2:									; if $0800 bits clear go to .3, go to CODE_C59ABF
+.2:									; if $0800 bits clear go to .3, go to SkaterRatingRowUp
 	bit.w #$0800
 	beq .3
-	jmp.w CODE_C59ABF
-.3:									; if $0400 bits clear go to .4, go to CODE_C59ACC
+	jmp.w SkaterRatingRowUp
+.3:									; if $0400 bits clear go to .4, go to SkaterRatingRowDown
 	bit.w #$0400
 	beq .4
-	jmp.w CODE_C59ACC
+	jmp.w SkaterRatingRowDown
 .4:									; if a $0200 bit set go to EditRatingLeft, ...
 	bit.w #$0200
 	bne EditRatingLeft
@@ -1266,21 +1266,22 @@ RatingText:							; mesarea = the text of rating A as shown: A * 5 + 25
 	adc.w #$0019
 	jsr.w BinToBCD
 	jmp.w BCDText
-CODE_C59ABF:						; from SkaterRatingsInput
+SkaterRatingRowUp:					; applies palette 3 to the old rating row and decrements d6, stopping at
+									; zero
 	lda.w #$0007
 	jsr.w RatingRowPalette3
 	dec.b d6
-	bpl CODE_C59ACB
+	bpl SkaterRatingRowUpReturn
 	stz.b d6
-CODE_C59ACB:						; from CODE_C59ABF, CODE_C59ACC
+SkaterRatingRowUpReturn:			; returns after the rating row change or at its boundary
 	rts
-CODE_C59ACC:						; from SkaterRatingsInput
+SkaterRatingRowDown:				; applies palette 3 to the old rating row and increments d6 below eleven
 	lda.w #$0007
 	jsr.w RatingRowPalette3
 	lda.b d6
 	inc a
 	cmp.w #$000B
-	bcs CODE_C59ACB
+	bcs SkaterRatingRowUpReturn
 	sta.b d6
 GoalieRatingsInputReturn:			; the rts GoalieRatingsInput branches to
 	rts
