@@ -215,9 +215,9 @@ $30,r1,,94S,"RAM; math operand as 94S r1 (the divisor)",src/ram95s.asm
 $C09A24,asstab,,93S,"29 long pointers by assignment number as 94S asstab (first entry an rtl); $C5085C reads ($0644,x * 4), patches $1851-$1853 and calls $001850",src/bankC0_A000.asm
 $C09A98,asspuckc_postab,,93S,"10 (x, y) pairs as 94S asspuckc_postab (one value 246 where 94S has 240); $C42E55 points at it",src/bankC0_A000.asm
 $C09AC0,DATA8_C09AC0,,new,"not traced; $C5449B points at it",src/bankC0_A000.asm
-$C09B2A,DATA8_C09B2A,,new,"0-6 in an order; $C48130, $C54371",src/bankC0_A000.asm
-$C09B31,DATA8_C09B31,,new,"0-6 in an order; $C54394",src/bankC0_A000.asm
-$C09B38,DATA8_C09B38,,new,"0-6 in an order; $C54383",src/bankC0_A000.asm
+$C09B2A,priolist,DATA8_C09B2A,94S+code,"94S priolist holds the first two lists with the same bytes (SetPlList points a0 at priolist, at priolist+7 for a penalty shot); 95 adds a third at +14, taken when OptPlayMode is 1",src/bankC0_A000.asm
+$C09B31,priolist+7,DATA8_C09B31,code,"priolist+7: the second list (94S priolist+7); the label is dropped",src/bankC0_A000.asm
+$C09B38,priolist+$E,DATA8_C09B38,code,"priolist+14: the third list (practice, OptPlayMode 1); the label is dropped",src/bankC0_A000.asm
 $C09B3F,linelist,DATA8_C09B3F,94S+purpose,"94S linelist holds the same short names (Sc1 ...) as strings; 95 keeps 3 high-bit characters a line, read as words at line * 3 (FinishFaceoffSetup, SetLCmode2)",src/bankC0_A000.asm
 $C09B54,RatingColumns,DATA8_C09B54,code,"16 entries, one per RatingNames heading; DrawLinePlayerRow and RosterSlotRowNext load the argument into d4 and jmp (RosterColumnTable,x) with the offset (read as RatingColumns+2,x)",src/bankC0_A000.asm
 $C09B94,GoalieRatingColumns,DATA8_C09B94,code,"12 entries, one per GoalieRatingNames heading; GoalieListRowNext and RosterGoalieRowNext read it as RatingColumns does",src/bankC0_A000.asm

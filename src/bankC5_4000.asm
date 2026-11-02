@@ -438,24 +438,24 @@ SetPlList:							; from setpersonel and other segments
 	stz.w PlList
 	stz.w PlList+2
 	stz.w PlList+4
-	lda.w #$00C0
+	lda.w #priolist>>16
 	sta.b $65
-	lda.w #$9B2A
+	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .1
-	lda.w #$00C0
+	lda.w #(priolist+$E)>>16
 	sta.b $65
-	lda.w #$9B38
+	lda.w #(priolist+$E)&$FFFF
 	sta.b a0
 	bra .3
 .1:									; if penshot = 0 go to .2, $65 = $00C0, a0 = $9B31, ...
 	lda.w penshot
 	beq .2
-	lda.w #$00C0
+	lda.w #(priolist+$7)>>16
 	sta.b $65
-	lda.w #$9B31
+	lda.w #(priolist+$7)&$FFFF
 	sta.b a0
 	lda.b a2
 	cmp.w BA_Team

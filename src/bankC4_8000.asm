@@ -188,9 +188,9 @@ releasepl:							; return the released penalty player to an available on-ice slo
 	lda.w #$0001
 	tsb.w tmflags
 	tsb.w tmflags+2
-	lda.w #$00C0
+	lda.w #priolist>>16
 	sta.b $65
-	lda.w #$9B2A
+	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w tmgoalie,y
 	bpl .1

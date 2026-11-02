@@ -32,11 +32,10 @@ DATA8_C09AC0:						; not traced: read by a routine in bank $C5 (seven words, the
 	db $0D,$15,$1D,$25,$2D,$35,$03,$0B,$13,$1B,$23,$2B,$33,$04,$0C,$14
 	db $1C,$24,$2C,$34,$04,$0C,$14,$1C,$24,$2C,$34,$03,$0B,$13,$1B,$23
 	db $2B,$33,$05,$0D,$15,$1D,$25,$2D,$35,$FF
-DATA8_C09B2A:						; not traced: the numbers 0 to 6 in an order
+priolist:							; position orders for SetPlList, 7 bytes each: the normal list, at +7 a
+									; second, at +14 a third (practice)
 	db $00,$01,$02,$04,$03,$05,$06
-DATA8_C09B31:						; not traced: the numbers 0 to 6 in an order
 	db $00,$03,$01,$02,$04,$05,$06
-DATA8_C09B38:						; not traced: the numbers 0 to 6 in an order
 	db $00,$04,$05,$03,$02,$01,$06
 linelist:							; the short line names, 3 characters each (Sc1, Sc2, Chk, PP1, PP2, PK1,
 									; PK2)
