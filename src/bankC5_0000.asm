@@ -62,7 +62,7 @@ Restart:							; starts over at the setup screen: the stack reset, StartMenuMusi
 StartGame_go:						; starts a game: fade out, the game RAM cleared, the games started count +
 									; 1, the penalties flag from the option
 	jsl.l FadeOutWait
-	ldx.w #$059E
+	ldx.w #mp5readall
 .loop:								; loop: $00,x = 0, X + 1, X + 1, if X < $1543 go to .loop, ...
 	stz.b $00,x
 	inx

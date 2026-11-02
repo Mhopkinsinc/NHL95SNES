@@ -223,11 +223,11 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l ClearTextMap
 	jsl.l WaitTransfers
 	lda.w #$FFFF
-	sta.w $151B
-	sta.w $151D
-	sta.w $151F
-	sta.w $1521
-	sta.w $1523
+	sta.w PadArrowTileMode
+	sta.w PadArrowTileMode+2
+	sta.w PadArrowTileMode+4
+	sta.w PadArrowTileMode+6
+	sta.w PadArrowTileMode+8
 	lda.w #$D02A
 	sta.b r0
 	lda.w #$007F

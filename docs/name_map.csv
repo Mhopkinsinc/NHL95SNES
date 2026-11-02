@@ -8868,3 +8868,8 @@ $1309,tmpde-2,,code,"RAM: indexed member of the existing array; traced writer an
 $13DA,tmboxlist-1,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
 $13F5,tmboxlist+$1A,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
 $2C82,(BracketTeamBarCells+$1E)&$FFFF,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$151B,PadArrowTileMode,,code,"RAM: setupice sets five words to FFFF; DrawPadArrow follows per-pad record pointers and uploads only when mode 0/1/2 changes",src/ram95s.asm
+$151D,PadArrowTileMode+2,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
+$151F,PadArrowTileMode+4,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
+$1521,PadArrowTileMode+6,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
+$1523,PadArrowTileMode+8,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm

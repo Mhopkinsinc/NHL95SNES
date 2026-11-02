@@ -320,6 +320,7 @@ CrowdLoud			=	$14E5		; puckfaceoff clears it; no other code uses it
 teampads			=	$14F5		; pads on the home / away team
 playerpad			=	$14F9		; per player object: the controlling pad * 2, negative = none
 c1playernum			=	$1511		; per pad (5 words): the player object it controls
+PadArrowTileMode	=	$151B		; per pad cached arrow tiles: vertical, corner or side
 padside				=	$1525		; per pad: 0 home / 2 away; bit 15 set on pads moved for a penalty shot
 mp5connect			=	$152F		; Multi5ConnectCheck: bit 7 multitap on port 1, bit 6 on port 2
 mp5readdelay		=	$1531		; frames to the next multitap read while pads 4 and 5 are unused
