@@ -902,7 +902,8 @@ clockcont:							; called from other segments
 	rtl
 DoHiLights:							; an rtl: called where 94S plays the playoff highlights
 	rtl
-CODE_C51812:						; no caller found (not traced)
+EraseBoxUnused:						; eraser (a bare rtl) for a 19 x 9 box of blankchar (d0 / d1 / d2);
+									; nothing calls it
 	lda.w #$0013
 	sta.b d0
 	lda.w #$0009

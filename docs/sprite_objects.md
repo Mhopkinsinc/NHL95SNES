@@ -106,12 +106,12 @@ timer expiry; it does not clear any animation flag. Yield means leave the positi
 | $86 | word speed | SpriteAnimSetSpeed | Store in $0A; next position p + 3 |
 | $87 | byte count n, then n frame bytes | SpriteAnimSetFrames | Widen frames into words starting at $28, append $FFFF, upload the list with UploadSpriteFrames, yield at p + n + 2 |
 | $88 | none | SpriteAnimDelete | Call DeleteSprite with X = object; the encoded JSR/RTL mismatch prevents assuming a valid return (see below) |
-| $89 | byte index | CODE_C5EBB8 | BRK for index >= 4; otherwise read a pointer from UploadSpriteFrames + 2*index and increment the word it addresses through DB, then continue at p + 2 |
+| $89 | byte index | SpriteAnimIncWordUnused | BRK for index >= 4; otherwise read a pointer from UploadSpriteFrames + 2*index and increment the word it addresses through DB, then continue at p + 2 |
 | $8A | byte ignored | SpriteAnimSkipByte | Read and mask the operand, discard it, continue at p + 2 |
 | $8B | none | SpriteAnimToggleHFlip | XOR object $36 with $4000 |
 | $8C | none | SpriteAnimToggleVFlip | XOR object $36 with $8000 |
 | $8D | none | SpriteAnimYield | Yield at p + 1 |
-| $8E | byte index | CODE_C5EC1A | JSR through the word at UploadSpriteFrames + 2*index in the program bank; carry set on return holds at p, clear consumes the operand and continues at p + 2 |
+| $8E | byte index | SpriteAnimCallUnused | JSR through the word at UploadSpriteFrames + 2*index in the program bank; carry set on return holds at p, clear consumes the operand and continues at p + 2 |
 | $8F | none | SpriteAnimHold8F | Jump to SpriteAnimHold |
 | $90 | none | SpriteAnimRestoreScript | Copy saved $20 to $1E, select that script, clear position and timer, set flags $22 bit $4000, continue |
 | $91 | none | SpriteAnimHold | Hold at p |
@@ -152,8 +152,9 @@ not change that saved index (CreateSprite initializes it to zero).
 - $89 and $8E use **code bytes** at UploadSpriteFrames as a pointer table. Its first four words are
   $1886, $B59B, $8510, $B510 (the beginning of `stx / txy / lda / sta / lda`), not an identified data
   table. $89 checks index < 4; $8E has no bound check or proven callee-preservation contract. Their
-  mechanical operations are documented above, but their intended jobs remain unnamed. Neither
-  command occurs in the record scripts in bankC0_8000.
+  mechanical operations are documented above; their intended jobs are not known. Neither command
+  occurs in the record scripts in bankC0_8000, so the handlers are named SpriteAnimIncWordUnused and
+  SpriteAnimCallUnused.
 - $8A and $9D have no persistent effect except consuming one operand byte. No external call is
   present; names such as sound or callback would be speculation.
 

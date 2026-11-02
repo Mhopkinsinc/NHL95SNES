@@ -4435,7 +4435,7 @@ $C4BE4B,.2,CODE_C4BE4B,new,"branch target only used in DrawText",src/bankC4_B000
 $C4C264,.1,CODE_C4C264,new,"branch target only used in QueueTextTiles",src/bankC4_C000.asm
 $C4C28B,.loop,CODE_C4C28B,new,"branch target only used in MapTextTiles",src/bankC4_C000.asm
 $C4C29E,.1,CODE_C4C29E,new,"branch target only used in MapTextTiles",src/bankC4_C000.asm
-$C4C2FF,.loop,CODE_C4C2FF,new,"branch target only used in CODE_C4C2C6",src/bankC4_C000.asm
+$C4C2FF,.loop,CODE_C4C2FF,new,"branch target only used in SendTextMapPartUnused",src/bankC4_C000.asm
 $C4C328,.1,CODE_C4C328,new,"branch target only used in TextWidth",src/bankC4_C000.asm
 $C4C33B,.2,CODE_C4C33B,new,"branch target only used in TextWidth",src/bankC4_C000.asm
 $C4C349,.3,CODE_C4C349,new,"branch target only used in TextWidth",src/bankC4_C000.asm
@@ -6512,9 +6512,9 @@ $C5EA5E,.3,CODE_C5EA5E,new,"branch target only used in CODE_C5EA29",src/bankC5_E
 $C5EA72,.4,CODE_C5EA72,new,"branch target only used in CODE_C5EA29",src/bankC5_E000.asm
 $C5EA84,.5,CODE_C5EA84,new,"branch target only used in CODE_C5EA29",src/bankC5_E000.asm
 $C5EB5E,.loop,CODE_C5EB5E,new,"branch target only used in CODE_C5EB52",src/bankC5_E000.asm
-$C5EBA5,.1,CODE_C5EBA5,new,"branch target only used in CODE_C5EB88",src/bankC5_E000.asm
-$C5EBC6,.1,CODE_C5EBC6,new,"branch target only used in CODE_C5EBB8",src/bankC5_E000.asm
-$C5EC2E,.1,CODE_C5EC2E,new,"branch target only used in CODE_C5EC1A",src/bankC5_E000.asm
+$C5EBA5,.1,CODE_C5EBA5,new,"branch target only used in CopySpriteFramesUnused",src/bankC5_E000.asm
+$C5EBC6,.1,CODE_C5EBC6,new,"branch target only used in SpriteAnimIncWordUnused",src/bankC5_E000.asm
+$C5EC2E,.1,CODE_C5EC2E,new,"branch target only used in SpriteAnimCallUnused",src/bankC5_E000.asm
 $C5EC97,.1,CODE_C5EC97,new,"branch target only used in CODE_C5EC89",src/bankC5_E000.asm
 $C5ECDF,.rtl,CODE_C5ECDF,new,"branch target only used in SetSpriteAnim",src/bankC5_E000.asm
 $C5ECE0,.1,CODE_C5ECE0,new,"branch target only used in SetSpriteAnim",src/bankC5_E000.asm
@@ -6531,7 +6531,7 @@ $C5EE01,.9,CODE_C5EE01,new,"branch target only used in CODE_C5ECF1",src/bankC5_E
 $C5EE22,.10,CODE_C5EE22,new,"branch target only used in CODE_C5ECF1",src/bankC5_E000.asm
 $C5EE24,.11,CODE_C5EE24,new,"branch target only used in CODE_C5ECF1",src/bankC5_E000.asm
 $C5EE30,.12,CODE_C5EE30,new,"branch target only used in CODE_C5ECF1",src/bankC5_E000.asm
-$C5EE66,.1,CODE_C5EE66,new,"branch target only used in CODE_C5EE3C",src/bankC5_E000.asm
+$C5EE66,.1,CODE_C5EE66,new,"branch target only used in FreeSpritePaletteUnused",src/bankC5_E000.asm
 $C5EE80,.1,CODE_C5EE80,new,"branch target only used in UseSpritePalette",src/bankC5_E000.asm
 $C5EECE,.1,CODE_C5EECE,new,"branch target only used in QueueSpritePalette",src/bankC5_E000.asm
 $C5EEDB,.2,CODE_C5EEDB,new,"branch target only used in QueueSpritePalette",src/bankC5_E000.asm
@@ -6700,16 +6700,16 @@ $CFFEF6,.27,CODE_CFFEF6,new,"branch target only used in GoalFrameLayout",src/ban
 $CFFEF9,.28,CODE_CFFEF9,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
 $CFFEFE,.29,CODE_CFFEFE,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
 $CFFF05,.30,CODE_CFFF05,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
-$CFFF20,.1,CODE_CFFF20,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF36,.2,CODE_CFFF36,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF39,.3,CODE_CFFF39,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF3E,.4,CODE_CFFF3E,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF45,.5,CODE_CFFF45,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF60,.6,CODE_CFFF60,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF76,.7,CODE_CFFF76,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF79,.8,CODE_CFFF79,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF7E,.9,CODE_CFFF7E,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF85,.10,CODE_CFFF85,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
+$CFFF20,.31,CODE_CFFF20,new,"branch target only used in GoalFrameLayout; CODE_CFFF0F (no reference, GoalFrameLayout runs into it) dropped so the routine is one scope",src/bankCF_F000.asm
+$CFFF36,.32,CODE_CFFF36,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF39,.33,CODE_CFFF39,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF3E,.34,CODE_CFFF3E,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF45,.35,CODE_CFFF45,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF60,.36,CODE_CFFF60,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF76,.37,CODE_CFFF76,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF79,.38,CODE_CFFF79,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF7E,.39,CODE_CFFF7E,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF85,.40,CODE_CFFF85,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
 $CFFF9A,.1,CODE_CFFF9A,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
 $CFFFB9,.2,CODE_CFFFB9,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
 $CFFFBC,.3,CODE_CFFFBC,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
@@ -9373,3 +9373,16 @@ $C53A29,DrawPeriodBox,CODE_C53A29,code,"RedrawPeriodBox blanks the rows and redr
 $C43FC1,PracticeFaceoffSetup,CODE_C43FC1,code,"puckfaceoff2 jumps here when OptPlayMode is 1 instead of drawing the face off box (.38)",src/bankC4_3000.asm
 $C5888F,Mul16x8XS24,CODE_C5888F,code,"the code: WRMPYA = A, X's low and high bytes through WRMPYB, the products added at $14 / $15, negated for a negative X; Mul16x8XS (into r2) is another routine",src/bankC5_8000.asm
 $C588EB,Div32x16U,CODE_C588EB,code,"the code: dividend $2E:r0 = X:A, divisor $32:r1 = Y:0 normalised, the quotient bits into r2 / $36, returns A = r2, X = $36, Y = r0; not 94S Div32x32U (r2 / r1 into r0)",src/bankC5_8000.asm
+$C4B844,SetTasksDoneUnused,CODE_C4B844,code,"after TaskStartKey's rtl; no operand, pointer, pea or table word reaches it",src/bankC4_B000.asm
+$C4C2C6,SendTextMapPartUnused,CODE_C4C2C6,code,"after SendTextMap's rtl: a transfer queue record per row ($A5 = Y rows); no operand, pointer, pea or table word reaches it",src/bankC4_C000.asm
+$C4CEE0,TransferQueueStubUnused,CODE_C4CEE0,code,"after WaitTransfers' rtl; no operand, pointer, pea or table word reaches it",src/bankC4_C000.asm
+$C50E8D,FadeStep5Unused,CODE_C50E8D,code,"after demoread's jml Restart; no operand, pointer, pea or table word reaches it",src/bankC5_0000.asm
+$C51812,EraseBoxUnused,CODE_C51812,code,"after DoHiLights' rtl; 94S eraser fills a d0 by d1 box of the text map with tile d2; no operand, pointer, pea or table word reaches it",src/bankC5_1000.asm
+$C5ADD8,CheckGameSelectedUnused,CODE_C5ADD8,code,"after GamesToday's rts, falling into ReturnToLeagueMenu; no operand, pointer, pea or table word reaches it",src/bankC5_A000.asm
+$C5EA91,CopySpriteFrameUnused,CODE_C5EA91,code,"after a jmp AnimateNextSprite; no operand, pointer, pea or table word (SpriteAnimCommands included) reaches it",src/bankC5_E000.asm
+$C5EAA2,ClearSpriteFrameUnused,CODE_C5EAA2,code,"after a jmp UploadSpriteAnimFrame; no operand, pointer, pea or table word (SpriteAnimCommands included) reaches it",src/bankC5_E000.asm
+$C5EB88,CopySpriteFramesUnused,CODE_C5EB88,code,"after a jmp AnimateNextSprite; no operand, pointer, pea or table word (SpriteAnimCommands included) reaches it",src/bankC5_E000.asm
+$C5ECA5,StartSpriteAnimUnused,CODE_C5ECA5,code,"after a jmp ReadSpriteAnim, right before SetSpriteAnim; no operand, pointer, pea or table word reaches it",src/bankC5_E000.asm
+$C5EE3C,FreeSpritePaletteUnused,CODE_C5EE3C,code,"after an rts, right before UseSpritePalette; no operand, pointer, pea or table word reaches it",src/bankC5_E000.asm
+$C5EBB8,SpriteAnimIncWordUnused,CODE_C5EBB8,code,"SpriteAnimCommands entry 9; no record script in bankC0_8000 uses command $89 (docs/sprite_objects.md); the 'pointers' are UploadSpriteFrames' first code bytes",src/bankC5_E000.asm
+$C5EC1A,SpriteAnimCallUnused,CODE_C5EC1A,code,"SpriteAnimCommands entry 14; no record script in bankC0_8000 uses command $8E (docs/sprite_objects.md); the 'pointers' are UploadSpriteFrames' first code bytes",src/bankC5_E000.asm

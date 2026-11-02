@@ -1519,7 +1519,8 @@ UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected
 	ldy.b r2
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EA91:						; no caller found (not traced)
+CopySpriteFrameUnused:				; sprite object A takes object X's frame words ($28, $2A), $36 = A, then
+									; UploadSpriteAnimFrame; nothing calls it
 	txy
 	tax
 	lda.w $0028,y
@@ -1528,7 +1529,8 @@ CODE_C5EA91:						; no caller found (not traced)
 	sta.b $2A,x
 	stx.b $36
 	jmp.w UploadSpriteAnimFrame
-CODE_C5EAA2:						; no caller found (not traced)
+ClearSpriteFrameUnused:				; sprite object X's frame words $28 / $2A = $FFFF, Y = r2, then
+									; AnimateNextSprite; nothing calls it
 	lda.w #$FFFF
 	sta.b $28,x
 	sta.b $2A,x
@@ -1545,8 +1547,8 @@ DispatchSpriteAnim:					; advance past the opcode and dispatch its low seven bit
 SpriteAnimCommands:					; handlers indexed by the low seven bits of a script command
 	dw SpriteAnimHold,SpriteAnimRestart,SpriteAnimJumpRelative,SpriteAnimSelectScript
 	dw SpriteAnimHold84,SpriteAnimSetReload,SpriteAnimSetSpeed,SpriteAnimSetFrames
-	dw SpriteAnimDelete,CODE_C5EBB8,SpriteAnimSkipByte,SpriteAnimToggleHFlip
-	dw SpriteAnimToggleVFlip,SpriteAnimYield,CODE_C5EC1A,SpriteAnimHold8F
+	dw SpriteAnimDelete,SpriteAnimIncWordUnused,SpriteAnimSkipByte,SpriteAnimToggleHFlip
+	dw SpriteAnimToggleVFlip,SpriteAnimYield,SpriteAnimCallUnused,SpriteAnimHold8F
 	dw SpriteAnimRestoreScript,SpriteAnimHold,SpriteAnimHold,SpriteAnimSetHFlip
 	dw SpriteAnimClearHFlip,SpriteAnimSetVFlip,SpriteAnimClearVFlip,SpriteAnimToggleFlips
 	dw SpriteAnimHold,SpriteAnimHold,SpriteAnimHold,SpriteAnimClearFlag4000
@@ -1632,7 +1634,9 @@ UploadSpriteAnimFrames:				; upload the frame list and restore the saved active-
 	ldx.b p0
 	ply
 	jmp.w AnimateNextSprite
-CODE_C5EB88:						; no caller found (not traced)
+CopySpriteFramesUnused:				; sprite object A takes up to three frame words of object X ($28 on, up to
+									; a negative one), $FFFF after them, then UploadSpriteAnimFrames; nothing
+									; calls it
 	txy
 	tax
 	stx.b p0
@@ -1661,7 +1665,9 @@ SpriteAnimDelete:					; call DeleteSprite via jsr, although its returns use rtl
 	ldy.b tmp0
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EBB8:						; index into UploadSpriteFrames code bytes as pointers; purpose unresolved
+SpriteAnimIncWordUnused:			; script command $89 (no script uses it): brk for an index of 4 or more,
+									; else increments the word a pointer at UploadSpriteFrames + index * 2
+									; (code bytes) points at
 	ldx.b tmp1
 	lda.b $01,x
 	and.w #$00FF
@@ -1718,8 +1724,9 @@ SpriteAnimYield:					; yield with the script position after this command
 	ldy.b tmp0
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EC1A:						; call through UploadSpriteFrames code bytes as pointers; purpose
-									; unresolved
+SpriteAnimCallUnused:				; script command $8E (no script uses it): calls through a pointer at
+									; UploadSpriteFrames + index * 2 (code bytes), holds when it returns carry
+									; set
 	ldx.b tmp1
 	lda.b $01,x
 	and.w #$00FF
@@ -1793,7 +1800,8 @@ SpriteAnimBranchIfFlagClear:		; jump to the byte position if animation flag $400
 	sta.w $0030,y
 	tyx
 	jmp.w ReadSpriteAnim
-CODE_C5ECA5:						; no caller found (not traced)
+StartSpriteAnimUnused:				; sprite object X starts animation script A: SetSpriteAnim's start steps
+									; without $22,x bit $4000, ending rts; nothing calls it
 	sta.b $1E,x
 	asl a
 	adc.b $2E,x
@@ -2027,7 +2035,9 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	ldy.b $18
 	tyx
 	rts
-CODE_C5EE3C:						; no caller found (not traced)
+FreeSpritePaletteUnused:			; gives back sprite object X's palette ($34,x): its use count in
+									; SpritePalUse - 1, and at 0 its slot back on PalSlotList (PalSlotsUsed -
+									; 1); nothing calls it
 	phx
 	lda.b $34,x
 	and.w #$00FF

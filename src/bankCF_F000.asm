@@ -1138,38 +1138,37 @@ GoalFrameLayout:					; the layout code of the second net, SPFgoal+1 (layouts $8F
 	adc.w #$4004
 	pha
 	ldx.w #$0002
-CODE_CFFF0F:						; called from other segments
 	clc
 	lda.w #$002D
 	adc.b $0A
-	bpl .1
+	bpl .31
 	cmp.w #$FFF1
-	bcc .2
+	bcc .32
 	inx
 	and.w #$00FF
-.1:									; if A >= $0100 go to .2, tmp0 = A, A = $0010, A + $0C, ...
+.31:								; if A >= $0100 go to .32, tmp0 = A, A = $0010, A + $0C, ...
 	cmp.w #$0100
-	bcs .2
+	bcs .32
 	sta.b tmp0
 	lda.w #$0010
 	adc.b $0C
-	bpl .3
+	bpl .33
 	cmp.w #$FFF1
 	and.w #$00FF
-	bcs .4
-.2:									; pull A, go to .5
+	bcs .34
+.32:								; pull A, go to .35
 	pla
-	bra .5
-.3:									; if A >= $00E0 go to .2
+	bra .35
+.33:								; if A >= $00E0 go to .32
 	cmp.w #$00E0
-	bcs .2
-.4:									; A or tmp0, push A, $00,y = X, Y + 1
+	bcs .32
+.34:								; A or tmp0, push A, $00,y = X, Y + 1
 	xba
 	ora.b tmp0
 	pha
 	stx.b $00,y
 	iny
-.5:									; A = tmp2, A + $4006, push A, X = $0002, ...
+.35:								; A = tmp2, A + $4006, push A, X = $0002, ...
 	clc
 	lda.b tmp2
 	adc.w #$4006
@@ -1178,34 +1177,34 @@ CODE_CFFF0F:						; called from other segments
 	clc
 	lda.w #$001D
 	adc.b $0A
-	bpl .6
+	bpl .36
 	cmp.w #$FFF1
-	bcc .7
+	bcc .37
 	inx
 	and.w #$00FF
-.6:									; if A >= $0100 go to .7, tmp0 = A, A = $0010, A + $0C, ...
+.36:								; if A >= $0100 go to .37, tmp0 = A, A = $0010, A + $0C, ...
 	cmp.w #$0100
-	bcs .7
+	bcs .37
 	sta.b tmp0
 	lda.w #$0010
 	adc.b $0C
-	bpl .8
+	bpl .38
 	cmp.w #$FFF1
 	and.w #$00FF
-	bcs .9
-.7:									; pull A, go to .10
+	bcs .39
+.37:								; pull A, go to .40
 	pla
-	bra .10
-.8:									; if A >= $00E0 go to .7
+	bra .40
+.38:								; if A >= $00E0 go to .37
 	cmp.w #$00E0
-	bcs .7
-.9:									; A or tmp0, push A, $00,y = X, Y + 1
+	bcs .37
+.39:								; A or tmp0, push A, $00,y = X, Y + 1
 	xba
 	ora.b tmp0
 	pha
 	stx.b $00,y
 	iny
-.10:								; jump through $00A5
+.40:								; jump through $00A5
 	jmp ($00A5)
 PuckFrameLayout:					; the layout code of the flipping puck, SPFpuck+1 to +10 (layouts $91 /
 									; $92): one 8 x 8 piece raised by puckz * 3 / 2, then on through $A5

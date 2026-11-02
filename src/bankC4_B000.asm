@@ -975,7 +975,7 @@ TaskStartKey:						; a task: start clears task flag bit 15 (so TaskEndCheck ends
 	tsb.b $85
 .rtl:								; return
 	rtl
-CODE_C4B844:						; no caller found (not traced)
+SetTasksDoneUnused:					; TasksDone = A and the stack at $1FFC, then rtl; nothing calls it
 	sta.w TasksDone
 	lda.w #$1FFC
 	tcs

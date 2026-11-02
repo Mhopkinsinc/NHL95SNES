@@ -1678,7 +1678,8 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	sta.b $99
 	stz.w fadestep
 	rts
-CODE_C5ADD8:						; called from other segments
+CheckGameSelectedUnused:			; if tmp0 bit 7 is clear, NoGameSelected, else on into ReturnToLeagueMenu;
+									; nothing calls it
 	bit.b tmp0
 	bpl NoGameSelected
 ReturnToLeagueMenu:					; drops a return address, rebuilds the setup screen (setoptions), then

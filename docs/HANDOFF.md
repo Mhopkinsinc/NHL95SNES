@@ -298,8 +298,8 @@
   intro pieces, a box, the NHL and NHLPA logos. Readers in bank $C5 (CreateSprite, CreateSpriteSharePal, UploadSpriteFrame and
   AnimateSprites are source in bankC5_E000): $C5E665 (create), $C5EEF3, $C5E8A5 (frame to VRAM), $C5F071 (format 0 without a
   header), $C5F0D1 (OAM), AnimateSprites (scripts, dispatched through SpriteAnimCommands).
-  The command bytes $80-$9D are documented in sprite_objects.md; CODE_C5EBB8 ($89) and CODE_C5EC1A ($8E)
-  remain unnamed because they treat UploadSpriteFrames code bytes as pointers, with no established intended contract.
+  The command bytes $80-$9D are documented in sprite_objects.md; no record script uses $89 or $8E, whose handlers
+  (SpriteAnimIncWordUnused / SpriteAnimCallUnused) treat UploadSpriteFrames code bytes as pointers.
   SpriteAnimDelete ($88) calls the RTL-returning DeleteSprite via JSR; no record script uses it. Unreached
   CODE_C5EA91 / CODE_C5EAA2 / CODE_C5EB88 keep auto names: they enter animation continuations with unproven
   saved-index/stack preconditions. CODE_C5ECA5 is an uncalled script setter variant without the SetSpriteAnim
@@ -373,12 +373,14 @@
     flag, then SPFgroup+n / time pairs). The code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
     as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
     reader.
-- 15 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
-  - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
-    CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5EA91,
-    CODE_C5EAA2, CODE_C5EB88, CODE_C5ECA5, CODE_C5EE3C (sprite object helpers), CODE_CFFF0F. Two math helpers with no
-    caller are named from their registers: Mul16x8XS24 and Div32x16U.
-  - Already listed: CODE_C5EBB8 / CODE_C5EC1A (sprite commands $89 / $8E).
+- No CODE_ labels are left. Code that nothing reaches is named from what it does with an Unused suffix (94S's style,
+  as GoalieUnused): SetTasksDoneUnused, SendTextMapPartUnused, TransferQueueStubUnused, FadeStep5Unused,
+  EraseBoxUnused, CheckGameSelectedUnused, CopySpriteFrameUnused, ClearSpriteFrameUnused, CopySpriteFramesUnused,
+  StartSpriteAnimUnused and FreeSpritePaletteUnused: each follows an exit (rtl, rts, jmp) and no operand, pointer,
+  pea or table word reaches it. SpriteAnimIncWordUnused ($89) and SpriteAnimCallUnused ($8E) are SpriteAnimCommands
+  entries for commands no record script uses. What any of them was for is not known. Two labels that their routines run into
+  (setpersonel's CODE_C54320, GoalFrameLayout's CODE_CFFF0F) were dropped. Two math helpers with no caller are
+  named from their registers: Mul16x8XS24 and Div32x16U.
 - FixLineForward / FixLineDefence were first named the wrong way round. The range right after the goalies is the
   forwards (roster +4 is the forward count, GetForwardCount). Line bytes +1 / +2 are LD / RD (the slot texts), so the
   routine that fixes those is FixLineDefence.

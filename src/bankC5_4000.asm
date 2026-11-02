@@ -391,7 +391,6 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	sta.b $71
 	pla
 	sta.b a3
-CODE_C54320:						; no caller found: a label inside setpersonel's register restore
 	pla
 	sta.b $6D
 	pla

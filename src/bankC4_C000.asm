@@ -462,7 +462,8 @@ SendTextMap:						; queues the text map ($800 bytes) for VRAM at $5C00
 	stx.b $00
 	stz.b QueueBusy
 	rtl
-CODE_C4C2C6:						; no caller found (not traced)
+SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns TextColLow to
+									; TextColHigh, to the VRAM map at $5C00 from row X; nothing calls it
 	sty.b $A5
 	tay
 	lda.w TextColLow
@@ -1857,7 +1858,8 @@ WaitTransfers:						; lets the NMI run the queued transfers (TransfersReady + 1)
 	inc.w TransfersReady
 	wai
 	rtl
-CODE_C4CEE0:						; no caller found (not traced)
+TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and closed twice with no
+									; record; nothing calls it
 	sta.b r0
 	stx.b $2E
 	dec.b QueueBusy
