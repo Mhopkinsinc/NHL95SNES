@@ -585,9 +585,9 @@ $C2E51D,Sample10,,new,"sound sample 10 of the sample list at $CF05DD: 12-byte he
 $C2F4AA,Sample11,,new,"sound sample 11 of the sample list at $CF05DD: 12-byte header, BRR blocks to $C2FC5F",src/bankC2_F000.asm
 $C2FC60,Sample12,,new,"sound sample 12 of the sample list at $CF05DD: 12-byte header, BRR blocks to $C2FF4D; zeros follow to the end of the bank",src/bankC2_F000.asm
 $C5A08B,RatingLevels,DATA8_C5A08B,code,"RatingNibble (and RatingNibbleHigh, for the high nibble of a record byte) reads entry A",src/bankC5_A000.asm
-$C5A1D7,LetterGridCells,DATA8_C5A1D7,code,"LetterCellPalette0 / LetterCellPalette3 (cell d6) and SetGridCellPalette (cell a1) add the entry to the text map address for the cell's palette",src/bankC5_A000.asm
+$C5A1D7,LetterGridCells,DATA8_C5A1D7,code,"LetterCellPalette0 / LetterCellPalette3 (cell d6) and SetGridCellPalette (cell a1) add the entry to the text map address for the cell's palette; SetGridCellPalette adds $C0 more (the user name grid sits 3 tile rows lower)",src/bankC5_A000.asm
 $C5A225,LetterGridX,DATA8_C5A225,code,"MoveCreateGridCursor (cell d6) and MoveGridCursor (cell a1) put the entry in the cursor object's x ($05)",src/bankC5_A000.asm
-$C5A25B,LetterGridY,DATA8_C5A25B,code,"MoveCreateGridCursor and MoveGridCursor put the entry in the cursor object's y ($08)",src/bankC5_A000.asm
+$C5A25B,LetterGridY,DATA8_C5A25B,code,"MoveCreateGridCursor puts the entry in the cursor object's y ($08); MoveGridCursor adds $18 first (the user name grid sits 3 tile rows lower)",src/bankC5_A000.asm
 $C5A2A8,CreatedPosNames,DATA8_C5A2A8,code,"FieldPos prints entry d0 in italics on row 8",src/bankC5_A000.asm
 $C5A354,TradeTeam2Check,DATA8_C5A354,code,"PrevOptionValue and NextOptionValue read the word before a line routine at $C4FFFE,x (X = the routine) and run it first",src/bankC5_A000.asm
 $C5A81B,GamesTodaySteps,DATA8_C5A81B,code,"GamesTodayInput jumps through it with X = $89 (GamesTodayKeys, ScrollGamesUp, ScrollGamesDown)",src/bankC5_A000.asm
@@ -732,7 +732,7 @@ $C4C07D,GlyphPixelRoutines,DATA8_C4C07D,code,"DrawGlyphRow pushes entry $0A & 7 
 $C4C420,PackedTextSymbols,DATA8_C4C420,code,"DecodePackedText reads entry index (+ 8 / + 16) into the string",src/bankC4_C000.asm
 $C4C4A6,ByteBitMasks,DATA8_C4C4A6,94S+code,"the same 8 bytes as 94S data/tables/ByteBitMasks; read by DrawGameMarks, GamesTodayKeys, MenuPlayGames and the save bit writers",src/bankC4_C000.asm
 $C4C4AE,PixelBitMasks,DATA8_C4C4AE,code,"CheckGlyphLeftOverlap tests the drawn pixels under the glyph's leading column with entry $0A & 7",src/bankC4_C000.asm
-$C4C4B6,ItalicFontWidths,DATA8_C4C4B6,code,"DrawNextTextCharacter reads it for flags $0E bit 0 without bit 2 (ItalicFontGlyphs, flags 3); with flag bit 1 a lowercase letter's width is read at ItalicFontWidths-$2B + glyph + $2A, the byte before its capital's",src/bankC4_C000.asm
+$C4C4B6,ItalicFontWidths,DATA8_C4C4B6,code,"DrawNextTextCharacter reads it for flags $0E bit 0 without bit 2 (ItalicFontGlyphs, flags 3); with flag bit 1 a lowercase letter (character - $30 >= $31) takes its capital's width: the adc #$2A runs with carry set, so X = character - $50 + $2B cancels the -$2B of ItalicFontWidths-$2B",src/bankC4_C000.asm
 $C4C4D7,ThinFontWidths,DATA8_C4C4D7,code,"DrawNextTextCharacter (flags bit 2: ThinFontGlyphs, flags 5) and TextWidth read it; the thin font has glyphs $D-$2A",src/bankC4_C000.asm
 $C4C502,BoldFontWidths,DATA8_C4C502,code,"DrawNextTextCharacter reads it when flags $0E bits 0 and 2 are clear (BoldFontGlyphs, flags 0)",src/bankC4_C000.asm
 $C4D101,TitleMapFill,DATA8_C4D101,code,"TitleScreen queues VRAM $5400 filled from it as ClearTextMap uses TextMapFill (pea TitleMapFill / (TitleMapFill+1)&$FFFF); the 7 bytes after the pair have no reference",src/bankC4_D000.asm
@@ -1484,8 +1484,8 @@ $C377BB,ReplayCursorSteps,DATA8_C377BB,code,"ReadReplayCameraInput adds entry d0
 $C377BD,ReplayCursorSteps+2,DATA8_C377BD,code,"ReplayCursorSteps+2: the y steps; the label is dropped; ReadReplayCameraInput reads ReplayCursorSteps+2,x",src/bankC3_7000.asm
 $C3803D,DATA8_C3803D,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
 $C3804B,DATA8_C3804B,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
-$C3847C,ObjSmallTiles,DATA8_C3847C,code,"DrawSortedGameObject loads it into tmp1, the tile word PutSmallPiece1-4 use; objects get 4 tiles each from tile 0",src/bankC3_8000.asm
-$C3849C,ObjBigTiles,DATA8_C3849C,code,"DrawSortedGameObject loads it into tmp2, the tile word PutBigPiece1-4 use; 2 big tiles per object from tile $A0",src/bankC3_8000.asm
+$C3847C,ObjSmallTiles,DATA8_C3847C,code,"DrawSortedGameObject loads it into tmp1, the tile word PutSmallPiece1-4 use; entries 0-11 are 4 tiles apart from tile 0, then $30, $30, $34, $35",src/bankC3_8000.asm
+$C3849C,ObjBigTiles,DATA8_C3849C,code,"DrawSortedGameObject loads it into tmp2, the tile word PutBigPiece1-4 use; entries 8 tile numbers apart from tile $A0, room for four 16 x 16 pieces each",src/bankC3_8000.asm
 $C384BC,ObjSmallTilesFlip,DATA8_C384BC,code,"DrawSortedGameObject takes it when attribute,x has bit $0800, then DrawFrameLayoutFlip",src/bankC3_8000.asm
 $C384DC,ObjBigTilesFlip,DATA8_C384DC,code,"DrawSortedGameObject takes it with ObjSmallTilesFlip for flipped objects",src/bankC3_8000.asm
 $C38658,SortObjInitTable,DATA8_C38658,94S+purpose,"94S defaultsprites_0 reads the same records from its local .3 ('as 93S SortObjInitTable'; the first record matches except the frame); 95 defaultsprites_0 reads the fields as SortObjInitTable+2 ... +16,x",src/bankC3_8000.asm

@@ -245,7 +245,8 @@ SetTilePalette0:					; palette 0 on the text map tile at Y
 	sta.w $0000,y
 	rts
 LetterGridCells:					; per letter grid cell (* 2, 9 a row): its text map offset ($0306 on, 3
-									; tiles apart)
+									; tiles apart); SetGridCellPalette adds $C0 (the user name grid, 3 rows
+									; lower)
 	db $06,$03,$0C,$03,$12,$03,$18,$03,$1E,$03,$24,$03,$2A,$03,$30,$03
 	db $36,$03,$C6,$03,$CC,$03,$D2,$03,$D8,$03,$DE,$03,$E4,$03,$EA,$03
 	db $F0,$03,$F6,$03,$86,$04,$8C,$04,$92,$04,$98,$04,$9E,$04,$A4,$04
@@ -267,7 +268,8 @@ LetterGridX:						; per letter grid cell (* 2): the cursor sprite's x ($14 + 24 
 	db $D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00,$A4,$00
 	db $BC,$00,$D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00
 	db $A4,$00,$BC,$00,$D4,$00
-LetterGridY:						; per letter grid cell (* 2): the cursor sprite's y ($70, $88, $A0 by row)
+LetterGridY:						; per letter grid cell (* 2): the cursor sprite's y ($70, $88, $A0 by
+									; row); MoveGridCursor adds $18 (the user name grid)
 	db $70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00
 	db $70,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00
 	db $88,$00,$88,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00
