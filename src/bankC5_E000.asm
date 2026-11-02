@@ -804,7 +804,7 @@ ResetSpritesAt:						; resets the sprite objects: the slot list (SpriteObjRAM on
 	dex
 	dec a
 	bpl .loop4
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
 	rts
 DeleteSprite:						; removes the sprite object X: out of the active list, its palette slot

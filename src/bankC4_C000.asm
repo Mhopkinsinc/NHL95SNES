@@ -1810,7 +1810,7 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	stz.w $2102
 	sec
 	lda.b $28
-	sbc.w #$1B91
+	sbc.w #OAMBuf+$1
 	bcc .76
 	adc.w #$0001
 	sta.w DAS0L
@@ -1834,10 +1834,10 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	sta.w A1T0L
 	stx.w MDMAEN
 	rtl
-.76:								; DAS0L = $0220, A1T0L = $1B90, $4303 = $001B, DMAP0 = $0400, ...
+.76:								; DAS0L = $0220, A1T0L = OAMBuf, $4303 = $001B, DMAP0 = $0400, ...
 	lda.w #$0220
 	sta.w DAS0L
-	lda.w #$1B90
+	lda.w #OAMBuf
 	sta.w A1T0L
 	lda.w #$001B
 	sta.w $4303

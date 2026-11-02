@@ -1067,7 +1067,7 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	bmi .3
 	dec.b d0
 	bpl .loop
-.3:									; if [a1] >= 0 go to .4, $0806 - 1, go to .1
+.3:									; if [a1] >= 0 go to .4, DispAttribCtr - 1, go to .1
 	lda.b [a1]
 	bpl .4
 	dec.w DispAttribCtr
@@ -1083,7 +1083,7 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	lda.w picktop
 	cmp.w pickfirst
 	beq .5
-.5:									; A = $1884, A - $1880, A + $0009, if A - $187C >= 0 go to .6
+.5:									; A = picktop, A - pickfirst, A + $0009, if A - listcount >= 0 go to .6
 	lda.w picktop
 	sec
 	sbc.w pickfirst
@@ -1126,7 +1126,7 @@ PrintShooterRows:					; the shooter list's rows from picktop + 1, the row at cur
 	bvc .loop
 .2:									; d1 - 1
 	dec.b d1
-.loop:								; loop: printa = $3800, if d1 is not $1888 go to .3, printa = $2000
+.loop:								; loop: printa = $3800, if d1 is not curplayer go to .3, printa = $2000
 	lda.w #$3800
 	sta.w printa
 	lda.b d1
@@ -1181,7 +1181,7 @@ SetShooter:							; puts the list player at row curplayer into shooter slot curi
 	sta.b $69
 	lda.w #awayshooters
 	sta.b a1
-.1:									; Y = $1878, A 8-bit, A = [a1],y, A 16-bit, ...
+.1:									; Y = curitem, A 8-bit, A = [a1],y, A 16-bit, ...
 	ldy.w curitem
 	sep #$20
 	lda.b [a1],y
@@ -1204,7 +1204,7 @@ SetShooter:							; puts the list player at row curplayer into shooter slot curi
 	sep #$20
 	sta.b [a1],y
 	rep #$20
-.3:									; Y = $1878, A = d0, A 8-bit, [a1],y = A, ...
+.3:									; Y = curitem, A = d0, A 8-bit, [a1],y = A, ...
 	ldy.w curitem
 	lda.b d0
 	sep #$20

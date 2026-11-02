@@ -373,9 +373,9 @@ ShowGameStats:						; pause menu Game Stats: the team stat rows as a scrolling l
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -453,9 +453,9 @@ ShowPeriodStats:					; pause menu Period Stats: DrawPeriodStats; B switches betw
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -652,9 +652,9 @@ ShowPlayerStats:					; pause menu Player Stats: the skaters of team a2 sorted by
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1224,11 +1224,11 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	lda.b a1
 	beq .3
 	jsr.w ScrollListArrows
-.3:									; call AnimateSprites, $28 = $1D8F, $2A = $1E00, call BuildSpriteOAM, ...
+.3:									; call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1553,11 +1553,11 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	lda.b a1
 	beq .3
 	jsr.w ScrollListArrows
-.3:									; call AnimateSprites, $28 = $1D8F, $2A = $1E00, call BuildSpriteOAM, ...
+.3:									; call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1760,9 +1760,9 @@ TeamRoster:							; pause menu Team Roster: the roster of team a2 (ShowRosterLin
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

@@ -187,9 +187,9 @@ NameEntryScreen:					; the Name Entry screen of a pad: the 8 user names (up / do
 	jsl.l ReadPauseMenuPad
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -462,9 +462,9 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l ReadPauseMenuPad
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

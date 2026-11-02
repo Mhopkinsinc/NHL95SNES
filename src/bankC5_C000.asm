@@ -178,9 +178,9 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	adc.w #$0076
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -948,9 +948,9 @@ ReleasePlayers:						; the Release Players screen: a team's roster (up / down, B
 	adc.w #$0076
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1333,12 +1333,12 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	bra .3
 .2:									; A + $008E
 	adc.w #$008E
-.3:									; $08,x = A, call AnimateSprites, $28 = $1D8F, $2A = $1E00, ...
+.3:									; $08,x = A, call AnimateSprites, $28 = OAMBuf+$1FF, ...
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1635,9 +1635,9 @@ GMDecisionScreen:					; the trade decision: DrawGMDecision, then start does an a
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

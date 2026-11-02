@@ -212,9 +212,9 @@ UpdateMenuSpritesTwice:				; run the menu sprite update and transfer wait twice
 	jsl.l UpdateMenuSprites
 UpdateMenuSprites:					; animate menu sprites, build their OAM and wait for transfers
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -748,13 +748,13 @@ UpdateReplayCamera:					; track the replay camera, render the frame and continue
 	sta.w replayHpos
 	lda.b Vpos
 	sta.w replayVpos
-.24:								; timestep = d7, call SprSort, $28 = $1D8F, $2A = $1E00, ...
+.24:								; timestep = d7, call SprSort, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	lda.b d7
 	sta.w timestep
 	jsl.l SprSort
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l RenderReplayFrame
 	jsl.l WaitTransfers

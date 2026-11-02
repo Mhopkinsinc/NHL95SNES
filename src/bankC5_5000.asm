@@ -242,9 +242,9 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	stx.w $18F0
 	lda.w #$0100
 	sta.b $22
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1880,9 +1880,9 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lda.w #$0001
 	trb.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

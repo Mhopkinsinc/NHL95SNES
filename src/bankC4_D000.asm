@@ -914,9 +914,9 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

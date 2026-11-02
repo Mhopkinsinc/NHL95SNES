@@ -585,9 +585,9 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -841,9 +841,9 @@ SelectLinePlayer:					; picks a player for the line slot: a scrolling list of th
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1251,9 +1251,9 @@ PauseGoalie:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, l
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1510,9 +1510,9 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1774,9 +1774,9 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

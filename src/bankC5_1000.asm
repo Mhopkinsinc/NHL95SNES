@@ -864,13 +864,13 @@ waitxsr:							; no caller found (not traced)
 	jsl.l ReadjoyA
 	lda.b d3
 	bne .2
-.1:									; X + 1, if X < $0005 go to .loop2, $28 = $1D8F, $2A = $1E00, ...
+.1:									; X + 1, if X < $0005 go to .loop2, $28 = OAMBuf+$1FF, ...
 	inx
 	cpx.w #$0005
 	bcc .loop2
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l setvideo
 	lda.b Vcount

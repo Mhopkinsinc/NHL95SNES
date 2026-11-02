@@ -441,9 +441,9 @@ SetContTeams:						; the controller setup: each pad's icon is moved to a team; o
 	jsl.l WaitTransfers
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsr.w ShowConnectedPads
 	jsr.w MovePadIcons
@@ -735,9 +735,9 @@ ScreenStateLoop:					; the front end loop: each frame the transfers, the pads an
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

@@ -140,9 +140,9 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.w #$0010
 	sta.w introTM
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -948,9 +948,9 @@ TaskFrameEnd:						; the last task of the list: the sprites to OAM (when task fl
 	lda.b $85
 	bit.w #$0002
 	beq .1
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

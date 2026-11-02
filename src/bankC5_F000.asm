@@ -497,9 +497,9 @@ QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM addr
 	stx.b $00
 	stz.b QueueBusy
 	rtl
-PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) into the 32
-									; byte OAM high table
-	lda.w #$1E00
+PackOAMHigh:						; packs the 128 size / X bit bytes at OAMHighBytes (BuildSpriteOAM) into
+									; the OAM high table at OAMBuf+$200
+	lda.w #OAMHighBytes
 	tcd
 	sep #$20
 	lda.b $00
@@ -512,7 +512,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $03
-	sta.w $1DAF
+	sta.w OAMBuf+$21F
 	lda.b $04
 	asl a
 	asl a
@@ -523,7 +523,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $07
-	sta.w $1DAE
+	sta.w OAMBuf+$21E
 	lda.b $08
 	asl a
 	asl a
@@ -534,7 +534,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $0B
-	sta.w $1DAD
+	sta.w OAMBuf+$21D
 	lda.b $0C
 	asl a
 	asl a
@@ -545,7 +545,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $0F
-	sta.w $1DAC
+	sta.w OAMBuf+$21C
 	lda.b $10
 	asl a
 	asl a
@@ -556,7 +556,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $13
-	sta.w $1DAB
+	sta.w OAMBuf+$21B
 	lda.b $14
 	asl a
 	asl a
@@ -567,7 +567,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $17
-	sta.w $1DAA
+	sta.w OAMBuf+$21A
 	lda.b $18
 	asl a
 	asl a
@@ -578,7 +578,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $1B
-	sta.w $1DA9
+	sta.w OAMBuf+$219
 	lda.b $1C
 	asl a
 	asl a
@@ -589,7 +589,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $1F
-	sta.w $1DA8
+	sta.w OAMBuf+$218
 	lda.b $20
 	asl a
 	asl a
@@ -600,7 +600,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $23
-	sta.w $1DA7
+	sta.w OAMBuf+$217
 	lda.b $24
 	asl a
 	asl a
@@ -611,7 +611,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $27
-	sta.w $1DA6
+	sta.w OAMBuf+$216
 	lda.b $28
 	asl a
 	asl a
@@ -622,7 +622,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $2B
-	sta.w $1DA5
+	sta.w OAMBuf+$215
 	lda.b $2C
 	asl a
 	asl a
@@ -633,7 +633,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $2F
-	sta.w $1DA4
+	sta.w OAMBuf+$214
 	lda.b $30
 	asl a
 	asl a
@@ -644,7 +644,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $33
-	sta.w $1DA3
+	sta.w OAMBuf+$213
 	lda.b $34
 	asl a
 	asl a
@@ -655,7 +655,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $37
-	sta.w $1DA2
+	sta.w OAMBuf+$212
 	lda.b $38
 	asl a
 	asl a
@@ -666,7 +666,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $3B
-	sta.w $1DA1
+	sta.w OAMBuf+$211
 	lda.b $3C
 	asl a
 	asl a
@@ -677,7 +677,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $3F
-	sta.w $1DA0
+	sta.w OAMBuf+$210
 	lda.b $40
 	asl a
 	asl a
@@ -688,7 +688,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $43
-	sta.w $1D9F
+	sta.w OAMBuf+$20F
 	lda.b $44
 	asl a
 	asl a
@@ -699,7 +699,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $47
-	sta.w $1D9E
+	sta.w OAMBuf+$20E
 	lda.b $48
 	asl a
 	asl a
@@ -710,7 +710,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $4B
-	sta.w $1D9D
+	sta.w OAMBuf+$20D
 	lda.b $4C
 	asl a
 	asl a
@@ -721,7 +721,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $4F
-	sta.w $1D9C
+	sta.w OAMBuf+$20C
 	lda.b $50
 	asl a
 	asl a
@@ -732,7 +732,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $53
-	sta.w $1D9B
+	sta.w OAMBuf+$20B
 	lda.b $54
 	asl a
 	asl a
@@ -743,7 +743,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $57
-	sta.w $1D9A
+	sta.w OAMBuf+$20A
 	lda.b $58
 	asl a
 	asl a
@@ -754,7 +754,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $5B
-	sta.w $1D99
+	sta.w OAMBuf+$209
 	lda.b $5C
 	asl a
 	asl a
@@ -765,7 +765,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $5F
-	sta.w $1D98
+	sta.w OAMBuf+$208
 	lda.b $60
 	asl a
 	asl a
@@ -776,7 +776,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $63
-	sta.w $1D97
+	sta.w OAMBuf+$207
 	lda.b $64
 	asl a
 	asl a
@@ -787,7 +787,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $67
-	sta.w $1D96
+	sta.w OAMBuf+$206
 	lda.b $68
 	asl a
 	asl a
@@ -798,7 +798,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $6B
-	sta.w $1D95
+	sta.w OAMBuf+$205
 	lda.b $6C
 	asl a
 	asl a
@@ -809,7 +809,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $6F
-	sta.w $1D94
+	sta.w OAMBuf+$204
 	lda.b $70
 	asl a
 	asl a
@@ -820,7 +820,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $73
-	sta.w $1D93
+	sta.w OAMBuf+$203
 	lda.b $74
 	asl a
 	asl a
@@ -831,7 +831,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $77
-	sta.w $1D92
+	sta.w OAMBuf+$202
 	lda.b $78
 	asl a
 	asl a
@@ -842,7 +842,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $7B
-	sta.w $1D91
+	sta.w OAMBuf+$201
 	lda.b $7C
 	asl a
 	asl a
@@ -853,7 +853,7 @@ PackOAMHigh:						; packs the 128 size / X bit bytes at $1E00 (BuildSpriteOAM) i
 	asl a
 	asl a
 	ora.b $7F
-	sta.w $1D90
+	sta.w OAMBuf+$200
 	rep #$20
 	lda.w #$0000
 	tcd

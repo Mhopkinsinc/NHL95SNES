@@ -1844,12 +1844,12 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	bra .5
 .4:									; call ReadActiveMenuPad
 	jsl.l ReadActiveMenuPad
-.5:									; $26 + 1, call AnimateSprites, $28 = $1D8F, $2A = $1E00, ...
+.5:									; $26 + 1, call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
