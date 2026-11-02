@@ -1826,7 +1826,7 @@ SetAllStarPhotoPointers:			; sets the scouting photo pointers for an all-star ro
 	lda.w #$03CE
 	sta.w $00E4,y
 	lda.w #$6FF6
-	sta.w Hpos+1,y
+	sta.w $00CC,y
 	lda.w #$04CD
 	sta.w $00FE,y
 	rts
