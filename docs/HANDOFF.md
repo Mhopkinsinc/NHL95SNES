@@ -90,7 +90,7 @@
 - Award pictures: AwardPictures (bankC4_D000) holds a map set per award, indexed by the award number ($63); $C4D963
   prints the award's name from AwardNames and $C4D99C its description from AwardDescs (offsets of packed text in bank
   $C3: 5-bit codes read by UnpackText, 0-25 letters, $1A end, $1B space, $1C case toggle, $1D-$1F a 3-bit index into
-  DATA8_C4C420), then loads the picture. The order: 0 Vezina, 1 Selke, 2 Conn Smythe, 3 Jennings, 4 Hart, 5 Art Ross, 6
+  PackedTextSymbols), then loads the picture. The order: 0 Vezina, 1 Selke, 2 Conn Smythe, 3 Jennings, 4 Hart, 5 Art Ross, 6
   Norris, 7 Presidents. Names as 95G AwardPictures (VezinaPic, ...): <Name>PicMap / Tiles / Palette. Each picture follows
   the last raw frame of its bank: VezinaPic $C6FDE8-$C7053D, SelkePic $C7FE7E-$C80558, then ConnSmythePic ($C8FE39-$C9076A),
   JenningsPic ($C9FFEB-$CA09D8), ArtRossPic ($CAFDF9-$CB08B4), NorrisPic ($CBFDD5-$CC05E4); HartPic ($CDF32B-$CDF949) and
@@ -159,7 +159,7 @@
 - Purpose names (95-only screens): ../work/textdec.py decodes the packed text (OFF... or --scan); textmap.py writes
   strings.txt (the string starts) and textrefs.txt (the strings each routine passes). Menu item lists are a count, then
   word pairs whose second word is the offset of a length-prefixed text in bank $C3 (bit 7 set on each character). The
-  pause menu: tabs Info / Stats / Options / quit prompt (DATA8_C5501C ...). A routine takes a 95G or 94S name only after
+  pause menu: tabs Info / Stats / Options / quit prompt (PauseInfoJumps ...). A routine takes a 95G or 94S name only after
   reading it against that routine (source genesis+purpose / 94S+purpose; code for names made from the code);
   ../work/purpose.py MAP renames, writes the label's comment and follows the local label rows. Named so far: the Stanley
   Cup screen and the season awards, the pause menu screens, the scouting report, the trade screens, the League Menu and
@@ -167,7 +167,7 @@
   the game setup screen, the start-up screens (IntroSequence ... TitleScreen), the work buffer and text helpers. ../work/pages.py lists the text pages
   PrintTextPage prints (a descriptor: margins, title, lines) with the routine that passes each: the screens' titles.
 - The front end is a state machine: a screen's entry draws its page, sets the state $99 and returns; ScreenStateLoop runs
-  the handler of the state from DATA8_C5967A each frame. The setup screen's start runs DATA8_C58DD0 by play mode
+  the handler of the state from ScreenStateHandlers each frame. The setup screen's start runs PlayModeStarts by play mode
   ($1864: Exhibition, Practice, Season, Trades, Free Agent, Release, Make Player). The start-up screens run a task list
   (StartTasks, AddTask, RunTasks through jmlvector, RemoveTask). The pause: Pausemode (game loop) and Intermission
   call Pausemode_menu, as in 94S. The text: Print<Font><Align>[Str] (UnpackText or CopyString, then DrawText,
@@ -192,7 +192,7 @@
   trace never reached: ShootoutShooters (after ShootoutWonBy, labelled now) and 94S ShooterSelectList, still inline
   after PickShooterRow's rtl. Several 94S calls became bare rtl stubs that keep the 94S name (eraser, StartBenchCheer,
   InitScores, DoHiLights, printscores1 = ldx a3).
-  Bank $C5: the front end's screen states 0-13 have named handlers (DATA8_C5967A); each scrolling list's row
+  Bank $C5: the front end's screen states 0-13 have named handlers (ScreenStateHandlers); each scrolling list's row
   routine is Draw<Screen>Row; the map set unpackers, Framer and the screen set-ups are named. bankC5_9000-C000 (the
   setup screen, Create Player, League Menu, Games Today, leaders, standings, free agents) were named by a second Claude
   thread. It left 34 labels: shared tails, loop heads, ReadTeamStatBits' unrolled shift entries. In these screens
@@ -201,7 +201,7 @@
   its usage limit after three commits (roster and face off pads, line energy bars, pause tabs).
   Still unnamed in bank $C5: the rest of bankC5_3000 / 4000 / 5000 / 7000, the bankC5_D000 roster / trade list
   helpers, the bankC5_E000 sprite helpers (the Edit Lines screen, the season records and the playoffs are named).
-  Play mode 1 is Practice (the setup strings and DATA8_C58DD0 order: Exhibition, Practice, Season ...; 95 Genesis
+  Play mode 1 is Practice (the setup strings and PlayModeStarts order: Exhibition, Practice, Season ...; 95 Genesis
   checks practice where 95S tests OptPlayMode 1). The game frame is named
   as in 94S (DoGameFrame, updateplayers, setvideo, updatescroll, PeriodOver, the face offs, SetupPenaltyShot, the line
   change box); bare rtl stubs sit where 94S calls StartBenchCheer, UpdateBenchCheer, InitScores and DoHiLights, and
@@ -346,6 +346,17 @@
   number); $0004 (the CGRAM queue stack pointer, dp $04 unnamed); $7E8F3C / $8F5C (a palette inside the unpacked bracket
   map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
   puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
+- 30 DATA8_ labels left after the data table pass (../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
+  - Not tables: unreached rtl / rts / jmp bytes after an exit (C42DC5, C43078, C4311B, C432A0, C433C3, C43530, C436DC,
+    C48B47, C49B66, C49E41, C511B7, C5362B, C5362D, C5E499, C59A4A, C59F0F, C59050, C43345, C5C655); 94S has such
+    bare rtls too.
+  - DATA8_C59249 is code: a $0000 check word and the Home Players option line routine ($C5924B), then the Visitor
+    Players one ($C5927A); the bank $C3 option list points at both. It should be disassembled as two routines.
+  - No reader found: C5AE40 (a high-bits mask series), C0491A, C04CAB, C08939, C08B17 (16 colours), C104E0 (the
+    $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
+  - Still raw in code: SPA offsets $1EFA (94S SPAonetimerb) and $C42082 (SPAsweepchk), the other CheckAnimByDir
+    entries and assgoalie_list's words (94S SPA names line up), the animation lists after TeamRoundSlots; TitleScreen's
+    pea $00C5 / pea $8A63 is ZeroFillWord. FrictionFactors has 94S updateplayers' bytes but no 95 reader.
 - 27 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
     CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5888F (a
