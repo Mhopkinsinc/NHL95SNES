@@ -58,134 +58,255 @@ TxtGameOfThePlayoffs:				; the packed text "game of the playoffs"
 	db $00,$F0,$00,$86,$4B,$02,$00,$D6,$47,$07,$C0,$00,$00,$10,$00,$F0
 	db $00,$8F,$4B,$02,$00,$D6,$47,$07,$C0,$00,$00
 PlayerStatsPage:					; the Player Stats text page (ShowPlayerStats)
-	db $10,$00,$F0,$00,$F1
-	db $4A,$02,$00,$FF,$FF,$20,$00,$84,$4A,$1A,$80,$00,$00,$10,$00,$F0
-	db $00,$21,$4C,$02,$00,$D6,$47,$07,$C0,$00,$00,$10,$00,$F0,$00,$37
-	db $4C,$02,$00,$D6,$47,$07,$C0,$00,$00
+	dw $0010,$00F0,TxtPlayerStats&$FFFF,$0002
+	dw $FFFF,$0020
+	dw TxtYSwitchTeams&$FFFF,$801A
+	dw 0
+	db $10,$00,$F0,$00,$21,$4C,$02,$00,$D6,$47,$07,$C0,$00,$00,$10,$00
+	db $F0,$00,$37,$4C,$02,$00,$D6,$47,$07,$C0,$00,$00
 TeamRosterPage:						; the Team Roster text page (TeamRoster)
-	db $10,$00,$F0,$00,$4C,$4C,$02
-	db $00,$AC,$46,$17,$80,$BD,$46,$18,$80,$84,$4A,$19,$80,$00,$00
+	dw $0010,$00F0,TxtTeamRoster&$FFFF,$0002
+	dw TxtPadUDChangeLine&$FFFF,$8017
+	dw TxtPadLRChangeStat&$FFFF,$8018
+	dw TxtYSwitchTeams&$FFFF,$8019
+	dw 0
 EditLinesPage:						; the Edit Lines text page (EditLinesScreen)
-	db $10
-	db $00,$F0,$00,$7D,$4C,$02,$00,$06,$4F,$17,$80,$15,$4F,$18,$80,$34
-	db $4F,$19,$80,$00,$00
+	dw $0010,$00F0,TxtEditLines&$FFFF,$0002
+	dw TxtPadLRChangeLine&$FFFF,$8017
+	dw TxtPadUDChangePlayer&$FFFF,$8018
+	dw TxtBSelectPlayer&$FFFF,$8019
+	dw 0
 ChangeGoaliePage:					; the Change Goalie text page (PauseGoalie)
-	db $10,$00,$F0,$00,$8A,$4C,$02,$00,$15,$4F,$17
-	db $80,$25,$4F,$18,$80,$34,$4F,$19,$80,$00,$00
+	dw $0010,$00F0,TxtChangeGoalie&$FFFF,$0002
+	dw TxtPadUDChangePlayer&$FFFF,$8017
+	dw TxtPadLRChangeStat2&$FFFF,$8018
+	dw TxtBSelectPlayer&$FFFF,$8019
+	dw 0
 FreeAgentsPage:						; the Hire Free Agents text page (DrawFreeAgentsPage)
-	db $10,$00,$F0,$00,$AB
-	db $4C,$02,$00,$FC,$4C,$06,$80,$03,$4D,$07,$80,$0C,$4D,$08,$80,$14
-	db $4D,$09,$80,$34,$4F,$19,$80,$C5,$4C,$1A,$80,$FF,$FF,$64,$00,$CF
-	db $4C,$1A,$80,$00,$00
+	dw $0010,$00F0,TxtHireFreeAgents&$FFFF,$0002
+	dw TxtGoalies2&$FFFF,$8006
+	dw TxtDefensemen&$FFFF,$8007
+	dw TxtForwards&$FFFF,$8008
+	dw TxtTotal2&$FFFF,$8009
+	dw TxtBSelectPlayer&$FFFF,$8019
+	dw TxtStartHire&$FFFF,$801A
+	dw $FFFF,$0064
+	dw TxtXCancel&$FFFF,$801A
+	dw 0
 ReleasePlayersPage:					; the Release Players text page (DrawReleasePage)
-	db $10,$00,$F0,$00,$B9,$4C,$02,$00,$FC,$4C,$06
-	db $80,$03,$4D,$07,$80,$0C,$4D,$08,$80,$14,$4D,$09,$80,$34,$4F,$19
-	db $80,$1A,$4D,$1A,$80,$FF,$FF,$78,$00,$CF,$4C,$1A,$80,$00,$00
+	dw $0010,$00F0,TxtReleasePlayers&$FFFF,$0002
+	dw TxtGoalies2&$FFFF,$8006
+	dw TxtDefensemen&$FFFF,$8007
+	dw TxtForwards&$FFFF,$8008
+	dw TxtTotal2&$FFFF,$8009
+	dw TxtBSelectPlayer&$FFFF,$8019
+	dw TxtStartRelease&$FFFF,$801A
+	dw $FFFF,$0078
+	dw TxtXCancel&$FFFF,$801A
+	dw 0
 EvaluateTradePage:					; the Evaluate Trade text page (DrawGMDecision)
-	db $10
-	db $00,$F0,$00,$33,$4D,$02,$00,$26,$4D,$18,$80,$CF,$4C,$19,$80,$FF
-	db $FF,$78,$00,$4F,$4D,$06,$80,$00,$00
+	dw $0010,$00F0,TxtEvaluateTrade&$FFFF,$0002
+	dw TxtStartContinue&$FFFF,$8018
+	dw TxtXCancel&$FFFF,$8019
+	dw $FFFF,$0078
+	dw TxtFor&$FFFF,$8006
+	dw 0
 SeasonAwardsPage:					; the Season Awards text page (SeasonAwards)
-	db $10,$00,$F0,$00,$69,$4D,$02
-	db $00,$74,$4D,$18,$80,$26,$4D,$19,$80,$00,$00
+	dw $0010,$00F0,TxtSeasonAwards&$FFFF,$0002
+	dw TxtPadChangeAward&$FFFF,$8018
+	dw TxtStartContinue&$FFFF,$8019
+	dw 0
 NameLogPage:						; the Name Entry list's text page (DrawNameLog)
-	db $10,$00,$F0,$00,$83
-	db $4D,$02,$00,$40,$4F,$19,$80,$4A,$4F,$1A,$80,$00,$00
+	dw $0010,$00F0,TxtNameEntry&$FFFF,$0002
+	dw TxtBEditName&$FFFF,$8019
+	dw TxtStartSelectPlayer&$FFFF,$801A
+	dw 0
 NameGridPage:						; the name entry grid's help text page (DrawNameGrid)
-	db $10,$00,$F0
-	db $00,$00,$00,$00,$00,$29,$49,$18,$80,$34,$49,$19,$80,$3D,$49,$1A
-	db $80,$FF,$FF,$87,$00,$46,$49,$19,$80,$CF,$4C,$1A,$80,$00,$00
+	dw $0010,$00F0,0,$0000
+	dw TxtPadToALetter&$FFFF,$8018
+	dw TxtBToSelect&$FFFF,$8019
+	dw TxtYToGoBack&$FFFF,$801A
+	dw $FFFF,$0087
+	dw TxtStartWhenDone&$FFFF,$8019
+	dw TxtXCancel&$FFFF,$801A
+	dw 0
 RecordHoldersPage:					; the Record Holders text page (RecordHoldersScreen)
-	db $10
-	db $00,$F0,$00,$8C,$4D,$02,$00,$A6,$49,$18,$80,$26,$4D,$19,$80,$00
-	db $00,$10,$00,$F0,$00,$C7,$54,$02,$00,$87,$54,$0A,$40,$95,$54,$0D
-	db $40,$A4,$54,$10,$40,$00,$00,$98,$3B,$BA,$0F,$A8,$64,$47,$02,$C4
-	db $21,$63,$CF,$43,$34,$7C,$1E,$B2,$19,$B8,$88,$51,$B6,$1B,$65,$81
-	db $C4,$ED,$8A,$06,$82,$47,$02,$26,$19,$9B,$3F,$BE,$00,$26,$51,$FA
-	db $6A,$10,$00,$F0,$00,$C7,$54,$02,$00,$CC,$54,$0A,$40,$D9,$54,$0D
-	db $40,$E9,$54,$10,$40,$00,$00,$80,$2F,$12,$A7,$06,$80,$AF,$B5,$DF
-	db $02,$98,$C4,$3D,$23,$18,$A8,$19,$0D,$FC,$00,$B9,$03,$21,$6D,$97
-	db $E8,$32,$69,$1F,$9B,$B6,$89,$96,$06,$7C,$1E,$B2,$1B,$B1,$5B,$12
-	db $20,$5D,$DB,$81,$18,$D4,$A4,$AF,$06
+	dw $0010,$00F0,TxtRecordHolders&$FFFF,$0002
+	dw TxtPadSelect&$FFFF,$8018
+	dw TxtStartContinue&$FFFF,$8019
+	dw 0
+	db $10,$00,$F0,$00,$C7,$54,$02,$00,$87,$54,$0A,$40,$95,$54,$0D,$40
+	db $A4,$54,$10,$40,$00,$00,$98,$3B,$BA,$0F,$A8,$64,$47,$02,$C4,$21
+	db $63,$CF,$43,$34,$7C,$1E,$B2,$19,$B8,$88,$51,$B6,$1B,$65,$81,$C4
+	db $ED,$8A,$06,$82,$47,$02,$26,$19,$9B,$3F,$BE,$00,$26,$51,$FA,$6A
+	db $10,$00,$F0,$00,$C7,$54,$02,$00,$CC,$54,$0A,$40,$D9,$54,$0D,$40
+	db $E9,$54,$10,$40,$00,$00,$80,$2F,$12,$A7,$06,$80,$AF,$B5,$DF,$02
+	db $98,$C4,$3D,$23,$18,$A8,$19,$0D,$FC,$00,$B9,$03,$21,$6D,$97,$E8
+	db $32,$69,$1F,$9B,$B6,$89,$96,$06,$7C,$1E,$B2,$1B,$B1,$5B,$12,$20
+	db $5D,$DB,$81,$18,$D4,$A4,$AF,$06
 CopyrightPage:						; the copyright screen's text page (CopyrightScreen)
-	db $08,$00,$F8,$00,$00,$00,$00
-	db $00,$41,$5A,$02,$C0,$49,$5A,$03,$C0,$5A,$5A,$04,$C0,$68,$5A,$05
-	db $C0,$76,$5A,$07,$C0,$90,$5A,$08,$C0,$A7,$5A,$09,$C0,$BA,$5A,$0A
-	db $C0,$D2,$5A,$0B,$C0,$E9,$5A,$0D,$C0,$FD,$5A,$0E,$C0,$16,$5B,$0F
-	db $C0,$29,$5B,$10,$C0,$3F,$5B,$11,$C0,$4D,$5B,$13,$C0,$63,$5B,$14
-	db $C0,$7C,$5B,$15,$C0,$97,$5B,$17,$C0,$AE,$5B,$18,$C0,$C3,$5B,$19
-	db $C0,$00,$00
+	dw $0008,$00F8,0,$0000
+	dw TxtCopyright01&$FFFF,$C002
+	dw TxtCopyright02&$FFFF,$C003
+	dw TxtCopyright03&$FFFF,$C004
+	dw TxtCopyright04&$FFFF,$C005
+	dw TxtCopyright05&$FFFF,$C007
+	dw TxtCopyright06&$FFFF,$C008
+	dw TxtCopyright07&$FFFF,$C009
+	dw TxtCopyright08&$FFFF,$C00A
+	dw TxtCopyright09&$FFFF,$C00B
+	dw TxtCopyright10&$FFFF,$C00D
+	dw TxtCopyright11&$FFFF,$C00E
+	dw TxtCopyright12&$FFFF,$C00F
+	dw TxtCopyright13&$FFFF,$C010
+	dw TxtCopyright14&$FFFF,$C011
+	dw TxtCopyright15&$FFFF,$C013
+	dw TxtCopyright16&$FFFF,$C014
+	dw TxtCopyright17&$FFFF,$C015
+	dw TxtCopyright18&$FFFF,$C017
+	dw TxtCopyright19&$FFFF,$C018
+	dw TxtCopyright20&$FFFF,$C019
+	dw 0
 StandingsPage:						; the NHL Standings text page (StandingsScreen)
-	db $10,$00,$00,$01,$B9,$4A,$02,$00,$CE,$46,$18,$80,$BD
-	db $46,$19,$80,$FF,$FF,$18,$00,$E0,$48,$07,$80,$00,$00
+	dw $0010,$0100,TxtNHLStandings&$FFFF,$0002
+	dw TxtPadUDChangeDivision&$FFFF,$8018
+	dw TxtPadLRChangeStat&$FFFF,$8019
+	dw $FFFF,$0018
+	dw TxtTeam&$FFFF,$8007
+	dw 0
 LeagueLeadersPage:					; the League Leaders text page (DrawLeagueLeaders)
-	db $10,$00,$00
-	db $01,$CD,$4A,$02,$00,$FF,$FF,$18,$00,$57,$4B,$07,$80,$30,$4B,$19
-	db $80,$00,$00
+	dw $0010,$0100,TxtLeagueLeaders&$FFFF,$0002
+	dw $FFFF,$0018
+	dw TxtPlayerNoTm&$FFFF,$8007
+	dw TxtPADChangeStats&$FFFF,$8019
+	dw 0
 SeasonPlayerStatsPage:				; the Season Player Stats text page (SeasonPlayerStats)
-	db $10,$00,$00,$01,$FB,$4A,$02,$00,$FF,$FF,$18,$00,$9D
-	db $55,$18,$80,$1F,$56,$19,$80,$BD,$55,$09,$80,$00,$00,$C1,$7F,$4B
+	dw $0010,$0100,TxtSeasonPlayerStats&$FFFF,$0002
+	dw $FFFF,$0018
+	dw TxtBSwitchToGoalies&$FFFF,$8018
+	dw TxtPadSwitchTeams&$FFFF,$8019
+	dw TxtPlayerNoGlsAstPts&$FFFF,$8009
+	dw 0
+TxtBSwitchToGoalies:				; the packed text "B? Switch to Goalies"
+	db $C1,$7F,$4B
 	db $6E,$D1,$14,$67,$4F,$B7,$B9,$E1,$0E,$2C,$44,$A4,$06
 TxtBSwitchToLinemen:				; the packed text "B? Switch to Linemen"
 	db $C1,$7F,$4B
-	db $6E,$D1,$14,$67,$4F,$B7,$F9,$E2,$A8,$11,$46,$9A,$06,$8F,$2F,$80
+	db $6E,$D1,$14,$67,$4F,$B7,$F9,$E2,$A8,$11,$46,$9A,$06
+TxtPlayerNoGlsAstPts:				; the packed text "Player     No= Gls= Ast= Pts="
+	db $8F,$2F,$80
 	db $49,$DC,$7B,$EF,$CD,$1B,$77,$BE,$9B,$1B,$BE,$A4,$EF,$E6,$80,$CB
 	db $E9,$BB,$F9,$E3,$53,$FA,$6A,$8F,$2F,$80,$49,$DC,$7B,$EF,$CD,$1B
 	db $77,$BE,$9B,$4B,$5E,$A5,$EF,$E6,$92,$9F,$E9,$BB,$F9,$E3,$62,$FA
 	db $6A
 SeasonTeamStatsPage:				; the Season Team Stats text page (SeasonTeamStats)
-	db $10,$00,$00,$01,$E2,$4A,$02,$00,$1F,$56,$19,$80,$FF,$FF,$08
-	db $00,$2E,$56,$09,$00,$3D,$56,$0B,$00,$4C,$56,$0D,$00,$62,$56,$0F
-	db $00,$6B,$56,$11,$00,$76,$56,$13,$00,$83,$56,$15,$00,$00,$00,$8F
-	db $83,$E1,$BF,$B9,$E4,$16,$4D,$71,$36,$9F,$9C,$00,$26,$35,$96,$A3
-	db $26,$BD,$F9,$E2,$4E,$4A,$22,$BD,$F9,$E4,$88,$48,$0D,$86,$3B,$B0
-	db $E4,$E6,$92,$0B,$17,$C9,$D8,$1C,$F0,$6A,$7C,$35,$86,$3B,$B0,$E4
+	dw $0010,$0100,TxtSeasonTeamStats&$FFFF,$0002
+	dw TxtPadSwitchTeams&$FFFF,$8019
+	dw $FFFF,$0008
+	dw TxtWinsLossesTies&$FFFF,$0009
+	dw TxtGoalsScoredAvg&$FFFF,$000B
+	dw TxtGoalsAllowedAvg&$FFFF,$000D
+	dw TxtSavePct&$FFFF,$000F
+	dw TxtShootingPct&$FFFF,$0011
+	dw TxtShotsPerGame&$FFFF,$0013
+	dw TxtShotsAllowed&$FFFF,$0015
+	dw 0
+TxtPadSwitchTeams:					; the packed text "Pad? Switch Teams"
+	db $8F
+	db $83,$E1,$BF,$B9,$E4,$16,$4D,$71,$36,$9F,$9C,$00,$26,$35
+TxtWinsLossesTies:					; the packed text "Wins>Losses>Ties"
+	db $96,$A3
+	db $26,$BD,$F9,$E2,$4E,$4A,$22,$BD,$F9,$E4,$88,$48,$0D
+TxtGoalsScoredAvg:					; the packed text "Goals Scored Avg="
+	db $86,$3B,$B0
+	db $E4,$E6,$92,$0B,$17,$C9,$D8,$1C,$F0,$6A,$7C,$35
+TxtGoalsAllowedAvg:					; the packed text "Goals Allowed Avg="
+	db $86,$3B,$B0,$E4
 	db $E6,$80,$AF,$E5,$2C,$19,$9B,$03,$5E,$8D,$AF,$06
 TxtSave:							; the packed text "Save <"
 	db $92,$83,$4A,$B6
-	db $A7,$06,$92,$83,$4A,$36,$7F,$5C,$4C,$5F,$0D,$92,$1F,$E7,$26,$6A
-	db $66,$F3,$C7,$C5,$F4,$D5,$92,$1F,$37,$E5,$E6,$8F,$93,$B8,$B9,$E1
-	db $80,$11,$0D,$92,$1F,$37,$E5,$E6,$80,$AF,$E5,$2C,$19,$1A
+	db $A7,$06
+TxtSavePct:							; the packed text "Save Pct="
+	db $92,$83,$4A,$36,$7F,$5C,$4C,$5F,$0D
+TxtShootingPct:						; the packed text "Shooting Pct="
+	db $92,$1F,$E7,$26,$6A
+	db $66,$F3,$C7,$C5,$F4,$D5
+TxtShotsPerGame:					; the packed text "Shots Per Game"
+	db $92,$1F,$37,$E5,$E6,$8F,$93,$B8,$B9,$E1
+	db $80,$11,$0D
+TxtShotsAllowed:					; the packed text "Shots Allowed"
+	db $92,$1F,$37,$E5,$E6,$80,$AF,$E5,$2C,$19,$1A
 GamesTodayPage:						; the Games Today text page (GamesToday)
-	db $10,$00
-	db $00,$01,$C3,$4A,$02,$00,$0B,$4B,$1D,$80,$23,$4B,$1E,$80,$3E,$4B
-	db $1F,$80,$00,$00
+	dw $0010,$0100,TxtGamesToday&$FFFF,$0002
+	dw TxtBMarkGame&$FFFF,$801D
+	dw TxtPADChangeDay&$FFFF,$801E
+	dw TxtStartLeagueMenu&$FFFF,$801F
+	dw 0
 LeagueMenuPage:						; the League Menu text page (SeasonOptions)
-	db $10,$00,$00,$01,$A6,$4A,$02,$00,$17,$47,$19,$80
-	db $FF,$FF,$3C,$00,$B0,$4A,$06,$00,$B9,$4A,$09,$00,$C3,$4A,$0C,$00
-	db $CD,$4A,$0F,$00,$D9,$4A,$12,$00,$F1,$4A,$15,$00,$00,$00
+	dw $0010,$0100,TxtLeagueMenu&$FFFF,$0002
+	dw TxtXExitMenu&$FFFF,$8019
+	dw $FFFF,$003C
+	dw TxtPlayGames&$FFFF,$0006
+	dw TxtNHLStandings&$FFFF,$0009
+	dw TxtGamesToday&$FFFF,$000C
+	dw TxtLeagueLeaders&$FFFF,$000F
+	dw TxtTeamStats&$FFFF,$0012
+	dw TxtPlayerStats&$FFFF,$0015
+	dw 0
 GameSetupPage:						; the Game Setup text page (setoptions)
-	db $10,$00
-	db $F6,$00,$C0,$47,$02,$00,$D6,$47,$07,$C0,$00,$00
+	dw $0010,$00F6,TxtGameSetup&$FFFF,$0002
+	dw TxtVS&$FFFF,$C007
+	dw 0
 NameOkPage:							; the "is the player name ok" prompt (NameEntry)
-	db $00,$00,$00,$01
-	db $00,$00,$00,$00,$67,$49,$0C,$40,$51,$49,$0F,$40,$55,$49,$12,$40
-	db $00,$00
+	dw $0000,$0100,0,$0000
+	dw TxtIsThePlayerNameOk&$FFFF,$400C
+	dw TxtYes&$FFFF,$400F
+	dw TxtNo&$FFFF,$4012
+	dw 0
 TradePlayersPage:					; the Trade Players text page (DrawTradePage)
-	db $10,$00,$F0,$00,$38,$48,$02,$00,$FF,$FF,$20,$00,$34,$4F
-	db $17,$80,$84,$4A,$18,$80,$91,$4A,$19,$80,$FF,$FF,$9B,$00,$CF,$4C
-	db $17,$80,$00,$00
+	dw $0010,$00F0,TxtTradePlayers&$FFFF,$0002
+	dw $FFFF,$0020
+	dw TxtBSelectPlayer&$FFFF,$8017
+	dw TxtYSwitchTeams&$FFFF,$8018
+	dw TxtStartEvaluate&$FFFF,$8019
+	dw $FFFF,$009B
+	dw TxtXCancel&$FFFF,$8017
+	dw 0
 CreatePlayerPage:					; the Create Player text page (DrawNameEntry)
-	db $10,$00,$00,$01,$EE,$48,$02,$00,$FF,$FF,$0D,$00
-	db $F9,$48,$06,$00,$FF,$FF,$14,$00,$03,$49,$08,$00,$FF,$FF,$20,$00
-	db $29,$49,$16,$80,$34,$49,$17,$80,$3D,$49,$18,$80,$CF,$4C,$19,$80
-	db $46,$49,$1A,$80,$00,$00
+	dw $0010,$0100,TxtCreatePlayer&$FFFF,$0002
+	dw $FFFF,$000D
+	dw TxtFirstName&$FFFF,$0006
+	dw $FFFF,$0014
+	dw TxtLastName&$FFFF,$0008
+	dw $FFFF,$0020
+	dw TxtPadToALetter&$FFFF,$8016
+	dw TxtBToSelect&$FFFF,$8017
+	dw TxtYToGoBack&$FFFF,$8018
+	dw TxtXCancel&$FFFF,$8019
+	dw TxtStartWhenDone&$FFFF,$801A
+	dw 0
 PlayerInfoPage:						; Create Player's position, weight, number and hand prompts (AnswerNameOk)
-	db $18,$00,$4B,$00,$00,$00,$00,$00,$76,$49
-	db $08,$20,$7E,$49,$0B,$20,$A0,$49,$0E,$20,$9B,$49,$11,$20,$A6,$49
-	db $17,$80,$CF,$4C,$18,$80,$AF,$49,$19,$80,$00,$00,$18,$00,$A0,$00
-	db $00,$00,$00,$00,$F2,$49,$08,$80,$F7,$49,$09,$80,$10,$4A,$0A,$80
-	db $54,$4A,$0B,$80,$68,$4A,$0C,$80,$5E,$4A,$0D,$80,$71,$4A,$0E,$80
-	db $7A,$4A,$0F,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0,$A6,$49,$18,$80
-	db $AF,$49,$19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80,$00,$00,$18,$00
-	db $A0,$00,$00,$00,$00,$00,$F2,$49,$07,$80,$F7,$49,$08,$80,$FD,$49
-	db $09,$80,$04,$4A,$0A,$80,$10,$4A,$0B,$80,$1C,$4A,$0C,$80,$26,$4A
-	db $0D,$80,$2F,$4A,$0E,$80,$3A,$4A,$0F,$80,$45,$4A,$10,$80,$4D,$4A
-	db $11,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0,$A6,$49,$18,$80,$AF,$49
-	db $19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80,$00,$00
+	dw $0018,$004B,0,$0000
+	dw TxtPosition2&$FFFF,$2008
+	dw TxtWeight2&$FFFF,$200B
+	dw TxtNumber&$FFFF,$200E
+	dw TxtHand&$FFFF,$2011
+	dw TxtPadSelect&$FFFF,$8017
+	dw TxtXCancel&$FFFF,$8018
+	dw TxtStartDone&$FFFF,$8019
+	dw 0
+	db $18,$00,$A0,$00,$00,$00,$00,$00,$F2,$49,$08,$80,$F7,$49,$09,$80
+	db $10,$4A,$0A,$80,$54,$4A,$0B,$80,$68,$4A,$0C,$80,$5E,$4A,$0D,$80
+	db $71,$4A,$0E,$80,$7A,$4A,$0F,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0
+	db $A6,$49,$18,$80,$AF,$49,$19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80
+	db $00,$00,$18,$00,$A0,$00,$00,$00,$00,$00,$F2,$49,$07,$80,$F7,$49
+	db $08,$80,$FD,$49,$09,$80,$04,$4A,$0A,$80,$10,$4A,$0B,$80,$1C,$4A
+	db $0C,$80,$26,$4A,$0D,$80,$2F,$4A,$0E,$80,$3A,$4A,$0F,$80,$45,$4A
+	db $10,$80,$4D,$4A,$11,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0,$A6,$49
+	db $18,$80,$AF,$49,$19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80,$00,$00
 ControllerSetupPage:				; the Controller Setup text page (ControllerSetupScreen)
-	db $10,$00,$00,$01
-	db $C9,$47,$02,$00,$00,$00
+	dw $0010,$0100,TxtControllerSetup&$FFFF,$0002
+	dw 0
 PracPlayerValues:					; the Home / Visitor Players values: a count (6), then texts Zero ... Five
 	dw 6
 	dw TxtZero&$FFFF,TxtOne&$FFFF,TxtTwo&$FFFF,TxtThree&$FFFF,TxtFour&$FFFF,TxtFive&$FFFF
@@ -249,31 +370,81 @@ TeamCityNames:						; per team (A * 2): the address of its city name (packed tex
 	db $E5,$A0,$CF,$F5,$F4,$02,$E2,$F9,$11,$D3,$F4,$E1,$F2,$F3,$A0,$EF
 	db $E6,$A0,$F4,$E8,$E5,$A0,$C7,$E1,$ED,$E5,$0A,$C8,$E1,$F4,$A0,$D4
 	db $F2,$E9,$E3,$EB,$A1,$04,$C7,$EF,$E1,$EC,$0A,$C1,$F3,$F3,$E9,$F3
-	db $F4,$A0,$E2,$F9,$BA,$ED,$AC,$BD,$B7,$97,$4F,$AF,$06,$7B,$F7,$F8
-	db $F8,$74,$6E,$4E,$16,$11,$33,$BA,$86,$C4,$06,$71,$4A,$0D,$1C,$AC
-	db $B5,$23,$32,$67,$CA,$1D,$89,$24,$B1,$92,$A1,$01,$7C,$21,$41,$9A
-	db $24,$63,$07,$BC,$1B,$6A,$93,$B4,$E1,$34,$BC,$81,$89,$5C,$03,$6B
+	db $F4,$A0,$E2,$F9,$BA
+TxtCopyright01:						; line 1 of the copyright screen's text: "NHL   :95"
+	db $ED,$AC,$BD,$B7,$97,$4F,$AF,$06
+TxtCopyright02:						; line 2 of the copyright screen's text: "  1994 electronic arts"
+	db $7B,$F7,$F8
+	db $F8,$74,$6E,$4E,$16,$11,$33,$BA,$86,$C4,$06,$71,$4A,$0D
+TxtCopyright03:						; line 3 of the copyright screen's text: "all rights reserved"
+	db $1C,$AC
+	db $B5,$23,$32,$67,$CA,$1D,$89,$24,$B1,$92,$A1,$01
+TxtCopyright04:						; line 4 of the copyright screen's text: "licensed by nintendo"
+	db $7C,$21,$41,$9A
+	db $24,$63,$07,$BC,$1B,$6A,$93,$B4,$E1,$34
+TxtCopyright05:						; line 5 of the copyright screen's text: "national hockey league@ nhl@ the
+									; logo"
+	db $BC,$81,$89,$5C,$03,$6B
 	db $1F,$27,$14,$C1,$7B,$11,$60,$28,$F9,$D8,$ED,$AC,$8F,$3D,$0F,$D9
-	db $CB,$19,$A7,$01,$DC,$95,$3D,$0F,$D9,$ED,$AC,$0D,$DA,$D8,$F3,$90
-	db $2D,$27,$68,$8B,$E0,$2D,$E8,$DB,$20,$12,$0D,$3C,$12,$83,$E4,$24
-	db $91,$8C,$3D,$23,$18,$84,$81,$A8,$E4,$76,$65,$CF,$43,$34,$BC,$81
+	db $CB,$19,$A7,$01
+TxtCopyright06:						; line 6 of the copyright screen's text: "of the nhl and the stanley cup
+									; are"
+	db $DC,$95,$3D,$0F,$D9,$ED,$AC,$0D,$DA,$D8,$F3,$90
+	db $2D,$27,$68,$8B,$E0,$2D,$E8,$DB,$20,$12,$0D
+TxtCopyright07:						; line 7 of the copyright screen's text: "registered trademarks of the"
+	db $3C,$12,$83,$E4,$24
+	db $91,$8C,$3D,$23,$18,$84,$81,$A8,$E4,$76,$65,$CF,$43,$34
+TxtCopyright08:						; line 8 of the copyright screen's text: "national hockey league and are
+									; used"
+	db $BC,$81
 	db $89,$5C,$03,$6B,$1F,$27,$14,$C1,$7B,$11,$60,$28,$D9,$A0,$8D,$0D
-	db $22,$D9,$54,$92,$A1,$01,$9C,$B6,$41,$E2,$5E,$48,$90,$26,$C9,$0E
-	db $78,$93,$45,$C4,$8C,$AE,$21,$B1,$41,$9C,$D2,$57,$03,$BC,$9D,$F5
+	db $22,$D9,$54,$92,$A1,$01
+TxtCopyright09:						; line 9 of the copyright screen's text: "under license by electronic
+									; arts="
+	db $9C,$B6,$41,$E2,$5E,$48,$90,$26,$C9,$0E
+	db $78,$93,$45,$C4,$8C,$AE,$21,$B1,$41,$9C,$D2,$57,$03
+TxtCopyright10:						; line 10 of the copyright screen's text: "nhlpa@ national hockey league"
+	db $BC,$9D,$F5
 	db $C0,$C7,$6E,$60,$22,$D7,$C0,$DA,$C7,$09,$45,$F0,$5E,$04,$18,$4A
-	db $34,$FC,$2D,$80,$49,$94,$5E,$1B,$48,$E9,$04,$02,$13,$B9,$B6,$41
-	db $1B,$7B,$1E,$B2,$97,$33,$6E,$BB,$A2,$01,$BC,$9D,$F5,$C0,$06,$91
-	db $EC,$19,$C1,$20,$0C,$44,$25,$B7,$2B,$7B,$1E,$A2,$01,$BC,$9D,$F5
+	db $34
+TxtCopyright11:						; line 11 of the copyright screen's text: "players: association and the
+									; logo of"
+	db $FC,$2D,$80,$49,$94,$5E,$1B,$48,$E9,$04,$02,$13,$B9,$B6,$41
+	db $1B,$7B,$1E,$B2,$97,$33,$6E,$BB,$A2,$01
+TxtCopyright12:						; line 12 of the copyright screen's text: "nhlpa are trademarks of the"
+	db $BC,$9D,$F5,$C0,$06,$91
+	db $EC,$19,$C1,$20,$0C,$44,$25,$B7,$2B,$7B,$1E,$A2,$01
+TxtCopyright13:						; line 13 of the copyright screen's text: "nhlpa and are used under
+									; license"
+	db $BC,$9D,$F5
 	db $C0,$06,$6D,$6C,$10,$C9,$A6,$92,$8C,$4D,$DB,$20,$71,$2F,$24,$48
-	db $93,$44,$03,$3C,$E0,$4D,$16,$11,$33,$BA,$86,$C4,$06,$71,$4A,$5F
-	db $0D,$7C,$12,$C0,$76,$03,$8C,$C8,$0D,$DA,$D8,$CB,$19,$27,$F7,$20
-	db $0F,$89,$49,$C6,$06,$91,$68,$DC,$95,$82,$04,$02,$6B,$E1,$BD,$90
+	db $93,$44,$03
+TxtCopyright14:						; line 14 of the copyright screen's text: "by electronic arts="
+	db $3C,$E0,$4D,$16,$11,$33,$BA,$86,$C4,$06,$71,$4A,$5F
+	db $0D
+TxtCopyright15:						; line 15 of the copyright screen's text: "team names and logos depicted
+									; are"
+	db $7C,$12,$C0,$76,$03,$8C,$C8,$0D,$DA,$D8,$CB,$19,$27,$F7,$20
+	db $0F,$89,$49,$C6,$06,$91,$68
+TxtCopyright16:						; line 16 of the copyright screen's text: "officially licensed trademarks
+									; of the"
+	db $DC,$95,$82,$04,$02,$6B,$E1,$BD,$90
 	db $20,$4D,$92,$B1,$67,$04,$83,$30,$10,$95,$DC,$AE,$EC,$79,$88,$06
+TxtCopyright17:						; line 17 of the copyright screen's text: "national hockey league=    NHL
+									; 1994="
 	db $BC,$81,$89,$5C,$03,$6B,$1F,$27,$14,$C1,$7B,$11,$60,$28,$F1,$DD
-	db $7B,$6F,$DE,$CE,$DA,$3D,$3E,$3E,$9D,$BE,$1A,$DC,$95,$82,$04,$02
+	db $7B,$6F,$DE,$CE,$DA,$3D,$3E,$3E,$9D,$BE,$1A
+TxtCopyright18:						; line 18 of the copyright screen's text: "officially licensed product of
+									; the"
+	db $DC,$95,$82,$04,$02
 	db $6B,$E1,$BD,$90,$20,$4D,$92,$B1,$5F,$74,$83,$8A,$B9,$5D,$D9,$F3
-	db $10,$0D,$BC,$81,$89,$5C,$03,$6B,$1F,$27,$14,$C1,$7B,$11,$60,$28
-	db $D9,$6F,$01,$4C,$A2,$F4,$D2,$1C,$48,$E9,$04,$02,$13,$B9,$E6,$AB
+	db $10,$0D
+TxtCopyright19:						; line 19 of the copyright screen's text: "national hockey league
+									; players:"
+	db $BC,$81,$89,$5C,$03,$6B,$1F,$27,$14,$C1,$7B,$11,$60,$28
+	db $D9,$6F,$01,$4C,$A2,$F4,$D2
+TxtCopyright20:						; line 20 of the copyright screen's text: "association="
+	db $1C,$48,$E9,$04,$02,$13,$B9,$E6,$AB
 	db $01
 ExhibitionOptions:					; the Exhibition setup lines: a count, then per line its title text, value
 									; list, variable and routine

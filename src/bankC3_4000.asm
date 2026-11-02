@@ -58,9 +58,15 @@ Penaltylist:						; per penalty number, the offset (from here) of its record: tw
 	db $A0,$FF,$FE
 TxtPleaseWait:						; the packed text "Please Wait==="
 	db $8F,$2F,$02,$24,$D9,$DC,$72,$80,$A6,$AF,$AF,$AF,$06
-	db $88,$CB,$05,$DA,$20,$51,$6A,$91,$83,$66,$48,$94,$1A,$8F,$83,$B1
-	db $39,$F5,$1E,$FE,$5B,$F0,$03,$9A,$21,$9B,$2F,$8E,$1A,$D1,$8F,$83
-	db $B1,$F9,$F2,$8E,$FE,$5B,$F0,$03,$9A,$21,$9B,$4B,$3E,$C1,$D4,$8F
+	db $88,$CB,$05,$DA,$20,$51,$6A,$91,$83,$66,$48,$94,$1A
+TxtPadUDChangeLine:					; the packed text "Pad U>D? Change Line"
+	db $8F,$83,$B1
+	db $39,$F5,$1E,$FE,$5B,$F0,$03,$9A,$21,$9B,$2F,$8E,$1A,$D1
+TxtPadLRChangeStat:					; the packed text "Pad L>R? Change Stat"
+	db $8F,$83
+	db $B1,$F9,$F2,$8E,$FE,$5B,$F0,$03,$9A,$21,$9B,$4B,$3E,$C1,$D4
+TxtPadUDChangeDivision:				; the packed text "Pad U>D? Change Division"
+	db $8F
 	db $83,$B1,$39,$F5,$1E,$FE,$5B,$F0,$03,$9A,$21,$9B,$0F,$8E,$2A,$92
 	db $C8,$35,$0D,$96,$13,$39,$49,$6C,$DE,$FC,$71,$20,$50,$41,$42,$03
 	db $96,$13,$39,$49,$6C,$DE,$5C,$70,$D2,$66,$04,$4B,$03,$84,$03,$39
@@ -106,8 +112,14 @@ TxtOkay:							; the packed text "Okay"
 	db $8E,$2B,$80,$35
 TxtPlayMode:						; the packed text "Play Mode"
 	db $8F,$2F,$80,$37,$67,$DC,$0D,$A2
-	db $01,$86,$03,$46,$36,$97,$9C,$4C,$FA,$34,$82,$BB,$36,$A3,$5B,$8B
-	db $C4,$CD,$25,$27,$93,$3E,$0D,$55,$FA,$6A
+	db $01
+TxtGameSetup:						; the packed text "Game Setup"
+	db $86,$03,$46,$36,$97,$9C,$4C,$FA,$34
+TxtControllerSetup:					; the packed text "Controller Setup"
+	db $82,$BB,$36,$A3,$5B,$8B
+	db $C4,$CD,$25,$27,$93,$3E,$0D
+TxtVS:								; the packed text "VS="
+	db $55,$FA,$6A
 TxtHomeTeam:						; the packed text "Home Team"
 	db $87,$3B,$46,$36,$9F,$9C
 	db $00,$A6,$01
@@ -135,7 +147,9 @@ TxtSeason:							; the packed text "Season"
 	db $92
 	db $13,$20,$5D,$D3
 TxtTrades:							; the packed text "Trades"
-	db $93,$47,$30,$88,$D4,$93,$47,$30,$C8,$E6,$8F,$2F
+	db $93,$47,$30,$88,$D4
+TxtTradePlayers:					; the packed text "Trade Players"
+	db $93,$47,$30,$C8,$E6,$8F,$2F
 	db $80,$49,$94,$1A
 TxtFreeAgent:						; the packed text "Free Agent"
 	db $85,$47,$42,$36,$07,$DC,$90,$36,$35,$BC,$44,$42
@@ -193,9 +207,15 @@ TxtTeam2:							; the packed text "Team 2"
 TxtTeam:							; the packed text "Team"
 	db $93,$13,$C0,$34
 TxtMakePlayer:						; the packed text "Make Player"
-	db $8C,$03,$45,$36,$7F,$7C,$01,$4C,$A2,$06,$82
-	db $47,$02,$26,$D9,$FC,$F1,$05,$30,$89,$1A,$85,$A3,$28,$E7,$E6,$8D
-	db $03,$46,$FC,$35,$8B,$03,$39,$37,$6F,$1C,$30,$E2,$AF,$01
+	db $8C,$03,$45,$36,$7F,$7C,$01,$4C,$A2,$06
+TxtCreatePlayer:					; the packed text "Create Player"
+	db $82
+	db $47,$02,$26,$D9,$FC,$F1,$05,$30,$89,$1A
+TxtFirstName:						; the packed text "First Name?"
+	db $85,$A3,$28,$E7,$E6,$8D
+	db $03,$46,$FC,$35
+TxtLastName:						; the packed text "Last Name?"
+	db $8B,$03,$39,$37,$6F,$1C,$30,$E2,$AF,$01
 TxtAbcdefghi:						; the packed text "ABCDEFGHI"
 	db $20,$88
 	db $41,$8A,$39,$48,$03
@@ -205,15 +225,40 @@ TxtStuvwxyz:						; the packed text "STUVWXYZ="
 	db $72,$D2,$6A,$2F
 	db $CE,$BE,$1A
 TxtStuvwxyz2:						; the packed text "STUVWXYZ>"
-	db $72,$D2,$6A,$2F,$CE,$DE,$1A,$FC,$81,$B1,$A7,$DB,$60
-	db $2F,$32,$27,$89,$1A,$3C,$EC,$E9,$B6,$24,$8B,$88,$A9,$01,$1C,$EF
-	db $E9,$B6,$71,$3B,$00,$A1,$34,$5C,$4E,$10,$E7,$B6,$87,$B4,$3D,$5C
-	db $23,$1A,$98,$13,$A9,$01,$8D,$3B,$0D,$84,$47,$20,$C9,$E6,$93,$13
-	db $C0,$36,$8F,$DC,$C9,$49,$A2,$D4,$88,$CB,$3D,$0F,$D9,$6F,$01,$4C
-	db $E2,$6E,$80,$91,$ED,$94,$06,$8F,$3B,$89,$26,$72,$CD,$5F,$03,$96
+	db $72,$D2,$6A,$2F,$CE,$DE,$1A
+TxtPadToALetter:					; the packed text "pad to a letter"
+	db $FC,$81,$B1,$A7,$DB,$60
+	db $2F,$32,$27,$89,$1A
+TxtBToSelect:						; the packed text "b to select"
+	db $3C,$EC,$E9,$B6,$24,$8B,$88,$A9,$01
+TxtYToGoBack:						; the packed text "y to go back"
+	db $1C,$EF
+	db $E9,$B6,$71,$3B,$00,$A1,$34
+TxtStartWhenDone:					; the packed text "start when done"
+	db $5C,$4E,$10,$E7,$B6,$87,$B4,$3D,$5C
+	db $23,$1A
+TxtYes:								; the packed text "Yes"
+	db $98,$13,$A9,$01
+TxtNo:								; the packed text "No"
+	db $8D,$3B,$0D,$84,$47,$20,$C9,$E6,$93,$13
+	db $C0,$36,$8F,$DC,$C9,$49,$A2,$D4
+TxtIsThePlayerNameOk:				; the packed text "Is the player name ok"
+	db $88,$CB,$3D,$0F,$D9,$6F,$01,$4C
+	db $E2,$6E,$80,$91,$ED,$94,$06
+TxtPosition2:						; the packed text "Position?"
+	db $8F,$3B,$89,$26,$72,$CD,$5F,$03
+TxtWeight2:							; the packed text "Weight?"
+	db $96
 	db $13,$64,$CE,$F4,$D7,$8E,$57,$12,$C1,$5A,$3B,$82,$89,$9A,$F1,$D7
-	db $94,$37,$2A,$C9,$D8,$FC,$71,$87,$DA,$94,$FE,$1A,$87,$83,$36,$FC
-	db $35,$8D,$53,$16,$48,$F4,$D7,$FC,$81,$E1,$BF,$25,$59,$44,$4C,$0D
+	db $94,$37,$2A,$C9,$D8,$FC,$71,$87,$DA,$94,$FE,$1A
+TxtHand:							; the packed text "Hand?"
+	db $87,$83,$36,$FC
+	db $35
+TxtNumber:							; the packed text "Number?"
+	db $8D,$53,$16,$48,$F4,$D7
+TxtPadSelect:						; the packed text "pad? select"
+	db $FC,$81,$E1,$BF,$25,$59,$44,$4C,$0D
+TxtStartDone:						; the packed text "start? done"
 	db $5C,$4E,$10,$A7,$FF,$1E,$AE,$11,$0D
 TxtGoalie:							; the packed text "Goalie"
 	db $86,$3B,$B0,$10,$D1
@@ -274,22 +319,54 @@ TxtGloveLeft:						; the packed text "Glove Left"
 	db $86,$2F,$57,$C9,$E6,$8B,$93,$32,$35
 TxtGloveRight:						; the packed text "Glove Right"
 	db $86,$2F,$57,$C9,$E6
-	db $91,$23,$73,$A6,$06,$D8,$7F,$4B,$6E,$D1,$14,$67,$F3,$C9,$09,$60
-	db $52,$03,$72,$82,$38,$FD,$37,$E1,$15,$2C,$0A,$26,$D1,$8F,$3B,$E9
-	db $AB,$01,$91,$4F,$E3,$AB,$01,$8B,$13,$60,$28,$D9,$9C,$71,$D2,$A8
-	db $06,$8F,$2F,$80,$37,$37,$1C,$30,$22,$35,$ED,$AC,$2D,$F9,$04,$6D
-	db $A0,$66,$A4,$06,$86,$03,$46,$E4,$E6,$93,$BB,$01,$B0,$06,$8B,$13
-	db $60,$28,$D9,$7C,$71,$02,$06,$89,$52,$03,$93,$13,$C0,$36,$97,$7C
-	db $82,$29,$35,$92,$13,$20,$5D,$DB,$7C,$72,$02,$D8,$E6,$92,$4F,$30
-	db $A5,$06,$8F,$2F,$80,$49,$DC,$5C,$F2,$09,$A6,$D4,$92,$13,$20,$5D
-	db $DB,$FC,$F1,$05,$30,$89,$9B,$4B,$3E,$C1,$94,$1A,$C1,$7F,$33,$0E
+	db $91,$23,$73,$A6,$06
+TxtYSwitchTeams:					; the packed text "Y? Switch Teams"
+	db $D8,$7F,$4B,$6E,$D1,$14,$67,$F3,$C9,$09,$60
+	db $52,$03
+TxtStartEvaluate:					; the packed text "START? Evaluate"
+	db $72,$82,$38,$FD,$37,$E1,$15,$2C,$0A,$26,$D1,$8F,$3B,$E9
+	db $AB,$01,$91,$4F,$E3,$AB,$01
+TxtLeagueMenu:						; the packed text "League Menu"
+	db $8B,$13,$60,$28,$D9,$9C,$71,$D2,$A8
+	db $06
+TxtPlayGames:						; the packed text "Play Games"
+	db $8F,$2F,$80,$37,$37,$1C,$30,$22,$35
+TxtNHLStandings:					; the packed text "NHL Standings"
+	db $ED,$AC,$2D,$F9,$04,$6D
+	db $A0,$66,$A4,$06
+TxtGamesToday:						; the packed text "Games Today"
+	db $86,$03,$46,$E4,$E6,$93,$BB,$01,$B0,$06
+TxtLeagueLeaders:					; the packed text "League Leaders"
+	db $8B,$13
+	db $60,$28,$D9,$7C,$71,$02,$06,$89,$52,$03
+TxtTeamStats:						; the packed text "Team Stats"
+	db $93,$13,$C0,$36,$97,$7C
+	db $82,$29,$35
+TxtSeasonTeamStats:					; the packed text "Season Team Stats"
+	db $92,$13,$20,$5D,$DB,$7C,$72,$02,$D8,$E6,$92,$4F,$30
+	db $A5,$06
+TxtPlayerStats:						; the packed text "Player Stats"
+	db $8F,$2F,$80,$49,$DC,$5C,$F2,$09,$A6,$D4
+TxtSeasonPlayerStats:				; the packed text "Season Player Stats"
+	db $92,$13,$20,$5D
+	db $DB,$FC,$F1,$05,$30,$89,$9B,$4B,$3E,$C1,$94,$1A
+TxtBMarkGame:						; the packed text "B? Mark Game"
+	db $C1,$7F,$33,$0E
 	db $A2,$DA,$DC,$70,$C0,$88,$06,$C1,$7F,$4B,$6E,$D1,$14,$67,$F3,$C9
-	db $09,$60,$52,$03,$0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$07,$07,$58
-	db $03,$0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$25,$9F,$60,$4A,$0D,$72
+	db $09,$60,$52,$03
+TxtPADChangeDay:					; the packed text "PAD? Change Day"
+	db $0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$07,$07,$58
+	db $03
+TxtPADChangeStats:					; the packed text "PAD? Change Stats"
+	db $0F,$0C,$FF,$2D,$F8,$01,$CD,$90,$CD,$25,$9F,$60,$4A,$0D
+TxtStartLeagueMenu:					; the packed text "START? League Menu"
+	db $72
 	db $82,$38,$FD,$F7,$E2,$04,$18,$4A,$36,$67,$9C,$34,$AA,$01
 TxtNoOffsides:						; the packed text "No Offsides"
 	db $8D,$BB
-	db $CD,$1D,$2F,$45,$A2,$41,$A4,$06,$8F,$2F,$80,$49,$DC,$7B,$EF,$BD
+	db $CD,$1D,$2F,$45,$A2,$41,$A4,$06
+TxtPlayerNoTm:						; the packed text "Player         No= Tm="
+	db $8F,$2F,$80,$49,$DC,$7B,$EF,$BD
 	db $F7,$DE,$BC,$71,$E7,$BB,$F9,$E4,$CC,$57,$03
 TxtGoals:							; the packed text "Goals"
 	db $86,$3B,$B0,$A4,$06
@@ -319,7 +396,9 @@ TxtNoPenalties:						; the packed text "No Penalties"
 	db $CD,$1F,$27,$0D,$AC,$89,$88,$D4,$92,$0B,$17,$51,$33,$9B,$4B,$4E
 	db $19,$03,$11,$6B
 TxtNoScoring:						; the packed text "No Scoring"
-	db $8D,$BB,$CD,$25,$17,$2E,$A2,$66,$34,$93,$13,$C0
+	db $8D,$BB,$CD,$25,$17,$2E,$A2,$66,$34
+TxtTeamRoster:						; the packed text "Team Roster"
+	db $93,$13,$C0
 	db $36,$8F,$DC,$C9,$49,$A2,$06
 TxtIce:								; the packed text "Ice"
 	db $88,$0B,$A2,$01
@@ -333,17 +412,28 @@ TxtGloveHand:						; the packed text "Glove Hand"
 	db $86,$2F,$57,$C9
 	db $E6,$87,$83,$36,$34
 TxtBestLine:						; the packed text "Best Line"
-	db $81,$13,$39,$37,$5F,$1C,$35,$A2,$01,$84,$0F
+	db $81,$13,$39,$37,$5F,$1C,$35,$A2,$01
+TxtEditLines:						; the packed text "Edit Lines"
+	db $84,$0F
 	db $34,$37,$5F,$1C,$35,$22,$35
 TxtNone:							; the packed text "None"
-	db $8D,$BB,$46,$34,$82,$1F,$D0,$0C,$D9
+	db $8D,$BB,$46,$34
+TxtChangeGoalie:					; the packed text "Change Goalie"
+	db $82,$1F,$D0,$0C,$D9
 	db $DC,$70,$07,$16,$22,$1A
 TxtOtherScores:						; the packed text "Other Scores"
 	db $8E,$CF,$43,$E2,$E6,$92,$0B,$17,$89,$D4
 TxtScoutingReport:					; the packed text "Scouting Report"
-	db $92,$0B,$47,$27,$6A,$66,$F3,$C8,$C9,$73,$71,$6A,$87,$A3,$48,$36
-	db $2F,$3C,$12,$B2,$39,$E0,$86,$B4,$29,$35,$91,$93,$45,$80,$24,$9B
-	db $3F,$BE,$00,$26,$51,$6A,$92,$4F,$10,$A7,$FF,$E6,$87,$A3,$48,$34
+	db $92,$0B,$47,$27,$6A,$66,$F3,$C8,$C9,$73,$71,$6A
+TxtHireFreeAgents:					; the packed text "Hire Free Agents"
+	db $87,$A3,$48,$36
+	db $2F,$3C,$12,$B2,$39,$E0,$86,$B4,$29,$35
+TxtReleasePlayers:					; the packed text "Release Players"
+	db $91,$93,$45,$80,$24,$9B
+	db $3F,$BE,$00,$26,$51,$6A
+TxtStartHire:						; the packed text "Start? Hire"
+	db $92,$4F,$10,$A7,$FF,$E6,$87,$A3,$48,$34
+TxtXCancel:							; the packed text "X? Cancel"
 	db $D7,$7F,$0B,$0E,$9A,$20,$4B,$03
 TxtPosition:						; the packed text "Position"
 	db $8F,$3B,$89,$26,$72,$4D,$03
@@ -356,15 +446,30 @@ TxtNoFreeAgents:					; the packed text "No Free Agents"
 TxtDefense:							; the packed text "Defense"
 	db $83,$93,$42,$9A,$24,$1A
 TxtForward:							; the packed text "Forward"
-	db $85,$BB,$68,$41,$1C,$1A,$86,$3B,$B0
-	db $10,$91,$FE,$1A,$83,$93,$42,$9A,$24,$8C,$34,$7F,$0D,$85,$BB,$68
-	db $41,$1C,$D2,$5F,$03,$93,$BB,$09,$96,$BF,$06,$92,$4F,$10,$A7,$FF
-	db $E6,$91,$93,$45,$80,$24,$1A,$92,$4F,$10,$A7,$FF,$E6,$82,$BB,$36
-	db $51,$A3,$44,$03,$84,$57,$B0,$28,$98,$64,$F3,$C9,$23,$18,$44,$03
+	db $85,$BB,$68,$41,$1C,$1A
+TxtGoalies2:						; the packed text "Goalies?"
+	db $86,$3B,$B0
+	db $10,$91,$FE,$1A
+TxtDefensemen:						; the packed text "Defensemen?"
+	db $83,$93,$42,$9A,$24,$8C,$34,$7F,$0D
+TxtForwards:						; the packed text "Forwards?"
+	db $85,$BB,$68
+	db $41,$1C,$D2,$5F,$03
+TxtTotal2:							; the packed text "Total?"
+	db $93,$BB,$09,$96,$BF,$06
+TxtStartRelease:					; the packed text "Start? Release"
+	db $92,$4F,$10,$A7,$FF
+	db $E6,$91,$93,$45,$80,$24,$1A
+TxtStartContinue:					; the packed text "Start? Continue"
+	db $92,$4F,$10,$A7,$FF,$E6,$82,$BB,$36
+	db $51,$A3,$44,$03
+TxtEvaluateTrade:					; the packed text "Evaluate Trade"
+	db $84,$57,$B0,$28,$98,$64,$F3,$C9,$23,$18,$44,$03
 TxtNoSelections:					; the packed text "No Selections"
 	db $8D,$BB,$CD,$25,$27,$8B,$88,$89,$5C,$93,$1A
 TxtEtc:								; the packed text "Etc="
 	db $84,$4F,$E1,$AB,$01
+TxtFor:								; the packed text "For"
 	db $85,$BB,$A8,$01
 TxtAccepted:						; the packed text "Accepted"
 	db $80,$0B,$41,$DE,$24,$43,$03
@@ -372,9 +477,17 @@ TxtRejected:						; the packed text "Rejected"
 	db $91,$93,$44,$C4,$24
 	db $43,$03
 TxtAdvantage:						; the packed text "Advantage?"
-	db $80,$8F,$0A,$DA,$04,$86,$F8,$6B,$92,$13,$20,$5D,$DB,$1C
-	db $70,$0B,$E2,$90,$1A,$8F,$83,$E1,$BF,$B9,$E0,$07,$34,$43,$36,$07
-	db $DC,$82,$38,$34,$8D,$03,$46,$36,$27,$BC,$CD,$88,$35,$91,$13,$E1
+	db $80,$8F,$0A,$DA,$04,$86,$F8,$6B
+TxtSeasonAwards:					; the packed text "Season Awards"
+	db $92,$13,$20,$5D,$DB,$1C
+	db $70,$0B,$E2,$90,$1A
+TxtPadChangeAward:					; the packed text "Pad? Change Award"
+	db $8F,$83,$E1,$BF,$B9,$E0,$07,$34,$43,$36,$07
+	db $DC,$82,$38,$34
+TxtNameEntry:						; the packed text "Name Entry"
+	db $8D,$03,$46,$36,$27,$BC,$CD,$88,$35
+TxtRecordHolders:					; the packed text "Record Holders"
+	db $91,$13,$E1
 	db $E2,$D8,$FC,$70,$B7,$06,$89,$52,$03
 TxtNoRecordHolders:					; the packed text "no record holders"
 	db $BC,$B9,$1D,$89,$70,$71,$EC
@@ -439,9 +552,15 @@ TxtBPlayers:						; the packed text "b? players"
 	db $F8,$EF,$B7,$00,$26,$51,$6A
 TxtPadLRChangeLine:					; the packed text "pad l>r? change line"
 	db $FC,$81,$B1,$97,$77,$F4,$DF,$E2,$80
-	db $66,$C8,$5E,$A8,$11,$0D,$FC,$81,$B1,$A9,$F7,$F0,$DF,$E2,$80,$66
-	db $C8,$7E,$0B,$60,$12,$35,$FC,$81,$B1,$97,$77,$F4,$DF,$E2,$80,$66
-	db $C8,$96,$13,$4C,$0D,$3C,$F8,$6F,$49,$16,$11,$73,$BF,$05,$30,$89
+	db $66,$C8,$5E,$A8,$11,$0D
+TxtPadUDChangePlayer:				; the packed text "pad u>d? change player"
+	db $FC,$81,$B1,$A9,$F7,$F0,$DF,$E2,$80,$66
+	db $C8,$7E,$0B,$60,$12,$35
+TxtPadLRChangeStat2:				; the packed text "pad l>r? change stat"
+	db $FC,$81,$B1,$97,$77,$F4,$DF,$E2,$80,$66
+	db $C8,$96,$13,$4C,$0D
+TxtBSelectPlayer:					; the packed text "b? select player"
+	db $3C,$F8,$6F,$49,$16,$11,$73,$BF,$05,$30,$89
 	db $1A
 TxtBEditName:						; the packed text "b? edit name"
 	db $3C,$F8,$6F,$32,$D0,$DC,$0D,$30,$A2,$01
