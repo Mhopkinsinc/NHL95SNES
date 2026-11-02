@@ -8,7 +8,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	adc.w #$000F
 	bmi .1
 	sta.w CwdExciteLvl
-.1:									; if a2 >= $0018 go to .rtl, if SPA,y = $2708 go to .rtl, ...
+.1:									; if a2 >= $0018 go to .rtl, if SPA,y = SPAinjury1&$FFFF go to .rtl, ...
 	ldy.b a2
 	cpy.w #$0018
 	bcs .rtl
@@ -107,7 +107,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,y
 	bit.w #$0800
 	bne .14
-.11:								; A = $29EA, go to .15
+.11:								; A = SPAboardright&$FFFF, go to .15
 	lda.w #SPAboardright&$FFFF
 	bra .15
 .12:								; if Ypos,y - $00F0 >= 0 go to .8, if Ypos,y - $FF0A < 0 go to .8, ...
@@ -133,7 +133,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,y
 	bit.w #$0800
 	bne .11
-.14:								; A = $2A64
+.14:								; A = SPAboardleft&$FFFF
 	lda.w #SPAboardleft&$FFFF
 .15:								; X = a2, pfalock,x = A, call SetSPAUpdate, A = CwdExciteLvl, ...
 	ldx.b a2
@@ -177,7 +177,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Yvel,y
-.20:								; A = $28F6, go to .15
+.20:								; A = SPAboardfront&$FFFF, go to .15
 	lda.w #SPAboardfront&$FFFF
 	bra .15
 .21:								; if Xpos,y - $0050 >= 0 go to .23, if Xpos,y - $FFB0 < 0 go to .23, ...
@@ -195,7 +195,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Yvel,y
-.22:								; A = $2970, go to .15
+.22:								; A = SPAboardback&$FFFF, go to .15
 	lda.w #SPAboardback&$FFFF
 	jmp.w .15
 .23:								; go to .39
@@ -297,7 +297,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w pfteam,y
 	beq .30
 	lda.w #$0002
-.30:								; A + $0006, call StartBenchCheer, X = a2, pfalock,x = $2708, ...
+.30:								; A + $0006, call StartBenchCheer, X = a2, ...
 	clc
 	adc.w #$0006
 	jsl.l StartBenchCheer
@@ -341,7 +341,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.b d0
 	jsl.l AddPenalty2
 	jmp.w Stop4Pen
-.34:								; Y = a2, if SPA,y = $25D2 go to .35, puckc = $FFFF
+.34:								; Y = a2, if SPA,y = SPAstumble&$FFFF go to .35, puckc = $FFFF
 	ldy.b a2
 	lda.w SPA,y
 	cmp.w #SPAstumble&$FFFF
@@ -567,7 +567,7 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	cmp.w #SPAsweepchk&$FFFF
 	bne .1
 	jmp.w Bcheck
-.1:									; if SPA,x is not $21BC go to CheckContactReturn, if gmclock = 0 go to .2,
+.1:									; if SPA,x is not SPAburst&$FFFF go to CheckContactReturn, ...
 									; ...
 	lda.w SPA,x
 	cmp.w #SPAburst&$FFFF
@@ -721,7 +721,7 @@ check4check:						; called from other segments
 	cpx.w #$000C
 	bcs .loop
 	ldy.w #$000C
-.loop:								; loop: a0 = Y, if position,y = 0 go to .4, if SPA,y < $2280 go to .3, ...
+.loop:								; loop: a0 = Y, if position,y = 0 go to .4, ...
 	sty.b a0
 	lda.w position,y
 	beq .4
@@ -774,7 +774,7 @@ check4check:						; called from other segments
 	bmi .10
 	cmp.w #$010E
 	bpl .10
-.6:									; if SPA,y < $2280 go to .7, if SPA,y < $2345 go to .11
+.6:									; if SPA,y < SPAHold2&$FFFF go to .7, if SPA,y < $2345 go to .11
 	lda.w SPA,y
 	cmp.w #SPAHold2&$FFFF
 	bcc .7
@@ -1125,7 +1125,7 @@ dostop:								; called from other segments
 	bmi .1
 	cmp.w #$2001
 	bmi stopna
-.1:									; A = $1958, if pfrev,x is not 0 go to .3, if X is not puckc go to .2, ...
+.1:									; A = SPAglide&$FFFF, if pfrev,x is not 0 go to .3, ...
 	lda.w #SPAglide&$FFFF
 	ldy.w pfrev,x
 	bne .3
@@ -1137,7 +1137,7 @@ dostop:								; called from other segments
 	sta.b $3A
 	lda.w #$000F
 	jsl.l StartSound
-.2:									; A = $1AEE, pf2aip,x = 0
+.2:									; A = SPAstop&$FFFF, pf2aip,x = 0
 	lda.w #SPAstop&$FFFF
 	stz.w pf2aip,x
 .3:									; call SetSPAFromA

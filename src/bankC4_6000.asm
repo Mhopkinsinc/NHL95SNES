@@ -1222,7 +1222,7 @@ doplayeracc:						; from skatetopuck and other segments
 	lda.w position,x
 	bne .1
 	jmp.w goalieacc
-.1:									; if SPA,x = $2082 go to .rtl, d1 = $1958, if pfrev,x = 0 go to .2, ...
+.1:									; if SPA,x = SPAsweepchk&$FFFF go to .rtl, d1 = SPAglide&$FFFF, ...
 	lda.w SPA,x
 	cmp.w #SPAsweepchk&$FFFF
 	beq .rtl
@@ -1424,7 +1424,7 @@ doplayeracc:						; from skatetopuck and other segments
 	bpl .16
 	lda.w #SPAskatewp&$FFFF
 	sta.b d1
-.16:								; A = attribute,x, if $0800 bits clear go to .17, d1 = $198A
+.16:								; A = attribute,x, if $0800 bits clear go to .17, d1 = SPAskatewp&$FFFF
 	lda.w attribute,x
 	bit.w #$0800
 	beq .17
@@ -1481,7 +1481,7 @@ noturn0:							; from doplayeracc
 	beq .3
 	dec.w facedir,x
 	dec.w facedir,x
-.3:									; A = facedir,x, A and $0007, facedir,x = A, d1 = $1958, ...
+.3:									; A = facedir,x, A and $0007, facedir,x = A, d1 = SPAglide&$FFFF, ...
 	lda.w facedir,x
 	and.w #$0007
 	sta.w facedir,x
@@ -1490,11 +1490,11 @@ noturn0:							; from doplayeracc
 	lda.w pfrev,x
 	bne .4
 	jmp.w SetSPA
-.4:									; Y = $0001, A = $1F6C, go to SetSPAFromA
+.4:									; Y = $0001, A = SPAglideback&$FFFF, go to SetSPAFromA
 	ldy.w #$0001
 	lda.w #SPAglideback&$FFFF
 	jml.l SetSPAFromA
-.5:									; Y = $0001, d1 = $1F9E, if pfrev,x is not 0 go to .7, Y = $0000, ...
+.5:									; Y = $0001, d1 = SPAskateback&$FFFF, if pfrev,x is not 0 go to .7, ...
 	ldy.w #$0001
 	lda.w #SPAskateback&$FFFF
 	sta.b d1
@@ -1509,7 +1509,7 @@ noturn0:							; from doplayeracc
 	ldy.w #$0001
 	lda.w #SPAstumble&$FFFF
 	sta.b d1
-.6:									; if X is not puckc go to .7, Y = $0000, d1 = $198A
+.6:									; if X is not puckc go to .7, Y = $0000, d1 = SPAskatewp&$FFFF
 	cpx.w puckc
 	bne .7
 	ldy.w #$0000

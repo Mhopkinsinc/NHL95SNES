@@ -1422,7 +1422,7 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	beq .1
 	ldx.w FaceoffSpriteLeft
 	stz.b $30,x
-.1:									; X = a3, A = $24FA, go to SetSPAFromA
+.1:									; X = a3, A = SPAfaceoff&$FFFF, go to SetSPAFromA
 	ldx.b a3
 	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
@@ -1442,11 +1442,11 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	beq .3
 	ldx.w FaceoffSpriteRight
 	stz.b $30,x
-.3:									; X = a3, A = $24FA, go to SetSPAFromA
+.3:									; X = a3, A = SPAfaceoff&$FFFF, go to SetSPAFromA
 	ldx.b a3
 	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
-.4:									; A = $2524, go to SetSPAFromA
+.4:									; A = SPAfaceoffr&$FFFF, go to SetSPAFromA
 	lda.w #SPAfaceoffr&$FFFF
 	jml.l SetSPAFromA
 puckfaceoff:						; assignment (asstab entry 27): the puck at the start of play; PeriodOver

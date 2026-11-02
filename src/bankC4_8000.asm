@@ -951,7 +951,7 @@ goalieacc:							; called from other segments
 	bcc .5
 	cmp.w #SPAinjury1&$FFFF
 	bcc .6
-.5:									; if d0 = facedir,x go to .8, d2 = A, A = $121E, call SetSPAFromA, ...
+.5:									; if d0 = facedir,x go to .8, d2 = A, A = SPAgready&$FFFF, ...
 	lda.b d0
 	cmp.w facedir,x
 	beq .8
@@ -990,13 +990,13 @@ goalieacc:							; called from other segments
 	lda.w #$0000
 .9:									; goalieturnwait,x = A
 	sta.w goalieturnwait,x
-.10:								; A = goalieflags,x, if a $0002 bit set go to .11, A = $121E, go to .12
+.10:								; A = goalieflags,x, if a $0002 bit set go to .11, ...
 	lda.w goalieflags,x
 	bit.w #$0002
 	bne .11
 	lda.w #SPAgready&$FFFF
 	bra .12
-.11:								; A = $14C0
+.11:								; A = SPAgskate&$FFFF
 	lda.w #SPAgskate&$FFFF
 .12:								; call SetSPAFromA, d2 = facedir,x
 	jsl.l SetSPAFromA
@@ -1699,7 +1699,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 .25:								; call vtoa, A = d0
 	jsl.l vtoa
 	lda.b d0
-.26:								; facedir,x = A, Y = $1552, A = Y, call SetSPAFromA, ...
+.26:								; facedir,x = A, Y = SPAgdive&$FFFF, A = Y, call SetSPAFromA, ...
 	sta.w facedir,x
 	ldy.w #SPAgdive&$FFFF
 	tya

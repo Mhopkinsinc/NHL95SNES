@@ -1253,7 +1253,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	bne .28
 	lda.w #SPAgready&$FFFF
 	bra .29
-.28:								; A = $1958
+.28:								; A = SPAglide&$FFFF
 	lda.w #SPAglide&$FFFF
 .29:								; call SetSPAFromA, call updateanim
 	jsl.l SetSPAFromA

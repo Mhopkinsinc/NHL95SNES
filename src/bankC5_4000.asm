@@ -28,7 +28,7 @@ ResetTeamPlayers:					; resets team a2: its flag $0010 cleared, then for its 6 p
 	bne .3
 	lda.w #SPAgready&$FFFF
 	bra .4
-.3:									; A = $1958
+.3:									; A = SPAglide&$FFFF
 	lda.w #SPAglide&$FFFF
 .4:									; call SetSPAFromA, impact,x = 0, nopuck,x = 0, A = pflags,x, ...
 	jsl.l SetSPAFromA
@@ -813,7 +813,7 @@ assbench:							; asstab entry 12: an assignment routine
 	beq .10
 	bmi .10
 	jmp.w .17
-.10:								; A = $1958, if position,x is not 0 go to .11, A = $121E
+.10:								; A = SPAglide&$FFFF, if position,x is not 0 go to .11, ...
 	lda.w #SPAglide&$FFFF
 	ldy.w position,x
 	bne .11

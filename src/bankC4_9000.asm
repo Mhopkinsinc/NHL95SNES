@@ -1133,7 +1133,7 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	sec
 	sbc.w Ypos,x
 	sta.b d1
-.10:								; call vtoa, call Findhittype, if zero go to .11, A = $1EFA, ...
+.10:								; call vtoa, call Findhittype, if zero go to .11, ...
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .11
@@ -1417,7 +1417,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	sec
 	sbc.w passtargety
 	sta.b d1
-.3:									; call vtoa, call Findhittype, if zero go to .4, A = $1EFA, ...
+.3:									; call vtoa, call Findhittype, if zero go to .4, ...
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .4

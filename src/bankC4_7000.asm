@@ -1665,7 +1665,7 @@ asspenalty:							; called from other segments
 	sta.w puckc
 	lda.w #$003C
 	sta.w nopuck,x
-.5:									; pfnc,x = $1958, call SetSPAFromA, d2 = $0006, ...
+.5:									; pfnc,x = SPAglide&$FFFF, call SetSPAFromA, d2 = $0006, ...
 	lda.w #SPAglide&$FFFF
 	sta.w pfnc,x
 	jsl.l SetSPAFromA

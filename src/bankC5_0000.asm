@@ -471,12 +471,12 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w onetimer
 	beq .13
 	jmp.w .33
-.13:								; if SPA,x is not $2708 go to .14, go to .44
+.13:								; if SPA,x is not SPAinjury1&$FFFF go to .14, go to .44
 	lda.w SPA,x
 	cmp.w #SPAinjury1&$FFFF
 	bne .14
 	jmp.w .44
-.14:								; if A < $28F6 go to .15, go to .44
+.14:								; if A < SPAboardfront&$FFFF go to .15, go to .44
 	cmp.w #SPAboardfront&$FFFF
 	bcc .15
 	jmp.w .44

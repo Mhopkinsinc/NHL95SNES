@@ -108,7 +108,7 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.b d3
 	sta.w Ylist,x
 	rtl
-.6:									; if SPA,x >= $28F6 go to .rtl, Xpos,x = OldXpos,x, Ypos,x = OldYpos,x
+.6:									; if SPA,x >= SPAboardfront&$FFFF go to .rtl, Xpos,x = OldXpos,x, ...
 	lda.w SPA,x
 	cmp.w #SPAboardfront&$FFFF
 	bcs .rtl
@@ -1174,7 +1174,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sta.b $85
 	bpl .3
 	jmp.w .17
-.3:									; if SPA,x < $2280 go to .5, if SPA,x >= $2345 go to .5, ...
+.3:									; if SPA,x < SPAHold2&$FFFF go to .5, if SPA,x >= $2345 go to .5, ...
 	lda.w SPA,x
 	cmp.w #SPAHold2&$FFFF
 	bcc .5
@@ -1193,7 +1193,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sta.w pf2aip,y
 .4:									; Y = a2
 	ldy.b a2
-.5:									; if SPA,y < $2280 go to .7, if SPA,y >= $2345 go to .7, ...
+.5:									; if SPA,y < SPAHold2&$FFFF go to .7, if SPA,y >= $2345 go to .7, ...
 	lda.w SPA,y
 	cmp.w #SPAHold2&$FFFF
 	bcc .7
@@ -1226,7 +1226,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	cmp.w #$0005
 	bcs .8
 	lda.w #$0005
-.8:									; d4 = A, if SPA,x < $2082 go to .10, if SPA,x >= $21BD go to .10
+.8:									; d4 = A, if SPA,x < SPAsweepchk&$FFFF go to .10, ...
 	sta.b d4
 	lda.w SPA,x
 	cmp.w #SPAsweepchk&$FFFF
@@ -1239,7 +1239,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	adc.b d4
 	sta.b d4
 	bra .11
-.10:								; if SPA,y < $2082 go to .11, if SPA,y < $21BD go to .9
+.10:								; if SPA,y < SPAsweepchk&$FFFF go to .11, if SPA,y < $21BD go to .9
 	lda.w SPA,y
 	cmp.w #SPAsweepchk&$FFFF
 	bcc .11
@@ -1752,7 +1752,7 @@ puckglue:							; give player a2 puck possession and update possession statistic
 	jsl.l EndPenaltyShot
 	stz.w breakaway
 	stz.w onetimer
-.1:									; puckc = a2, puckvz = 0, puckz = 0, if SPA,y < $224E go to .2, ...
+.1:									; puckc = a2, puckvz = 0, puckz = 0, ...
 	ldy.b a2
 	sty.w puckc
 	stz.w puckvz

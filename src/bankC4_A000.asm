@@ -282,7 +282,7 @@ dopass_swing:						; from dopass, LaunchDumpIn
 	eor.w #$FFFF
 	inc a
 	sta.w puckvy
-.3:									; d0 = puckvx, d1 = puckvy, call vtoa, Y = $144E, ...
+.3:									; d0 = puckvx, d1 = puckvy, call vtoa, Y = SPAgswing&$FFFF, ...
 	lda.w puckvx
 	sta.b d0
 	lda.w puckvy
