@@ -1,20 +1,28 @@
 ; Raw planar frame tiles sent directly to VRAM by QueueFrameTiles.
 ; Frame poses are not traced; DATA8_ labels identify the transfer sources.
 org $CBD035
-DATA8_CBD035:						; raw frame tiles for transfer index $365; pose not traced
+FrameTiles365:						; the raw tiles of frame $365 (FrameTileSource / FrameBankLayout entry
+									; $365); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$35..$235
-DATA8_CBD235:						; raw frame tiles for transfer index $366; pose not traced
+FrameTiles366:						; the raw tiles of frame $366 (FrameTileSource / FrameBankLayout entry
+									; $366); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$235..$435
-DATA8_CBD435:						; raw frame tiles for transfer index $367; pose not traced
+FrameTiles367:						; the raw tiles of frame $367 (FrameTileSource / FrameBankLayout entry
+									; $367); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$435..$635
-DATA8_CBD635:						; raw frame tiles for transfer index $368; pose not traced
+FrameTiles368:						; the raw tiles of frame $368 (FrameTileSource / FrameBankLayout entry
+									; $368); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$635..$835
-DATA8_CBD835:						; raw frame tiles for transfer index $369; pose not traced
+FrameTiles369:						; the raw tiles of frame $369 (FrameTileSource / FrameBankLayout entry
+									; $369); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$835..$A35
-DATA8_CBDA35:						; raw frame tiles for transfer index $36A; pose not traced
+FrameTiles36A:						; the raw tiles of frame $36A (FrameTileSource / FrameBankLayout entry
+									; $36A); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$A35..$C35
-DATA8_CBDC35:						; raw frame tiles for transfer index $36B; pose not traced
+FrameTiles36B:						; the raw tiles of frame $36B (FrameTileSource / FrameBankLayout entry
+									; $36B); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$C35..$E35
-DATA8_CBDE35:						; raw frame tiles for transfer index $36C; pose not traced
+FrameTiles36C:						; the raw tiles of frame $36C (FrameTileSource / FrameBankLayout entry
+									; $36C); pose not traced
 	incbin "../Extracted/segments/bankCB_D000.bin":$E35..$1000
 	incbin "../Extracted/segments/bankCB_E000.bin":$0..$35

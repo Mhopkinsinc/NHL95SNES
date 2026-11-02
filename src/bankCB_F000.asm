@@ -1,17 +1,23 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
 ; Frame poses are not traced; DATA8_ labels identify the transfer sources.
 org $CBF175
-DATA8_CBF175:						; raw frame tiles for transfer index $375; pose not traced
+FrameTiles375:						; the raw tiles of frame $375 (FrameTileSource / FrameBankLayout entry
+									; $375); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$175..$3D5
-DATA8_CBF3D5:						; raw frame tiles for transfer index $376; pose not traced
+FrameTiles376:						; the raw tiles of frame $376 (FrameTileSource / FrameBankLayout entry
+									; $376); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$3D5..$5D5
-DATA8_CBF5D5:						; raw frame tiles for transfer index $377; pose not traced
+FrameTiles377:						; the raw tiles of frame $377 (FrameTileSource / FrameBankLayout entry
+									; $377); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$5D5..$7D5
-DATA8_CBF7D5:						; raw frame tiles for transfer index $378; pose not traced
+FrameTiles378:						; the raw tiles of frame $378 (FrameTileSource / FrameBankLayout entry
+									; $378); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$7D5..$9D5
-DATA8_CBF9D5:						; raw frame tiles for transfer index $379; pose not traced
+FrameTiles379:						; the raw tiles of frame $379 (FrameTileSource / FrameBankLayout entry
+									; $379); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$9D5..$BD5
-DATA8_CBFBD5:						; raw frame tiles for transfer index $37A; pose not traced
+FrameTiles37A:						; the raw tiles of frame $37A (FrameTileSource / FrameBankLayout entry
+									; $37A); pose not traced
 	incbin "../Extracted/segments/bankCB_F000.bin":$BD5..$DD5
 NorrisPicMap:						; the picture of award 6 (AwardPictures): James Norris Memorial Trophy
 	dw NorrisPicTiles-NorrisPicMap-2	; map chunk length

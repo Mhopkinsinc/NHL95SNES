@@ -254,7 +254,7 @@
 ## Unsure
 
 - Banks $C6-$CC: individual frame poses and placement-table axes are not traced. Raw planar tile inspection shows player
-  parts and small indicators; labels remain DATA8_ names. The null-bank frame slots are not assumed unused. The bank $CF
+  parts and small indicators; the blocks are FrameTilesNNN by frame number (the FrameTileSource entry). The null-bank frame slots are not assumed unused. The bank $CF
   frame code (DrawFrameLayoutFlip / DrawFrameLayout) reads them by label now, the layout through FrameBankLayout+1.
 
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,

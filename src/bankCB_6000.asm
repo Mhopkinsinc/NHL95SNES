@@ -1,18 +1,25 @@
 ; Raw planar frame tiles sent directly to VRAM by QueueFrameTiles.
 ; Frame poses are not traced; DATA8_ labels identify the transfer sources.
 org $CB60D5
-DATA8_CB60D5:						; raw frame tiles for transfer index $332; pose not traced
+FrameTiles332:						; the raw tiles of frame $332 (FrameTileSource / FrameBankLayout entry
+									; $332); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$D5..$335
-DATA8_CB6335:						; raw frame tiles for transfer index $333; pose not traced
+FrameTiles333:						; the raw tiles of frame $333 (FrameTileSource / FrameBankLayout entry
+									; $333); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$335..$535
-DATA8_CB6535:						; raw frame tiles for transfer index $334; pose not traced
+FrameTiles334:						; the raw tiles of frame $334 (FrameTileSource / FrameBankLayout entry
+									; $334); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$535..$795
-DATA8_CB6795:						; raw frame tiles for transfer index $335; pose not traced
+FrameTiles335:						; the raw tiles of frame $335 (FrameTileSource / FrameBankLayout entry
+									; $335); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$795..$9F5
-DATA8_CB69F5:						; raw frame tiles for transfer index $336; pose not traced
+FrameTiles336:						; the raw tiles of frame $336 (FrameTileSource / FrameBankLayout entry
+									; $336); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$9F5..$C55
-DATA8_CB6C55:						; raw frame tiles for transfer index $337; pose not traced
+FrameTiles337:						; the raw tiles of frame $337 (FrameTileSource / FrameBankLayout entry
+									; $337); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$C55..$E55
-DATA8_CB6E55:						; raw frame tiles for transfer index $338; pose not traced
+FrameTiles338:						; the raw tiles of frame $338 (FrameTileSource / FrameBankLayout entry
+									; $338); pose not traced
 	incbin "../Extracted/segments/bankCB_6000.bin":$E55..$1000
 	incbin "../Extracted/segments/bankCB_7000.bin":$0..$D5
