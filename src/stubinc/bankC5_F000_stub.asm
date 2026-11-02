@@ -7,8 +7,8 @@ incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 LayoutSizes = $CFF27C
-DATA8_C60000 = $C60000				; frame source low words
-DATA8_C60848 = $C60848				; source banks and layout indices
+FrameTileSource = $C60000			; frame source low words
+FrameBankLayout = $C60848			; source banks and layout indices
 SpritePieces = $C19660
 
 incsrc "../bankC5_F000.asm"

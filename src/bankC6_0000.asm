@@ -1,7 +1,7 @@
 ; Frame transfer sources: low words, then bank bytes paired with a transfer-layout index.
 ; QueueFrameTiles indexes both tables by the frame number. Null-bank entries retain their literal words.
 org $C60000
-DATA8_C60000:						; frame source low words; read by QueueFrameTiles
+FrameTileSource:					; per frame (A * 2, 1060 words): the low word of its tiles' ROM address
 	dw $2968
 	dw $2968
 	dw DATA8_C62968&$FFFF
@@ -1062,7 +1062,8 @@ DATA8_C60000:						; frame source low words; read by QueueFrameTiles
 	dw DATA8_CCE7E5&$FFFF
 	dw DATA8_CCEA45&$FFFF
 	dw DATA8_CCECA5&$FFFF
-DATA8_C60848:						; source bank and transfer-layout index; read by QueueFrameTiles
+FrameBankLayout:					; per frame (1060 words): its tiles' bank (low byte) and its layout number
+									; (high byte)
 	dw $0000
 	dw $0000
 	dw (DATA8_C62968>>16)|$5E00
@@ -2123,4 +2124,4 @@ DATA8_C60848:						; source bank and transfer-layout index; read by QueueFrameTi
 	dw (DATA8_CCE7E5>>16)|$7100
 	dw (DATA8_CCEA45>>16)|$6F00
 	dw (DATA8_CCECA5>>16)|$7E00
-assert DATA8_C60848-DATA8_C60000 == pc()-DATA8_C60848
+assert FrameBankLayout-FrameTileSource == pc()-FrameBankLayout

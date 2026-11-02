@@ -11,14 +11,14 @@ DrawFrameLayoutFlip:				; DrawFrameLayout for an x-flipped object: the flipped o
 									; record next to the normal one
 	asl a
 	tax
-	lda.l DATA8_C618D8,x
+	lda.l FrameOffsetY,x
 	adc.b $0C
 	sta.b $0C
 	clc
 	lda.b $0A
-	adc.l DATA8_C62120,x
+	adc.l FrameOffsetXFlip,x
 	sta.b $0A
-	lda.l DATA8_C60848+1,x
+	lda.l FrameBankLayout+1,x
 	and.w #$00FF
 	dec a
 	eor.w #$0001
@@ -47,14 +47,14 @@ DrawFrameLayout:					; draws frame A of a game object at x $0A / y $0C from its 
 									; then on through $A5
 	asl a
 	tax
-	lda.l DATA8_C61090,x
+	lda.l FrameOffsetX,x
 	adc.b $0A
 	sta.b $0A
 	clc
-	lda.l DATA8_C618D8,x
+	lda.l FrameOffsetY,x
 	adc.b $0C
 	sta.b $0C
-	lda.l DATA8_C60848+1,x
+	lda.l FrameBankLayout+1,x
 	and.w #$00FF
 	beq .2
 	cmp.w #$008F

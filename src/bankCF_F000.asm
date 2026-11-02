@@ -219,7 +219,7 @@ PutSmallPiece1:						; the first 8 x 8 piece's sprite (x $E7 / y $EF), then Layo
 	iny
 LayoutDone:							; the end of a frame layout: on to the caller's continuation in $A5
 	jmp ($00A5)
-LayoutSizes:						; per layout (the high byte of a DATA8_C60848 word) a size word:
+LayoutSizes:						; per layout (the high byte of a FrameBankLayout word) a size word:
 									; QueueFrameTiles queues two transfers of twice its low byte, then one of
 									; its high byte (zero parts skipped)
 	dw $0000,$8080,$8080,$6080,$6080,$6080,$6080,$8080

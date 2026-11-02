@@ -9,8 +9,8 @@ incsrc "../ram95s.asm"
 DrawFrameLayoutFlip = $CFEE25
 DrawFrameLayout = $CFEE6C
 NextSortedGameObjectJump = $CFEE1D
-DATA8_CE0192 = $CE0192				; a per-frame offset table
-DATA8_CDF94A = $CDF94A				; a per-frame offset table
+FrameHotY = $CE0192					; a per-frame offset table
+FrameHotX = $CDF94A					; a per-frame offset table
 vtoa = $C37F6D
 assinsert = $C43734
 prefmes = $C481D5

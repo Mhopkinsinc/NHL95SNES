@@ -1506,11 +1506,11 @@ $C3CDBF,Sample24,,new,"sound sample 24 of the sample list: header, then BRR bloc
 $C3D52D,Sample25,,new,"sound sample 25 of the sample list: header, then BRR blocks",src/bankC3_D000.asm
 $C3DC1D,Sample30,,new,"sound sample 30 of the sample list: header, then BRR blocks",src/bankC3_D000.asm
 $C3E82F,Sample29,,new,"sound sample 29 of the sample list: header, then BRR blocks",src/bankC3_E000.asm
-$C60000,DATA8_C60000,,new,"frame source low words; read by CODE_C5F368",src/bankC6_0000.asm
-$C60848,DATA8_C60848,,new,"source bank and transfer-layout index; read by CODE_C5F368",src/bankC6_0000.asm
-$C61090,DATA8_C61090,,new,"placement words read by the normal frame path; axis not traced",src/bankC6_1000.asm
-$C618D8,DATA8_C618D8,,new,"placement words shared by the normal and mirrored frame paths",src/bankC6_1000.asm
-$C62120,DATA8_C62120,,new,"placement words read by the mirrored frame path; axis not traced",src/bankC6_2000.asm
+$C60000,FrameTileSource,DATA8_C60000,code,"QueueFrameTiles queues the frame's raw tiles from this address in the bank FrameBankLayout gives",src/bankC6_0000.asm
+$C60848,FrameBankLayout,DATA8_C60848,code,"QueueFrameTiles reads the bank and, through LayoutSizes, the transfer sizes; DrawFrameLayout / DrawFrameLayoutFlip read the layout number as FrameBankLayout+1,x",src/bankC6_0000.asm
+$C61090,FrameOffsetX,DATA8_C61090,code,"DrawFrameLayout adds entry frame * 2 to $0A (x) before the pieces",src/bankC6_1000.asm
+$C618D8,FrameOffsetY,DATA8_C618D8,code,"DrawFrameLayout and DrawFrameLayoutFlip add entry frame * 2 to $0C (y)",src/bankC6_1000.asm
+$C62120,FrameOffsetXFlip,DATA8_C62120,code,"DrawFrameLayoutFlip adds entry frame * 2 to $0A (x) instead of FrameOffsetX",src/bankC6_2000.asm
 $C62968,DATA8_C62968,,new,"raw frame tiles for transfer index $002; pose not traced",src/bankC6_2000.asm
 $C62BE8,DATA8_C62BE8,,new,"raw frame tiles for transfer index $003; pose not traced",src/bankC6_2000.asm
 $C62E28,DATA8_C62E28,,new,"raw frame tiles for transfer index $006; pose not traced",src/bankC6_2000.asm
@@ -2316,8 +2316,8 @@ $CDE01E,PlayerPhotosFLA,DATA8_CDE01E,code,"Florida: 6 player photos, packed form
 $CDF32B,HartPicMap,DATA8_CDF32B,render+genesis+code,"the picture of award 4 (Hart Memorial Trophy): map chunk, 9 x 13 tiles, LZSS; AwardPictures entry 4, whose AwardNames text reads Hart Memorial Trophy. 95G HartPic",src/bankCD_F000.asm
 $CDF3B8,HartPicTiles,DATA8_CDF3B8,render+genesis+code,"its tiles (49, 4bpp, LZSS)",src/bankCD_F000.asm
 $CDF923,HartPicPalette,DATA8_CDF923,render+genesis+code,"its colours (16)",src/bankCD_F000.asm
-$CDF94A,DATA8_CDF94A,,new,"per frame number (1060 words, as DATA8_C60000): a signed offset; CODE_C37FE2 (frame from $0856,y) puts it in $7F, negated when $08E0,y has bit $0800; runs into bank $CE",src/bankCD_F000.asm
-$CE0192,DATA8_CE0192,,new,"per frame number (1060 words, parallel to DATA8_CDF94A): a signed offset; CODE_C37FE2 (frame from $0856,y) puts it negated in $83",src/bankCE_0000.asm
+$CDF94A,FrameHotX,DATA8_CDF94A,code,"GetFrameHot puts it in d0 (negated when attribute bit $0800 is set); 94S GetFrameHot reads the hot spot from SpriteFrames bytes $12 / $13 instead",src/bankCD_F000.asm
+$CE0192,FrameHotY,DATA8_CE0192,code,"GetFrameHot puts minus entry frame * 2 in d1; 94S keeps the hot spot in its SpriteFrames records",src/bankCE_0000.asm
 $CE09DA,PhotoPalettesHFD,DATA8_CE09DA,code,"Hartford: 16 colours for each of its 6 player photos; entry 9 of PhotoPaletteTable (read 1-based), as PhotoPalettesTB in bank $C0",src/bankCE_0000.asm
 $CE0A9A,PlayerPhotosHFD,DATA8_CE0A9A,code,"Hartford: 6 player photos, packed format 4 ($1B00 bytes), 48 x 48 linear 4bpp each; its stream ends where the next item starts",src/bankCE_0000.asm
 $CE1CC7,PhotoPalettesLA,DATA8_CE1CC7,code,"Los Angeles: 16 colours for each of its 6 player photos; entry 10 of PhotoPaletteTable (read 1-based), as PhotoPalettesTB in bank $C0",src/bankCE_1000.asm

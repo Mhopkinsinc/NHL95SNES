@@ -1,7 +1,7 @@
 ; Frame placement tables and raw planar frame tiles.
 ; Frame poses are not traced; DATA8_ labels identify the transfer sources.
 org $C62120
-DATA8_C62120:						; placement words read by the mirrored frame path; axis not traced
+FrameOffsetXFlip:					; per frame (1060 words): the x offset for an x-flipped object
 	dw $FFF5,$FFE8,$FFE1,$FFE3,$FFEB,$FFE9,$FFEC,$FFEF
 	dw $FFEB,$FFE7,$FFEB,$FFE6,$FFE1,$FFE7,$FFEA,$FFE7
 	dw $FFE4,$FFF0,$FFE9,$FFEF,$FFF0,$FFE3,$FFD8,$FFD7

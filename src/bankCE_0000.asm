@@ -1,8 +1,8 @@
-; Segment bankCE_0000: DATA8_CE0192 (a per-frame offset table), then the Hartford player photos
+; Segment bankCE_0000: FrameHotY (a per-frame offset table), then the Hartford player photos
 ; (PhotoPalettesHFD, PlayerPhotosHFD).
 org $CE0192
-DATA8_CE0192:						; per frame number (1060 words): a signed offset; GetFrameHot puts
-									; it negated in $83
+FrameHotY:							; per frame (1060 words): the stick hot spot's y, which GetFrameHot
+									; negates into d1
 	dw $0000,$FFF9,$FFFB,$FFFA,$FFFA,$FFF2,$FFF0,$FFF6
 	dw $FFF6,$0005,$FFFF,$FFFE,$FFFD,$FFF8,$FFF6,$FFFA
 	dw $FFFB,$000A,$000A,$0009,$0008,$0004,$0004,$0002

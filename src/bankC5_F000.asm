@@ -427,8 +427,8 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 .41:								; go to .2
 	jmp.w .2
 QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM address from
-									; DATA8_C60000 / DATA8_C60848, the sizes from LayoutSizes, to the VRAM
-									; slots in tmp2 / tmp1
+									; FrameTileSource / FrameBankLayout, the sizes from LayoutSizes, to the
+									; VRAM slots in tmp2 / tmp1
 	sta.b tmp0
 	dec.b QueueBusy
 	lda.b $00
@@ -438,9 +438,9 @@ QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM addr
 	lda.b tmp0
 	asl a
 	tax
-	lda.l DATA8_C60000,x
+	lda.l FrameTileSource,x
 	sta.b r0
-	lda.l DATA8_C60848,x
+	lda.l FrameBankLayout,x
 	sta.b $2E
 	xba
 	and.w #$00FF

@@ -16,8 +16,8 @@
   Bank $C6: frame source and placement tables, raw frame tiles and VezinaPic. Banks $C7-$CB: raw frame tiles, each followed
   by an award picture (SelkePic, ConnSmythePic, JenningsPic, ArtRossPic, NorrisPic). Bank $CC: raw frame tiles, then the
   rink map set (IceRinkMap, IceRinkTiles). Bank $CD: the rest of the rink set (IceRinkPalette), the player photo sets of
-  WSH, WPG, ANH, BOS, BUF, CGY, CHI, DAL, DET, EDM and FLA, HartPic, then DATA8_CDF94A (a per-frame table that runs into
-  bank $CE). Bank $CE: DATA8_CE0192 (the parallel per-frame table), the photo sets of HFD, LA, MTL, NJ, NYI, NYR, OTW, PHI,
+  WSH, WPG, ANH, BOS, BUF, CGY, CHI, DAL, DET, EDM and FLA, HartPic, then FrameHotX (a per-frame table that runs into
+  bank $CE). Bank $CE: FrameHotY (the parallel per-frame table), the photo sets of HFD, LA, MTL, NJ, NYI, NYR, OTW, PHI,
   PIT, QUE, SJ and STL, PresidentsPic, the Stanley Cup map set and a zero fill. Bank $CF: the sound code, the sound table,
   SampleList, the sounds and four samples, then the frame code, its layout data and a zero fill. Every segment is source.
 - Next: no segment is left (see `SEGMENT_AGENT.md`, `PROMPT.md`); what remains is naming (the Unsure list). Banks $C0-$CF are all source (the code banks $C4
@@ -35,7 +35,7 @@
 
 ## Notes for the next segments
 
-- Bank $C6 frame tables: DATA8_C60000 / DATA8_C60848 are 1060 parallel low-word and bank/layout words. QueueFrameTiles uses A as
+- Bank $C6 frame tables: FrameTileSource / FrameBankLayout are 1060 parallel low-word and bank/layout words. QueueFrameTiles uses A as
   a frame index; it queues raw ROM transfers to VRAM, without an unpacker. A layout word at $CFF27C gives two equal
   transfers of twice its low byte, followed by a transfer of its high byte (zero parts skipped). There are 759 nonzero-bank
   pointers in banks $C6-$CC, with 95 in $C6 ($C62968-$C6FDE7), 105 in $C7 ($C7053E-$C7FE7D), 116 in $C8 ($C80559-$C8FE38),
@@ -97,8 +97,8 @@
   PresidentsPic ($CEF0AB-$CEF3E8) follow photo sets instead. The frames of bank $CC end at $CCEEA5; the rink map set follows
   (IceRinkMap, below). ../work/framesseg.py BANK J writes a raw-frame segment (and the picture in the last one), awards.py
   holds the names.
-- Per-frame offsets: DATA8_CDF94A ($CDF94A, into bank $CE) and DATA8_CE0192 ($CE0192) are two more 1060-word tables
-  indexed by the frame number (as DATA8_C60000). GetFrameHot takes the frame from $0856,y and puts the first in $7F
+- Per-frame offsets: FrameHotX ($CDF94A, into bank $CE) and FrameHotY ($CE0192) are two more 1060-word tables
+  indexed by the frame number (as FrameTileSource). GetFrameHot takes the frame from $0856,y and puts the first in $7F
   (negated when $08E0,y has bit $0800) and the second, negated, in $83. What the offsets place is not traced.
 - Rink: IceRinkMap ($CCEEA5) is a three-chunk map set like the award pictures, but 32 x 170 tiles (the two rink halves,
   85 rows each), 520 tiles and 4 palettes, to $CD25DF. setupice loads it (MapSetToUnpackbuf); $C55524 finds its tiles chunk.
@@ -108,15 +108,15 @@
   PresidentsPic; rendered as the Stanley Cup and named as 94S StanleyCupMap / Tiles / Palette. StanleyCupScreen loads it
   (through MapSetToWRAM). Zeros fill bank $CE after it.
 - Bank $CF: the sound code ($CF0000-$CF04E2; SPCUpload as 94S, the rest CODE_ names), SoundSequenceTable (40 sounds: a long
-  pointer and a flag byte), SampleVolumeOverrideLists (four lists of sample records), DATA8_CF05D4, SampleList (33 long pointers as dd;
+  pointer and a flag byte), SampleVolumeOverrideLists (four lists of sample records), SongLists, SampleList (33 long pointers as dd;
   entries 26 and 27 share Sample26), DATA8_CF0661 / TeamSongSoundList, then the sounds back to back ($CF0679-$CF95A3 and
   $CFC262-$CFC560; each a length word and its data; LoadSequence sends the samples listed from +3), Sample26, Sample31,
   Sample23, Sample06, and code again from $CFEE1D. ../work/sndseg.py J writes the data segments and keeps the sound table
   and SampleList entries current. For bank $CF the whole-bank decode drops the raw jsl search of bank $C3 (all source now;
   it seeded sample bytes) and a seed with the wrong M/X at $CF0204; $CF0000,x / $CF0001,x are bank bases (3-byte records).
   The end of the bank: the continuations NextSortedGameObjectJump / PadTagFrameDoneJump (their addresses go in $A5), the frame code DrawFrameLayoutFlip / DrawFrameLayout (mirrored /
-  normal; layout from DATA8_C60848+1, the record through DATA8_CFF3A2 / DATA8_CFF3A0 and the handler table LayoutBigPieces),
-  DATA8_CFF27C (the size words QueueFrameTiles reads), the 141 layout records, CODE_CFFD9E / CODE_CFFF88 (the top layouts jump
+  normal; layout from FrameBankLayout+1, the record through LayoutPointers / $CFF3A0 and the handler table LayoutBigPieces),
+  LayoutSizes (the size words QueueFrameTiles reads), the 141 layout records, CODE_CFFD9E / CODE_CFFF88 (the top layouts jump
   there through the pointer table) and zeros. The records are read as $CF0000-$CF0008,x (bank bases; numbers).
 - Naming pass (94S by code): ../work/match94.py compares every call target in the bank $C3/$C4/$C5/$CF pickles (body
   flooded over branches, calls not followed) with each NHL94SNES routine (mnemonic + addressing mode, 4-gram candidates,
@@ -255,7 +255,7 @@
 
 - Banks $C6-$CC: individual frame poses and placement-table axes are not traced. Raw planar tile inspection shows player
   parts and small indicators; labels remain DATA8_ names. The null-bank frame slots are not assumed unused. The bank $CF
-  frame code (DrawFrameLayoutFlip / DrawFrameLayout) reads them by label now, the layout through DATA8_C60848+1.
+  frame code (DrawFrameLayoutFlip / DrawFrameLayout) reads them by label now, the layout through FrameBankLayout+1.
 
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
   VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
@@ -288,7 +288,7 @@
   406 players) but the code that reads them is not traced; a player record is taken to hold a packed name and the ratings
   (not decoded); DATA8_C34427 has the form of a team record but TeamList does not point at it.
 - bankC0_A000: the sample header (12 bytes: a pitch-like word, two volume-like bytes, ...) is not decoded; the samples are
-  named by their index in the sample list. DATA8_C09BC4 also gets a long pointer from PrintShooterRows the way InitShooters does.
+  named by their index in the sample list. MaxSpeed also gets a long pointer from PrintShooterRows the way InitShooters does.
 - bankC0_9000: the game code keeps CODE_ names: menus and a list with pad input ($C097A2), a string copy to the heap
   (CopyLenString2). Its RAM ($1878-$18B6, $0806, $2364, ...) is not named yet. There is a brk at $C09419.
 - asar: mvn / mvp take the operands in byte order, destination bank first (`mvn $7E,$C0` copies from $C0 to $7E).
@@ -299,8 +299,8 @@
 - bankC0_8000: DATA8_C08939 and DATA8_C08B17 have no reader found. TiledBackMap is named from
   its pattern (94S MenuBackMap may be the same job: not checked). TransfersReady, DMAEnShadow, QueueBusy are named from the
   NMI code only. Mul8S's A-positive / X-negative path multiplies A by -A (tya where 94S has txa): that is in the ROM.
-- bankC0_4000: DATA8_C0491A, DATA8_C04AA9, DATA8_C04CAB, DATA8_C04CBF, DATA8_C04CC3 are not traced to a purpose
-  (DivisionNames is DivisionNames; the two byte tables after it are picked by the same division number).
+- bankC0_4000: DATA8_C0491A and DATA8_C04CAB are not traced to a purpose. LargeSlotTiles maps a 16 x 16 sprite slot to
+  its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
   DigitFontTiles and LinePieceTiles are named from the rendered tiles; BG3ScrollHDMA1/2 from the HDMA set-up.
 - WonCheckTiles / WonCheckPalette: named from the rendered tiles; the screen is not traced.
 - Fonts: named from their rendered glyphs; the screens that draw with them are not traced.
