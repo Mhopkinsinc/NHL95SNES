@@ -893,7 +893,7 @@ EndPenaltyShot:						; called from other segments
 	beq .rtl
 	phx
 	jsl.l WaitTransfers
-	jsl.l CODE_C4785E
+	jsl.l RedrawPeriodBox
 	stz.w PenShotActive
 	stz.w penshot
 	lda.w #$FFFF

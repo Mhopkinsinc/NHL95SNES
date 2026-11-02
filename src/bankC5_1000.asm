@@ -21,7 +21,8 @@ printscores1:						; X = a3; chk4lc, SetFaceoffComputerLine and lcfound_close ca
 									; line change
 	ldx.b a3
 	rtl
-CODE_C5111D:						; no caller found (not traced)
+printscores1_per:					; the period label (one column left in overtime) through print, then team
+									; a2's score; no caller found
 	lda.w gsp
 	sta.b d0
 	cmp.w #$0004
@@ -44,7 +45,7 @@ CODE_C5111D:						; no caller found (not traced)
 	sta.b a0
 	dec.b d0
 	bpl .loop
-	jsl.l CODE_C528D3
+	jsl.l print
 	ldy.b a2
 	lda.w tmscore,y
 	sta.b d0
@@ -87,7 +88,7 @@ AlignBigNumber:						; no caller found (not traced)
 	cmp.b [a1]
 	bcc .loop
 	rtl
-Mod100:								; from CODE_C5111D and other segments
+Mod100:								; from printscores1_per and other segments
 	lda.b d0
 .loop:								; loop: if A < $0064 go to .1, A - $0064, go to .loop
 	cmp.w #$0064

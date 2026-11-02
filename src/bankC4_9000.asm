@@ -75,7 +75,7 @@ GoaliePuckVector:					; called from other segments
 	sbc.w Ypos,x
 	sta.b d1
 	bra AdjustGoalieVectorAtNet
-CODE_C49390:						; no caller found (not traced); it runs on into the next routine
+.1:									; no caller found: d0 = puckx, d1 = pucky - d4, then the next routine
 	lda.w puckx
 	sta.b d0
 	lda.w pucky

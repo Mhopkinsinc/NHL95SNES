@@ -183,7 +183,7 @@ IntroStartALogo:					; waits for unit scale, then starts the A logo animation
 	lda.w introM7Scale
 	cmp.w #$0100
 	beq .1
-	jmp.w CODE_C4B27F
+	jmp.w IntroEndDelayReturn
 .1:									; X = a1, Y = $69, call PrepareIntroMode7Sprite, A = a1, ...
 	ldx.b a1
 	ldy.b $69
@@ -198,7 +198,7 @@ IntroStartSportsWord:				; waits for unit scale, then starts the Sports word ani
 	lda.w introM7Scale
 	cmp.w #$0100
 	beq .1
-	jmp.w CODE_C4B27F
+	jmp.w IntroEndDelayReturn
 .1:									; X = a2, Y = $6D, call PrepareIntroMode7Sprite, A = a2, ...
 	ldx.b a2
 	ldy.b $6D
@@ -212,7 +212,7 @@ IntroStartSportsWord:				; waits for unit scale, then starts the Sports word ani
 IntroStartElectronicWord:			; waits for unit scale, then starts the Electronic word animation
 	lda.w introM7Scale
 	cmp.w #$0100
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b a3
 	ldy.b $71
 	jsr.w PrepareIntroMode7Sprite
@@ -225,7 +225,7 @@ IntroStartElectronicWord:			; waits for unit scale, then starts the Electronic w
 IntroWaitForUnitScale:				; waits for unit scale and resets the intro task delay
 	lda.w introM7Scale
 	cmp.w #$0100
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b d1
 	stz.w $0008,x
 	lda.w #IntroShowFinalWord
@@ -233,7 +233,7 @@ IntroWaitForUnitScale:				; waits for unit scale and resets the intro task delay
 IntroShowFinalWord:					; waits 30 task ticks, reveals the final word sprite and resets the delay
 	lda.w $0008,x
 	cmp.w #$001E
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b $7B
 	jsr.w ShowIntroSprite
 	ldx.b d1
@@ -243,10 +243,10 @@ IntroShowFinalWord:					; waits 30 task ticks, reveals the final word sprite and
 IntroEndDelay:						; ends the intro task sequence after its final hold
 	lda.w $0008,x
 	cmp.w #$0258
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	lda.w #$8000
 	trb.b $85
-CODE_C4B27F:						; from IntroStartALogo, IntroStartSportsWord, ...
+IntroEndDelayReturn:				; IntroEndDelay's rtl, shared by the intro task routines
 	rtl
 PositionIntroSprite:				; positions and hides an intro sprite, mirroring its horizontal position
 									; when enabled
@@ -750,19 +750,19 @@ MergeIntroPixelRotate1:				; rotates A left once and merges the bits into the in
 IntroSoundCue1:						; starts the first pair of intro sounds after 30 ticks
 	lda.w $0008,x
 	cmp.w #$001E
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue2
 	sta.w $0002,x
 	lda.w #$0014
 	jsl.l StartSound
 	lda.w #$0011
 	bra StartSoundJump
-CODE_C4B688:						; a task routine: stored as the next routine of a task
+IntroSoundCueReturn:				; the intro sound cues' shared rtl; also the last cue's next task routine
 	rtl
 IntroSoundCue2:						; starts the second pair of intro sounds after 60 ticks
 	lda.w $0008,x
 	cmp.w #$003C
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue3
 	sta.w $0002,x
 	lda.w #$0013
@@ -772,7 +772,7 @@ IntroSoundCue2:						; starts the second pair of intro sounds after 60 ticks
 IntroSoundCue3:						; starts the third pair of intro sounds after 90 ticks
 	lda.w $0008,x
 	cmp.w #$005A
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue4
 	sta.w $0002,x
 	lda.w #$0016
@@ -782,8 +782,8 @@ IntroSoundCue3:						; starts the third pair of intro sounds after 90 ticks
 IntroSoundCue4:						; starts the last intro sound after 150 ticks and disables this task
 	lda.w $0008,x
 	cmp.w #$0096
-	bcc CODE_C4B688
-	lda.w #CODE_C4B688
+	bcc IntroSoundCueReturn
+	lda.w #IntroSoundCueReturn
 	sta.w $0002,x
 	lda.w #$0015
 StartSoundJump:						; jumps to StartSound: the intro sound cues' shared tail
@@ -791,13 +791,13 @@ StartSoundJump:						; jumps to StartSound: the intro sound cues' shared tail
 TitleStartMusicTask:				; starts the title music after the task delay and disables this task
 	lda.w $0008,x
 	cmp.w #$0177
-	bcc CODE_C4B6EA
+	bcc TitleStartMusicTaskReturn
 	lda.w #$00A4
 	jsl.l StartSound
 	stz.w MenuMusicPending
-	lda.w #CODE_C4B6EA
+	lda.w #TitleStartMusicTaskReturn
 	sta.w $0002,x
-CODE_C4B6EA:						; a task routine: stored as the next routine of a task
+TitleStartMusicTaskReturn:			; TitleStartMusicTask's rtl; also the task's routine once the song started
 	rtl
 InitTasks:							; empties the task list: 10 free task slots, the list head and its last
 									; task (TaskFrameEnd), the task flags; the done flag is kept as the last
@@ -1354,7 +1354,8 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	sta.w TextColLow
 	stz.w TextColHigh
 	rtl
-CODE_C4BB43:						; no caller found (not traced)
+CopyBankC3String:					; copies the zero ended string at A in bank $C3 to Y, the zero too; no
+									; caller found
 	tax
 	phb
 	sep #$20
@@ -1445,7 +1446,7 @@ PrintBoldCentred:					; prints the packed text X at row Y in BoldFontGlyphs, cen
 									; margins
 	jsl.l RenderBoldCentred
 	bra UploadAndMapText
-CODE_C4BBEB:						; no caller found (not traced)
+PrintBoldCentredCopy:				; the same code as PrintBoldCentred; no caller found
 	jsl.l RenderBoldCentred
 	bra UploadAndMapText
 PrintBoldCentredStr:				; PrintBoldCentred for the string X in RAM (CopyString)

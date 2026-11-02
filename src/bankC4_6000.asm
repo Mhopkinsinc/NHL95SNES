@@ -1912,7 +1912,7 @@ GoalieAvoidInsideTarget:			; route a goalie whose target is inside the avoidance
 	bra GoalieAvoidFarBoundary
 .rts:								; return
 	rts
-CODE_C46EDA:						; no caller found (not traced)
+.2:									; no caller found: if A < Xpos,y, d1 = $42, return
 	cmp.w Xpos,y
 	bpl GoalieAvoidReturn
 	lda.b $42

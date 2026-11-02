@@ -3979,7 +3979,7 @@ $C47825,.5,CODE_C47825,new,"branch target only used in updatepwrplay",src/bankC4
 $C47828,.6,CODE_C47828,new,"branch target only used in updatepwrplay",src/bankC4_7000.asm
 $C4782C,.7,CODE_C4782C,new,"branch target only used in updatepwrplay",src/bankC4_7000.asm
 $C4784A,.8,CODE_C4784A,new,"branch target only used in updatepwrplay",src/bankC4_7000.asm
-$C47880,.loop,CODE_C47880,new,"branch target only used in CODE_C4785E",src/bankC4_7000.asm
+$C47880,.loop,CODE_C47880,new,"branch target only used in RedrawPeriodBox",src/bankC4_7000.asm
 $C478C2,.rtl,CODE_C478C2,new,"branch target only used in AddPenalty",src/bankC4_7000.asm
 $C478CB,.1,CODE_C478CB,new,"branch target only used in AddPenalty2",src/bankC4_7000.asm
 $C478DE,.2,CODE_C478DE,new,"branch target only used in AddPenalty2",src/bankC4_7000.asm
@@ -4410,8 +4410,8 @@ $C4B953,.2,CODE_C4B953,new,"branch target only used in FadeDelta",src/bankC4_B00
 $C4B974,.loop,CODE_C4B974,new,"branch target only used in FillWords7E",src/bankC4_B000.asm
 $C4BA56,.loop,CODE_C4BA56,new,"branch target only used in DeveloperCredits",src/bankC4_B000.asm
 $C4BB2C,.1,CODE_C4BB2C,new,"branch target only used in InitTextMap",src/bankC4_B000.asm
-$C4BB47,.loop,CODE_C4BB47,new,"branch target only used in CODE_C4BB43",src/bankC4_B000.asm
-$C4BB54,.1,CODE_C4BB54,new,"branch target only used in CODE_C4BB43",src/bankC4_B000.asm
+$C4BB47,.loop,CODE_C4BB47,new,"branch target only used in CopyBankC3String",src/bankC4_B000.asm
+$C4BB54,.1,CODE_C4BB54,new,"branch target only used in CopyBankC3String",src/bankC4_B000.asm
 $C4BB7E,.1,CODE_C4BB7E,new,"branch target only used in PrintTextPage",src/bankC4_B000.asm
 $C4BB7F,.2,CODE_C4BB7F,new,"branch target only used in PrintTextPage",src/bankC4_B000.asm
 $C4BB92,.3,CODE_C4BB92,new,"branch target only used in PrintTextPage",src/bankC4_B000.asm
@@ -4864,9 +4864,9 @@ $C51094,.25,CODE_C51094,new,"branch target only used in CalcAttrib",src/bankC5_0
 $C510A2,.26,CODE_C510A2,new,"branch target only used in CalcAttrib",src/bankC5_0000.asm
 $C510AC,.27,CODE_C510AC,new,"branch target only used in CalcAttrib",src/bankC5_0000.asm
 $C510AE,.rtl,CODE_C510AE,new,"branch target only used in CalcAttrib",src/bankC5_0000.asm
-$C5112C,.1,CODE_C5112C,new,"branch target only used in CODE_C5111D",src/bankC5_1000.asm
-$C51136,.loop,CODE_C51136,new,"branch target only used in CODE_C5111D",src/bankC5_1000.asm
-$C51183,.2,CODE_C51183,new,"branch target only used in CODE_C5111D",src/bankC5_1000.asm
+$C5112C,.1,CODE_C5112C,new,"branch target only used in printscores1_per",src/bankC5_1000.asm
+$C51136,.loop,CODE_C51136,new,"branch target only used in printscores1_per",src/bankC5_1000.asm
+$C51183,.2,CODE_C51183,new,"branch target only used in printscores1_per",src/bankC5_1000.asm
 $C51191,.loop,CODE_C51191,new,"branch target only used in AlignBigNumber",src/bankC5_1000.asm
 $C511A1,.1,CODE_C511A1,new,"branch target only used in AlignBigNumber",src/bankC5_1000.asm
 $C511AA,.loop,CODE_C511AA,new,"branch target only used in Mod100",src/bankC5_1000.asm
@@ -8873,3 +8873,13 @@ $151D,PadArrowTileMode+2,,code,"RAM: per-pad arrow tile cache word referenced by
 $151F,PadArrowTileMode+4,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
 $1521,PadArrowTileMode+6,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
 $1523,PadArrowTileMode+8,,code,"RAM: per-pad arrow tile cache word referenced by DrawPadArrow record",src/ram95s.asm
+$C4B27F,IntroEndDelayReturn,CODE_C4B27F,code,"IntroEndDelay runs on into it; IntroStartALogo, IntroStartSportsWord and the other intro tasks branch to it",src/bankC4_B000.asm
+$C4B6EA,TitleStartMusicTaskReturn,CODE_C4B6EA,code,"TitleStartMusicTask runs on into it and stores it as the task's next routine (the task then does nothing)",src/bankC4_B000.asm
+$C4B688,IntroSoundCueReturn,CODE_C4B688,code,"IntroSoundCue1-4 branch to it before their tick count is reached; IntroSoundCue4 stores it as the task's next routine",src/bankC4_B000.asm
+$C4BBEB,PrintBoldCentredCopy,CODE_C4BBEB,code,"from the code: jsl RenderBoldCentred / bra UploadAndMapText, as PrintBoldCentred just above; no reference in the traced code",src/bankC4_B000.asm
+$C4BB43,CopyBankC3String,CODE_C4BB43,code,"from the code: tax / lda.l $C30000,x loop to sta $0000,y until 0; no reference in the traced code",src/bankC4_B000.asm
+$C4785E,RedrawPeriodBox,CODE_C4785E,code,"updatepwrplay_clr runs on into it when the power play flag was set, where 94S updatepwrplay_clr calls EASNLogo to restore the box; EndPenaltyShot calls it",src/bankC4_7000.asm
+$C5111D,printscores1_per,CODE_C5111D,94S+code,"the same code as 94S printscores1_per (gsp 4: printx - 1 and the next label; walk PerLabels to label d0) up to its jml print; 95 calls print and goes on to the score",src/bankC5_1000.asm
+$C528D3,print,CODE_C528D3,94S+code,"printscores1_per calls it where 94S printscores1_per ends with jml print",src/bankC5_2000.asm
+$C46EDA,.2,CODE_C46EDA,94S+code,"GoalieAvoidInsideTarget local: unreached in 95; the block of 94S avdgoal at its .4 (cmp Xpos,y / bpl return / far line y to d1), no reference in the traced code",src/bankC4_6000.asm
+$C49390,.1,CODE_C49390,94S+code,"GoaliePuckVector local: unreached in 95; 94S GoaliePuckVector's .t1 entry (d0 = puckx, d1 = pucky - d4) before its goal line check, no reference in the traced code",src/bankC4_9000.asm

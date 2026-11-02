@@ -1090,7 +1090,7 @@ PutTagChar:							; writes one 8 x 8 tag sprite (tile tmp1) at screen x $0A, y $
 .5:									; $2A = Y, jump through $00A5
 	sty.b $2A
 	jmp ($00A5)
-CODE_C528D3:						; called from other segments
+print:								; a bare rtl where 94S prints the string at a1
 	rtl
 eraser:								; a bare rtl where 94S fills a d0 by d1 box of the text map with tile d2
 									; (blankchar)

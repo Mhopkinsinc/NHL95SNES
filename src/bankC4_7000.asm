@@ -993,7 +993,8 @@ updatepwrplay_clr:					; from updatepwrplay and other segments
 	lda.w #$2000
 	trb.w sflags
 	beq updatepwrplay_clrReturn
-CODE_C4785E:						; called from other segments
+RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws the period box
+									; (CODE_C53A29)
 	dec.b QueueBusy
 	lda.b $00
 	tsx
