@@ -398,7 +398,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w recsfxpitch+1
 	sta.b WMDATA&$FF
-	lda.w $077B
+	lda.w recsfxvol+1
 	sta.b WMDATA&$FF
 	lda.w recsfx2
 	sta.b WMDATA&$FF
@@ -406,7 +406,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w recsfxpitch2+1
 	sta.b WMDATA&$FF
-	lda.w $0781
+	lda.w recsfxvol2+1
 	sta.b WMDATA&$FF
 	lda.w d7
 	sta.b WMDATA&$FF
@@ -1413,7 +1413,7 @@ adda43:								; from adda4 and other segments
 	lda.b $80
 	sta.w recsfxpitch+1
 	lda.b $80
-	sta.w $077B
+	sta.w recsfxvol+1
 	lda.b $80
 	sta.w recsfx2
 	lda.b $80
@@ -1421,7 +1421,7 @@ adda43:								; from adda4 and other segments
 	lda.b $80
 	sta.w recsfxpitch2+1
 	lda.b $80
-	sta.w $0781
+	sta.w recsfxvol2+1
 	lda.b $80
 	sta.w d7
 	lda.b $80
@@ -1608,7 +1608,7 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	lda.l WMDATA
 	sta.w recsfxpitch+1
 	lda.l WMDATA
-	sta.w $077B
+	sta.w recsfxvol+1
 	lda.l WMDATA
 	sta.w recsfx2
 	lda.l WMDATA
@@ -1616,7 +1616,7 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	lda.l WMDATA
 	sta.w recsfxpitch2+1
 	lda.l WMDATA
-	sta.w $0781
+	sta.w recsfxvol2+1
 	lda.l WMDATA
 	sta.b d7
 	lda.l WMDATA
