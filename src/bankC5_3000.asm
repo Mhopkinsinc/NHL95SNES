@@ -407,7 +407,7 @@ PlayerShortName:					; from GetPlayerNumInitial and other segments
 	pei ($6D)
 	pei ($63)
 	pei ($65)
-	jsl.l CODE_C535EF
+	jsl.l GetPlayerRecord
 	stz.b $69
 	lda.w #mesarea
 	sta.b a1
@@ -744,7 +744,9 @@ BenchTeamRoster:					; team a2: tmap 6 and every roster entry on the bench (tmpd
 	dec.b d0
 	bpl .loop
 	rtl
-CODE_C535EF:						; from PlayerShortName and other segments
+GetPlayerRecord:					; a0 = the roster record of player d0 of team a2 (bank $C3): the team
+									; record's first word (low 11 bits) points at an offset table, entry d0
+									; (low 14 bits) * 2 at the record's address
 	ldy.b a2
 	lda.w #$00C3
 	sta.b $65
@@ -1270,7 +1272,9 @@ InitGameSprites:					; resets the sprites, creates sprite record $1D (with the a
 	jsl.l UseSpritePalette
 	jsl.l ResetWorkBuf
 	rts
-CODE_C539D7:						; called from other segments
+DrawScoreBox:						; the score box: its frame (Framer, 9 x 3), the visitors' and the home
+									; team's short names (PackTeamSecondText) and their scores (tmscore+2,
+									; tmscore) to the text map by DMA
 	ldx.w #$0009
 	ldy.w #$0003
 	lda.w #$5AF7
@@ -1297,7 +1301,9 @@ CODE_C539D7:						; called from other segments
 	jsr.w PackShortText
 	ldy.w #$5B3C
 	jmp.w QueueVRAMDMALen
-CODE_C53A29:						; called from other segments
+DrawPeriodBox:						; the period box: the clock (showclockdma), the period label (PeriodLabels
+									; by gsp) and its frame (Framer: 10 x 4 with sflags bit $2000, else 10 x
+									; 2)
 	jsl.l showclockdma
 	lda.w gsp
 	asl a

@@ -346,9 +346,10 @@
   MenuMusicVisited (set by its first call) is set. $4ABC / $4ABE / $4BC0 are only written at sound setup: not named.
   DATA8_CF0661 has no reader found. SampleVolumeOverrideLists writes sample stereo-volume overrides, but LoadSequence indexes
   it from r2 (the sequence pointer), not the flag byte in SoundSequenceTable; the intended selection is unresolved.
-- Scoreboard: CODE_C539D7 draws the score box (team abbreviations, scores) and CODE_C53A29 the period box (showclockdma,
-  the period text, a power play frame); together they do 94S printscores1's job, split differently: not named.
-- CODE_C535EF sits where 94S PlayerShortName calls GetPlayerRecord but reads an offset table, then a word through it.
+- Scoreboard: DrawScoreBox (team abbreviations, scores) and DrawPeriodBox (showclockdma, the period text, a power play
+  frame) together do 94S printscores1's job, split differently, so they have code names.
+- GetPlayerRecord takes 94S's name by purpose: PlayerShortName reads its a0 as 94S's does, but 95 finds the record
+  through an offset table where 94S walks the records.
   The third Claude thread followed its reads for all 662 roster players. It doubles the PlayerList pointer before
   reading, so it never reaches a real player record: not named.
 - setlccords (was setlccords) is resolved: the bytes at $C54120 are `ldy.w #$5AB5`. The old `phy` entry at $C54122 was
@@ -372,13 +373,12 @@
     flag, then SPFgroup+n / time pairs). The code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
     as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
     reader.
-- 21 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
+- 17 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
     CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5888F (a
     signed multiply through WRMPYA / WRMPYB), CODE_C588EB (a software divide, not 94S Div32x32U), CODE_C5EA91,
     CODE_C5EAA2, CODE_C5EB88, CODE_C5ECA5, CODE_C5EE3C (sprite object helpers), CODE_CFFF0F.
-  - Already listed: CODE_C43FC1 (only calls CODE_C53A29), CODE_C539D7 / CODE_C53A29 (scoreboard), CODE_C535EF,
-    CODE_C5EBB8 / CODE_C5EC1A (sprite commands $89 / $8E).
+  - Already listed: CODE_C5EBB8 / CODE_C5EC1A (sprite commands $89 / $8E).
 - FixLineForward / FixLineDefence were first named the wrong way round. The range right after the goalies is the
   forwards (roster +4 is the forward count, GetForwardCount). Line bytes +1 / +2 are LD / RD (the slot texts), so the
   routine that fixes those is FixLineDefence.

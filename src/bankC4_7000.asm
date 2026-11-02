@@ -938,11 +938,11 @@ updatepwrplay:						; called from other segments
 	jsl.l updatepwrplay_clr
 	lda.w #$4000
 	trb.w sflags
-.3:									; A = $2000, if not zero go to .4, call CODE_C53A29, X = a3, ...
+.3:									; A = $2000, if not zero go to .4, call DrawPeriodBox, X = a3, ...
 	lda.w #$2000
 	tsb.w sflags
 	bne .4
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 	ldx.b a3
 	inc.w tmPwrPlays,x
 .4:									; A = $0005, call AllocWorkBuf2, X = A, $0000,x = $0004, ...
@@ -994,7 +994,7 @@ updatepwrplay_clr:					; from updatepwrplay and other segments
 	trb.w sflags
 	beq updatepwrplay_clrReturn
 RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws the period box
-									; (CODE_C53A29)
+									; (DrawPeriodBox)
 	dec.b QueueBusy
 	lda.b $00
 	tsx
@@ -1022,7 +1022,7 @@ RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws
 	tcs
 	stx.b $00
 	stz.b QueueBusy
-	jml.l CODE_C53A29
+	jml.l DrawPeriodBox
 updatepwrplay_clrReturn:			; the rtl updatepwrplay_clr branches to
 	rtl
 AddPenalty:							; from CheckGoalieInterference, Bcheck and other segments

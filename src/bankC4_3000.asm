@@ -915,7 +915,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w #$001E
 	sta.w fadestep
 	jsl.l WaitTransfers
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 	lda.w PBnum
 	beq .4
 	lsr a
@@ -1352,11 +1352,11 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w penshot
 	beq .37
 	jmp.w DrawPenaltyShotMatchup
-.37:								; if OptPlayMode is not $0001 go to .38, go to CODE_C43FC1
+.37:								; if OptPlayMode is not $0001 go to .38, go to PracticeFaceoffSetup
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .38
-	jmp.w CODE_C43FC1
+	jmp.w PracticeFaceoffSetup
 .38:								; fobox = $0001, call WaitTransfers, call RestoreWorkBuf, A = $0A00, ...
 	lda.w #$0001
 	sta.w fobox
@@ -1452,9 +1452,9 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w VisSpritePal
 	bcc .40
 	lda.w HomeSpritePal
-.40:								; call UseSpritePalette, call CODE_C53A29
+.40:								; call UseSpritePalette, call DrawPeriodBox
 	jsl.l UseSpritePalette
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes on, no penalty
 									; shot), the drop time in temp1, the centres' and the ref's frames
 									; (fofdata2, fofdata), fodir1 / fodir2 cleared, the registers restored
@@ -1727,6 +1727,7 @@ CentreNameX:						; r0 = the string pointer, A = (20 - its length) / 2 with carr
 	lsr a
 	clc
 	rts
-CODE_C43FC1:						; from puckfaceoff2
-	jsl.l CODE_C53A29
+PracticeFaceoffSetup:				; the face off set-up in practice (OptPlayMode 1): no face off box,
+									; DrawPeriodBox, then FinishFaceoffSetup
+	jsl.l DrawPeriodBox
 	jmp.w FinishFaceoffSetup

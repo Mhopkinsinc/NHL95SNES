@@ -1166,7 +1166,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.b #$13
 	sta.l TM
 	rep #$20
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 	jsl.l WaitTransfers
 	jml.l RestoreWorkBuf
 QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from the buffer at

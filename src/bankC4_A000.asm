@@ -1507,9 +1507,9 @@ Goal:								; called from other segments
 	adc.b d0
 	tax
 	inc.w tmgoals,x
-.28:								; call PenGoalStuff, call CODE_C539D7, X = a3, d0 = $0008, ...
+.28:								; call PenGoalStuff, call DrawScoreBox, X = a3, d0 = $0008, ...
 	jsl.l PenGoalStuff
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 	ldx.b a3
 	lda.w #$0008
 	sta.b d0

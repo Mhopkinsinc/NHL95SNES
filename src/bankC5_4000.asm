@@ -1447,7 +1447,7 @@ lcfound_close:						; closes team a2's line change box: its six rows overwritten
 	pla
 	cmp.w #$5AB5
 	bcc .1
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 .1:									; call showclockdma, call WaitTransfers, go to printscores1
 	jsl.l showclockdma
 	jsl.l WaitTransfers

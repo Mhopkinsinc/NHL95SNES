@@ -236,8 +236,8 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lda.w #LinePieceTiles&$FFFF
 	ldx.w #LinePieceTiles>>16
 	jsl.l Decompress
-	jsl.l CODE_C539D7
-	jmp.w CODE_C53A29
+	jsl.l DrawScoreBox
+	jmp.w DrawPeriodBox
 setupice_reset:						; resets the rink state: Oldrow $03E7, the pause bit cleared, Hpos / Vpos
 									; 0, the sort objects, pfgoal turned with the direction of play, sfhormode
 									; 0, then the scoreboard
@@ -264,9 +264,9 @@ setupice_reset:						; resets the rink state: Oldrow $03E7, the pause bit cleare
 	dex
 	dex
 	bpl .loop
-.1:									; sfhormode = 0, go to CODE_C539D7
+.1:									; sfhormode = 0, go to DrawScoreBox
 	stz.w sfhormode
-	jmp.w CODE_C539D7
+	jmp.w DrawScoreBox
 ClrHor:								; what is left of 94S ClrHor: sfhormode = 0; X = a3
 	stz.w sfhormode
 	ldx.b a3
