@@ -55,5 +55,7 @@ SPAgready = $C4121E
 SPAgskate = $C414C0
 SPAinjury1 = $C42708
 SPAshotf = $C41C24
+SPAgcover = $C41636
+SPAgpoke = $C415C4
 
 incsrc "../bankC4_8000.asm"

@@ -248,6 +248,11 @@
   - Raw pointer pairs (lda #$00BB / sta P+2, lda #$XXXX / sta P): ptrpairs2.py lists those that start a label and
     writes #LABEL>>16 / #LABEL&$FFFF (--skip / --nolabel for chance matches: a pair in the unreachable
     printscores1_per falls on RatingColumns). stubfix.py adds the outside labels a segment stub then needs.
+- Frames (PR #3): ../work/framerender.py draws frames as the game does (QueueFrameTiles' three tile blocks, the
+  DrawFrameLayout record and offsets, team 0's home sprite palette) and writes contact sheets (`sheet FIRST COUNT
+  OUT.png`, `info N...`). spfmap.py lines the SPA lists up with 94S's and 95 Genesis's by name and direction (frame
+  votes); spfgroups.py holds the SPF groups (`check`, `expr N`, `write src/frames95s.asm`); spadw.py writes SPA lists
+  as dw rows; spfrows.py writes their name_map rows. Segment stubs that use SPF names include frames95s.asm.
 - Parallel work: the repo is the T3 project "NHL95SNES"; a Codex thread on its own worktree branch (codex/<topic>)
   works beside the main checkout and is merged by cherry-pick (name_map.csv conflicts: keep both sides,
   ../work/resolve_namemap.py). Brief it with the rules and the tools that are safe to run (side.py only reads).
@@ -269,10 +274,13 @@
 
 ## Unsure
 
-- Banks $C6-$CC: individual frame poses are not traced. Raw planar tile inspection shows player parts and small
-  indicators; the blocks are FrameTiles002 ... FrameTiles423, named by the frame number whose FrameTileSource entry
-  points at them. The null-bank frame slots are not assumed unused. The bank $CF frame code (DrawFrameLayoutFlip /
-  DrawFrameLayout) adds FrameOffsetX / FrameOffsetXFlip and FrameOffsetY and reads the layout through FrameBankLayout+1.
+- Frames: src/frames95s.asm puts the 1060 frame slots in 40 SPF groups, from the SPA lists that use them, the code
+  that sets frames, the renders (framerender.py) and 95 Genesis's frame sheet, which 95 follows up to $29D. Not in a
+  group: $312 and $319, the first frames of SPAflip, alone in a run where 95 Genesis has its board check frames.
+  Empty slots outside the groups: $000, $059-$06E, $070-$071, $073-$07A, $18B-$1B2, $2A5-$2BC, $2F3-$329 (but $312,
+  $319), $3CC-$3EB, $3FC-$41A. The frames drawn by layout code ($1B4-$1BD, $1BF) are not rendered. The tile blocks
+  keep their index names (FrameTiles002 ...). The bank $CF frame code (DrawFrameLayoutFlip / DrawFrameLayout) adds
+  FrameOffsetX / FrameOffsetXFlip and FrameOffsetY and reads the layout through FrameBankLayout+1.
 
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
   VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
@@ -354,11 +362,12 @@
     bare rtls too.
   - No reader found: C5AE40 (a high-bits mask series), C0491A, C04CAB, C08939, C08B17 (16 colours), C104E0 (the
     $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
-  - The SPA lists (bank $C4, 59 of them) carry 94S names except two between SPAgdive and SPAgbutterfly ($C415C4,
-    $C41636: two of gpoke / gcover2 / gcover) and the two wall lists. Those are SPAwallin / SPAwallout from their
-    users: 95 plays one sequence for every direction, forward going into the bench or penalty box, reversed coming
-    out, and neither 94S's nor 95 Genesis's left / right users match. The code's SPA immediates read
-    #SPAname&$FFFF, range bounds stay numbers as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
+  - The SPA lists (bank $C4, 59 of them) carry 94S names (SPAgpoke / SPAgcover from GoalieUpdateState, which is
+    94S assgoalie's code) except the two wall lists. Those are SPAwallin / SPAwallout from their users: 95 plays one
+    sequence for every direction, forward going into the bench or penalty box, reversed coming out, and neither
+    94S's nor 95 Genesis's left / right users match. The lists are dw rows as in 94S (.d0-.d7 direction labels, the
+    flag, then SPFgroup+n / time pairs). The code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
+    as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
     reader.
 - 26 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,

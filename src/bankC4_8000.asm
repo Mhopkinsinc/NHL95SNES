@@ -1587,23 +1587,23 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bmi .rtl2
 .15:								; go to .28
 	jmp.w .28
-.16:								; Y = $0000, if A >= $0014 go to .15, pf2aip,x = $005A, A = $1636, ...
+.16:								; Y = $0000, if A >= $0014 go to .15, pf2aip,x = $005A, ...
 	ldy.w #$0000
 	cmp.w #$0014
 	bcs .15
 	lda.w #$005A
 	sta.w pf2aip,x
-	lda.w #$1636
+	lda.w #SPAgcover&$FFFF
 	jsl.l SetSPAFromA
 .rtl2:								; return
 	rtl
 .17:								; call vtoa, A = d0
 	jsl.l vtoa
 	lda.b d0
-.18:								; facedir,x = A, pfalock,x = A, A = $15C4, call SetSPAFromA, ...
+.18:								; facedir,x = A, pfalock,x = A, A = SPAgpoke&$FFFF, call SetSPAFromA, ...
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$15C4
+	lda.w #SPAgpoke&$FFFF
 	jsl.l SetSPAFromA
 	lda.w #$00F0
 	sta.w goaliedivewait,x

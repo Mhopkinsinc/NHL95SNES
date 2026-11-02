@@ -9320,3 +9320,45 @@ $C350CC,TxtInTheFinal,,code,"textdec.py decodes $50CC to this text",src/bankC3_5
 $C3576C,CreateGoalieRatingsPage,,code,"PrintTextPage reads it when d0 is 0 (the goalie); decoded with pages.py",src/bankC3_5000.asm
 $C357AE,CreateSkaterRatingsPage,,code,"PrintTextPage reads it when d0 is not 0; decoded with pages.py",src/bankC3_5000.asm
 $C4DF5B,FindFewestGoalsAllowedTeam,CODE_C4DF5B,code,"loops teams 0-25 with BuildTeamSeasonRecordLong and keeps the lowest $2A; DrawSeasonTeamStats prints $2A * 100 / games as Goals Allowed Avg and ($2E - $2A) / $2E as the save percentage, so $2A is goals allowed; ScanSelke, ScanJennings and ScanNorris pick their player from this team",src/bankC4_D000.asm
+$C415C4,SPAgpoke,,94S+code,"GoalieUpdateState loads it where 94S assgoalie loads #SPAgpoke (facedir and pfalock set, then goaliedivewait 240)",src/bankC4_1000.asm
+$C41636,SPAgcover,,94S+code,"GoalieUpdateState loads it where 94S assgoalie loads #SPAgcover (a loose puck within $14, pf2aip 90)",src/bankC4_1000.asm
+$001,SPFskate,,94S+purpose,"frames $001-$040; used by SPAflail, SPAskate; 94S SPFskate is the group of the same job (41 there); 95 Genesis has SPFskate at 1 (the same number)",src/frames95s.asm
+$041,SPFglide,,genesis+purpose,"frames $041-$048; used by SPAglide; 95 Genesis has SPFglide at 65 (the same number)",src/frames95s.asm
+$049,SPFstop,,94S+purpose,"frames $049-$058; used by SPAstop; 94S SPFstop is the group of the same job (145 there); 95 Genesis has SPFstop at 73 (the same number)",src/frames95s.asm
+$06F,SPFpad,,94S+purpose,"frame $06F; setupice and RestoreGameScreen queue it; 94S SPFpad is the group of the same job (389 there); 95 Genesis has SPFpad at 111 (the same number)",src/frames95s.asm
+$072,SPFreplay,,94S+purpose,"frame $072, four corner marks; RestoreGameScreen queues it and the pad tags draw it; 94S SPFreplay is the group of the same job (395 there); 95 Genesis has SPFreplay at 114 (the same number)",src/frames95s.asm
+$07B,SPFshoulderl,,94S+purpose,"frames $07B-$082; used by SPAshoulderchkl; 94S SPFshoulderl is the group of the same job (249 there); 95 Genesis has SPFshoulderl at 123 (the same number)",src/frames95s.asm
+$083,SPFshoulderr,,94S+purpose,"frames $083-$08A; used by SPAshoulderchkr; 94S SPFshoulderr is the group of the same job (257 there); 95 Genesis has SPFshoulderr at 131 (the same number)",src/frames95s.asm
+$08B,SPFhook,,94S+purpose,"frames $08B-$09A; used by SPAhook, SPAhook2; 94S SPFhook is the group of the same job (481 there); 95 Genesis has SPFhook at 139 (the same number)",src/frames95s.asm
+$09B,SPFHold,,94S+purpose,"frames $09B-$0A2; used by SPAHold, SPAHold2; 94S SPFHold is the group of the same job (353 there); 95 Genesis has SPFHold at 155 (the same number)",src/frames95s.asm
+$0A3,SPFsweep,,94S+purpose,"frames $0A3-$0B2; used by SPAfaceoff, SPAsweepchk; 94S SPFsweep is the group of the same job (265 there); 95 Genesis has SPFsweep at 163 (the same number)",src/frames95s.asm
+$0B3,SPFfallfwd,,94S+purpose,"frames $0B3-$0E2; used by SPAboardback, SPAboardfront, SPAboardleft, SPAboardright, SPAfallfwd, SPAsweepchk; 94S SPFfallfwd is the group of the same job (313 there); 95 Genesis has SPFfallfwd at 179 (the same number)",src/frames95s.asm
+$0E3,SPFfallback,,94S+purpose,"frames $0E3-$10A; used by SPAboardback, SPAboardfront, SPAboardleft, SPAboardright, SPAfallback, SPAflip; 94S SPFfallback is the group of the same job (281 there); 95 Genesis has SPFfallback at 227 (the same number)",src/frames95s.asm
+$10B,SPFburst,,genesis+purpose,"frames $10B-$14A; used by SPAburst; 95 Genesis has SPFburst at 267 (the same number)",src/frames95s.asm
+$14B,SPFskatewp,,94S+purpose,"frames $14B-$18A; used by SPAfaceoff, SPAfaceoffr, SPAskatewp; 94S SPFskatewp is the group of the same job (1 there); 95 Genesis has SPFskatewp at 331 (the same number)",src/frames95s.asm
+$1B3,SPFpuck,,94S+purpose,"frames $1B3-$1BD; used by SPApflip (+1 to +10); puckfaceoff2, puckshadow and updateplayers set or test +0, the shadow; 94S SPFpuck is the group of the same job (396 there); 95 Genesis has SPFpuck at 435 (the same number)",src/frames95s.asm
+$1BE,SPFgoal,,94S+purpose,"frames $1BE-$1BF, the nets; setupice and RestoreGameScreen queue them; 94S SPFgoal is the group of the same job (407 there); 95 Genesis has SPFgoal at 446 (the same number)",src/frames95s.asm
+$1C0,SPFswing,,94S+purpose,"frames $1C0-$1EF; used by SPAonetimerf, SPApassf, SPAshotb, SPAshotf; 94S SPFswing is the group of the same job (97 there); 95 Genesis has SPFswing at 448 (the same number)",src/frames95s.asm
+$1F0,SPFskateb,,94S+purpose,"frames $1F0-$21F; used by SPAglideback, SPAskateback; 94S SPFskateb is the group of the same job (161 there); 95 Genesis has SPFskateb at 496 (the same number)",src/frames95s.asm
+$220,SPFstumble,,94S+purpose,"frames $220-$23F; used by SPAstumble; 94S SPFstumble is the group of the same job (457 there); 95 Genesis has SPFstumble at 544 (the same number)",src/frames95s.asm
+$240,SPFswingb,,genesis+purpose,"frames $240-$257; used by SPAonetimerb, SPApassb, SPAshotb; 95 Genesis has SPFswingb at 576 (the same number)",src/frames95s.asm
+$258,SPFflip,,94S+purpose,"frames $258-$25D; used by SPAflip; 94S SPFflip is the group of the same job (449 there); 95 Genesis has SPFflip at 600 (the same number)",src/frames95s.asm
+$25E,SPFGoalie,,94S+purpose,"frames $25E-$285; used by SPAgglovel, SPAgglover, SPAgready, SPAgready2, SPAgsprawll, SPAgsprawlr, SPAgstickl, SPAgstickr; 94S SPFGoalie is the group of the same job (534 there); 95 Genesis has SPFGoalie at 606 (the same number)",src/frames95s.asm
+$286,SPFgdive,,94S+purpose,"frames $286-$29D; used by SPAgcover, SPAgdive, SPAgpoke; 94S SPFgdive is the group of the same job (662 there); 95 Genesis has SPFgdive at 646 (the same number)",src/frames95s.asm
+$29E,SPFPen,,94S+purpose,"frames $29E-$2A4; used by SPAwallin, SPAwallout; 94S SPFPen is the group of the same job (361 there); 95 Genesis has SPFPen at 1005 (-335 here)",src/frames95s.asm
+$2BD,SPFSiren,,94S+purpose,"frames $2BD-$2CA; used by SPAsiren; 94S SPFSiren is the group of the same job (409 there); 95 Genesis has SPFSiren at 698 (+3 here)",src/frames95s.asm
+$2CB,SPFgstack,,genesis+purpose,"frames $2CB-$2F2; used by SPAgstackl, SPAgstackr, SPAgswing; 95 Genesis has SPFgstack at 712 (+3 here)",src/frames95s.asm
+$32A,SPFcrosscheck,,94S+purpose,"frames $32A-$331; used by SPAcrosscheck; 94S SPFcrosscheck is the group of the same job (518 there)",src/frames95s.asm
+$332,SPFcatch,,94S+purpose,"frames $332-$341; used by SPAcatch; 94S SPFcatch is the group of the same job (497 there); 95 Genesis has SPFcatch at 816 (+2 here)",src/frames95s.asm
+$342,SPFshoulder2,,genesis+purpose,"frames $342-$345; used by SPAhipchkl, SPAhipchkr; 95 Genesis has SPFshoulder2 at 832 (+2 here)",src/frames95s.asm
+$346,SPFcelebrate,,94S+purpose,"frames $346-$355; used by SPAcelebrate; 94S SPFcelebrate is the group of the same job (185 there); 95 Genesis has SPFcelebrate at 836 (+2 here)",src/frames95s.asm
+$356,SPFgskate,,genesis+purpose,"frames $356-$375; used by SPAgbutterfly, SPAgpoke, SPAgskate, SPAgsprawlr; 95 Genesis has SPFgskate at 852 (+2 here)",src/frames95s.asm
+$376,SPFgbutterfly,,94S+purpose,"frames $376-$377; used by SPAgbutterfly, SPAgcover; 94S SPFgbutterfly is the group of the same job (718 there)",src/frames95s.asm
+$378,SPFboardfront,,94S+purpose,"frames $378-$387; used by SPAboardback, SPAboardfront; 94S SPFboardfront is the group of the same job (832 there)",src/frames95s.asm
+$388,SPFboardright,,94S+purpose,"frames $388-$397; used by SPAboardleft, SPAboardright; 94S SPFboardright is the group of the same job (848 there)",src/frames95s.asm
+$398,SPFboardback,,94S+purpose,"frames $398-$3A5; used by SPAboardback; 94S SPFboardback is the group of the same job (864 there)",src/frames95s.asm
+$3A6,SPFboardleft,,94S+purpose,"frames $3A6-$3B3; used by SPAboardleft; 94S SPFboardleft is the group of the same job (880 there)",src/frames95s.asm
+$3B4,SPFinjury1,,genesis+purpose,"frames $3B4-$3B9; used by SPAinjury1; 95 Genesis has SPFinjury1 at 890 (+58 here)",src/frames95s.asm
+$3BA,SPFgready,,94S+purpose,"frames $3BA-$3CB; used by SPAgready; 94S SPFgready is the group of the same job (646 there); 95 Genesis has SPFgready at 904 (+50 here)",src/frames95s.asm
+$3EC,SPFpump2,,94S+purpose,"frames $3EC-$3FB; used by SPApump2; 94S SPFpump2 is the group of the same job (790 there); 95 Genesis's SPApump2 shows the 16 frames it calls SPFcup (938), 2 a direction as here; the frames show a stick pump",src/frames95s.asm
+$41B,SPFbenchcheck,,94S+purpose,"frames $41B-$423; used by SPAbenchcheckr; 94S SPFbenchcheck is the group of the same job (896 there)",src/frames95s.asm
