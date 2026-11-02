@@ -8913,3 +8913,9 @@ $C5B4A7,WriteTilesLoop,CODE_C5B4A7,code,"shared loop of WriteTiles4 and WriteTil
 $C5B4BC,WriteBlanksLoop,CODE_C5B4BC,code,"shared loop of WriteBlanks4 and WriteBlanks9",src/bankC5_B000.asm
 $C5B5C1,LinkLeaderBeforeInner,CODE_C5B5C1,code,"LinkLeaderBefore branches here when X differs from the list head",src/bankC5_B000.asm
 $C5B95A,DrawSeasonTeamStatsFinish,CODE_C5B95A,code,"fall-through tail of DrawSeasonTeamStats; restores its saved Y before SendTextMap",src/bankC5_B000.asm
+$C5C03F,SortStandingsInsert,CODE_C5C03F,code,"outer insertion loop of SortStandingsByStat",src/bankC5_C000.asm
+$C5C047,SortStandingsKeep,CODE_C5C047,code,"all stat compare routines branch here when no replacement is needed",src/bankC5_C000.asm
+$C5C048,SortStandingsNextSlot,CODE_C5C048,code,"shared advance after keeping or replacing a slot",src/bankC5_C000.asm
+$C5C04A,SortStandingsCompare,CODE_C5C04A,code,"dispatches through the selected stat comparison routine",src/bankC5_C000.asm
+$C5C054,SortStandingsSwap,CODE_C5C054,code,"all stat compare routines branch here to insert before the current record",src/bankC5_C000.asm
+$C5C05C,SortStandingsAppend,CODE_C5C05C,code,"restores tmp1 and follows record offset two until the linked list ends",src/bankC5_C000.asm

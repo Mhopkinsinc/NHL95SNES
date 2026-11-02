@@ -54,77 +54,79 @@ SortStandingsByStat:				; fills the list at ListBuf with the team records linked
 	lda.l DATA8_C5C0AE,x
 	sta.b tmp0
 	lda.b $81
-CODE_C5C03F:						; from CODE_C5C05C
+SortStandingsInsert:				; starts inserting team record A into ListBuf and saves its linked-list
+									; position
 	tax
 	stx.b tmp1
 	ldy.w #$0000
-	bra CODE_C5C04A
-CODE_C5C047:						; from SortByPoints, SortByGoalsAvg, SortByGoalsAllowed, ...
+	bra SortStandingsCompare
+SortStandingsKeep:					; restores the list offset when the compare keeps the existing team first
 	ply
-CODE_C5C048:						; from CODE_C5C054
+SortStandingsNextSlot:				; advances to the next word of the sorted list
 	iny
 	iny
-CODE_C5C04A:						; from CODE_C5C03F
+SortStandingsCompare:				; compares against the current list entry or finishes at the first empty
+									; slot
 	lda.w ListBuf,y
-	beq CODE_C5C05C
+	beq SortStandingsAppend
 	phy
 	tay
 	jmp ($009F)
-CODE_C5C054:						; from SortByPoints, SortByGoalsAvg, SortByGoalsAllowed, ...
+SortStandingsSwap:					; replaces the current slot and carries the displaced record forward
 	txa
 	tyx
 	ply
 	sta.w ListBuf,y
-	bra CODE_C5C048
-CODE_C5C05C:						; from CODE_C5C04A
+	bra SortStandingsNextSlot
+SortStandingsAppend:				; fills the empty slot and starts inserting the next linked team record
 	txa
 	sta.w ListBuf,y
 	ldx.b tmp1
 	lda.w $0002,x
-	bne CODE_C5C03F
+	bne SortStandingsInsert
 	rts
 SortByPoints:						; compare of SortStandingsByStat by points (+$A), highest first; back to
 									; the sort loop
 	lda.w $000A,y
 	cmp.w $000A,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByGoalsAvg:						; compare of SortStandingsByStat by goals a game (+$10), highest first;
 									; back to the sort loop
 	lda.w $0010,y
 	cmp.w $0010,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByGoalsAllowed:					; compare of SortStandingsByStat by goals allowed a game (+$12), lowest
 									; first; back to the sort loop
 	lda.w $0012,x
 	cmp.w $0012,y
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortBySavePct:						; compare of SortStandingsByStat by save percentage (+$14), highest first;
 									; back to the sort loop
 	lda.w $0014,y
 	cmp.w $0014,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShootPct:						; compare of SortStandingsByStat by shooting percentage (+$16), highest
 									; first; back to the sort loop
 	lda.w $0016,y
 	cmp.w $0016,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShotsAvg:						; compare of SortStandingsByStat by shots a game (+$1A), highest first;
 									; back to the sort loop
 	lda.w $001A,y
 	cmp.w $001A,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShotsAllowed:					; compare of SortStandingsByStat by shots allowed a game (+$30), lowest
 									; first; back to the sort loop
 	lda.w $0030,x
 	cmp.w $0030,y
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 DATA8_C5C0AE:						; the compare routines of the sort in SortStandingsByStat (one per sort
 									; key)
 	dw SortByPoints,SortByPoints,SortByGoalsAvg,SortByGoalsAllowed
