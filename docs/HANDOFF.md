@@ -358,9 +358,11 @@
   - No reader found: C5AE40 (a high-bits mask series), C0491A, C04CAB, C08939, C08B17 (16 colours), C104E0 (the
     $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
   - The SPA lists (bank $C4, 59 of them) carry 94S names except two between SPAgdive and SPAgbutterfly ($C415C4,
-    $C41636: two of gpoke / gcover2 / gcover); the code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
-    as in 94S. FrictionFactors has 94S updateplayers' bytes but
-    no 95 reader.
+    $C41636: two of gpoke / gcover2 / gcover) and the two wall lists. Those are SPAwallin / SPAwallout from their
+    users: 95 plays one sequence for every direction, forward going into the bench or penalty box, reversed coming
+    out, and neither 94S's nor 95 Genesis's left / right users match. The code's SPA immediates read
+    #SPAname&$FFFF, range bounds stay numbers as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
+    reader.
 - 26 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
     CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5888F (a

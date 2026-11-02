@@ -1388,7 +1388,7 @@ assepen:							; assignment (asstab entry 11): leave the penalty box
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #SPAwallleft&$FFFF
+	lda.w #SPAwallout&$FFFF
 	jsl.l SetSPAFromA
 	jml.l SprSort
 .3:									; facedir,x = $0004, newpnum,x = $FFFF, newpos,x = A, A = pflags,x, ...
@@ -1705,7 +1705,7 @@ asspenalty:							; called from other segments
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #SPAwallright&$FFFF
+	lda.w #SPAwallin&$FFFF
 	jsl.l SetSPAFromA
 	lda.w pflags,x
 	and.w #$BFFF

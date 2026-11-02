@@ -23,8 +23,9 @@ printscores1:						; X = a3; chk4lc, SetFaceoffComputerLine and lcfound_close ca
 									; line change
 	ldx.b a3
 	rtl
-printscores1_per:					; the period label (one column left in overtime) through print, then team
-									; a2's score; no caller found
+printscores1_per:					; steps a1 by period through the length-prefixed entries at $C09B54
+									; (RatingColumns: its first word 0 keeps a1 there), calls print (a bare
+									; rtl), writes team a2's score to mesarea; no caller found
 	lda.w gsp
 	sta.b d0
 	cmp.w #$0004

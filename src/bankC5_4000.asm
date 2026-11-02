@@ -849,7 +849,7 @@ assbench:							; asstab entry 12: an assignment routine
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #SPAwallright&$FFFF
+	lda.w #SPAwallin&$FFFF
 	jsl.l SetSPAFromA
 	lda.w #$0064
 	sta.w temp1,x
@@ -941,7 +941,7 @@ asseben:							; asstab entry 10: an assignment routine
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #SPAwallleft&$FFFF
+	lda.w #SPAwallout&$FFFF
 	jml.l SetSPAUpdate
 .rtl:								; return
 	rtl

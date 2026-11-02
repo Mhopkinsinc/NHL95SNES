@@ -58,7 +58,8 @@ MaxSpeed:							; per speed level (A * 4): the top speed squared (32 bits), from
 	dd $035D0E40,$03A64E21,$03F28B64,$0441C609
 	dd $0493FE10,$04E93379,$05416644,$059C9671
 	dd $05FAC400,$065BEEF1,$06C01744,$07273CF9
-dirtab:								; x / y vectors (length 250) of the 8 directions, read by Endfaceoff
+dirtab:								; x / y vectors (length 250) of the 8 directions, read by burst and
+									; Endfaceoff
 	dw 0,250,176,176,250,0,176,-176
 	dw 0,-250,-176,-176,-250,0,-176,176
 BitMaskTable2:						; single-bit masks, bit 0 up (the same words as BitMaskTable)

@@ -61,6 +61,6 @@ SPAinjury1 = $C42708
 SPAstop = $C41AEE
 SPAstumble = $C425D2
 SPAsweepchk = $C42082
-SPAwallleft = $C418EC
+SPAwallout = $C418EC
 
 incsrc "../bankC4_5000.asm"

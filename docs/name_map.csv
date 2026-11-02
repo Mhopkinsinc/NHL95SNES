@@ -222,7 +222,7 @@ $C09B3F,linelist,DATA8_C09B3F,94S+purpose,"94S linelist holds the same short nam
 $C09B54,RatingColumns,DATA8_C09B54,code,"16 entries, one per RatingNames heading; DrawLinePlayerRow and RosterSlotRowNext load the argument into d4 and jmp (RosterColumnTable,x) with the offset (read as RatingColumns+2,x)",src/bankC0_A000.asm
 $C09B94,GoalieRatingColumns,DATA8_C09B94,code,"12 entries, one per GoalieRatingNames heading; GoalieListRowNext and RosterGoalieRowNext read it as RatingColumns does",src/bankC0_A000.asm
 $C09BC4,MaxSpeed,DATA8_C09BC4,94S+code,"94S playeracc reads MaxSpeed,x and MaxSpeed+2,x into d2 from legspd * 16 scaled by the energy; 95 PlayerAccDir* do the same; PrintShooterRows also loads this address into $77 / $79, where 94S PrintShooterNames loads its slot text pointer (a5); no 95 read of that pointer was found",src/bankC0_A000.asm
-$C09C04,dirtab,DATA8_C09C04,94S+code,"the same bytes as 94S data/tables/dirtab (8 concrete of 32, the rest symbolic there); Endfaceoff reads it where 94S Endfaceoff does (datamap.py 2/2)",src/bankC0_A000.asm
+$C09C04,dirtab,DATA8_C09C04,94S+code,"94S data/tables/dirtab's layout (x, y per direction, diagonals runspeed*1000/1414) with 250 / 176 where 94S has runspeed 200 (200 / 141); burst and Endfaceoff read it where 94S burst and Endfaceoff do (datamap.py 2/2)",src/bankC0_A000.asm
 $C09C24,BitMaskTable2,,new,"the 16 single-bit words again (BitMaskTable is at $C04CC7); $C50F53, $C571FB, $C5C6CE",src/bankC0_A000.asm
 $C09C44,jdtab8F,DATA8_C09C44,94S+code,"the same 16 bytes as 94S data/tables/jdtab8F; no reference in the traced 95 code",src/bankC0_A000.asm
 $C09C54,Sample19,,new,"sound sample 19 of the sample list at $CF05DD: 12-byte header, BRR blocks",src/bankC0_A000.asm
@@ -715,7 +715,7 @@ $C46F93,GoalieAvoidHandlers,DATA8_C46F93,code,"94S avdgoal's second jsr table (.
 $C48B47,DATA8_C48B47,,new,"not traced: data between routines (in bankC4_8000)",src/bankC4_8000.asm
 $C4883F,rtss,,94S,"an rtl that asstab entry 0 points at (no assignment); 94S rtss is the same (entry 0 is 0 in the 94 and the 95 Genesis order); also passed as a long pointer to CODE_C45950",src/bankC4_8000.asm
 $C4932C,assgoalie_list,DATA8_C4932C,94S+code,"the same reader as 94S assgoalie (a1 = assgoalie_list, [a1],y to pfalock and SetSPAFromA, Crowdlevel + 150); the 95 offsets sort as 94S's SPAgglover ... SPAgbutterfly do in its SPA list",src/bankC4_9000.asm
-$C49B35,doshot_shotsets,DATA8_C49B35,94S+code,"the same 36 bytes as 94S doshot_shotsets (routines/input/doshot_shotsets.asm); no reference in the traced 95 code",src/bankC4_9000.asm
+$C49B35,doshot_shotsets,DATA8_C49B35,94S+code,"the same 36 bytes as 94S doshot_shotsets (routines/input/doshot_shotsets.asm); doshot reads it through a0 at passdir * 4, as 94S doshot does",src/bankC4_9000.asm
 $C49B66,DATA8_C49B66,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
 $C49C87,BreakawayNoCallback,DATA8_C49C87,code,"94S assbreakaway .nocallback ('skateto callback: nothing to avoid'), passed in a0 the same way",src/bankC4_9000.asm
 $C49CC3,BreakawayPathPoints,DATA8_C49CC3,code,"94S assbreakaway .10 ('path points: x, y and the y of the next point'; 95 has 80, 140, 230, 183, 233 where 94S has 74, 134, 224, 177, 227); AdvanceBreakawayPath reads it as 94S .9 does",src/bankC4_9000.asm
@@ -8882,7 +8882,7 @@ $C4B688,IntroSoundCueReturn,CODE_C4B688,code,"IntroSoundCue1-4 branch to it befo
 $C4BBEB,PrintBoldCentredCopy,CODE_C4BBEB,code,"from the code: jsl RenderBoldCentred / bra UploadAndMapText, as PrintBoldCentred just above; no reference in the traced code",src/bankC4_B000.asm
 $C4BB43,CopyBankC3String,CODE_C4BB43,code,"from the code: tax / lda.l $C30000,x loop to sta $0000,y until 0; no reference in the traced code",src/bankC4_B000.asm
 $C4785E,RedrawPeriodBox,CODE_C4785E,code,"updatepwrplay_clr runs on into it when the power play flag was set, where 94S updatepwrplay_clr calls EASNLogo to restore the box; EndPenaltyShot calls it",src/bankC4_7000.asm
-$C5111D,printscores1_per,CODE_C5111D,94S+code,"the same code as 94S printscores1_per (gsp 4: printx - 1 and the next label; walk PerLabels to label d0) up to its jml print; 95 calls print and goes on to the score",src/bankC5_1000.asm
+$C5111D,printscores1_per,CODE_C5111D,94S+code,"the same code as 94S printscores1_per (gsp 4: printx - 1 and the next label; step a1 to label d0) up to its jml print, but its table address is $C09B54 (RatingColumns) where 94S has PerLabels; 95 calls print (a bare rtl) and goes on to write the score to mesarea",src/bankC5_1000.asm
 $C528D3,print,CODE_C528D3,94S+code,"printscores1_per calls it where 94S printscores1_per ends with jml print",src/bankC5_2000.asm
 $C46EDA,.2,CODE_C46EDA,94S+code,"GoalieAvoidInsideTarget local: unreached in 95; the block of 94S avdgoal at its .4 (cmp Xpos,y / bpl return / far line y to d1), no reference in the traced code",src/bankC4_6000.asm
 $C49390,.1,CODE_C49390,94S+code,"GoaliePuckVector local: unreached in 95; 94S GoaliePuckVector's .t1 entry (d0 = puckx, d1 = pucky - d4) before its goal line check, no reference in the traced code",src/bankC4_9000.asm
@@ -8949,8 +8949,8 @@ $C41552,SPAgdive,,94S+code,"the 94S SPA list of the same place: spa94.py (goalie
 $C41708,SPAgbutterfly,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 8",src/bankC4_1000.asm
 $C4179A,SPAgsprawll,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 7",src/bankC4_1000.asm
 $C4182C,SPAgsprawlr,,94S+code,"the 94S SPA list of the same place: assgoalie_list entry 6",src/bankC4_1000.asm
-$C418BE,SPAwallright,,94S+code,"the 94S SPA list of the same place: 94S order after SPAgsprawlr; assbench votes SPAwallright (asspenalty votes SPAgwallleft: 95 has no goalie wall lists)",src/bankC4_1000.asm
-$C418EC,SPAwallleft,,94S+code,"the 94S SPA list of the same place: 94S order; updateanim votes SPAwallleft (asseben / assepen vote the right-hand names)",src/bankC4_1000.asm
+$C418BE,SPAwallin,,code,"was SPAwallright (94S order after SPAgsprawlr); one sequence for every direction, frames $029E-$02A4; assbench and asspenalty load it. 94S assbench loads SPAwallleft and asspenalty SPAwallright, 95 Genesis SPAwallleft and SPAwallright, so neither name fits",src/bankC4_1000.asm
+$C418EC,SPAwallout,,code,"was SPAwallleft (94S order); the reverse sequence, frames $02A4-$029E, for every direction; asseben, assepen and updateanim (a bench check's end) load it. 94S loads SPAwallright, SPAwallleft and SPAwallright there, 95 Genesis SPAwallleft in asseben and assepen",src/bankC4_1000.asm
 $C4191A,SPApflip,,94S+code,"the 94S SPA list of the same place: spa94.py (puckflip)",src/bankC4_1000.asm
 $C41958,SPAglide,,94S+code,"the 94S SPA list of the same place: spa94.py 6/6 votes",src/bankC4_1000.asm
 $C4198A,SPAskatewp,,94S+code,"the 94S SPA list of the same place: spa94.py (noturn0)",src/bankC4_1000.asm

@@ -56,7 +56,7 @@ rtss = $C4883F
 SPAcelebrate = $C42824
 SPAglide = $C41958
 SPApump2 = $C427B2
-SPAwallleft = $C418EC
-SPAwallright = $C418BE
+SPAwallin = $C418BE
+SPAwallout = $C418EC
 
 incsrc "../bankC4_7000.asm"

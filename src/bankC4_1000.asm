@@ -184,14 +184,16 @@ SPAgsprawlr:						; per direction (facedir & 7, * 2): the goalie's sprawl to the
 	db $82,$02,$14,$00,$75,$03,$FC,$FF,$64,$02,$04,$00,$84,$02,$04,$00
 	db $82,$02,$14,$00,$75,$03,$FC,$FF,$65,$02,$04,$00,$85,$02,$04,$00
 	db $84,$02,$14,$00,$73,$03,$FC,$FF
-SPAwallright:						; per direction (facedir & 7, * 2): over the boards to the right (the
-									; bench)
+SPAwallin:							; per direction (facedir & 7, * 2): one sequence for all: frames
+									; $029E-$02A4 over the boards into the bench (assbench) or the penalty box
+									; (asspenalty)
 	db $D0,$18,$D0,$18,$D0,$18,$D0,$18
 	db $D0,$18,$D0,$18,$D0,$18,$D0,$18,$00,$00,$9E,$02,$05,$00,$9F,$02
 	db $05,$00,$A0,$02,$05,$00,$A1,$02,$05,$00,$A2,$02,$05,$00,$A3,$02
 	db $05,$00,$A4,$02,$FB,$FF
-SPAwallleft:						; per direction (facedir & 7, * 2): over the boards to the left (the
-									; bench)
+SPAwallout:							; per direction (facedir & 7, * 2): one sequence for all: frames
+									; $02A4-$029E back over the boards out of the bench (asseben, and
+									; updateanim after a bench check) or the penalty box (assepen)
 	db $FE,$18,$FE,$18,$FE,$18,$FE,$18,$FE,$18
 	db $FE,$18,$FE,$18,$FE,$18,$00,$00,$A4,$02,$05,$00,$A3,$02,$05,$00
 	db $A2,$02,$05,$00,$A1,$02,$05,$00,$A0,$02,$05,$00,$9F,$02,$05,$00

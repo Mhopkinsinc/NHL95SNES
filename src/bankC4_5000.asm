@@ -1111,7 +1111,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #SPAwallleft&$FFFF
+	lda.w #SPAwallout&$FFFF
 	jsl.l SetSPAUpdate
 	bra .8
 dostop:								; called from other segments
