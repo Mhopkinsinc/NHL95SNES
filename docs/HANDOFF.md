@@ -207,7 +207,8 @@
   change box); bare rtl stubs sit where 94S calls StartBenchCheer, UpdateBenchCheer, InitScores and DoHiLights, and
   SetHor / ClrHor keep only the puck speed halving and the sfhormode count. Hand-checked RAM names go in with
   ../work/ramhand.py (fixoff.py writes $XXXX as NAME+K; relabel.py and movename.py correct a name already given).
-- RAM names, second pass (515 names now, 33 of them save RAM; 517 raw operands left at 320 addresses):
+- RAM names, second pass (584 names now, 33 of them save RAM; 51 raw operands left at 45 addresses, all buffer or
+  record offsets or on the Unsure list):
   - ../work/ramsurvey.py lists the raw absolute operands by use, with the routines using them. It leaves out pea,
     hardware registers, and indexed operands below $0200 (record fields with a base pointer in X / Y).
   - neigh94.py gives the 94S symbol at the offset of the named neighbours on each side. Take it only when both sides
@@ -221,6 +222,16 @@
   - Code running with the data bank at $30 writes save RAM as NAME&$FFFF (InitSaveRAM, ClearSeasonData ...).
   - Shared areas have neutral names: ScratchBuf ($364E, 2 KB: DecompressLZSS's window and the screens' lists) and
     ListBuf ($3E4E). HomeRoster / VisRoster are the two LoadTeamRoster tables; their fields are written +K.
+  - $7E RAM above $2000 reached only with absolute operands gets a $XXXX name in the low RAM section (TaskSlots,
+    gamesstarted). A name goes in the long section ($7Exxxx / $7Fxxxx) only when code also reaches it with long
+    operands (unpackbuf, rinkmapbuf, RefsMapBuf, pausesavebuf); its absolute operands then read NAME&$FFFF /
+    (NAME+$K)&$FFFF (CopyRefereeFrameToVRAM runs with data bank $7F). ../work/longname.py MAP adds long names,
+    longw.py NAME SIZE rewrites their operands, long2low.py moves a name that has no long uses.
+  - fixoff.py takes NAME-K too (OOlist-1,y, mesarea-1,x as 94S writes them). resum2.py refreshes summaries quoting
+    direct page names; comaddr.py lists hand-written comments that still quote a named address (most hits are values).
+  - Left as numbers on purpose: offsets from a base in X / Y (PutClockDigit's $0700,x ... into the pause map,
+    CheckGlyphLeftOverlap's glyph buffer, EditLinesScreen / PrintPositionCounts text map cells, the roster bonus fields
+    $0430-$043C), and the code that moves D.
 - Parallel work: the repo is the T3 project "NHL95SNES"; a Codex thread on its own worktree branch (codex/<topic>)
   works beside the main checkout and is merged by cherry-pick (name_map.csv conflicts: keep both sides,
   ../work/resolve_namemap.py). Brief it with the rules and the tools that are safe to run (side.py only reads).
@@ -301,9 +312,11 @@
   for a zero first sequence byte, otherwise readPackedEventByte; the old missing-reference question is resolved.
   Remaining auto labels inside SoundDriver are control-flow joins, loops, patched instruction sites and helpers
   without a separately documented contract. Sound RAM buffers stay numbers.
-  CPU continuations CODE_CF0069/008B/0098/00FD/0239/04A8/04B4 keep auto labels; they are not independent APIs.
+  The CPU continuations are named by role (SPCUploadBlockBytes, SPCUploadNextBlock, SPCUploadBlockHandshake,
+  QueueSoundCmdReturn, LoadSampleEnvelopeAndData, StartSelectedTeamSong); they are not separate entry points.
   StartCrowdSound starts sound 2 (the crowd) unless CrowdSoundOn is set; puckfaceoff2 and Pausemode call it; StartMenuMusic
-  reloads and starts sequence $A4 under two flags whose game-level meanings are not established.
+  reloads and starts sequence $A4 when MenuMusicPending (TitleScreen's song task has not started it yet) or
+  MenuMusicVisited (set by its first call) is set. $4ABC / $4ABE / $4BC0 are only written at sound setup: not named.
   DATA8_CF0661 has no reader found. SampleVolumeOverrideLists writes sample stereo-volume overrides, but LoadSequence indexes
   it from r2 (the sequence pointer), not the flag byte in SoundSequenceTable; the intended selection is unresolved.
 - Scoreboard: CODE_C539D7 draws the score box (team abbreviations, scores) and CODE_C53A29 the period box (showclockdma,
@@ -312,7 +325,13 @@
   The third Claude thread followed its reads for all 662 roster players. It doubles the PlayerList pointer before
   reading, so it never reaches a real player record: not named.
 - setlccords (was setlccords) is resolved: the bytes at $C54120 are `ldy.w #$5AB5`. The old `phy` entry at $C54122 was
-  its operand's last byte, and that entry's caller was a false match. $18AA: CloseLCBoxes and the face off code count it up; not named.
+  its operand's last byte, and that entry's caller was a false match. $18AA is LCBoxesClosed (CloseLCBoxes, ShowGoalBox
+  and ShowInjuryBox count it up; the face off clears it; setlccords opens the top line change box lower while it is set).
+- RAM left unnamed: dp $A5 (248 scratch uses; its tmp2 / tmp4 neighbours put 94S tmp3 there, but 94S uses tmp3 only in
+  IntroSequence, so layout is the only evidence); $0085 (absolute d1+2, but the season screens use dp $85 as a game
+  number); $0004 (the CGRAM queue stack pointer, dp $04 unnamed); $7E8F3C / $8F5C (a palette inside the unpacked bracket
+  map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
+  puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
 - FixLineForward / FixLineDefence were first named the wrong way round. The range right after the goalies is the
   forwards (roster +4 is the forward count, GetForwardCount). Line bytes +1 / +2 are LD / RD (the slot texts), so the
   routine that fixes those is FixLineDefence.
