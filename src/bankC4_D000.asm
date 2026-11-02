@@ -1348,8 +1348,8 @@ ScanVezina:							; Vezina Trophy: of the goalies of the 26 teams, the one Seaso
 	bne .1
 	lda.b $71
 	rts
-ScanSelke:							; Selke Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
-									; goals + assists
+ScanSelke:							; Selke Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; forward with the most goals + assists
 	stz.b a2
 	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
@@ -1433,8 +1433,8 @@ ScanConnSmythe:						; Conn Smythe Trophy: of the skaters of the 16 playoff team
 	bcc .1
 	lda.b $71
 	rts
-ScanJennings:						; Jennings Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
-									; scores highest
+ScanJennings:						; Jennings Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; goalie with the most season games (SeasonGoalieGamesLong)
 	stz.b a2
 	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
@@ -1654,8 +1654,8 @@ ScanArtRoss:						; Art Ross Trophy: of all players, goalies skipped, the one wi
 	bcc .loop
 	lda.b $71
 	rts
-ScanNorris:							; Norris Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
-									; most goals + assists
+ScanNorris:							; Norris Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; defenceman with the most goals + assists
 	stz.b a2
 	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
