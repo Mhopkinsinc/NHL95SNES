@@ -38,9 +38,9 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l MapSetToUnpackbuf
 	ldx.w #$2A7E
 	clc
-.loop:								; loop: $7F9C7A,x = $50DC,x, X - 1, X - 1, ...
-	lda.w $50DC,x
-	sta.l $7F9C7A,x
+.loop:								; loop: rinkmapbuf,x = unpackbuf&$FFFF,x, X - 1, X - 1, ...
+	lda.w unpackbuf&$FFFF,x
+	sta.l rinkmapbuf,x
 	dex
 	dex
 	bpl .loop
@@ -150,7 +150,7 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	asl a
 	adc.w HomeTeam
 	xba
-	adc.w #$50DC
+	adc.w #unpackbuf&$FFFF
 	pha
 	ldy.b $00
 	tsx
@@ -180,10 +180,10 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l MapSetToUnpackbuf
 	ldx.w #$092E
 	clc
-.loop2:								; loop: A = $50DC,x, A + $3420, $7FC6FA,x = A, X - 1, ...
-	lda.w $50DC,x
+.loop2:								; loop: A = unpackbuf&$FFFF,x, A + $3420, RefsMapBuf,x = A, X - 1, ...
+	lda.w unpackbuf&$FFFF,x
 	adc.w #$3420
-	sta.l $7FC6FA,x
+	sta.l RefsMapBuf,x
 	dex
 	dex
 	bpl .loop2
@@ -1191,7 +1191,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	xba
 	lsr a
 	lsr a
-	adc.w #$9C7A
+	adc.w #rinkmapbuf&$FFFF
 	pha
 	phx
 	phy
@@ -1223,7 +1223,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	xba
 	lsr a
 	lsr a
-	adc.w #$9C7A
+	adc.w #rinkmapbuf&$FFFF
 	pha
 	phx
 	phy

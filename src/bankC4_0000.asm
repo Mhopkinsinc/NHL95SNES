@@ -563,10 +563,10 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	jsl.l MapSetToUnpackbuf
 	ldx.w #$15DE
 	clc
-.loop:								; loop: A = $50DC,x, A + $2A30, $7F9C7A,x = A, X - 1, ...
-	lda.w $50DC,x
+.loop:								; loop: A = unpackbuf&$FFFF,x, A + $2A30, rinkmapbuf,x = A, X - 1, ...
+	lda.w unpackbuf&$FFFF,x
 	adc.w #$2A30
-	sta.l $7F9C7A,x
+	sta.l rinkmapbuf,x
 	dex
 	dex
 	bpl .loop
@@ -608,10 +608,10 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	jsl.l AllocWorkBuf
 	jsl.l MarkWorkBuf
 	ldx.w #$04DE
-.loop2:								; loop: A = $50DC,x, A or $3400, $50DC,x = A, X - 1, ...
-	lda.w $50DC,x
+.loop2:								; loop: A = unpackbuf&$FFFF,x, A or $3400, unpackbuf&$FFFF,x = A, ...
+	lda.w unpackbuf&$FFFF,x
 	ora.w #$3400
-	sta.w $50DC,x
+	sta.w unpackbuf&$FFFF,x
 	dex
 	dex
 	bpl .loop2
@@ -800,8 +800,8 @@ QueueBracketColumn:					; gathers and queues one bracket map column for the scro
 	tax
 	lda.w #$001B
 	sta.b tmp0
-.loop:								; loop: $0000,y = $7F9C7A,x, Y + 1, Y + 1, A = X, ...
-	lda.l $7F9C7A,x
+.loop:								; loop: $0000,y = rinkmapbuf,x, Y + 1, Y + 1, A = X, ...
+	lda.l rinkmapbuf,x
 	sta.w $0000,y
 	iny
 	iny
@@ -1159,10 +1159,10 @@ CopyBracketTeamBar:					; copies a team's two-row name bar into the bracket map
 	asl a
 	asl a
 	asl a
-	adc.w #$50DC
+	adc.w #unpackbuf&$FFFF
 	tax
 	tya
-	adc.w #$9C7A
+	adc.w #rinkmapbuf&$FFFF
 	tay
 	lda.w #$0017
 	mvn $7F,$7E
@@ -1181,12 +1181,12 @@ ToggleTeamBarHighlight:				; toggles the highlight of a team's name bar in the b
 	txa
 	adc.w #$00B0
 	tax
-ToggleTeamBarRow:					; toggles palette bit $0400 of 12 tiles at X in the map buffer at $7F9C7A
+ToggleTeamBarRow:					; toggles palette bit $0400 of 12 tiles at X in rinkmapbuf
 	ldy.w #$000B
-.loop:								; loop: A = $7F9C7A,x, A xor $0400, $7F9C7A,x = A, X + 1, ...
-	lda.l $7F9C7A,x
+.loop:								; loop: A = rinkmapbuf,x, A xor $0400, rinkmapbuf,x = A, X + 1, ...
+	lda.l rinkmapbuf,x
 	eor.w #$0400
-	sta.l $7F9C7A,x
+	sta.l rinkmapbuf,x
 	inx
 	inx
 	dey

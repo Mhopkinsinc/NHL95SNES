@@ -495,6 +495,8 @@ SimPickIndex		=	$DBEA		; BuildSimPickTable: the next entry of SimTable (4 bytes 
 ; work RAM, long addresses
 Crowdlevel			=	$7E24CA		; crowd noise level: the play raises it, updatecrowdf lets it fade
 unpackbuf			=	$7E50DC		; Decompress output buffer (DecompressUnpackbuf)
+rinkmapbuf			=	$7F9C7A		; the rink map the game scrolls (setupice); the bracket map too
+RefsMapBuf			=	$7FC6FA		; the referee frames (RefsMap) with tile base $3420 (setupice)
 
 ; save RAM (bank $30), long addresses
 SRSignature1		=	$306000		; save signature 1 of 3: the cartridge header and vectors ($40 bytes)

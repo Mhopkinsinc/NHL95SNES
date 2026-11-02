@@ -1087,131 +1087,131 @@ CopyRefereeFrameToVRAM:				; copy the selected referee map frame to VRAM
 	tya
 	clc
 	sta.b VMADDL&$FF
-	ldy.w $C6FA,x
+	ldy.w RefsMapBuf&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C6FC,x
+	ldy.w (RefsMapBuf+$2)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C6FE,x
+	ldy.w (RefsMapBuf+$4)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C700,x
+	ldy.w (RefsMapBuf+$6)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C702,x
+	ldy.w (RefsMapBuf+$8)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C704,x
+	ldy.w (RefsMapBuf+$A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C706,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C75C,x
-	sty.b VMDATAL&$FF
-	ldy.w $C75E,x
-	sty.b VMDATAL&$FF
-	ldy.w $C760,x
-	sty.b VMDATAL&$FF
-	ldy.w $C762,x
-	sty.b VMDATAL&$FF
-	ldy.w $C764,x
-	sty.b VMDATAL&$FF
-	ldy.w $C766,x
-	sty.b VMDATAL&$FF
-	ldy.w $C768,x
+	ldy.w (RefsMapBuf+$C)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C7BE,x
+	ldy.w (RefsMapBuf+$62)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C0,x
+	ldy.w (RefsMapBuf+$64)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C2,x
+	ldy.w (RefsMapBuf+$66)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C4,x
+	ldy.w (RefsMapBuf+$68)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C6,x
+	ldy.w (RefsMapBuf+$6A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C8,x
+	ldy.w (RefsMapBuf+$6C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7CA,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C820,x
-	sty.b VMDATAL&$FF
-	ldy.w $C822,x
-	sty.b VMDATAL&$FF
-	ldy.w $C824,x
-	sty.b VMDATAL&$FF
-	ldy.w $C826,x
-	sty.b VMDATAL&$FF
-	ldy.w $C828,x
-	sty.b VMDATAL&$FF
-	ldy.w $C82A,x
-	sty.b VMDATAL&$FF
-	ldy.w $C82C,x
+	ldy.w (RefsMapBuf+$6E)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C882,x
+	ldy.w (RefsMapBuf+$C4)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C884,x
+	ldy.w (RefsMapBuf+$C6)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C886,x
+	ldy.w (RefsMapBuf+$C8)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C888,x
+	ldy.w (RefsMapBuf+$CA)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88A,x
+	ldy.w (RefsMapBuf+$CC)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88C,x
+	ldy.w (RefsMapBuf+$CE)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88E,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C8E4,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8E6,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8E8,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EA,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EC,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EE,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8F0,x
+	ldy.w (RefsMapBuf+$D0)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C946,x
+	ldy.w (RefsMapBuf+$126)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C948,x
+	ldy.w (RefsMapBuf+$128)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94A,x
+	ldy.w (RefsMapBuf+$12A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94C,x
+	ldy.w (RefsMapBuf+$12C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94E,x
+	ldy.w (RefsMapBuf+$12E)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C950,x
+	ldy.w (RefsMapBuf+$130)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C952,x
+	ldy.w (RefsMapBuf+$132)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C9A8,x
+	ldy.w (RefsMapBuf+$188)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AA,x
+	ldy.w (RefsMapBuf+$18A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AC,x
+	ldy.w (RefsMapBuf+$18C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AE,x
+	ldy.w (RefsMapBuf+$18E)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B0,x
+	ldy.w (RefsMapBuf+$190)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B2,x
+	ldy.w (RefsMapBuf+$192)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B4,x
+	ldy.w (RefsMapBuf+$194)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$1EA)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1EC)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1EE)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F0)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F2)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F4)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F6)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$24C)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$24E)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$250)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$252)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$254)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$256)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$258)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$2AE)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B0)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B2)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B4)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B6)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B8)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2BA)&$FFFF,x
 	sty.b VMDATAL&$FF
 	plb
 	pld

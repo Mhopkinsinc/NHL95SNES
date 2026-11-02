@@ -767,7 +767,7 @@ DATA8_C4C502:						; not traced: a table read by DrawNextTextCharacter
 	db $83,$88,$87,$88,$87,$86,$86,$88,$87,$83,$86,$87,$87,$88,$87,$88
 	db $87,$88,$88,$87,$87,$87,$88,$88,$87,$87,$87,$02,$03,$01
 ResetWorkBuf:						; both work buffer pointers back to their starts, the saved mark too
-	lda.w #$50DC
+	lda.w #unpackbuf&$FFFF
 	sta.w WorkBufMark
 RestoreWorkBuf:						; the work buffer pointer back to the saved mark (MarkWorkBuf), the second
 									; one to its start
