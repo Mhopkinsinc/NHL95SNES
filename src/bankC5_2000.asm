@@ -99,19 +99,19 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	sta.b tmp1
 	lda.w #$2160
 	sta.b tmp2
-	lda.w #$01BE
+	lda.w #SPFgoal
 	jsl.l QueueFrameTiles
 	lda.w #$2168
 	sta.b tmp2
-	lda.w #$01BF
+	lda.w #SPFgoal+1
 	jsl.l QueueFrameTiles
 	lda.w #$2588
 	sta.b tmp2
-	lda.w #$006F
+	lda.w #SPFpad
 	jsl.l QueueFrameTiles
 	lda.w #$2035
 	sta.b tmp1
-	lda.w #$01B3
+	lda.w #SPFpuck
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
 	lda.b $00
@@ -1047,7 +1047,7 @@ CODE_C52852:						; from TagPadMarker
 	lda.w #PadTagFrameDoneJump&$FFFF
 	sta.b $A5
 	ldy.b $2A
-	lda.w #$0072
+	lda.w #SPFreplay
 	jml.l DrawFrameLayout
 PadTagFrameDone:					; the frame layout's continuation for the player tags: the OAM pointer
 									; kept, then NextPadTag

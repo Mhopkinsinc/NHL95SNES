@@ -116,7 +116,7 @@
   it seeded sample bytes) and a seed with the wrong M/X at $CF0204; $CF0000,x / $CF0001,x are bank bases (3-byte records).
   The end of the bank: the continuations NextSortedGameObjectJump / PadTagFrameDoneJump (their addresses go in $A5), the frame code DrawFrameLayoutFlip / DrawFrameLayout (mirrored /
   normal; layout from FrameBankLayout+1, the record through LayoutPointers / $CFF3A0 and the handler table LayoutBigPieces),
-  LayoutSizes (the size words QueueFrameTiles reads), the 141 layout records, CODE_CFFD9E / CODE_CFFF88 (the top layouts jump
+  LayoutSizes (the size words QueueFrameTiles reads), the 141 layout records, GoalFrameLayout / PuckFrameLayout (the top layouts jump
   there through the pointer table) and zeros. The records are read as $CF0000-$CF0008,x (bank bases; numbers).
 - Naming pass (94S by code): ../work/match94.py compares every call target in the bank $C3/$C4/$C5/$CF pickles (body
   flooded over branches, calls not followed) with each NHL94SNES routine (mnemonic + addressing mode, 4-gram candidates,
@@ -369,15 +369,15 @@
     flag, then SPFgroup+n / time pairs). The code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
     as in 94S. FrictionFactors has 94S updateplayers' bytes but no 95
     reader.
-- 26 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
+- 24 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
     CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5888F (a
     signed multiply through WRMPYA / WRMPYB), CODE_C588EB (a software divide, not 94S Div32x32U), CODE_C5EA91,
     CODE_C5EAA2, CODE_C5EB88, CODE_C5ECA5, CODE_C5EE3C (sprite object helpers), CODE_CFFF0F.
   - CODE_C537DE: 94S findpc's carrier test, which 95 skips with an unconditional branch (its other blocks are named
     findpcSearch / findpcSweepcheck / findpcAssign / findpcReturn).
-  - CODE_C52842 / CODE_C52852: DrawPadTag / TagPadMarker draw a frame layout ($72) with tiles $2454 / $25E0; what it
-    shows is not established. CODE_CFFD9E / CODE_CFFF88: layout records 142-145 jump there.
+  - CODE_C52842 / CODE_C52852: DrawPadTag / TagPadMarker draw frame SPFreplay (the four corner marks, 94S's replay
+    cursor) with tiles $2454 / $25E0 beside the tag; when they run is not traced.
   - Already listed: CODE_C43FC1 (only calls CODE_C53A29), CODE_C539D7 / CODE_C53A29 (scoreboard), CODE_C535EF,
     CODE_C5EBB8 / CODE_C5EC1A (sprite commands $89 / $8E).
 - FixLineForward / FixLineDefence were first named the wrong way round. The range right after the goalies is the

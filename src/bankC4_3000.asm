@@ -1000,7 +1000,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w Xpos+26
 	lda.w #$FEE8
 	sta.w Ypos+26
-	lda.w #$01B3
+	lda.w #SPFpuck
 	sta.w frame+$1E
 	stz.w SPA+$1E
 	stz.w attribute+$1E

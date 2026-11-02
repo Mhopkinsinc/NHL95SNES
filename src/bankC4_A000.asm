@@ -752,7 +752,7 @@ DumpInTargetY:						; per dump in target: y toward the goal (the second half for
 	db $97,$FF,$8D,$FF,$8D,$FF,$4C,$FF,$29,$FF,$4C,$FF,$69,$00,$73,$00
 	db $73,$00,$B4,$00,$D7,$00,$B4,$00
 puckshadow:							; assignment (asstab entry 25): the puck shadow (object 15): under the
-									; puck when the puck frame is $01B3, else at a fixed spot flipped by the
+									; puck when the puck frame is SPFpuck, else at a fixed spot flipped by the
 									; puck's end
 	lda.w frame+$1E
 	cmp.w frame+$3E
@@ -769,8 +769,8 @@ puckshadow:							; assignment (asstab entry 25): the puck shadow (object 15): u
 	jsl.l QueueFrameTiles
 	plx
 	lda.w frame+$1E
-.1:									; if A is not $01B3 go to .2, Xpos+$1E = puckx, A = pucky, A + 1, ...
-	cmp.w #$01B3
+.1:									; if A is not SPFpuck go to .2, Xpos+$1E = puckx, A = pucky, A + 1, ...
+	cmp.w #SPFpuck
 	bne .2
 	lda.w puckx
 	sta.w Xpos+$1E
@@ -956,10 +956,10 @@ puckgoalie:							; called from other segments
 	lda.b d2
 	eor.w #$0002
 	sta.b d2
-.5:									; A = frame,y, A - $0286, if A >= $0018 go to .6, ...
+.5:									; A = frame,y, A - SPFgdive, if A >= $0018 go to .6, ...
 	lda.w frame,y
 	sec
-	sbc.w #$0286
+	sbc.w #SPFgdive
 	cmp.w #$0018
 	bcs .6
 	lda.w puckz

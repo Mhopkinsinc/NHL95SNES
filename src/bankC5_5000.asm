@@ -928,25 +928,25 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	sta.b tmp1
 	lda.w #$2160
 	sta.b tmp2
-	lda.w #$01BE
+	lda.w #SPFgoal
 	jsl.l QueueFrameTiles
 	lda.w #$2168
 	sta.b tmp2
-	lda.w #$01BF
+	lda.w #SPFgoal+1
 	jsl.l QueueFrameTiles
 	lda.w #$2588
 	sta.b tmp2
-	lda.w #$006F
+	lda.w #SPFpad
 	jsl.l QueueFrameTiles
 	lda.w #$2035
 	sta.b tmp1
-	lda.w #$01B3
+	lda.w #SPFpuck
 	jsl.l QueueFrameTiles
 	lda.w #$2454
 	sta.b tmp1
 	lda.w #$25E0
 	sta.b tmp2
-	lda.w #$0072
+	lda.w #SPFreplay
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
 	lda.b $00

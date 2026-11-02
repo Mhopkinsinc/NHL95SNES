@@ -1123,7 +1123,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$FF65
 	sta.w puckx
 	ldx.w frame+$1C
-	cpx.w #$01B3
+	cpx.w #SPFpuck
 	bne .74
 	sta.w Xpos+$1E
 .74:								; if puckx - $009B < 0 go to .75, puckx = $009B, ...
@@ -1133,7 +1133,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$009B
 	sta.w puckx
 	ldx.w frame+$1C
-	cpx.w #$01B3
+	cpx.w #SPFpuck
 	bne .75
 	sta.w Xpos+$1E
 .75:								; if puckz is not 0 go to .77, if pucky - $FEAE < 0 go to .77, ...

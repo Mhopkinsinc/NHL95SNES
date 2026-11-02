@@ -1853,7 +1853,7 @@ assdopen:							; from SeatPenaltyBox and other segments
 	lda.w attribute,x
 	and.w #$F7FF
 	sta.w attribute,x
-	lda.w #$02A4
+	lda.w #SPFPen+6
 	sta.w frame,x
 	rtl
 SeatPenaltyBox:						; from chkprogress and other segments

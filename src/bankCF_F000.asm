@@ -280,8 +280,8 @@ LayoutPointers:						; per layout a pointer in this bank: entries 0-141 a layout
 	dw Layout128&$FFFF,Layout129&$FFFF,Layout130&$FFFF,Layout131&$FFFF
 	dw Layout132&$FFFF,Layout133&$FFFF,Layout134&$FFFF,Layout135&$FFFF
 	dw Layout136&$FFFF,Layout137&$FFFF,Layout138&$FFFF,Layout139&$FFFF
-	dw Layout140&$FFFF,Layout141&$FFFF,CODE_CFFD9E&$FFFF,CODE_CFFD9E&$FFFF
-	dw CODE_CFFF88&$FFFF,CODE_CFFF88&$FFFF
+	dw Layout140&$FFFF,Layout141&$FFFF,GoalFrameLayout&$FFFF,GoalFrameLayout&$FFFF
+	dw PuckFrameLayout&$FFFF,PuckFrameLayout&$FFFF
 Layout000:							; the layout record of LayoutPointers entry 0: 16 x 16 pieces (a byte for
 									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
 									; then the 8 x 8 ones
@@ -926,7 +926,8 @@ Layout141:							; the layout record of LayoutPointers entry 141: 16 x 16 pieces
 									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
 									; pairs), then the 8 x 8 ones
 	db $04,$00,$00,$00,$10,$10,$06,$08
-CODE_CFFD9E:						; reached through LayoutPointers (entries 142 and 143)
+GoalFrameLayout:					; the layout code of the second net, SPFgoal+1 (layouts $8F / $90): its 16
+									; x 16 pieces at fixed offsets, then on through $A5
 	pei ($A3)
 	ldx.w #$0002
 	lda.b $0A
@@ -1206,7 +1207,8 @@ CODE_CFFF0F:						; called from other segments
 	iny
 .10:								; jump through $00A5
 	jmp ($00A5)
-CODE_CFFF88:						; reached by jmp (LayoutPointers-2,x): entries 144 and 145
+PuckFrameLayout:					; the layout code of the flipping puck, SPFpuck+1 to +10 (layouts $91 /
+									; $92): one 8 x 8 piece raised by puckz * 3 / 2, then on through $A5
 	pei ($A1)
 	ldx.w #$0000
 	lda.b $0A

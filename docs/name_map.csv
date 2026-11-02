@@ -6670,36 +6670,36 @@ $CFF255,.1,CODE_CFF255,new,"branch target only used in PutSmallPiece1",src/bankC
 $CFF26A,.2,CODE_CFF26A,new,"branch target only used in PutSmallPiece1",src/bankCF_F000.asm
 $CFF26D,.3,CODE_CFF26D,new,"branch target only used in PutSmallPiece1",src/bankCF_F000.asm
 $CFF272,.4,CODE_CFF272,new,"branch target only used in PutSmallPiece1",src/bankCF_F000.asm
-$CFFDB0,.1,CODE_CFFDB0,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFDC3,.2,CODE_CFFDC3,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFDC6,.3,CODE_CFFDC6,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFDCB,.4,CODE_CFFDCB,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFDD2,.5,CODE_CFFDD2,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFDED,.6,CODE_CFFDED,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE00,.7,CODE_CFFE00,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE03,.8,CODE_CFFE03,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE08,.9,CODE_CFFE08,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE0F,.10,CODE_CFFE0F,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE26,.11,CODE_CFFE26,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE3C,.12,CODE_CFFE3C,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE3F,.13,CODE_CFFE3F,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE44,.14,CODE_CFFE44,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE4B,.15,CODE_CFFE4B,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE66,.16,CODE_CFFE66,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE7C,.17,CODE_CFFE7C,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE7F,.18,CODE_CFFE7F,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE84,.19,CODE_CFFE84,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFE8B,.20,CODE_CFFE8B,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEA6,.21,CODE_CFFEA6,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEB9,.22,CODE_CFFEB9,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEBC,.23,CODE_CFFEBC,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEC1,.24,CODE_CFFEC1,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEC8,.25,CODE_CFFEC8,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEE3,.26,CODE_CFFEE3,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEF6,.27,CODE_CFFEF6,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEF9,.28,CODE_CFFEF9,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFEFE,.29,CODE_CFFEFE,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
-$CFFF05,.30,CODE_CFFF05,new,"branch target only used in CODE_CFFD9E",src/bankCF_F000.asm
+$CFFDB0,.1,CODE_CFFDB0,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFDC3,.2,CODE_CFFDC3,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFDC6,.3,CODE_CFFDC6,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFDCB,.4,CODE_CFFDCB,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFDD2,.5,CODE_CFFDD2,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFDED,.6,CODE_CFFDED,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE00,.7,CODE_CFFE00,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE03,.8,CODE_CFFE03,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE08,.9,CODE_CFFE08,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE0F,.10,CODE_CFFE0F,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE26,.11,CODE_CFFE26,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE3C,.12,CODE_CFFE3C,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE3F,.13,CODE_CFFE3F,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE44,.14,CODE_CFFE44,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE4B,.15,CODE_CFFE4B,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE66,.16,CODE_CFFE66,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE7C,.17,CODE_CFFE7C,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE7F,.18,CODE_CFFE7F,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE84,.19,CODE_CFFE84,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFE8B,.20,CODE_CFFE8B,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEA6,.21,CODE_CFFEA6,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEB9,.22,CODE_CFFEB9,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEBC,.23,CODE_CFFEBC,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEC1,.24,CODE_CFFEC1,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEC8,.25,CODE_CFFEC8,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEE3,.26,CODE_CFFEE3,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEF6,.27,CODE_CFFEF6,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEF9,.28,CODE_CFFEF9,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFEFE,.29,CODE_CFFEFE,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
+$CFFF05,.30,CODE_CFFF05,new,"branch target only used in GoalFrameLayout",src/bankCF_F000.asm
 $CFFF20,.1,CODE_CFFF20,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
 $CFFF36,.2,CODE_CFFF36,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
 $CFFF39,.3,CODE_CFFF39,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
@@ -6710,11 +6710,11 @@ $CFFF76,.7,CODE_CFFF76,new,"branch target only used in CODE_CFFF0F",src/bankCF_F
 $CFFF79,.8,CODE_CFFF79,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
 $CFFF7E,.9,CODE_CFFF7E,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
 $CFFF85,.10,CODE_CFFF85,new,"branch target only used in CODE_CFFF0F",src/bankCF_F000.asm
-$CFFF9A,.1,CODE_CFFF9A,new,"branch target only used in CODE_CFFF88",src/bankCF_F000.asm
-$CFFFB9,.2,CODE_CFFFB9,new,"branch target only used in CODE_CFFF88",src/bankCF_F000.asm
-$CFFFBC,.3,CODE_CFFFBC,new,"branch target only used in CODE_CFFF88",src/bankCF_F000.asm
-$CFFFC1,.4,CODE_CFFFC1,new,"branch target only used in CODE_CFFF88",src/bankCF_F000.asm
-$CFFFC8,.5,CODE_CFFFC8,new,"branch target only used in CODE_CFFF88",src/bankCF_F000.asm
+$CFFF9A,.1,CODE_CFFF9A,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
+$CFFFB9,.2,CODE_CFFFB9,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
+$CFFFBC,.3,CODE_CFFFBC,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
+$CFFFC1,.4,CODE_CFFFC1,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
+$CFFFC8,.5,CODE_CFFFC8,new,"branch target only used in PuckFrameLayout",src/bankCF_F000.asm
 $C4DFD6,StanleyCupScreen,CODE_C4DFD6,genesis+code,"same job as 95G StanleyCupScreen: loads StanleyCupMap, prints the winner A and the team X it beat from the strings at $C350A9-$C350D6, the winner's logo sprite, sprites each frame until start; CODE_C401E5 calls it, then SeasonAwards, then Reset",src/bankC4_E000.asm
 $C4D818,SeasonAwards,CODE_C4D818,genesis+code,"same job as 95G SeasonAwards (the awards after the season); 95 SNES shows one winner per award (no finalists) and steps through the awards with left / right; CODE_C401E5 calls it after StanleyCupScreen",src/bankC4_D000.asm
 $C4D941,DrawAward,CODE_C4D941,code,"prints AwardNames / AwardDescs of award a0 and unpacks AwardPictures (CODE_C5881C); SeasonAwards calls it for each award shown",src/bankC4_D000.asm
@@ -9362,3 +9362,5 @@ $3B4,SPFinjury1,,genesis+purpose,"frames $3B4-$3B9; used by SPAinjury1; 95 Genes
 $3BA,SPFgready,,94S+purpose,"frames $3BA-$3CB; used by SPAgready; 94S SPFgready is the group of the same job (646 there); 95 Genesis has SPFgready at 904 (+50 here)",src/frames95s.asm
 $3EC,SPFpump2,,94S+purpose,"frames $3EC-$3FB; used by SPApump2; 94S SPFpump2 is the group of the same job (790 there); 95 Genesis's SPApump2 shows the 16 frames it calls SPFcup (938), 2 a direction as here; the frames show a stick pump",src/frames95s.asm
 $41B,SPFbenchcheck,,94S+purpose,"frames $41B-$423; used by SPAbenchcheckr; 94S SPFbenchcheck is the group of the same job (896 there)",src/frames95s.asm
+$CFFD9E,GoalFrameLayout,CODE_CFFD9E,code,"LayoutPointers entries 142 / 143; the only frame with layout $8F is SPFgoal+1 (the second net, framerender.py)",src/bankCF_F000.asm
+$CFFF88,PuckFrameLayout,CODE_CFFF88,code,"LayoutPointers entries 144 / 145; the frames with layout $91 are SPFpuck+1 to +10, the ones SPApflip shows",src/bankCF_F000.asm
