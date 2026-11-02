@@ -23,8 +23,8 @@ asspuckc_postab:					; 10 positions (x, y) as 94S asspuckc_postab
 	dw 0,226
 	dw 20,236
 	dw 30,236
-DATA8_C09AC0:						; not traced: read by a routine in bank $C5 (seven words, then rows of 7
-									; bytes)
+sublist:							; per position (goalie, LD, RD, LW, C, RW, extra attacker) the offset of
+									; its substitute list, then the lists ($80: try everyone)
 	db $0E,$00,$0E,$00,$1C,$00,$2A,$00,$54,$00,$3F,$00,$54,$00,$01,$09
 	db $11,$19,$21,$29,$31,$02,$0A,$12,$1A,$22,$2A,$32,$02,$0A,$12,$1A
 	db $22,$2A,$32,$01,$09,$11,$19,$21,$29,$31,$03,$0B,$13,$1B,$23,$2B

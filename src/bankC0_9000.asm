@@ -753,9 +753,9 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	sta.b $79
 	lda.w #InitShooters
 	sta.b $77
-	lda.w #$00C0
+	lda.w #DefaultShooterList>>16
 	sta.b $71
-	lda.w #$967D
+	lda.w #DefaultShooterList&$FFFF
 	sta.b a3
 	lda.w SelectedPlayerIdx
 	dec a
@@ -823,7 +823,7 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 .4:									; call ShootersBackground, return
 	jsl.l ShootersBackground
 	rtl
-DATA8_C0967D:						; not traced: 1, 2, 3, 4
+DefaultShooterList:					; the default shooter slots 1, 2, 3, 4 when no shooter row is picked
 	db $01,$02,$03,$04
 InitShooters:						; the 8 shooters of team a2 (0 home, 2 visitors) into its shooter list
 	lda.w #$0000

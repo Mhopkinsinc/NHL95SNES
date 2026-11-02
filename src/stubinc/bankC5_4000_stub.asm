@@ -51,5 +51,6 @@ Mul16x8XS = $C08F95
 QueueVRAMDMALen = $C58A15
 SongLists = $CF05D4
 priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
+sublist = $C09AC0					; substitute lists by position (bankC0_A000)
 
 incsrc "../bankC5_4000.asm"

@@ -593,9 +593,9 @@ SetPlList:							; from setpersonel and other segments
 	and.w #$00FF
 	asl a
 	sta.b d0
-	lda.w #$00C0
+	lda.w #sublist>>16
 	sta.b $65
-	lda.w #$9AC0
+	lda.w #sublist&$FFFF
 	sta.b a0
 	ldy.b d0
 	lda.b [a0],y

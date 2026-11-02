@@ -208,13 +208,13 @@ $C09075,Mul16U_Go,,94S,"entry inside the routine before it, as in 94S",src/bankC
 $C091F5,Div16U_Go,,94S,"entry inside the routine before it, as in 94S",src/bankC0_9000.asm
 $C09210,Div32U_ByteDivisor,,94S,"entry inside the routine before it, as in 94S",src/bankC0_9000.asm
 $C09259,Div16x8U_Go,,94S,"entry inside the routine before it, as in 94S",src/bankC0_9000.asm
-$C0967D,DATA8_C0967D,,new,"not traced: 4 bytes after CODE_C09678",src/bankC0_9000.asm
+$C0967D,DefaultShooterList,DATA8_C0967D,code,"94S PrintShooterNames points a3 at its local .6 ('default shooter list') at the same place; 95 PrintShooterNames points a3 at this through a raw pointer pair",src/bankC0_9000.asm
 $C098CE,ShooterAttribColumns,DATA8_C098CE,94S+purpose,"94S ShooterAttribColumns: the records PrintShooterList walks by DispAttribCtr (length + 4 per entry, minus ends)",src/bankC0_9000.asm
 $2C,r0,,94S,"RAM; math result as 94S r0 (the divides' quotient)",src/ram95s.asm
 $30,r1,,94S,"RAM; math operand as 94S r1 (the divisor)",src/ram95s.asm
 $C09A24,asstab,,93S,"29 long pointers by assignment number as 94S asstab (first entry an rtl); $C5085C reads ($0644,x * 4), patches $1851-$1853 and calls $001850",src/bankC0_A000.asm
 $C09A98,asspuckc_postab,,93S,"10 (x, y) pairs as 94S asspuckc_postab (one value 246 where 94S has 240); $C42E55 points at it",src/bankC0_A000.asm
-$C09AC0,DATA8_C09AC0,,new,"not traced; $C5449B points at it",src/bankC0_A000.asm
+$C09AC0,sublist,DATA8_C09AC0,94S+code,"94S sublist has the same layout and bytes (a word offset per position, then the candidate slot lists from 0+1, 8+1 ...); 95 SetPlList points a0 at it and walks the list for position d0 as 94S does",src/bankC0_A000.asm
 $C09B2A,priolist,DATA8_C09B2A,94S+code,"94S priolist holds the first two lists with the same bytes (SetPlList points a0 at priolist, at priolist+7 for a penalty shot); 95 adds a third at +14, taken when OptPlayMode is 1",src/bankC0_A000.asm
 $C09B31,priolist+7,DATA8_C09B31,code,"priolist+7: the second list (94S priolist+7); the label is dropped",src/bankC0_A000.asm
 $C09B38,priolist+$E,DATA8_C09B38,code,"priolist+14: the third list (practice, OptPlayMode 1); the label is dropped",src/bankC0_A000.asm
