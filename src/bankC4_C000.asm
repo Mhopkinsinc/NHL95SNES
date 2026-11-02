@@ -1820,9 +1820,9 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	bcc .76
 	adc.w #$0001
 	sta.w DAS0L
-	lda.w #$939C
+	lda.w #OAMClearByte&$FFFF
 	sta.w A1T0L
-	lda.w #$C593
+	lda.w #OAMClearByte>>8
 	sta.w $4303
 	lda.w #$0408
 	sta.w DMAP0

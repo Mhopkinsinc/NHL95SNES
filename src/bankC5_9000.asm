@@ -412,7 +412,8 @@ DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lin
 	sta.b $22,x
 	jsr.w SetupLinePalette0
 	rtl
-DATA8_C5939C:						; not reached by the traced code (data or unused code)
+OAMClearByte:						; the byte ProcessQueuedTransfers' fixed-source DMA writes over the unused
+									; OAM entries: $F0, a y below the screen
 	db $F0
 StartPractice:						; play mode Practice (PlayModeStarts): line changes and penalties off, the
 									; pad limits from the Home Players / Visitor Players options + 1, then

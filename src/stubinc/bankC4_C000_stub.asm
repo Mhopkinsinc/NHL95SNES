@@ -13,5 +13,6 @@ DrawNextTextCharacter = $C4BE53		; read the next character and prepare its glyph
 DrawGlyphRow = $C4BF1A				; load a glyph row and dispatch by its destination pixel column
 CopyToRAM7E = $C58AF3
 ClearRAM7E = $C58B11
+OAMClearByte = $C5939C
 
 incsrc "../bankC4_C000.asm"

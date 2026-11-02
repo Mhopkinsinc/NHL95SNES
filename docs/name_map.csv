@@ -8929,3 +8929,4 @@ $C59EFA,PlayerInfoRight,DATA8_C59EFA,code,"PlayerInfoInput calls entry d6 on rig
 $C5A3BF,VisTeamCheck,DATA8_C5A3BF,code,"as TradeTeam2Check",src/bankC5_A000.asm
 $C5A3FD,TradeTeam1Check,DATA8_C5A3FD,code,"as TradeTeam2Check",src/bankC5_A000.asm
 $C5A468,HomeTeamCheck,DATA8_C5A468,code,"as TradeTeam2Check",src/bankC5_A000.asm
+$C5939C,OAMClearByte,DATA8_C5939C,code,"ProcessQueuedTransfers sets the DMA source to it (A1T0L $939C, then $C593 to A1T0H / A1B0: written OAMClearByte&$FFFF and OAMClearByte>>8), fixed (DMAP0 $08) to OAMDATA, before it sends the used part of OAMBuf",src/bankC5_9000.asm
