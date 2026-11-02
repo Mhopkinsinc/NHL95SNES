@@ -5211,11 +5211,11 @@ $C537C3,.rtl,CODE_C537C3,new,"branch target only used in AssignPadPlayer",src/ba
 $C537F8,.1,CODE_C537F8,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
 $C53806,.2,CODE_C53806,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
 $C53811,.3,CODE_C53811,new,"branch target only used in CODE_C537DE",src/bankC5_3000.asm
-$C5382D,.loop,CODE_C5382D,new,"branch target only used in CODE_C53813",src/bankC5_3000.asm
-$C53849,.1,CODE_C53849,new,"branch target only used in CODE_C53813",src/bankC5_3000.asm
-$C53854,.2,CODE_C53854,new,"branch target only used in CODE_C53813",src/bankC5_3000.asm
-$C5385D,.3,CODE_C5385D,new,"branch target only used in CODE_C53813",src/bankC5_3000.asm
-$C5386A,.4,CODE_C5386A,new,"branch target only used in CODE_C53813",src/bankC5_3000.asm
+$C5382D,.loop,CODE_C5382D,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
+$C53849,.1,CODE_C53849,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
+$C53854,.2,CODE_C53854,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
+$C5385D,.3,CODE_C5385D,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
+$C5386A,.4,CODE_C5386A,new,"branch target only used in findpcSearch",src/bankC5_3000.asm
 $C538E9,.loop,CODE_C538E9,new,"branch target only used in PassPadToTeammate",src/bankC5_3000.asm
 $C538F3,.1,CODE_C538F3,new,"branch target only used in PassPadToTeammate",src/bankC5_3000.asm
 $C538F7,.2,CODE_C538F7,new,"branch target only used in PassPadToTeammate",src/bankC5_3000.asm
@@ -8888,3 +8888,7 @@ $CFF234,.3,CODE_CFF234,new,"branch target only used in PutSmallPiece2",src/bankC
 $CFF239,.4,CODE_CFF239,new,"branch target only used in PutSmallPiece2; CODE_CFF221 (no reference, between .1 and .2) dropped so the routine is one scope",src/bankCF_F000.asm
 $C5F097,UnpackStream0Next,CODE_C5F097,code,"UnpackStream0 stores its address as the jmp target after the mvn it builds at DMAP2; the copy returns with X past the copied bytes",src/bankC5_F000.asm
 $C5F099,UnpackStream0Loop,CODE_C5F099,code,"UnpackStream0 jml's here at -$400000 so the jmp to the DMA registers stays in bank $85; each command byte copies a run (mvn) or a literal block",src/bankC5_F000.asm
+$C53813,findpcSearch,CODE_C53813,code,"matches the search continuation of 94S findpc .9",src/bankC5_3000.asm
+$C53882,findpcSweepcheck,CODE_C53882,code,"matches 94S findpc .10",src/bankC5_3000.asm
+$C538BF,findpcAssign,CODE_C538BF,code,"matches 94S findpc .11",src/bankC5_3000.asm
+$C538C5,findpcReturn,CODE_C538C5,code,"shared restore after assignment or Sweepcheck; 94S findpc .12",src/bankC5_3000.asm

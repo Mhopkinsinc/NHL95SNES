@@ -1008,7 +1008,7 @@ findpc:								; from FaceoffPads and other segments
 	lda.w #$0008
 	sta.b r0
 	ldy.w puckc
-	bra CODE_C53813
+	bra findpcSearch
 CODE_C537DE:						; no caller found (not traced)
 	lda.w position,x
 	beq .1
@@ -1019,14 +1019,14 @@ CODE_C537DE:						; no caller found (not traced)
 	lda.w puckdist,x
 	cmp.w #$0028
 	bcs .1
-	jmp.w CODE_C53882
+	jmp.w findpcSweepcheck
 .1:									; if playerpad,y < 0 go to .2, Y = A, ...
 	lda.w playerpad,y
 	bmi .2
 	tay
 	lda.w padside,y
 	cmp.w padside,x
-	beq CODE_C53813
+	beq findpcSearch
 .2:									; Y = $0000, if pfgoal,x is not 0 go to .3, Y = $0004
 	ldy.w #$0000
 	lda.w pfgoal,x
@@ -1034,7 +1034,8 @@ CODE_C537DE:						; no caller found (not traced)
 	ldy.w #$0004
 .3:									; r0 = Y
 	sty.b r0
-CODE_C53813:						; from findpc, CODE_C537DE
+findpcSearch:						; searches the pad team for the eligible skater with the lowest distance
+									; and direction cost
 	lda.w #$0006
 	sta.b d1
 	ldy.b d4
@@ -1082,14 +1083,15 @@ CODE_C53813:						; from findpc, CODE_C537DE
 	ldx.b a3
 	lda.b d2
 	cmp.w #$FFFF
-	beq CODE_C538C5
+	beq findpcReturn
 	ldy.b d4
 	lda.b d3
 	cmp.w c1playernum,y
-	bne CODE_C538BF
-CODE_C53882:						; from CODE_C537DE
+	bne findpcAssign
+findpcSweepcheck:					; runs Sweepcheck for the current player unless animation locked,
+									; preserving scratch registers
 	lda.w pfalock,x
-	bne CODE_C538C5
+	bne findpcReturn
 	pei ($8F)
 	pei ($91)
 	pei ($93)
@@ -1121,11 +1123,11 @@ CODE_C53882:						; from CODE_C537DE
 	sta.b $91
 	pla
 	sta.b d4
-	bra CODE_C538C5
-CODE_C538BF:						; from CODE_C53813
+	bra findpcReturn
+findpcAssign:						; gives pad d4 to the best candidate through AssignPadPlayer
 	sta.b d0
 	jsl.l AssignPadPlayer
-CODE_C538C5:						; from CODE_C53813, CODE_C53882
+findpcReturn:						; restores the saved d0 through d3 words and returns from findpc
 	pla
 	sta.b $8D
 	pla
