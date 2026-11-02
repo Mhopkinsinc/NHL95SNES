@@ -253,9 +253,10 @@
 
 ## Unsure
 
-- Banks $C6-$CC: individual frame poses and placement-table axes are not traced. Raw planar tile inspection shows player
-  parts and small indicators; the blocks are FrameTilesNNN by frame number (the FrameTileSource entry). The null-bank frame slots are not assumed unused. The bank $CF
-  frame code (DrawFrameLayoutFlip / DrawFrameLayout) reads them by label now, the layout through FrameBankLayout+1.
+- Banks $C6-$CC: individual frame poses are not traced. Raw planar tile inspection shows player parts and small
+  indicators; the blocks are FrameTiles002 ... FrameTiles423, named by the frame number whose FrameTileSource entry
+  points at them. The null-bank frame slots are not assumed unused. The bank $CF frame code (DrawFrameLayoutFlip /
+  DrawFrameLayout) adds FrameOffsetX / FrameOffsetXFlip and FrameOffsetY and reads the layout through FrameBankLayout+1.
 
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
   VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
