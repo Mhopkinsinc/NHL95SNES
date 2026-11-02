@@ -97,7 +97,7 @@ PrintPaddedValue:					; prints the BCDText digits in mesarea bold right-aligned 
 	rts
 RatingNibble:						; A = the 0-6 rating of value A (0-15), from the table after it
 	tax
-	lda.l DATA8_C5A08B,x
+	lda.l RatingLevels,x
 	and.w #$00FF
 	rts
 RatingNibbleHigh:					; RatingNibble * 16 (for the high nibble of a record byte)
@@ -107,7 +107,7 @@ RatingNibbleHigh:					; RatingNibble * 16 (for the high nibble of a record byte)
 	asl a
 	asl a
 	rts
-DATA8_C5A08B:						; not traced: a table read by RatingNibble
+RatingLevels:						; per rating value (0-15): the 0-6 level RatingNibble returns
 	db $00,$00,$01,$01,$02,$02,$03,$03,$03,$03,$04,$04,$04,$05,$05,$06
 DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the letter grid and
 									; its keys; the screen state goes to 0 (NameEntry)
@@ -194,12 +194,12 @@ PlaceYesNoCursor:					; the cursor sprite (a0) to x $6A on the Yes (d6 = 0, y $8
 	sta.b $08,x
 	rts
 LetterCellPalette3:					; palette 3 on the 2 x 2 tiles of Create Player letter grid cell d6
-									; (DATA8_C5A1D7)
+									; (LetterGridCells)
 	lda.b d6
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	tay
 	jsr.w SetTilePalette3
 	iny
@@ -218,12 +218,12 @@ SetTilePalette3:					; palette 3 on the text map tile at Y
 	sta.w $0000,y
 	rts
 LetterCellPalette0:					; palette 0 on the 2 x 2 tiles of Create Player letter grid cell d6
-									; (DATA8_C5A1D7), then SendTextMap
+									; (LetterGridCells), then SendTextMap
 	lda.b d6
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	tay
 	jsr.w SetTilePalette0
 	iny
@@ -244,47 +244,49 @@ SetTilePalette0:					; palette 0 on the text map tile at Y
 	ora.w #$0000
 	sta.w $0000,y
 	rts
-DATA8_C5A1D7:						; not traced: a table read by LetterCellPalette3, LetterCellPalette0
+LetterGridCells:					; per letter grid cell (* 2, 9 a row): its text map offset ($0306 on, 3
+									; tiles apart)
 	db $06,$03,$0C,$03,$12,$03,$18,$03,$1E,$03,$24,$03,$2A,$03,$30,$03
 	db $36,$03,$C6,$03,$CC,$03,$D2,$03,$D8,$03,$DE,$03,$E4,$03,$EA,$03
 	db $F0,$03,$F6,$03,$86,$04,$8C,$04,$92,$04,$98,$04,$9E,$04,$A4,$04
 	db $AA,$04,$B0,$04,$B6,$04
 MoveCreateGridCursor:				; palette 0 on Create Player letter grid cell d6 and the cursor sprite
-									; (a0) onto it (x and y from DATA8_C5A225 / DATA8_C5A25B)
+									; (a0) onto it (x and y from LetterGridX / LetterGridY)
 	jsr.w LetterCellPalette0
 	ldy.b a0
 	lda.b d6
 	asl a
 	tax
-	lda.l DATA8_C5A25B,x
+	lda.l LetterGridY,x
 	sta.w $0008,y
-	lda.l DATA8_C5A225,x
+	lda.l LetterGridX,x
 	sta.w $0005,y
 	rts
-DATA8_C5A225:						; not traced: a table read by MoveCreateGridCursor
+LetterGridX:						; per letter grid cell (* 2): the cursor sprite's x ($14 + 24 a column)
 	db $14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00,$A4,$00,$BC,$00
 	db $D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00,$A4,$00
 	db $BC,$00,$D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00
 	db $A4,$00,$BC,$00,$D4,$00
-DATA8_C5A25B:						; not traced: a table read by MoveCreateGridCursor
+LetterGridY:						; per letter grid cell (* 2): the cursor sprite's y ($70, $88, $A0 by row)
 	db $70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00
 	db $70,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00
 	db $88,$00,$88,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00
 	db $A0,$00,$A0,$00,$A0,$00
 FieldPos:							; prints the created player's position (d0: Goalie, Left Defense, Right
-									; Defense, Left Wing, Center, Right Wing; DATA8_C5A2A8) on row 8, its
+									; Defense, Left Wing, Center, Right Wing; CreatedPosNames) on row 8, its
 									; field cleared first
 	lda.w #$0008
 	jsr.w ClearFieldValue
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C5A2A8,x
+	lda.l CreatedPosNames,x
 	tax
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	rts
-DATA8_C5A2A8:						; not traced: a table read by FieldPos
+CreatedPosNames:					; per created player position (d0 * 2): its name, packed text: Goalie,
+									; then the five of PositionLongNames
 	db $B8,$49,$BD,$49,$C7,$49,$D7,$49,$D2,$49,$E0,$49
 FieldWeight:						; prints the created player's weight, $81 * 8 + 140, on row $B, its field
 									; cleared first
@@ -368,7 +370,8 @@ BCDDigits4:							; mesarea = the 4 BCD digits of A as text, leading zeros kept
 	adc.w #$0030
 	sta.w mesarea+3
 	rts
-DATA8_C5A354:						; the check routine of the option line routine after it: LimitTradeTeam2
+TradeTeam2Check:					; the check routine of the Trades screen's Team 2 line (LimitTradeTeam2):
+									; the word before the line's routine, TradeTeam2Hook
 	dw LimitTradeTeam2
 TradeTeam2Hook:						; the routine of the Trades screen's Team 2 line (the word before it is
 									; its check, LimitTradeTeam2): PrintVisTeamName
@@ -429,7 +432,8 @@ LimitVisTeam:						; the Visiting Team line's check: with OptRosters set or a pl
 	bra .2
 .rts:								; return
 	rts
-DATA8_C5A3BF:						; the check routine of the option line routine after it: LimitVisTeam
+VisTeamCheck:						; the check routine of the Visiting Team line (LimitVisTeam): the word
+									; before the line's routine, PrintVisTeamName
 	dw LimitVisTeam
 PrintVisTeamName:					; saves VisTeam (SRVisTeam) and prints its name, thin and centred between
 									; x $20 and $68 on row $D; the Visiting Team lines' routine
@@ -459,7 +463,8 @@ ClearTeamNameBox:					; clears 16 tiles at text map offset A and on the row belo
 	adc.w #$0040
 	jsl.l ClearRAM7E
 	rts
-DATA8_C5A3FD:						; the check routine of the option line routine after it: LimitTradeTeam1
+TradeTeam1Check:					; the check routine of the Trades screen's Team 1 line (LimitTradeTeam1):
+									; the word before the line's routine, TradeTeam1Hook
 	dw LimitTradeTeam1
 TradeTeam1Hook:						; the routine of the Trades screen's Team 1 line (the word before it is
 									; its check, LimitTradeTeam1): PrintHomeTeamName
@@ -520,7 +525,8 @@ LimitHomeTeam:						; the Home Team line's check: with OptRosters set or a play 
 	bra .2
 .rts:								; return
 	rts
-DATA8_C5A468:						; the check routine of the option line routine after it: LimitHomeTeam
+HomeTeamCheck:						; the check routine of the Home Team line (LimitHomeTeam): the word before
+									; the line's routine, PrintHomeTeamName
 	dw LimitHomeTeam
 PrintHomeTeamName:					; saves HomeTeam (SRHomeTeam) and prints its name, thin and centred
 									; between x $A0 and $E8 on row $D; the Home Team lines' routine
@@ -984,10 +990,11 @@ ClearTextMapAt:						; clears Y bytes of the text map from offset A
 	jsl.l ClearRAM7E
 	rts
 GamesTodayInput:					; the Games Today screen each frame (screen state 7): its current step's
-									; routine from DATA8_C5A81B
+									; routine from GamesTodaySteps
 	ldx.b $89
-	jmp (DATA8_C5A81B,x)
-DATA8_C5A81B:						; jump table: the routine for each index
+	jmp (GamesTodaySteps,x)
+GamesTodaySteps:					; per Games Today step ($89): its routine each frame: the keys, or a
+									; scroll of the games up / down
 	dw GamesTodayKeys,ScrollGamesUp,ScrollGamesDown
 GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / down the game
 									; $85 (a scroll at the list's ends), B flips the game between user and
@@ -1324,12 +1331,12 @@ DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $
 	asl a
 	tax
 	phx
-	lda.l DATA8_C5B35D,x
+	lda.l GameSlotOffsets,x
 	adc.b $D3
 	ldy.w #$01C0
 	jsl.l ClearRAM7E
 	plx
-	lda.l DATA8_C5B363,x
+	lda.l GameSlotRows,x
 	tay
 	lda.b $8D
 	and.w #$00FF

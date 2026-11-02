@@ -513,11 +513,11 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 .5:									; call MoveGridCursor, go to .11
 	jsr.w MoveGridCursor
 	bra .11
-.6:									; if $8080 bits clear go to .8, X = a1, A = DATA8_C598FA,x, Y = $69, ...
+.6:									; if $8080 bits clear go to .8, X = a1, A = LetterGridChars,x, ...
 	bit.w #$8080
 	beq .8
 	ldx.b a1
-	lda.l DATA8_C598FA,x
+	lda.l LetterGridChars,x
 	ldy.b $69
 	sep #$20
 	cmp.b #$3D
@@ -667,16 +667,16 @@ DrawNameGrid:						; draws the letter grid and its keys for EditUserName
 	jsr.w MoveGridCursor
 	rts
 MoveGridCursor:						; puts the cursor's palette 0 on letter grid cell a1 (GridCellPalette0)
-									; and moves the cursor sprite (a0) onto it (x and y from DATA8_C5A225 /
-									; DATA8_C5A25B)
+									; and moves the cursor sprite (a0) onto it (x and y from LetterGridX /
+									; LetterGridY)
 	jsr.w GridCellPalette0
 	ldy.b a0
 	lda.b a1
 	asl a
 	tax
-	lda.l DATA8_C5A225,x
+	lda.l LetterGridX,x
 	sta.w $0005,y
-	lda.l DATA8_C5A25B,x
+	lda.l LetterGridY,x
 	clc
 	adc.w #$0018
 	sta.w $0008,y
@@ -689,13 +689,13 @@ GridCellPalette3:					; puts palette 3 (the cells' normal look) on letter grid c
 									; (SetGridCellPalette $0C00)
 	lda.w #$0C00
 SetGridCellPalette:					; puts palette bits tmp0 on the 2 x 2 tiles of letter grid cell a1 (its
-									; position from DATA8_C5A1D7), then SendTextMap
+									; position from LetterGridCells), then SendTextMap
 	sta.b tmp0
 	lda.b a1
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	adc.w #$00C0
 	tay
 	jsr.w SetTilePalette

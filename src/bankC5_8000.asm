@@ -1695,8 +1695,8 @@ SeedRandom:							; seeds RandomBelowA's generator (RandomState) from the latche
 	beq SeedRandom
 	rtl
 GameSetUp:							; the game setup screen (setoptions builds it): up / down pick a line,
-									; left / right change it, start / select run the play mode (DATA8_C58DD0);
-									; 360 frames with no key start the demo (StartDemo)
+									; left / right change it, start / select run the play mode
+									; (PlayModeStarts); 360 frames with no key start the demo (StartDemo)
 	jsr.w setoptions
 	lda.w DemoMode
 	beq .1
@@ -1715,7 +1715,7 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	jsl.l ReadMenuPads
 	inc.b $26
 	ldx.b $99
-	jsr (DATA8_C58DF0,x)
+	jsr (SetupScreenStates,x)
 	jsl.l AnimateSprites
 	lda.w #OAMBuf+$1FF
 	sta.b $28
@@ -1761,7 +1761,7 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	lda.w OptPlayMode
 	asl a
 	tax
-	jmp (DATA8_C58DD0,x)
+	jmp (PlayModeStarts,x)
 .8:									; A = SetupIdleTime, A + 1, if A >= $0168 go to StartDemo, ...
 	lda.w SetupIdleTime
 	inc a
@@ -1769,9 +1769,9 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	bcs StartDemo
 	sta.w SetupIdleTime
 	jmp.w .loop
-DATA8_C58DD0:						; the routine of each play mode, run on start in the setup screen:
-									; Exhibition, Practice, Season, Trades, Free Agent, Release, Make Player,
-									; then an eighth
+PlayModeStarts:						; per play mode (OptPlayMode * 2): the routine start / select runs in the
+									; setup screen: Exhibition, Practice, Season, Trades, Free Agent, Release,
+									; Make Player, StartNewSeason
 	dw StartExhibition,StartPractice,StartSeason,TradePlayers
 	dw SignFreeAgents,ReleasePlayers,CreatePlayer,StartNewSeason
 StartDemo:							; starts the demo: the demo flag set, user records off, play mode
@@ -1781,7 +1781,8 @@ StartDemo:							; starts the demo: the demo flag set, user records off, play mo
 	stz.w OptUserRec
 	stz.w OptPlayMode
 	jmp.w StartExhibition
-DATA8_C58DF0:						; jump table: the routine for each index
+SetupScreenStates:					; per setup screen state ($99): its routine each frame: the logo update,
+									; or a scroll of the list up / down
 	dw UpdateTeamLogos,SetupScrollUp,SetupScrollDown
 SetupScrollUp:						; a frame of the setup list's scroll after SetupLineUp ($99 = 2): the band
 									; scroll words move a line over 16 frames, then $99 = 0

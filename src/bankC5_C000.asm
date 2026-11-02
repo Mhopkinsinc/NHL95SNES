@@ -41,7 +41,7 @@ KeepDivisionTeams:					; keeps only the teams of division d1 in the sorted list 
 	bcc .loop2
 	rts
 SortStandingsByStat:				; fills the list at ListBuf with the team records linked from $81, sorted
-									; by stat d0 (its compare routine from DATA8_C5C0AE)
+									; by stat d0 (its compare routine from StandingsSortCompares)
 	ldx.w #$0032
 .loop:								; loop: ListBuf,x = 0, X - 1, X - 1, if the result >= 0 go to .loop, ...
 	stz.w ListBuf,x
@@ -51,7 +51,7 @@ SortStandingsByStat:				; fills the list at ListBuf with the team records linked
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C5C0AE,x
+	lda.l StandingsSortCompares,x
 	sta.b tmp0
 	lda.b $81
 SortStandingsInsert:				; starts inserting team record A into ListBuf and saves its linked-list
@@ -127,8 +127,8 @@ SortByShotsAllowed:					; compare of SortStandingsByStat by shots allowed a game
 	cmp.w $0030,y
 	bcc SortStandingsSwap
 	bra SortStandingsKeep
-DATA8_C5C0AE:						; the compare routines of the sort in SortStandingsByStat (one per sort
-									; key)
+StandingsSortCompares:				; per standings column (d0 * 2): the compare routine of
+									; SortStandingsByStat's sort (points for the first two)
 	dw SortByPoints,SortByPoints,SortByGoalsAvg,SortByGoalsAllowed
 	dw SortBySavePct,SortByShootPct,SortByShotsAvg,SortByShotsAllowed
 DrawSetupTeams:						; the setup screen's teams: both colour sets queued, two tile blocks, the

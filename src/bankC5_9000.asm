@@ -76,9 +76,9 @@ DrawSetupLineJump:					; jumps to DrawSetupLine: the option value routines' shar
 	jmp.w DrawSetupLine
 DATA8_C59050:						; not reached by the traced code (data or unused code)
 	db $68,$60
-UpdateTeamLogos:					; setup screen state 0 (DATA8_C58DF0): replaces the home logo sprite (d7)
-									; or the visiting one ($9D) at the same place when HomeTeam or VisTeam has
-									; changed, its colours queued
+UpdateTeamLogos:					; setup screen state 0 (SetupScreenStates): replaces the home logo sprite
+									; (d7) or the visiting one ($9D) at the same place when HomeTeam or
+									; VisTeam has changed, its colours queued
 	ldx.b d7
 	lda.w HomeTeam
 	cmp.b $24,x
@@ -296,7 +296,7 @@ DATA8_C59249:						; not reached by the traced code (data or unused code)
 	db $20,$75,$8F,$20,$9A,$90,$68,$8D,$0E,$01,$68,$85,$97,$60,$00,$00
 DrawPlayModeOptions:				; the Play Mode line's routine (setoptions calls it too): ClampRosterTeams
 									; past Practice, VisTeam moved on when Trades has it equal to HomeTeam,
-									; then the mode's option list (DATA8_C592FA, DrawOptionList)
+									; then the mode's option list (PlayModeOptionLists, DrawOptionList)
 	lda.w OptPlayMode
 	beq .1
 	dec a
@@ -328,10 +328,11 @@ DrawPlayModeOptions:				; the Play Mode line's routine (setoptions calls it too)
 	lda.w OptPlayMode
 	asl a
 	tax
-	lda.l DATA8_C592FA,x
+	lda.l PlayModeOptionLists,x
 	jsl.l DrawOptionList
 	rts
-DATA8_C592FA:						; not reached by the traced code (data or unused code)
+PlayModeOptionLists:				; per play mode (OptPlayMode * 2): its option list in bank $C3 for
+									; DrawOptionList (modes 4 and 5 share one)
 	db $CD,$5B,$87,$5C,$17,$5C,$51,$5C,$6B,$5C,$6B,$5C,$7D,$5C
 DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lines of name,
 									; values, variable, routine) from row $10: up to 4 lines, values centred
@@ -413,7 +414,7 @@ DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lin
 	rtl
 DATA8_C5939C:						; not reached by the traced code (data or unused code)
 	db $F0
-StartPractice:						; play mode Practice (DATA8_C58DD0): line changes and penalties off, the
+StartPractice:						; play mode Practice (PlayModeStarts): line changes and penalties off, the
 									; pad limits from the Home Players / Visitor Players options + 1, then
 									; SetContTeams
 	stz.w OptLine
@@ -425,7 +426,7 @@ StartPractice:						; play mode Practice (DATA8_C58DD0): line changes and penalt
 	inc a
 	sta.b $81
 	bra SetContTeams
-StartExhibition:					; play mode Exhibition (DATA8_C58DD0): SetContTeams with up to 5 pads a
+StartExhibition:					; play mode Exhibition (PlayModeStarts): SetContTeams with up to 5 pads a
 									; team; the demo (StartDemo) and a user's season game (FinishSeasonDay)
 									; start here too
 	lda.w #$0005
@@ -730,7 +731,7 @@ CreatePlayer:						; play mode Make Player: CheckCreateSlots, the Create Player 
 	jsr.w DrawNameEntry
 	stz.w fadestep
 ScreenStateLoop:					; the front end loop: each frame the transfers, the pads and the sprites,
-									; then the handler of screen state $99 (DATA8_C5967A)
+									; then the handler of screen state $99 (ScreenStateHandlers)
 	jsl.l WaitTransfers
 	jsl.l ReadMenuPads
 	inc.b $26
@@ -744,10 +745,10 @@ ScreenStateLoop:					; the front end loop: each frame the transfers, the pads an
 	lda.b $99
 	asl a
 	tax
-	jsr (DATA8_C5967A,x)
+	jsr (ScreenStateHandlers,x)
 	bra ScreenStateLoop
-DATA8_C5967A:						; the front end screen handlers, ...
-									; the one of the current state each frame)
+ScreenStateHandlers:				; per front end screen state ($99): its handler, run each frame by
+									; ScreenStateLoop: the Create Player pages, then the season screens
 	dw NameEntry,NameEntry,AskNameOk,EditPlayerInfo
 	dw ModifyRatings,NameEntryReturn,SeasonOptionsInput,GamesTodayInput
 	dw LeagueLeadersInput,SeasonTeamStatsInput,SeasonPlayerStatsInput,StandingsInput
@@ -930,13 +931,13 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	sta.w mesarea,y
 	sty.b a3
 	bra .14
-.12:								; A, X / Y 8-bit, X = d6, A = DATA8_C598FA,x, if a3 = 0 go to .13, ...
+.12:								; A, X / Y 8-bit, X = d6, A = LetterGridChars,x, if a3 = 0 go to .13, ...
 	sep #$30
 	ldx.b d6
-	lda.l DATA8_C598FA,x
+	lda.l LetterGridChars,x
 	ldy.b a3
 	beq .13
-	lda.l $C59915,x
+	lda.l LetterGridChars+$1B,x
 .13:								; mesarea,y = A, Y + 1, if Y >= $69 go to .14, a3 = Y
 	sta.w mesarea,y
 	iny
@@ -1039,7 +1040,8 @@ EnteredNameLength:					; Y = the length of the name entered in mesarea: the curs
 .1:									; A, X / Y 16-bit, return
 	rep #$30
 	rts
-DATA8_C598FA:						; not reached by the traced code (data or unused code)
+LetterGridChars:					; per letter grid cell (0-26): its character for a name's first letter:
+									; A-Z, then $3D (the space cell); the lowercase set follows at +$1B
 	db $41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$4B,$4C,$4D,$4E,$4F,$50
 	db $51,$52,$53,$54,$55,$56,$57,$58,$59,$5A,$3D,$61,$62,$63,$64,$65
 	db $66,$67,$68,$69,$6A,$6B,$6C,$6D,$6E,$6F,$70,$71,$72,$73,$74,$75
@@ -1647,8 +1649,8 @@ EditPlayerInfo:						; Create Player screen state 3: position, weight, number, h
 .1:									; go to PlaceInfoCursor
 	jmp.w PlaceInfoCursor
 PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, weight, number,
-									; hand), left / right its routine (DATA8_C59EF2 / DATA8_C59EFA), start the
-									; ratings page, X cancels
+									; hand), left / right its routine (PlayerInfoLeft / PlayerInfoRight),
+									; start the ratings page, X cancels
 	lda.w repeatdelayframes
 	beq .1
 	cmp.w #$0014
@@ -1672,7 +1674,7 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	lda.b d6
 	asl a
 	tax
-	jsr (DATA8_C59EF2,x)
+	jsr (PlayerInfoLeft,x)
 	lda.w padchangeany
 .3:									; if $0100 bits clear go to .rts, A = d6, A * 2, X = A, ...
 	bit.w #$0100
@@ -1680,7 +1682,7 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	lda.b d6
 	asl a
 	tax
-	jsr (DATA8_C59EFA,x)
+	jsr (PlayerInfoRight,x)
 .rts:								; return
 	rts
 .4:									; A = d6, A * 2, A + d6, A + $0008, ...
@@ -1793,9 +1795,11 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	jsl.l WaitTransfers
 	stz.w fadestep
 	rts
-DATA8_C59EF2:						; jump table: the routine for each index
+PlayerInfoLeft:						; per Create Player info line (d6: position, weight, number, hand): its
+									; routine for left
 	dw EditPosLeft,EditWeightLeft,EditJerseyLeft,EditHand
-DATA8_C59EFA:						; jump table: the routine for each index
+PlayerInfoRight:					; per Create Player info line (d6: position, weight, number, hand): its
+									; routine for right
 	dw EditPosRight,EditWeightRight,EditJerseyRight,EditHand
 EditPosLeft:						; position line, left: d0 one back (5 after 0), then FieldPos
 	lda.b d0

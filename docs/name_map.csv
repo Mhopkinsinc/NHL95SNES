@@ -266,8 +266,8 @@ $C58A65,DecompressToVRAM,,code,"Decompress A:X into a $1000 byte heap block and 
 $C58A99,FadeOutWait,,code,"fadestep = $FFFF, then wait until the screen is black (94S FadeOut, WaitFadeOut)",src/bankC5_8000.asm
 $C58AA5,SetupHDMA,,code,"HDMA channel X from the 6 bytes after the jsl: DMAP, BBAD, source, indirect bank",src/bankC5_8000.asm
 $7E50DC,unpackbuf,,94S,"RAM; Decompress output buffer as 94S unpackbuf (here $7E:50DC); DecompressUnpackbuf sets it as the destination",src/ram95s.asm
-$C5967A,DATA8_C5967A,,new,"the front end screen handlers, indexed by the screen state $99; CODE_C59651 calls the current one each frame (SeasonOptions sets 6, SeasonTeamStats 9); the bankC5_A000 entries are labels with stub equates",src/bankC5_9000.asm
-$C598FA,DATA8_C598FA,,new,"not reached by the traced code: starts with the bytes of ABCDEFGH (a character table?)",src/bankC5_9000.asm
+$C5967A,ScreenStateHandlers,DATA8_C5967A,code,"ScreenStateLoop calls entry $99 (NameEntry ... StartSeasonInput, 14 entries)",src/bankC5_9000.asm
+$C598FA,LetterGridChars,DATA8_C598FA,code,"NameEntry reads entry d6, or LetterGridChars+$1B,x after the first letter; EditUserName reads entry a1 and stores $3D as a space",src/bankC5_9000.asm
 $C10000,SpritePalettes,DATA8_C10000,render,"39 palettes of 16 colours for the sprite objects (record field +18)",src/bankC1_0000.asm
 $C10533,LogoANHTiles,DATA8_C10533,render,"tiles of the ANH logo (frame header at $C08005)",src/bankC1_0000.asm
 $C1094E,LogoBOSTiles,DATA8_C1094E,render,"tiles of the BOS logo (frame header at $C0802A)",src/bankC1_0000.asm
@@ -584,25 +584,25 @@ $C2DF3B,Sample09,,new,"sound sample 9 of the sample list at $CF05DD: 12-byte hea
 $C2E51D,Sample10,,new,"sound sample 10 of the sample list at $CF05DD: 12-byte header, BRR blocks to $C2F4A9",src/bankC2_E000.asm
 $C2F4AA,Sample11,,new,"sound sample 11 of the sample list at $CF05DD: 12-byte header, BRR blocks to $C2FC5F",src/bankC2_F000.asm
 $C2FC60,Sample12,,new,"sound sample 12 of the sample list at $CF05DD: 12-byte header, BRR blocks to $C2FF4D; zeros follow to the end of the bank",src/bankC2_F000.asm
-$C5A08B,DATA8_C5A08B,,new,"a byte table read by CODE_C5A07A (0, 0, 1, 1, 2, 2, 3, ...)",src/bankC5_A000.asm
-$C5A1D7,DATA8_C5A1D7,,new,"a word table read by CODE_C5A17B and CODE_C5A1A5 (added to $D3 as a map offset)",src/bankC5_A000.asm
-$C5A225,DATA8_C5A225,,new,"a word table read by CODE_C5A20D",src/bankC5_A000.asm
-$C5A25B,DATA8_C5A25B,,new,"a word table read by CODE_C5A20D",src/bankC5_A000.asm
-$C5A2A8,DATA8_C5A2A8,,new,"a word table read by CODE_C5A291",src/bankC5_A000.asm
-$C5A354,DATA8_C5A354,,new,"a word pointing at CODE_C5A359, followed by jmp CODE_C5A3C1; DATA8_C5A3BF, DATA8_C5A3FD and DATA8_C5A468 have the same form; their reader is not traced",src/bankC5_A000.asm
-$C5A81B,DATA8_C5A81B,,new,"jump table (3 routines) in bankC5_A000",src/bankC5_A000.asm
+$C5A08B,RatingLevels,DATA8_C5A08B,code,"RatingNibble (and RatingNibbleHigh, for the high nibble of a record byte) reads entry A",src/bankC5_A000.asm
+$C5A1D7,LetterGridCells,DATA8_C5A1D7,code,"LetterCellPalette0 / LetterCellPalette3 (cell d6) and SetGridCellPalette (cell a1) add the entry to the text map address for the cell's palette",src/bankC5_A000.asm
+$C5A225,LetterGridX,DATA8_C5A225,code,"MoveCreateGridCursor (cell d6) and MoveGridCursor (cell a1) put the entry in the cursor object's x ($05)",src/bankC5_A000.asm
+$C5A25B,LetterGridY,DATA8_C5A25B,code,"MoveCreateGridCursor and MoveGridCursor put the entry in the cursor object's y ($08)",src/bankC5_A000.asm
+$C5A2A8,CreatedPosNames,DATA8_C5A2A8,code,"FieldPos prints entry d0 in italics on row 8",src/bankC5_A000.asm
+$C5A354,TradeTeam2Check,DATA8_C5A354,code,"PrevOptionValue and NextOptionValue read the word before a line routine at $C4FFFE,x (X = the routine) and run it first",src/bankC5_A000.asm
+$C5A81B,GamesTodaySteps,DATA8_C5A81B,code,"GamesTodayInput jumps through it with X = $89 (GamesTodayKeys, ScrollGamesUp, ScrollGamesDown)",src/bankC5_A000.asm
 $C5AC73,SeasonMenuJumps,DATA8_C5AC73,genesis+purpose,"same job as 95G SeasonMenuJumps (the season menu items' routines); the order of the League Menu page; CODE_C5AC07 jumps through it",src/bankC5_A000.asm
 $C5AE40,DATA8_C5AE40,,new,"8 bytes FF FE FC F8 F0 E0 C0 80 (left masks?) between routines; no reader found",src/bankC5_A000.asm
 $C5B1FE,StandingsStatTitles,DATA8_C5B1FE,code,"8 offsets into bank $C3's packed text; DrawStandings prints the one of stat d0",src/bankC5_B000.asm
-$C5B35D,DATA8_C5B35D,,new,"not traced: a table read by CODE_C5B346 (in bankC5_B000)",src/bankC5_B000.asm
-$C5B363,DATA8_C5B363,,new,"not traced: a table read by CODE_C5B346 (in bankC5_B000)",src/bankC5_B000.asm
-$C5B56C,DATA8_C5B56C,,new,"jump table: the routine for each index (in bankC5_B000)",src/bankC5_B000.asm
-$C5B66A,DATA8_C5B66A,,new,"not traced: a table read by CODE_C5B631 (in bankC5_B000)",src/bankC5_B000.asm
-$C5B670,DATA8_C5B670,,new,"not traced: a table read by CODE_C5B631 (in bankC5_B000)",src/bankC5_B000.asm
+$C5B35D,GameSlotOffsets,DATA8_C5B35D,code,"ClearGameSlot clears $1C0 bytes of the text map from the entry",src/bankC5_B000.asm
+$C5B363,GameSlotRows,DATA8_C5B363,code,"ClearGameSlot returns the entry in Y for the slot's text",src/bankC5_B000.asm
+$C5B56C,LeaderInserts,DATA8_C5B56C,code,"AddLeaderEntry jumps through it by d1 (InsertByGoals, InsertByAssists, InsertByPoints)",src/bankC5_B000.asm
+$C5B66A,LeaderCategoryNames,DATA8_C5B66A,code,"PrintPlayerCategory prints entry d1 (GoalieCategoryNames when $85 bit 0 is set)",src/bankC5_B000.asm
+$C5B670,GoalieCategoryNames,DATA8_C5B670,code,"PrintPlayerCategory reads it when $85 bit 0 is set",src/bankC5_B000.asm
 $C5BB6C,StatBitsShiftTable,DATA8_C5BB6C,code,"from the code: jmp (table,x) with X = (bit position & 7) * 2",src/bankC5_B000.asm
 $C5BB9C,LowBitMasks,DATA8_C5BB9C,code,"from the code: $0001, $0003 ... $FFFF; StatBitsMask reads it by the bit count r1",src/bankC5_B000.asm
-$C5BEDD,DATA8_C5BEDD,,new,"jump table: the routine for each index (in bankC5_B000)",src/bankC5_B000.asm
-$C5C0AE,DATA8_C5C0AE,,new,"the compare routines of the sort in CODE_C5C029 (one per sort key) (in bankC5_C000)",src/bankC5_C000.asm
+$C5BEDD,StandingsColumnTexts,DATA8_C5BEDD,code,"DrawStandingsRow calls entry d0, then prints mesarea right-aligned",src/bankC5_B000.asm
+$C5C0AE,StandingsSortCompares,DATA8_C5C0AE,code,"SortStandingsByStat puts entry d0 in tmp0 for SortStandingsCompare",src/bankC5_C000.asm
 $C5C655,DATA8_C5C655,,new,"not traced: data between routines (in bankC5_C000)",src/bankC5_C000.asm
 $C5E499,DATA8_C5E499,,new,"not traced: data between routines (in bankC5_E000)",src/bankC5_E000.asm
 $C5E655,RemoveSpriteSlotTable,DATA8_C5E655,code,"from the code: DeleteSprite's jsr (table,x) with X = the slot * 2",src/bankC5_E000.asm
@@ -6763,7 +6763,7 @@ $C5B07C,SeasonTeamStats,CODE_C5B07C,genesis+purpose,"same job as 95G SeasonTeamS
 $C5B0EA,SeasonPlayerStats,CODE_C5B0EA,genesis+purpose,"same job as 95G SeasonPlayerStats (the season player stats screen); the page at $C35583 (Season Player Stats)",src/bankC5_B000.asm
 $C5C109,SignFreeAgents,CODE_C5C109,genesis+purpose,"same job as 95G SignFreeAgents; the page at $C353AB (Hire Free Agents); play mode Free Agent of the setup screen (DATA8_C58DD0 entry 4)",src/bankC5_C000.asm
 $C5C722,ReleasePlayers,CODE_C5C722,genesis+purpose,"same job as 95G ReleasePlayers; the page at $C353D5 (Release Players) printed by CODE_C5C826; play mode Release (DATA8_C58DD0 entry 5)",src/bankC5_C000.asm
-$C58DD0,DATA8_C58DD0,,new,"the routine of each play mode ($1864), run on start / select in the setup screen; the play mode list at $C35844: Exhibition, Practice, Season (CODE_C59588: the season in progress warning or SeasonOptions), Trades (TradePlayers), Free Agent (SignFreeAgents), Release (ReleasePlayers), Make Player (CODE_C59643: Create Player), then CODE_C5ABA1",src/bankC5_8000.asm
+$C58DD0,PlayModeStarts,DATA8_C58DD0,code,"GameSetUp jumps through it by OptPlayMode",src/bankC5_8000.asm
 $C57C34,RecordHoldersScreen,CODE_C57C34,genesis+purpose,"same job as 95G RecordHoldersScreen (the save RAM records in pages: wins, goals, saves); the page at $C3545F (Record Holders), no record holders ($C34D98) when there are none; the item Records of the pause menu's Info tab",src/bankC5_7000.asm
 $C57E57,PrintWinRecords,CODE_C57E57,genesis+purpose,"same job as 95G PrintWinRecords; prints name / win% / win / lose / tie ($C34DA4-$C34DB5); RecordHoldersScreen through DATA8_C57DCD",src/bankC5_7000.asm
 $C57F05,PrintGoalRecords,CODE_C57F05,code,"the second page routine of DATA8_C57DCD; prints name and Goals ($C34DA4, $C34B6A); 95G prints this page and the next with PrintPlayerRecords",src/bankC5_7000.asm
@@ -8922,3 +8922,10 @@ $C5C048,SortStandingsNextSlot,CODE_C5C048,code,"shared advance after keeping or 
 $C5C04A,SortStandingsCompare,CODE_C5C04A,code,"dispatches through the selected stat comparison routine",src/bankC5_C000.asm
 $C5C054,SortStandingsSwap,CODE_C5C054,code,"all stat compare routines branch here to insert before the current record",src/bankC5_C000.asm
 $C5C05C,SortStandingsAppend,CODE_C5C05C,code,"restores tmp1 and follows record offset two until the linked list ends",src/bankC5_C000.asm
+$C58DF0,SetupScreenStates,DATA8_C58DF0,code,"GameSetUp's frame loop calls entry $99 (UpdateTeamLogos, SetupScrollUp, SetupScrollDown)",src/bankC5_8000.asm
+$C592FA,PlayModeOptionLists,DATA8_C592FA,code,"DrawPlayModeOptions passes entry OptPlayMode to DrawOptionList; 7 entries",src/bankC5_9000.asm
+$C59EF2,PlayerInfoLeft,DATA8_C59EF2,code,"PlayerInfoInput calls entry d6 on left (pad bit $0200)",src/bankC5_9000.asm
+$C59EFA,PlayerInfoRight,DATA8_C59EFA,code,"PlayerInfoInput calls entry d6 on right (pad bit $0100)",src/bankC5_9000.asm
+$C5A3BF,VisTeamCheck,DATA8_C5A3BF,code,"as TradeTeam2Check",src/bankC5_A000.asm
+$C5A3FD,TradeTeam1Check,DATA8_C5A3FD,code,"as TradeTeam2Check",src/bankC5_A000.asm
+$C5A468,HomeTeamCheck,DATA8_C5A468,code,"as TradeTeam2Check",src/bankC5_A000.asm

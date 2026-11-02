@@ -384,21 +384,22 @@ ClearGameSlot:						; clears the text rows of game slot $81 - 1 (- 2 with carry 
 	sbc.w #$0001
 	bcs .1
 	adc.w #$0003
-.1:									; A * 2, X = A, push X, A = DATA8_C5B35D,x, ...
+.1:									; A * 2, X = A, push X, A = GameSlotOffsets,x, ...
 	asl a
 	tax
 	phx
-	lda.l DATA8_C5B35D,x
+	lda.l GameSlotOffsets,x
 	adc.b $D3
 	ldy.w #$01C0
 	jsl.l ClearRAM7E
 	plx
-	lda.l DATA8_C5B363,x
+	lda.l GameSlotRows,x
 	tay
 	rts
-DATA8_C5B35D:						; not traced: a table read by ClearGameSlot
+GameSlotOffsets:					; per game slot (0-2, * 2): the text map offset of its rows ($0200, $03C0,
+									; $0580)
 	db $00,$02,$C0,$03,$80,$05
-DATA8_C5B363:						; not traced: a table read by ClearGameSlot
+GameSlotRows:						; per game slot (0-2, * 2): its first text row (9, $10, $17)
 	db $09,$00,$10,$00,$17,$00
 QueueTeamPalette:					; queues team A's 16 colours (TeamPalettes as unpacked at $7F:D80A) for
 									; CGRAM X; A kept
@@ -665,8 +666,9 @@ AddLeaderEntry:						; adds player tmp0 to the League Leaders list at d0: a 16-b
 	lda.b d1
 	asl a
 	tax
-	jmp (DATA8_C5B56C,x)
-DATA8_C5B56C:						; jump table: the routine for each index
+	jmp (LeaderInserts,x)
+LeaderInserts:						; per League Leaders category (d1 * 2): the routine that links a new entry
+									; into the list in its order: goals, assists, points
 	dw InsertByGoals,InsertByAssists,InsertByPoints
 InsertByAssists:					; AddLeaderEntry for category 1: links entry Y into the list at d0 in
 									; order of +$A (assists; a goalie's shots)
@@ -790,9 +792,9 @@ PrintPlayerCategory:				; prints the League Leaders category name: Goals, Assist
 	tax
 	lda.b $85
 	lsr a
-	lda.l DATA8_C5B66A,x
+	lda.l LeaderCategoryNames,x
 	bcc .1
-	lda.l DATA8_C5B670,x
+	lda.l GoalieCategoryNames,x
 .1:									; push A, A = $D3, A + $01AA, push A, ...
 	pha
 	lda.b $D3
@@ -813,9 +815,11 @@ PrintPlayerCategory:				; prints the League Leaders category name: Goals, Assist
 	sta.b $D1
 	jsl.l PrintBoldRight
 	rts
-DATA8_C5B66A:						; not traced: a table read by PrintPlayerCategory
+LeaderCategoryNames:				; per League Leaders category (d1 * 2): the skaters' heading, packed text:
+									; Goals, Assists, Points
 	db $6A,$4B,$6F,$4B,$75,$4B
-DATA8_C5B670:						; not traced: a table read by PrintPlayerCategory
+GoalieCategoryNames:				; per League Leaders category (d1 * 2): the goalies' heading, packed text:
+									; Saves, Shots, the save percentage
 	db $7A,$4B,$9E,$4B,$5C,$56
 BinToBCDLong:						; BinToBCD for long calls
 	jsr.w BinToBCD
@@ -1885,12 +1889,14 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	lda.b d0
 	asl a
 	tax
-	jsr (DATA8_C5BEDD,x)
+	jsr (StandingsColumnTexts,x)
 	ldy.b $6D
 	ldx.w #mesarea
 	jsl.l PrintBoldRightStr
 	rts
-DATA8_C5BEDD:						; jump table: the routine for each index
+StandingsColumnTexts:				; per standings column (d0 * 2): the routine that writes the team's value
+									; in mesarea: record, points, goals and goals allowed a game, save and
+									; shooting percentage, shots and shots allowed a game
 	dw TeamRecordText,TeamPointsText,TeamGoalsAvgText,TeamGoalsAllowedText
 	dw TeamSavePctText,TeamShootPctText,TeamShotsAvgText,TeamShotsAllowedText
 TeamRecordText:						; mesarea = team record Y's wins, losses and ties (+4, +6, +8), $3E
