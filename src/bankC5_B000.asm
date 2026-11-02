@@ -553,28 +553,29 @@ WriteTiles4:						; with D = $2100: a new map row (SetVRAMRow) of 4 tiles X, X +
 									; advanced)
 	jsr.w SetVRAMRow
 	lda.w #$0003
-	bra CODE_C5B4A7
+	bra WriteTilesLoop
 WriteTiles9:						; with D = $2100: a new map row (SetVRAMRow) of 9 tiles X, X + 1, ... (X
 									; advanced)
 	jsr.w SetVRAMRow
 	lda.w #$0008
-CODE_C5B4A7:						; from CODE_C5B4A7, WriteTiles4
+WriteTilesLoop:						; writes A plus one consecutive tiles starting at X with D at the PPU
+									; registers
 	stx.b $18
 	inx
 	dec a
-	bpl CODE_C5B4A7
+	bpl WriteTilesLoop
 	rts
 WriteBlanks4:						; with D = $2100: a new map row (SetVRAMRow) of 4 zero tiles
 	jsr.w SetVRAMRow
 	lda.w #$0003
-	bra CODE_C5B4BC
+	bra WriteBlanksLoop
 WriteBlanks9:						; with D = $2100: a new map row (SetVRAMRow) of 9 zero tiles
 	jsr.w SetVRAMRow
 	lda.w #$0008
-CODE_C5B4BC:						; from CODE_C5B4BC, WriteBlanks4
+WriteBlanksLoop:					; writes A plus one zero tiles with D at the PPU registers
 	stz.b $18
 	dec a
-	bpl CODE_C5B4BC
+	bpl WriteBlanksLoop
 	rts
 FillLeaderEntry:					; fills the leader entry at Y for player A: number and team, then goals /
 									; assists / points or, for a goalie, saves / shots / save percentage
@@ -714,7 +715,8 @@ LinkLeaderLast:						; links leader entry Y after X as the list's last ($81 = Y)
 	stz.w $0000,x
 	sta.w $0002,y
 	rts
-CODE_C5B5C1:						; from LinkLeaderBefore
+LinkLeaderBeforeInner:				; links entry Y before a non-head entry X, updating both neighbouring
+									; links
 	lda.w $0002,x
 	sta.w $0002,y
 	sta.b tmp2
@@ -728,7 +730,7 @@ CODE_C5B5C1:						; from LinkLeaderBefore
 LinkLeaderBefore:					; links leader entry Y before entry X; at the head (X = d0) Y becomes the
 									; head
 	cpx.b d0
-	bne CODE_C5B5C1
+	bne LinkLeaderBeforeInner
 	sty.b d0
 	txa
 	sta.w $0000,y
@@ -1168,7 +1170,8 @@ DrawSeasonTeamStats:				; draws the season stats of the current team (record, go
 	jsr.w BCDTextAt
 	lda.b r2
 	and.w #$000F
-CODE_C5B95A:						; called from other segments
+DrawSeasonTeamStatsFinish:			; appends the final shots allowed digit, prints row twenty-one and sends
+									; the text map
 	jsr.w BCDTextAt
 	ldx.w #mesarea
 	ldy.w #$0015

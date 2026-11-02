@@ -8909,3 +8909,7 @@ $C59ACC,SkaterRatingRowDown,CODE_C59ACC,code,"SkaterRatingsInput down key; bound
 $C5A48C,PrintSetupTeamName,CODE_C5A48C,code,"PrintHomeTeamName falls through; PrintVisTeamName jumps here with saved text margins",src/bankC5_A000.asm
 $C5A48F,PrintTeamNameBody,CODE_C5A48F,code,"shared continuation of PrintSetupTeamName and PrintTeamNameLeft",src/bankC5_A000.asm
 $C5A80B,ClearStandingsRows,CODE_C5A80B,code,"StandingsInput supplies length; loads offset 464 then falls into ClearTextMapAt",src/bankC5_A000.asm
+$C5B4A7,WriteTilesLoop,CODE_C5B4A7,code,"shared loop of WriteTiles4 and WriteTiles9; X advances",src/bankC5_B000.asm
+$C5B4BC,WriteBlanksLoop,CODE_C5B4BC,code,"shared loop of WriteBlanks4 and WriteBlanks9",src/bankC5_B000.asm
+$C5B5C1,LinkLeaderBeforeInner,CODE_C5B5C1,code,"LinkLeaderBefore branches here when X differs from the list head",src/bankC5_B000.asm
+$C5B95A,DrawSeasonTeamStatsFinish,CODE_C5B95A,code,"fall-through tail of DrawSeasonTeamStats; restores its saved Y before SendTextMap",src/bankC5_B000.asm
