@@ -4594,8 +4594,8 @@ $C4DF1D,.1,CODE_C4DF1D,new,"branch target only used in ScanNorris",src/bankC4_D0
 $C4DF2A,.loop,CODE_C4DF2A,new,"branch target only used in ScanPresidents",src/bankC4_D000.asm
 $C4DF45,.1,CODE_C4DF45,new,"branch target only used in ScanPresidents",src/bankC4_D000.asm
 $C4DF50,.2,CODE_C4DF50,new,"branch target only used in ScanPresidents",src/bankC4_D000.asm
-$C4DF64,.loop,CODE_C4DF64,new,"branch target only used in CODE_C4DF5B",src/bankC4_D000.asm
-$C4DF77,.1,CODE_C4DF77,new,"branch target only used in CODE_C4DF5B",src/bankC4_D000.asm
+$C4DF64,.loop,CODE_C4DF64,new,"branch target only used in FindFewestGoalsAllowedTeam",src/bankC4_D000.asm
+$C4DF77,.1,CODE_C4DF77,new,"branch target only used in FindFewestGoalsAllowedTeam",src/bankC4_D000.asm
 $C4DFA3,.loop,CODE_C4DFA3,new,"branch target only used in ReadPlayoffPlayerGoals",src/bankC4_D000.asm
 $C4DFCD,.loop,CODE_C4DFCD,new,"branch target only used in ReadPlayoffPlayerAssists",src/bankC4_D000.asm
 $C4E020,.loop,CODE_C4E020,new,"branch target only used in StanleyCupScreen",src/bankC4_E000.asm
@@ -9319,3 +9319,4 @@ $C350C4,TxtDefeating,,code,"textdec.py decodes $50C4 to this text",src/bankC3_50
 $C350CC,TxtInTheFinal,,code,"textdec.py decodes $50CC to this text",src/bankC3_5000.asm
 $C3576C,CreateGoalieRatingsPage,,code,"PrintTextPage reads it when d0 is 0 (the goalie); decoded with pages.py",src/bankC3_5000.asm
 $C357AE,CreateSkaterRatingsPage,,code,"PrintTextPage reads it when d0 is not 0; decoded with pages.py",src/bankC3_5000.asm
+$C4DF5B,FindFewestGoalsAllowedTeam,CODE_C4DF5B,code,"loops teams 0-25 with BuildTeamSeasonRecordLong and keeps the lowest $2A; DrawSeasonTeamStats prints $2A * 100 / games as Goals Allowed Avg and ($2E - $2A) / $2E as the save percentage, so $2A is goals allowed; ScanSelke, ScanJennings and ScanNorris pick their player from this team",src/bankC4_D000.asm

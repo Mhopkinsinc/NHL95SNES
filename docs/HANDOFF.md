@@ -361,15 +361,13 @@
     $C41636: two of gpoke / gcover2 / gcover); the code's SPA immediates read #SPAname&$FFFF, range bounds stay numbers
     as in 94S. FrictionFactors has 94S updateplayers' bytes but
     no 95 reader.
-- 27 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
+- 26 CODE_ labels left (the report of the last Codex run is in ../work/agent_runs/tools-codex-labels):
   - No reference anywhere, entry contract unclear: CODE_C4B844 (TasksDone = A, S = $1FFC, rtl), CODE_C4C2C6,
     CODE_C4CEE0, CODE_C50E8D (fadestep 5), CODE_C51812, CODE_C54320 (inside setpersonel), CODE_C5ADD8, CODE_C5888F (a
     signed multiply through WRMPYA / WRMPYB), CODE_C588EB (a software divide, not 94S Div32x32U), CODE_C5EA91,
     CODE_C5EAA2, CODE_C5EB88, CODE_C5ECA5, CODE_C5EE3C (sprite object helpers), CODE_CFFF0F.
   - CODE_C537DE: 94S findpc's carrier test, which 95 skips with an unconditional branch (its other blocks are named
     findpcSearch / findpcSweepcheck / findpcAssign / findpcReturn).
-  - CODE_C4DF5B: ScanSelke / ScanJennings / ScanNorris take the team with the lowest field $2A of BuildTeamSeasonRecord;
-    what that field holds is not established.
   - CODE_C52842 / CODE_C52852: DrawPadTag / TagPadMarker draw a frame layout ($72) with tiles $2454 / $25E0; what it
     shows is not established. CODE_CFFD9E / CODE_CFFF88: layout records 142-145 jump there.
   - Already listed: CODE_C43FC1 (only calls CODE_C53A29), CODE_C539D7 / CODE_C53A29 (scoreboard), CODE_C535EF,

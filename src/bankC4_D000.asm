@@ -1348,10 +1348,10 @@ ScanVezina:							; Vezina Trophy: of the goalies of the 26 teams, the one Seaso
 	bne .1
 	lda.b $71
 	rts
-ScanSelke:							; Selke Trophy: from the team CODE_C4DF5B picks, the forward with the most
+ScanSelke:							; Selke Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
 									; goals + assists
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1433,10 +1433,10 @@ ScanConnSmythe:						; Conn Smythe Trophy: of the skaters of the 16 playoff team
 	bcc .1
 	lda.b $71
 	rts
-ScanJennings:						; Jennings Trophy: from the team CODE_C4DF5B picks, ...
+ScanJennings:						; Jennings Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
 									; scores highest
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1654,10 +1654,10 @@ ScanArtRoss:						; Art Ross Trophy: of all players, goalies skipped, the one wi
 	bcc .loop
 	lda.b $71
 	rts
-ScanNorris:							; Norris Trophy: from the team CODE_C4DF5B picks, the defenceman with the
+ScanNorris:							; Norris Trophy: from the team FindFewestGoalsAllowedTeam picks, ...
 									; most goals + assists
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1721,7 +1721,8 @@ ScanPresidents:						; Presidents Trophy: the team with the most standings point
 	bne .loop
 	lda.b $71
 	rts
-CODE_C4DF5B:						; from ScanSelke, ScanJennings, ScanNorris
+FindFewestGoalsAllowedTeam:			; returns in A (and $71) the team with the fewest goals allowed this
+									; season (BuildTeamSeasonRecord field $2A)
 	lda.w #$0000
 	sta.b a2
 	sta.b $71
