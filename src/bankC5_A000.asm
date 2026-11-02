@@ -287,7 +287,8 @@ FieldPos:							; prints the created player's position (d0: Goalie, Left Defense
 	rts
 CreatedPosNames:					; per created player position (d0 * 2): its name, packed text: Goalie,
 									; then the five of PositionLongNames
-	db $B8,$49,$BD,$49,$C7,$49,$D7,$49,$D2,$49,$E0,$49
+	dw TxtGoalie&$FFFF,TxtLeftDefense&$FFFF,TxtRightDefense&$FFFF,TxtLeftWing&$FFFF,TxtCenter&$FFFF
+	dw TxtRightWing&$FFFF
 FieldWeight:						; prints the created player's weight, $81 * 8 + 140, on row $B, its field
 									; cleared first
 	lda.w #$000B

@@ -92,5 +92,11 @@ TxtLeft = $C349E9
 TxtOkay = $C347B3
 TxtSelected = $C347AB
 TxtStuvwxyz = $C3491B
+TxtCenter = $C349D2
+TxtGoalie = $C349B8
+TxtLeftDefense = $C349BD
+TxtLeftWing = $C349D7
+TxtRightDefense = $C349C7
+TxtRightWing = $C349E0
 
 incsrc "../bankC5_A000.asm"

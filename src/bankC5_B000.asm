@@ -817,10 +817,10 @@ PrintPlayerCategory:				; prints the League Leaders category name: Goals, Assist
 	rts
 LeaderCategoryNames:				; per League Leaders category (d1 * 2): the skaters' heading, packed text:
 									; Goals, Assists, Points
-	db $6A,$4B,$6F,$4B,$75,$4B
+	dw TxtGoals&$FFFF,TxtAssists&$FFFF,TxtPoints&$FFFF
 GoalieCategoryNames:				; per League Leaders category (d1 * 2): the goalies' heading, packed text:
 									; Saves, Shots, the save percentage
-	db $7A,$4B,$9E,$4B,$5C,$56
+	dw TxtSaves&$FFFF,TxtShots&$FFFF,TxtSave&$FFFF
 BinToBCDLong:						; BinToBCD for long calls
 	jsr.w BinToBCD
 	rtl

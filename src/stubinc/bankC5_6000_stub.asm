@@ -80,5 +80,10 @@ TxtSh = $C34F78
 TxtTime = $C34F87
 TxtTm = $C34F8B
 TxtTotal = $C34C1C
+TxtAssists = $C34B6F
+TxtGoals = $C34B6A
+TxtPenalties = $C34808
+TxtPoints = $C34B75
+TxtShots = $C34B9E
 
 incsrc "../bankC5_6000.asm"

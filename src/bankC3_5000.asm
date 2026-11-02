@@ -140,7 +140,9 @@ SeasonTeamStatsPage:				; the Season Team Stats text page (SeasonTeamStats)
 	db $83,$E1,$BF,$B9,$E4,$16,$4D,$71,$36,$9F,$9C,$00,$26,$35,$96,$A3
 	db $26,$BD,$F9,$E2,$4E,$4A,$22,$BD,$F9,$E4,$88,$48,$0D,$86,$3B,$B0
 	db $E4,$E6,$92,$0B,$17,$C9,$D8,$1C,$F0,$6A,$7C,$35,$86,$3B,$B0,$E4
-	db $E6,$80,$AF,$E5,$2C,$19,$9B,$03,$5E,$8D,$AF,$06,$92,$83,$4A,$B6
+	db $E6,$80,$AF,$E5,$2C,$19,$9B,$03,$5E,$8D,$AF,$06
+TxtSave:							; the packed text "Save <"
+	db $92,$83,$4A,$B6
 	db $A7,$06,$92,$83,$4A,$36,$7F,$5C,$4C,$5F,$0D,$92,$1F,$E7,$26,$6A
 	db $66,$F3,$C7,$C5,$F4,$D5,$92,$1F,$37,$E5,$E6,$8F,$93,$B8,$B9,$E1
 	db $80,$11,$0D,$92,$1F,$37,$E5,$E6,$80,$AF,$E5,$2C,$19,$1A
@@ -345,31 +347,36 @@ PracticeOptions:					; the Practice setup lines: a count, then title, value list
 	db $DB,$12,$DF,$12
 PerLabels:							; the period labels (1st, 2nd, 3rd, OT): addresses of packed texts, by
 									; period
-	db $59,$4F,$5D,$4F,$61,$4F,$65,$4F
+	dw Txt1st&$FFFF,Txt2nd&$FFFF,Txt3rd&$FFFF,TxtOT&$FFFF
 ScoringStrengthTexts:				; a goal's strength mark: SH2, SH, none ($FFFF), PP, PP2 (packed text
 									; addresses)
-	db $9A,$4F,$78,$4F,$FF,$FF,$9D,$4F,$9F,$4F
+	dw TxtSH2&$FFFF,TxtSh&$FFFF,$FFFF,TxtPP&$FFFF,TxtPP2&$FFFF
 LineNames:							; the line names by line: Best Line, Scoring 1 / 2, Checking, Power Play 1
 									; / 2, Penalty Kill 1 / 2
-	db $74,$4C,$83,$4E,$8B,$4E,$4D,$4A,$93,$4E,$9E,$4E,$A9,$4E,$B5,$4E
+	dw TxtBestLine&$FFFF,TxtScoring1&$FFFF,TxtScoring2&$FFFF,TxtChecking&$FFFF,TxtPowerPlay1&$FFFF
+	dw TxtPowerPlay2&$FFFF,TxtPenaltyKill1&$FFFF,TxtPenaltyKill2&$FFFF
 PositionNames:						; the position abbreviations LD, RD, LW, C, RW (packed text addresses)
-	db $A2,$4F,$A4,$4F,$A6,$4F,$A8,$4F,$AA,$4F
+	dw TxtLD&$FFFF,TxtRD&$FFFF,TxtLW&$FFFF,TxtC&$FFFF,TxtRW&$FFFF
 PositionLongNames:					; the position names, Left Defense to Right Wing, in PositionNames order
-	db $BD,$49,$C7,$49,$D7,$49,$D2,$49,$E0,$49
+	dw TxtLeftDefense&$FFFF,TxtRightDefense&$FFFF,TxtLeftWing&$FFFF,TxtCenter&$FFFF,TxtRightWing&$FFFF
 PositionGroupNames:					; each roster slot group's name by position: Goalie, Defense, Defense,
 									; Forward x 3
-	db $B8,$49,$F0,$4C,$F0,$4C,$F6,$4C,$F6,$4C,$F6,$4C
+	dw TxtGoalie&$FFFF,TxtDefense&$FFFF,TxtDefense&$FFFF,TxtForward&$FFFF,TxtForward&$FFFF
+	dw TxtForward&$FFFF
 RatingNames:						; the skater rating headings: Status, Overall, Energy, Agility ...
 									; Aggression, Checking
-	db $C7,$4E,$CC,$4E,$D2,$4E,$F7,$49,$F2,$49,$D7,$4E,$04,$4A,$10,$4A
-	db $26,$4A,$2F,$4A,$3A,$4A,$1C,$4A,$DC,$4E,$FD,$49,$45,$4A,$4D,$4A
+	dw TxtStatus&$FFFF,TxtOverall&$FFFF,TxtEnergy&$FFFF,TxtAgility&$FFFF,TxtSpeed&$FFFF,TxtHanded&$FFFF
+	dw TxtOffAwareness&$FFFF,TxtDefAwareness&$FFFF,TxtShotPower&$FFFF,TxtShotAccuracy&$FFFF
+	dw TxtPassAccuracy&$FFFF,TxtStickhandling&$FFFF,TxtWeight&$FFFF,TxtEndurance&$FFFF
+	dw TxtAggression&$FFFF,TxtChecking&$FFFF
 GoalieRatingNames:					; the goalie rating headings: Status, Overall, Agility ... Glove Left,
 									; Weight
-	db $C7,$4E,$CC,$4E,$F7,$49,$F2,$49,$6B,$4C,$10,$4A,$54,$4A,$5E,$4A
-	db $68,$4A,$7A,$4A,$71,$4A,$DC,$4E
+	dw TxtStatus&$FFFF,TxtOverall&$FFFF,TxtAgility&$FFFF,TxtSpeed&$FFFF,TxtGloveHand&$FFFF
+	dw TxtDefAwareness&$FFFF,TxtPuckControl&$FFFF,TxtStickRight&$FFFF,TxtStickLeft&$FFFF
+	dw TxtGloveRight&$FFFF,TxtGloveLeft&$FFFF,TxtWeight&$FFFF
 RosterStatusTexts:					; the roster status words (Ice, Bench, Inj. P, Inj. G), then the hands
 									; (Right, Left)
-	db $56,$4C,$5A,$4C,$5F,$4C,$65,$4C,$ED,$49,$E9,$49
+	dw TxtIce&$FFFF,TxtBench&$FFFF,TxtInjP&$FFFF,TxtInjG&$FFFF,TxtRight&$FFFF,TxtLeft&$FFFF
 PhotoPaletteTable:					; per team (team order) a long pointer to its photo set: 6 palettes,
 									; then the photos (as 94S PhotoPaletteTable); read 1-based (-4 + team x 4)
 	dd PhotoPalettesANH,PhotoPalettesBOS,PhotoPalettesBUF,PhotoPalettesCGY

@@ -1162,7 +1162,7 @@ PrintGoalieStatHeads:				; prints the goalie stats headings (Goalies, the column
 	jmp.w PrintStatHead
 StatColumnNames:					; per player stats column ($7D): its name, packed text: Goals, Assists,
 									; Points, Shots, Penalties
-	db $6A,$4B,$6F,$4B,$75,$4B,$9E,$4B,$08,$48
+	dw TxtGoals&$FFFF,TxtAssists&$FFFF,TxtPoints&$FFFF,TxtShots&$FFFF,TxtPenalties&$FFFF
 ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, Time, Tm, Player,
 									; PM) as a scrolling list, No Penalties when there are none; start returns
 	lda.w #$534D

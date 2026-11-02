@@ -61,5 +61,11 @@ SeasonPlayerStatsPage = $C35583
 SeasonTeamStatsPage = $C355F1
 StandingsPage = $C35553
 TxtBSwitchToLinemen = $C355AD
+TxtAssists = $C34B6F
+TxtGoals = $C34B6A
+TxtPoints = $C34B75
+TxtSave = $C3565C
+TxtSaves = $C34B7A
+TxtShots = $C34B9E
 
 incsrc "../bankC5_B000.asm"
