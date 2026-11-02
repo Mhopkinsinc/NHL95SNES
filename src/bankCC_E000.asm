@@ -1,5 +1,5 @@
 ; Raw planar frame tiles, then the map chunk of IceRinkMap; its tiles and colours are in the next segment.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $CCE1E5
 FrameTiles41E:						; the raw tiles of frame $41E (FrameTileSource / FrameBankLayout entry
 									; $41E); pose not traced

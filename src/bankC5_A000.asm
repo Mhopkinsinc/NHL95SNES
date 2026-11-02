@@ -1721,7 +1721,8 @@ NoGameSelected:						; the warning A game must be selected. / Okay (screen state
 	lda.w #$000C
 	sta.b $99
 	rts
-DATA8_C5AE40:						; not traced: data between routines
+HighBitMasksUnused:					; 8 masks, the top 8 bits down to the top bit ($FF, $FE ... $80); nothing
+									; reads them
 	db $FF,$FE,$FC,$F8,$F0,$E0,$C0,$80
 MenuPlayGames:						; League Menu Play Games: when the season is over (play mode 3), the end
 									; of season (BuildPlayoffDay); else the day's games from the schedule

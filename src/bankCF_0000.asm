@@ -751,7 +751,7 @@ SampleList:							; the 33 sound samples: a long pointer each (dd: then a zero);
 	dd Sample30						; sample 30
 	dd Sample31						; sample 31
 	dd Sample32						; sample 32
-DATA8_CF0661:						; not traced (no reader found)
+SampleListTailUnused:				; the word $FFA6 after SampleList's 32 entries; nothing reads it
 	db $A6,$FF
 TeamSongSoundList:					; samples and sequence loaded by LoadTeamSongs before appending the
 									; selected team songs

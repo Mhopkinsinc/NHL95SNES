@@ -86,7 +86,9 @@ $C04642,DigitFontTiles,,render,"15 4bpp tiles, packed format 2 ($01E0): 0-9 and 
 $C04708,LinePieceTiles,,render,"63 4bpp tiles, packed format 6 ($07E0): straight and diagonal line pieces and corners; $C52216 unpacks them to $7F:D02A, then $C539D7 builds a screen",src/bankC0_4000.asm
 $C048E2,BG3ScrollHDMA1,,code,"28 bytes: indirect HDMA table (count, RAM address) for BG3VOFS; $C5ABC4 copies it to $7E:468C, HDMA channel 5 mode $42 (set by $C5AD1B through $C58AA5)",src/bankC0_4000.asm
 $C048FE,BG3ScrollHDMA2,,code,"the same for another screen ($C5AD3B copies 28 bytes, which end inside the short table after it)",src/bankC0_4000.asm
-$C0491A,DATA8_C0491A,,new,"not traced: a 0 then 5-byte records up to MainScreenHDMA",src/bankC0_4000.asm
+$C0491A,DATA8_C0491A,,new,"the label is dropped: its first byte is the 0 that ends the short HDMA table before it; HDMATableUnused1 / HDMATableUnused2 follow",src/bankC0_4000.asm
+$C0491B,HDMATableUnused1,,code,"(line count, 4 bytes) entries up to a 0 at $C049A7, the form of the HDMA tables around it; no operand, immediate, pea or table word holds its address",src/bankC0_4000.asm
+$C049A8,HDMATableUnused2,,code,"the same form up to a 0 at $C04A34, before MainScreenHDMA; no operand, immediate, pea or table word holds its address",src/bankC0_4000.asm
 $C04A35,MainScreenHDMA,,code,"indirect HDMA table for TM; $C5AD08 sets channel 6 (mode $40, B-bus $2C, indirect bank $7E: values at $7E:364E-$3652)",src/bankC0_4000.asm
 $C04A45,BlueColours,,code,"8 colours BlueColoursHook sends to CGRAM $11",src/bankC0_4000.asm
 $C04A55,DarkBlueColours,,code,"8 colours DarkBlueColoursHook sends to CGRAM $11",src/bankC0_4000.asm
@@ -94,7 +96,7 @@ $C04A65,BlueColoursHook,,code,"NMI hook ($C4016B sets it through SetNMIHook): DM
 $C04A87,DarkBlueColoursHook,,code,"NMI hook ($C4044B sets it through SetNMIHook): DMA DarkBlueColours to CGRAM $11",src/bankC0_4000.asm
 $C04AA9,LargeSlotTiles,DATA8_C04AA9,code,"AllocLargeSpriteTiles and the sprite creators read entry slot * 2 and shift it left 4 for the object's VRAM address (+$14)",src/bankC0_4000.asm
 $C04CA9,BackdropColour,,code,"1 colour ($7F98) that $C52091 / $C5576A queue to CGRAM colour 0",src/bankC0_4000.asm
-$C04CAB,DATA8_C04CAB,,new,"6 words, not traced",src/bankC0_4000.asm
+$C04CAB,WordListUnused,DATA8_C04CAB,code,"no operand, immediate, pea, table word or long pointer holds its address",src/bankC0_4000.asm
 $C04CB7,DivisionNames,DATA8_C04CB7,code,"4 offsets into bank $C3's packed text ($C346E2 ...); DrawStandings prints the one of division d1",src/bankC0_4000.asm
 $C04CBF,DivisionCodes,DATA8_C04CBF,code,"KeepDivisionTeams keeps the ListBuf teams whose DATA8_C40EDA byte equals entry d1",src/bankC0_4000.asm
 $C04CC3,DivisionTeamCounts,DATA8_C04CC3,code,"KeepDivisionTeams puts entry d1 in a1 as the count of the division's list",src/bankC0_4000.asm
@@ -110,8 +112,8 @@ $C07F73,DefaultSongs,,94S,"94S DefaultSongs by purpose: $CF044F replaces each $F
 $C07F7B,IntroSoundList,DATA8_C07F7B,code,"IntroSequence hands it to LoadSounds before the intro starts",src/bankC0_7000.asm
 $C08000,DATA8_C08000,,new,"the sprite objects (docs/sprite_objects.md): header with the record list and palette pointer, 27-byte records, frame headers into bank $C1; read by $C5E665 and its helpers",src/bankC0_8000.asm
 $C087F2,TiledBackMap,,render,"map set for the map unpacker $C58527 (length word, width $20, height $1C, flags $8C: LZSS; $0700 bytes): a 16 x 3 block of tiles repeated; $C4D68C, $C4D7C7, $C4E1EE, $C55980, $C5916A send it to VRAM $5800",src/bankC0_8000.asm
-$C08939,DATA8_C08939,,new,"not traced: a set with the same length word ($01D5) but width byte $30, which $C58527 would reject; then 7 bytes",src/bankC0_8000.asm
-$C08B17,DATA8_C08B17,,new,"not traced: 16 colours, magenta then blues",src/bankC0_8000.asm
+$C08939,TileSetUnused,DATA8_C08939,code,"no operand, immediate, pea, table word or long pointer holds its address; the bytes after the header have bit patterns ($77, $88, $AA, $55)",src/bankC0_8000.asm
+$C08B17,BluesPaletteUnused,DATA8_C08B17,code,"no operand, immediate, pea, table word or long pointer holds its address",src/bankC0_8000.asm
 $C08B37,InitHooks,,94S,"same layout and seed as 94S InitHooks; $C5000A reads it",src/bankC0_8000.asm
 $C08B44,NullHook,,94S,"rtl; the default frame and NMI hook",src/bankC0_8000.asm
 $C08B45,NMI_Fast,,94S,"NMI: save the registers; nothing more while NMISkip is set, else the NMI hook",src/bankC0_8000.asm
@@ -244,7 +246,7 @@ $C0FD18,NMI,,94S,"NMI vector: jml NMI_Fast",src/bankC0_F000.asm
 $C0FD1C,BRKHandler,,new,"BRK vector: cop #$00 (the COP vector returns past it), then $CD fill",src/bankC0_F000.asm
 $C0FFB0,ExtHeader,,new,"extended cartridge header: maker 69, game code ANHE",src/bankC0_F000.asm
 $C10000,DATA8_C10000,,new,"not traced: 39 palettes of 16 colours",src/bankC1_0000.asm
-$C104E0,DATA8_C104E0,,new,"not traced: the word $04E2 repeated; DATA8_C08000 records point at words in it",src/bankC1_0000.asm
+$C104E0,SpriteField4DataUnused,DATA8_C104E0,code,"the SpriteRecordList records' dl lines point into it (field +4); the sprite code reads the field and discards it",src/bankC1_0000.asm
 $C10533,DATA8_C10533,,new,"not traced: block a DATA8_C08000 record points at (record offset 30)",src/bankC1_0000.asm
 $C1094E,DATA8_C1094E,,new,"not traced: block a record points at (offset 32)",src/bankC1_0000.asm
 $C10CFD,DATA8_C10CFD,,new,"not traced: block a record points at (offset 32)",src/bankC1_0000.asm
@@ -592,7 +594,7 @@ $C5A2A8,CreatedPosNames,DATA8_C5A2A8,code,"FieldPos prints entry d0 in italics o
 $C5A354,TradeTeam2Check,DATA8_C5A354,code,"PrevOptionValue and NextOptionValue read the word before a line routine at $C4FFFE,x (X = the routine) and run it first",src/bankC5_A000.asm
 $C5A81B,GamesTodaySteps,DATA8_C5A81B,code,"GamesTodayInput jumps through it with X = $89 (GamesTodayKeys, ScrollGamesUp, ScrollGamesDown)",src/bankC5_A000.asm
 $C5AC73,SeasonMenuJumps,DATA8_C5AC73,genesis+purpose,"same job as 95G SeasonMenuJumps (the season menu items' routines); the order of the League Menu page; CODE_C5AC07 jumps through it",src/bankC5_A000.asm
-$C5AE40,DATA8_C5AE40,,new,"8 bytes FF FE FC F8 F0 E0 C0 80 (left masks?) between routines; no reader found",src/bankC5_A000.asm
+$C5AE40,HighBitMasksUnused,DATA8_C5AE40,code,"no operand, immediate, pea, table word or long pointer holds its address",src/bankC5_A000.asm
 $C5B1FE,StandingsStatTitles,DATA8_C5B1FE,code,"8 offsets into bank $C3's packed text; DrawStandings prints the one of stat d0",src/bankC5_B000.asm
 $C5B35D,GameSlotOffsets,DATA8_C5B35D,code,"ClearGameSlot clears $1C0 bytes of the text map from the entry",src/bankC5_B000.asm
 $C5B363,GameSlotRows,DATA8_C5B363,code,"ClearGameSlot returns the entry in Y for the slot's text",src/bankC5_B000.asm
@@ -1314,7 +1316,7 @@ $C34262,Toronto,,new,"team record 22 (Toronto): not traced; it holds licensed na
 $C342D7,Vancouver,,new,"team record 23 (Vancouver): not traced; it holds licensed names",src/bankC3_4000.asm
 $C3434B,Winnipeg,,new,"team record 25 (Winnipeg): not traced; it holds licensed names",src/bankC3_4000.asm
 $C343B8,Washington,,new,"team record 24 (Washington): not traced; it holds licensed names",src/bankC3_4000.asm
-$C34427,DATA8_C34427,,new,"a team record not in TeamList (the same form; not traced)",src/bankC3_4000.asm
+$C34427,TeamRecordUnused,DATA8_C34427,code,"no operand, immediate, pea, table word or long pointer holds its address; the same form as the team records before it",src/bankC3_4000.asm
 $C34499,Penaltylist,DATA8_C34499,94S+purpose,"94S Penaltylist (the penalty name table prefmes reads); prefmes reads the offset by d0 and the text length at DATA8_C3449B",src/bankC3_4000.asm
 $C3449A,Penaltylist+1,DATA8_C3449A,94S+purpose,"Penaltylist+1: the label is dropped; SetPA2 reads the referee animation steps after a record's name as Penaltylist+1,x (X = the record offset + name length + step)",src/bankC3_4000.asm
 $C3449B,Penaltylist+2,DATA8_C3449B,94S+purpose,"Penaltylist+2: the label is dropped; SetPA2 and prefmes read a record's name length as Penaltylist+2,x (X = the offset from Penaltylist, as 94S PenData records hang off Penaltylist)",src/bankC3_4000.asm
@@ -1482,7 +1484,7 @@ $C360D4,SeasonSchedule,DATA8_C360D4,genesis+purpose,"95 Genesis SeasonSchedule h
 $C36D2A,PadDirection,DATA8_C36D2A,94S+code,"the same 16 bytes as 94S PadDirection; ReadPads reads it",src/bankC3_6000.asm
 $C377BB,ReplayCursorSteps,DATA8_C377BB,code,"ReadReplayCameraInput adds entry d0 to the cursor object's Xpos+32 / Ypos+32 and puts it in its Xvel / Yvel high byte; the y step is read as ReplayCursorSteps+2,x",src/bankC3_7000.asm
 $C377BD,ReplayCursorSteps+2,DATA8_C377BD,code,"ReplayCursorSteps+2: the y steps; the label is dropped; ReadReplayCameraInput reads ReplayCursorSteps+2,x",src/bankC3_7000.asm
-$C3803D,DATA8_C3803D,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
+$C3803D,.1,DATA8_C3803D,94S+code,"projxy local: unreached in 95; the bytes are lda #$4E20 / sta d1 / rtl, 94S projxy's .t1x (off screen: d1 = $4E20, which setffo tests); 95 projxy drops the range checks that branch there",src/bankC3_8000.asm
 $C3804B,DATA8_C3804B,,new,"the label is dropped: the bytes are rtl / rtl after rtl, unreached, written as instructions",src/bankC3_8000.asm
 $C3847C,ObjSmallTiles,DATA8_C3847C,code,"DrawSortedGameObject loads it into tmp1, the tile word PutSmallPiece1-4 use; entries 0-11 are 4 tiles apart from tile 0, then $30, $30, $34, $35",src/bankC3_8000.asm
 $C3849C,ObjBigTiles,DATA8_C3849C,code,"DrawSortedGameObject loads it into tmp2, the tile word PutBigPiece1-4 use; entries 8 tile numbers apart from tile $A0, room for four 16 x 16 pieces each",src/bankC3_8000.asm
@@ -2360,7 +2362,7 @@ $CF05B1,SampleVolumeOverrides2,DATA8_CF05B1,code,"SampleVolumeOverrideLists entr
 $CF05C1,SampleVolumeOverrides3,DATA8_CF05C1,code,"SampleVolumeOverrideLists entry 3 points here",src/bankCF_0000.asm
 $CF05D4,SongLists,DATA8_CF05D4,code,"StartMenuMusic and the title load +0; ScoutingReport and the other screens load SongLists+3 / +5 / +7",src/bankCF_0000.asm
 $CF05DD,SampleList,DATA8_CF05DD,code,"the 33 sound samples: a long pointer each (dd: then a zero); CODE_CF01E0 sends sample A to the sound CPU",src/bankCF_0000.asm
-$CF0661,DATA8_CF0661,,new,"not traced (no reader found)",src/bankCF_0000.asm
+$CF0661,SampleListTailUnused,DATA8_CF0661,code,"no operand, immediate, pea, table word or long pointer holds its address",src/bankCF_0000.asm
 $CF0663,DATA8_CF0663,,new,"a byte list ending in $FF; CODE_CF0427 passes it to CODE_CF0134",src/bankCF_0000.asm
 $CF0679,Sequence01,DATA8_CF0679,code,"SoundSequenceTable entry 1 points here; named by its sound number",src/bankCF_0000.asm
 $CF0949,Sequence02,DATA8_CF0949,code,"SoundSequenceTable entry 2 points here; named by its sound number",src/bankCF_0000.asm

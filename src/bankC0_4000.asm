@@ -36,8 +36,12 @@ BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so 
 	db $00							; end
 	db $40,$C2,$04					; the short table: 64 lines
 	db $01,$C2,$04					; 1 line
-DATA8_C0491A:						; not traced: a 0, then records of 5 bytes
-	incbin "../Extracted/segments/bankC0_4000.bin":$91A..$A35
+	db $00							; end
+HDMATableUnused1:					; an HDMA table in the form of its neighbours: (line count, 4 bytes)
+									; entries, a 0 at the end; nothing points at it
+	incbin "../Extracted/segments/bankC0_4000.bin":$91B..$9A8
+HDMATableUnused2:					; a second table of the same form and length; nothing points at it
+	incbin "../Extracted/segments/bankC0_4000.bin":$9A8..$A35
 MainScreenHDMA:						; indirect HDMA table for TM (line count, address of the layers to show)
 	db $40,$4E,$36					; 64 lines
 	db $05,$50,$36					; 5 lines
@@ -97,7 +101,8 @@ LargeSlotTiles:						; per 16 x 16 sprite slot (A * 2): its first tile, (n / 8) 
 	dw $03C0,$03C2,$03C4,$03C6,$03C8,$03CA,$03CC,$03CE,$03E0,$03E2,$03E4,$03E6,$03E8,$03EA,$03EC,$03EE
 BackdropColour:						; 1 colour queued to CGRAM colour 0
 	dw $7F98
-DATA8_C04CAB:						; not traced
+WordListUnused:						; six words (9, 9, 11, 18, 18, 10) between BackdropColour and
+									; DivisionNames; nothing reads them
 	dw $0009,$0009,$000B,$0012,$0012,$000A
 DivisionNames:						; the packed text of the 4 division names: Western / Pacific, Western /
 									; Central, Eastern / Atlantic, Eastern / Northeast

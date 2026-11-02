@@ -19,7 +19,8 @@ Winnipeg:							; team record 25 (Winnipeg): not traced; it holds licensed names
 	incbin "../Extracted/segments/bankC3_4000.bin":$34B..$3B8
 Washington:							; team record 24 (Washington): not traced; it holds licensed names
 	incbin "../Extracted/segments/bankC3_4000.bin":$3B8..$427
-DATA8_C34427:						; a team record not in TeamList (the same form; not traced)
+TeamRecordUnused:					; a team record in TeamList's form that TeamList does not point at; it
+									; holds licensed names, kept out of the source; nothing reads it
 	incbin "../Extracted/segments/bankC3_4000.bin":$427..$499
 Penaltylist:						; per penalty number, the offset (from here) of its record: two bytes, the
 									; length-led name, then the referee's animation steps (SetPA2)

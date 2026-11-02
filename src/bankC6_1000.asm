@@ -1,5 +1,5 @@
 ; Frame placement tables and raw planar frame tiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C61090
 FrameOffsetX:						; per frame (1060 words): the x offset DrawFrameLayout adds to the
 									; object's screen x

@@ -109,7 +109,7 @@
   (through MapSetToWRAM). Zeros fill bank $CE after it.
 - Bank $CF: the sound code ($CF0000-$CF04E2; SPCUpload as 94S, the rest CODE_ names), SoundSequenceTable (40 sounds: a long
   pointer and a flag byte), SampleVolumeOverrideLists (four lists of sample records), SongLists, SampleList (33 long pointers as dd;
-  entries 26 and 27 share Sample26), DATA8_CF0661 / TeamSongSoundList, then the sounds back to back ($CF0679-$CF95A3 and
+  entries 26 and 27 share Sample26), SampleListTailUnused / TeamSongSoundList, then the sounds back to back ($CF0679-$CF95A3 and
   $CFC262-$CFC560; each a length word and its data; LoadSequence sends the samples listed from +3), Sample26, Sample31,
   Sample23, Sample06, and code again from $CFEE1D. ../work/sndseg.py J writes the data segments and keeps the sound table
   and SampleList entries current. For bank $CF the whole-bank decode drops the raw jsl search of bank $C3 (all source now;
@@ -313,7 +313,7 @@
   with its colours to palette 3); where the map puts it on the rink is not traced.
 - Team database (bank $C3): PlayerList's bits 14-15 (0, $4000, $8000) group like goalies, defence and forwards (63, 218,
   406 players) but the code that reads them is not traced; a player record is taken to hold a packed name and the ratings
-  (not decoded); DATA8_C34427 has the form of a team record but TeamList does not point at it.
+  (not decoded); TeamRecordUnused has the form of a team record but TeamList does not point at it.
 - bankC0_A000: the sample header (12 bytes: a pitch-like word, two volume-like bytes, ...) is not decoded; the samples are
   named by their index in the sample list. MaxSpeed also gets a long pointer from PrintShooterRows the way InitShooters does.
 - bankC0_9000: there is a brk at $C09419 (in the ROM, not reached by the traced code).
@@ -322,10 +322,10 @@
   entries), carry M/X through calls, size jump tables against the decoded code, and skip the 6 inline parameter bytes after
   calls to SetBGMapRegs and SetupHDMA. Several routines end in brk traps (the map unpacker's unhandled header forms).
 - asar: write a branch to a label, never to a number (bcc $C090D2 assembled the low byte as the offset); pei is `pei ($nn)`.
-- bankC0_8000: DATA8_C08939 and DATA8_C08B17 have no reader found. TiledBackMap is named from
+- bankC0_8000: TileSetUnused and BluesPaletteUnused have no reader. TiledBackMap is named from
   its pattern (94S MenuBackMap may be the same job: not checked). TransfersReady, DMAEnShadow, QueueBusy are named from the
   NMI code only. Mul8S's A-positive / X-negative path multiplies A by -A (tya where 94S has txa): that is in the ROM.
-- bankC0_4000: DATA8_C0491A and DATA8_C04CAB are not traced to a purpose. LargeSlotTiles maps a 16 x 16 sprite slot to
+- bankC0_4000: HDMATableUnused1 / HDMATableUnused2 and WordListUnused have no reader. LargeSlotTiles maps a 16 x 16 sprite slot to
   its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
   DigitFontTiles and LinePieceTiles are named from the rendered tiles; BG3ScrollHDMA1/2 from the HDMA set-up.
 - WonCheckTiles / WonCheckPalette: named from the rendered tiles; the screen is not traced.
@@ -343,7 +343,7 @@
   StartCrowdSound starts sound 2 (the crowd) unless CrowdSoundOn is set; puckfaceoff2 and Pausemode call it; StartMenuMusic
   reloads and starts sequence $A4 when MenuMusicPending (TitleScreen's song task has not started it yet) or
   MenuMusicVisited (set by its first call) is set. $4ABC / $4ABE / $4BC0 are only written at sound setup: not named.
-  DATA8_CF0661 has no reader found. SampleVolumeOverrideLists writes sample stereo-volume overrides, but LoadSequence indexes
+  SampleListTailUnused has no reader. SampleVolumeOverrideLists writes sample stereo-volume overrides, but LoadSequence indexes
   it from r2 (the sequence pointer), not the flag byte in SoundSequenceTable; the intended selection is unresolved.
 - Scoreboard: DrawScoreBox (team abbreviations, scores) and DrawPeriodBox (showclockdma, the period text, a power play
   frame) together do 94S printscores1's job, split differently, so they have code names.
@@ -359,11 +359,14 @@
   number); $0004 (the CGRAM queue stack pointer, dp $04 unnamed); $7E8F3C / $8F5C (a palette inside the unpacked bracket
   map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
   puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
-- 9 DATA8_ labels left after the data table pass (../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
-  - Not tables: 20 runs of unreached rtl / rts / pla / jmp bytes after an exit (C42DC5 ... C5C655, and C3804B's two
-    rtls) are written as instructions with an "unreached" comment, their labels dropped; 94S has such bare rtls too.
-  - No reader found: C5AE40 (a high-bits mask series), C0491A, C04CAB, C08939, C08B17 (16 colours), C104E0 (the
-    $04E2 run sprite record field +4 points into), C3803D, C3804B, CF0661; C34427 is a team record (licensed names).
+- No DATA8_ labels are left (the data table pass: ../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
+  - Not tables: 20 runs of unreached rtl / rts / pla / jmp bytes after an exit are written as instructions with an
+    "unreached" comment, their labels dropped; 94S has such bare rtls too. DATA8_C3803D was 94S projxy's off-screen
+    exit (.t1x), now projxy's unreached .1.
+  - Nothing reads: HDMATableUnused1 / HDMATableUnused2 (after the 0 that ends the short table, which was the old
+    label's first byte), WordListUnused, TileSetUnused, BluesPaletteUnused, SpriteField4DataUnused (sprite record
+    field +4 points into it but the code drops the field), TeamRecordUnused (licensed names), HighBitMasksUnused,
+    SampleListTailUnused. Named from their form; what they were for is not known.
   - The SPA lists (bank $C4, 59 of them) carry 94S names (SPAgpoke / SPAgcover from GoalieUpdateState, which is
     94S assgoalie's code) except the two wall lists. Those are SPAwallin / SPAwallout from their users: 95 plays one
     sequence for every direction, forward going into the bench or penalty box, reversed coming out, and neither

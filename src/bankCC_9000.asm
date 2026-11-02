@@ -1,5 +1,5 @@
 ; Raw planar frame tiles sent directly to VRAM by QueueFrameTiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $CC90A5
 FrameTiles3B9:						; the raw tiles of frame $3B9 (FrameTileSource / FrameBankLayout entry
 									; $3B9); pose not traced

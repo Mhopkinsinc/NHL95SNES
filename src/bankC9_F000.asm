@@ -1,5 +1,5 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C9F14B
 FrameTiles23B:						; the raw tiles of frame $23B (FrameTileSource / FrameBankLayout entry
 									; $23B); pose not traced

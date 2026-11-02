@@ -13,7 +13,7 @@ LogoANHFrame:						; 4 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoANHTiles					; its tiles
 LogoANHSprite:						; the ANH logo
 	dw LogoANHFrames,LogoANHFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$00				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$00	; into the $04E2 run (loaded, not used)
 	db 4,8,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -25,30,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 0							; palette number (SpritePalettes)
@@ -32,7 +32,7 @@ LogoBOSFrame:						; 4 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoBOSTiles					; its tiles
 LogoBOSSprite:						; the BOS logo
 	dw LogoBOSFrames,LogoBOSFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$03				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$03	; into the $04E2 run (loaded, not used)
 	db 4,8,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -22,25,-24,31				; x from, x to, y from, y to (a box: not traced)
 	dw 1							; palette number (SpritePalettes)
@@ -49,7 +49,7 @@ LogoBUFFrame:						; 4 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoBUFTiles					; its tiles
 LogoBUFSprite:						; the BUF logo
 	dw LogoBUFFrames,LogoBUFFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$05				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$05	; into the $04E2 run (loaded, not used)
 	db 4,8,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -22,25,-24,31				; x from, x to, y from, y to (a box: not traced)
 	dw 2							; palette number (SpritePalettes)
@@ -66,7 +66,7 @@ LogoCGYFrame:						; 3 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoCGYTiles					; its tiles
 LogoCGYSprite:						; the CGY logo
 	dw LogoCGYFrames,LogoCGYFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$07				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$07	; into the $04E2 run (loaded, not used)
 	db 3,8,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 3							; palette number (SpritePalettes)
@@ -83,7 +83,7 @@ LogoCHIFrame:						; 4 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoCHITiles					; its tiles
 LogoCHISprite:						; the CHI logo
 	dw LogoCHIFrames,LogoCHIFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$09				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$09	; into the $04E2 run (loaded, not used)
 	db 4,7,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 4							; palette number (SpritePalettes)
@@ -100,7 +100,7 @@ LogoDALFrame:						; 10 8x8 and 5 16x16 sprites, packed tiles (flags 3)
 	dl LogoDALTiles					; its tiles
 LogoDALSprite:						; the DAL logo
 	dw LogoDALFrames,LogoDALFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$0B				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$0B	; into the $04E2 run (loaded, not used)
 	db 10,5,15						; the most 8x8, 16x16 and both sprites in a frame
 	dw -23,32,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 5							; palette number (SpritePalettes)
@@ -117,7 +117,7 @@ LogoDETFrame:						; 11 8x8 and 4 16x16 sprites, packed tiles (flags 3)
 	dl LogoDETTiles					; its tiles
 LogoDETSprite:						; the DET logo
 	dw LogoDETFrames,LogoDETFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$0D				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$0D	; into the $04E2 run (loaded, not used)
 	db 11,4,15						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 6							; palette number (SpritePalettes)
@@ -134,7 +134,7 @@ LogoEDMFrame:						; 0 8x8 and 9 16x16 sprites, packed tiles (flags 2)
 	dl LogoEDMTiles					; its tiles
 LogoEDMSprite:						; the EDM logo
 	dw LogoEDMFrames,LogoEDMFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$0F				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$0F	; into the $04E2 run (loaded, not used)
 	db 0,9,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 7							; palette number (SpritePalettes)
@@ -151,7 +151,7 @@ LogoFLAFrame:						; 5 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoFLATiles					; its tiles
 LogoFLASprite:						; the FLA logo
 	dw LogoFLAFrames,LogoFLAFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$11				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$11	; into the $04E2 run (loaded, not used)
 	db 5,6,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 8							; palette number (SpritePalettes)
@@ -168,7 +168,7 @@ LogoHFDFrame:						; 0 8x8 and 9 16x16 sprites, packed tiles (flags 2)
 	dl LogoHFDTiles					; its tiles
 LogoHFDSprite:						; the HFD logo
 	dw LogoHFDFrames,LogoHFDFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$13				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$13	; into the $04E2 run (loaded, not used)
 	db 0,9,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -23,24,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 9							; palette number (SpritePalettes)
@@ -185,7 +185,7 @@ LogoLAFrame:						; 3 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoLATiles					; its tiles
 LogoLASprite:						; the LA logo
 	dw LogoLAFrames,LogoLAFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$15				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$15	; into the $04E2 run (loaded, not used)
 	db 3,6,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -25,30,-16,23				; x from, x to, y from, y to (a box: not traced)
 	dw 10							; palette number (SpritePalettes)
@@ -202,7 +202,7 @@ LogoMTLFrame:						; 4 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoMTLTiles					; its tiles
 LogoMTLSprite:						; the MTL logo
 	dw LogoMTLFrames,LogoMTLFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$17				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$17	; into the $04E2 run (loaded, not used)
 	db 4,6,10						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-20,19				; x from, x to, y from, y to (a box: not traced)
 	dw 11							; palette number (SpritePalettes)
@@ -219,7 +219,7 @@ LogoNJFrame:						; 5 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoNJTiles					; its tiles
 LogoNJSprite:						; the NJ logo
 	dw LogoNJFrames,LogoNJFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$19				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$19	; into the $04E2 run (loaded, not used)
 	db 5,7,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 12							; palette number (SpritePalettes)
@@ -236,7 +236,7 @@ LogoNYIFrame:						; 4 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoNYITiles					; its tiles
 LogoNYISprite:						; the NYI logo
 	dw LogoNYIFrames,LogoNYIFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$1B				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$1B	; into the $04E2 run (loaded, not used)
 	db 4,8,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-28,27				; x from, x to, y from, y to (a box: not traced)
 	dw 13							; palette number (SpritePalettes)
@@ -253,7 +253,7 @@ LogoNYRFrame:						; 0 8x8 and 9 16x16 sprites, packed tiles (flags 2)
 	dl LogoNYRTiles					; its tiles
 LogoNYRSprite:						; the NYR logo
 	dw LogoNYRFrames,LogoNYRFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$1D				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$1D	; into the $04E2 run (loaded, not used)
 	db 0,9,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 14							; palette number (SpritePalettes)
@@ -270,7 +270,7 @@ LogoOTWFrame:						; 7 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoOTWTiles					; its tiles
 LogoOTWSprite:						; the OTW logo
 	dw LogoOTWFrames,LogoOTWFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$1F				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$1F	; into the $04E2 run (loaded, not used)
 	db 7,6,13						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 15							; palette number (SpritePalettes)
@@ -287,7 +287,7 @@ LogoPHIFrame:						; 5 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoPHITiles					; its tiles
 LogoPHISprite:						; the PHI logo
 	dw LogoPHIFrames,LogoPHIFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$21				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$21	; into the $04E2 run (loaded, not used)
 	db 5,6,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-20,19				; x from, x to, y from, y to (a box: not traced)
 	dw 16							; palette number (SpritePalettes)
@@ -304,7 +304,7 @@ LogoPITFrame:						; 6 8x8 and 5 16x16 sprites, packed tiles (flags 3)
 	dl LogoPITTiles					; its tiles
 LogoPITSprite:						; the PIT logo
 	dw LogoPITFrames,LogoPITFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$23				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$23	; into the $04E2 run (loaded, not used)
 	db 6,5,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 17							; palette number (SpritePalettes)
@@ -321,7 +321,7 @@ LogoQUEFrame:						; 6 8x8 and 5 16x16 sprites, packed tiles (flags 3)
 	dl LogoQUETiles					; its tiles
 LogoQUESprite:						; the QUE logo
 	dw LogoQUEFrames,LogoQUEFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$25				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$25	; into the $04E2 run (loaded, not used)
 	db 6,5,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-20,19				; x from, x to, y from, y to (a box: not traced)
 	dw 18							; palette number (SpritePalettes)
@@ -338,7 +338,7 @@ LogoSJFrame:						; 6 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoSJTiles					; its tiles
 LogoSJSprite:						; the SJ logo
 	dw LogoSJFrames,LogoSJFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$27				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$27	; into the $04E2 run (loaded, not used)
 	db 6,6,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 19							; palette number (SpritePalettes)
@@ -355,7 +355,7 @@ LogoSTLFrame:						; 3 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	dl LogoSTLTiles					; its tiles
 LogoSTLSprite:						; the STL logo
 	dw LogoSTLFrames,LogoSTLFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$29				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$29	; into the $04E2 run (loaded, not used)
 	db 3,6,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 20							; palette number (SpritePalettes)
@@ -372,7 +372,7 @@ LogoTBFrame:						; 4 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoTBTiles					; its tiles
 LogoTBSprite:						; the TB logo
 	dw LogoTBFrames,LogoTBFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$2B				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$2B	; into the $04E2 run (loaded, not used)
 	db 4,7,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 21							; palette number (SpritePalettes)
@@ -389,7 +389,7 @@ LogoTORFrame:						; 5 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoTORTiles					; its tiles
 LogoTORSprite:						; the TOR logo
 	dw LogoTORFrames,LogoTORFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$2D				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$2D	; into the $04E2 run (loaded, not used)
 	db 5,7,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 22							; palette number (SpritePalettes)
@@ -406,7 +406,7 @@ LogoVANFrame:						; 6 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoVANTiles					; its tiles
 LogoVANSprite:						; the VAN logo
 	dw LogoVANFrames,LogoVANFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$2F				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$2F	; into the $04E2 run (loaded, not used)
 	db 6,7,13						; the most 8x8, 16x16 and both sprites in a frame
 	dw -28,27,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 23							; palette number (SpritePalettes)
@@ -423,7 +423,7 @@ LogoWSHFrame:						; 5 8x8 and 4 16x16 sprites, packed tiles (flags 3)
 	dl LogoWSHTiles					; its tiles
 LogoWSHSprite:						; the WSH logo
 	dw LogoWSHFrames,LogoWSHFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$31				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$31	; into the $04E2 run (loaded, not used)
 	db 5,4,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-20,19				; x from, x to, y from, y to (a box: not traced)
 	dw 24							; palette number (SpritePalettes)
@@ -440,7 +440,7 @@ LogoWPGFrame:						; 4 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl LogoWPGTiles					; its tiles
 LogoWPGSprite:						; the WPG logo
 	dw LogoWPGFrames,LogoWPGFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$33				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$33	; into the $04E2 run (loaded, not used)
 	db 4,7,11						; the most 8x8, 16x16 and both sprites in a frame
 	dw -24,23,-24,23				; x from, x to, y from, y to (a box: not traced)
 	dw 25							; palette number (SpritePalettes)
@@ -457,7 +457,7 @@ LogoASEFrame:						; 7 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoASETiles					; its tiles
 LogoASESprite:						; the Eastern all-star logo
 	dw LogoASEFrames,LogoASEFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$35				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$35	; into the $04E2 run (loaded, not used)
 	db 7,8,15						; the most 8x8, 16x16 and both sprites in a frame
 	dw -25,30,-20,27				; x from, x to, y from, y to (a box: not traced)
 	dw 26							; palette number (SpritePalettes)
@@ -474,7 +474,7 @@ LogoASWFrame:						; 7 8x8 and 8 16x16 sprites, packed tiles (flags 3)
 	dl LogoASWTiles					; its tiles
 LogoASWSprite:						; the Western all-star logo
 	dw LogoASWFrames,LogoASWFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$37				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$37	; into the $04E2 run (loaded, not used)
 	db 7,8,15						; the most 8x8, 16x16 and both sprites in a frame
 	dw -25,30,-20,27				; x from, x to, y from, y to (a box: not traced)
 	dw 27							; palette number (SpritePalettes)
@@ -646,7 +646,7 @@ Sprite28Frame31:					; 2 8x8 and 0 16x16 sprites, packed tiles
 	dl Sprite28Tiles31				; its tiles
 Sprite28Sprite:						; sprite 28 (an arrow, then a spinning disc)
 	dw Sprite28Frames,Sprite28FramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$39				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$39	; into the $04E2 run (loaded, not used)
 	db 2,1,2						; the most 8x8, 16x16 and both sprites in a frame
 	dw -7,10,-15,15					; x from, x to, y from, y to (a box: not traced)
 	dw 28							; palette number (SpritePalettes)
@@ -708,7 +708,7 @@ PadNumbersFrame05:					; 1 8x8 and 1 16x16 sprites, packed tiles (flags 3)
 	dl PadNumbersTiles05			; its tiles
 PadNumbersSprite:					; a controller, then the numbers 1 to 5
 	dw PadNumbersFrames,PadNumbersFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$3B				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$3B	; into the $04E2 run (loaded, not used)
 	db 3,2,3						; the most 8x8, 16x16 and both sprites in a frame
 	dw -15,16,-11,13				; x from, x to, y from, y to (a box: not traced)
 	dw 29							; palette number (SpritePalettes)
@@ -768,7 +768,7 @@ SkaterFrame05:						; 5 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl SkaterTiles05				; its tiles
 SkaterSprite:						; a skating player
 	dw SkaterFrames,SkaterFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$3D				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$3D	; into the $04E2 run (loaded, not used)
 	db 11,8,18						; the most 8x8, 16x16 and both sprites in a frame
 	dw 0,63,-61,7					; x from, x to, y from, y to (a box: not traced)
 	dw 30							; palette number (SpritePalettes)
@@ -794,7 +794,7 @@ RedDotFrame:						; 2 8x8 and 0 16x16 sprites, packed tiles
 	dl RedDotTiles					; its tiles
 RedDotSprite:						; a small red dot
 	dw RedDotFrames,RedDotFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$3F				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$3F	; into the $04E2 run (loaded, not used)
 	db 2,0,2						; the most 8x8, 16x16 and both sprites in a frame
 	dw -2,13,0,7					; x from, x to, y from, y to (a box: not traced)
 	dw 31							; palette number (SpritePalettes)
@@ -811,7 +811,7 @@ EASportsFrame:						; 4 8x8 and 2 16x16 sprites, packed tiles (flags 3)
 	dl EASportsTiles				; its tiles
 EASportsSprite:						; the EA SPORTS logo
 	dw EASportsFrames,EASportsFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$41				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$41	; into the $04E2 run (loaded, not used)
 	db 4,2,6						; the most 8x8, 16x16 and both sprites in a frame
 	dw -15,16,-11,12				; x from, x to, y from, y to (a box: not traced)
 	dw 32							; palette number (SpritePalettes)
@@ -828,7 +828,7 @@ EALogoEFrame:						; 0 8x8 and 24 16x16 sprites, packed tiles (flags 2)
 	dl EALogoETiles					; its tiles
 EALogoESprite:						; the big E of the EA logo
 	dw EALogoEFrames,EALogoEFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$43				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$43	; into the $04E2 run (loaded, not used)
 	db 0,24,24						; the most 8x8, 16x16 and both sprites in a frame
 	dw -44,51,-38,41				; x from, x to, y from, y to (a box: not traced)
 	dw 33							; palette number (SpritePalettes)
@@ -845,7 +845,7 @@ EALogoAFrame:						; 0 8x8 and 19 16x16 sprites, packed tiles (flags 2)
 	dl EALogoATiles					; its tiles
 EALogoASprite:						; the big A of the EA logo
 	dw EALogoAFrames,EALogoAFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$45				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$45	; into the $04E2 run (loaded, not used)
 	db 0,19,19						; the most 8x8, 16x16 and both sprites in a frame
 	dw -40,47,-38,41				; x from, x to, y from, y to (a box: not traced)
 	dw 33							; palette number (SpritePalettes)
@@ -862,7 +862,7 @@ SportsWordFrame:					; 0 8x8 and 19 16x16 sprites, packed tiles (flags 2)
 	dl SportsWordTiles				; its tiles
 SportsWordSprite:					; part of the word SPORTS
 	dw SportsWordFrames,SportsWordFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$47				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$47	; into the $04E2 run (loaded, not used)
 	db 0,19,19						; the most 8x8, 16x16 and both sprites in a frame
 	dw -75,84,-13,18				; x from, x to, y from, y to (a box: not traced)
 	dw 34							; palette number (SpritePalettes)
@@ -879,7 +879,7 @@ ElectronicWordFrame:				; 0 8x8 and 9 16x16 sprites, packed tiles (flags 2)
 	dl ElectronicWordTiles			; its tiles
 ElectronicWordSprite:				; part of the words ELECTRONIC ARTS
 	dw ElectronicWordFrames,ElectronicWordFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$49				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$49	; into the $04E2 run (loaded, not used)
 	db 0,9,9						; the most 8x8, 16x16 and both sprites in a frame
 	dw -72,71,-5,10					; x from, x to, y from, y to (a box: not traced)
 	dw 34							; palette number (SpritePalettes)
@@ -896,7 +896,7 @@ ItsInTheFrame:						; 0 8x8 and 7 16x16 sprites, packed tiles (flags 2)
 	dl ItsInTheTiles				; its tiles
 ItsInTheSprite:						; the words It's in the
 	dw ItsInTheFrames,ItsInTheFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$4B				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$4B	; into the $04E2 run (loaded, not used)
 	db 0,7,7						; the most 8x8, 16x16 and both sprites in a frame
 	dw -52,59,-8,7					; x from, x to, y from, y to (a box: not traced)
 	dw 35							; palette number (SpritePalettes)
@@ -913,7 +913,7 @@ BlackBoxFrame:						; 1 8x8 and 15 16x16 sprites, packed tiles (flags 3)
 	dl BlackBoxTiles				; its tiles
 BlackBoxSprite:						; a black box with a white frame
 	dw BlackBoxFrames,BlackBoxFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$4D				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$4D	; into the $04E2 run (loaded, not used)
 	db 1,15,16						; the most 8x8, 16x16 and both sprites in a frame
 	dw -3,60,-3,60					; x from, x to, y from, y to (a box: not traced)
 	dw 36							; palette number (SpritePalettes)
@@ -930,7 +930,7 @@ NHLShieldFrame:						; 5 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dl NHLShieldTiles				; its tiles
 NHLShieldSprite:					; the NHL shield
 	dw NHLShieldFrames,NHLShieldFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$4F				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$4F	; into the $04E2 run (loaded, not used)
 	db 5,7,12						; the most 8x8, 16x16 and both sprites in a frame
 	dw 0,47,0,47					; x from, x to, y from, y to (a box: not traced)
 	dw 37							; palette number (SpritePalettes)
@@ -947,7 +947,7 @@ NHLPAFrame:							; 10 8x8 and 4 16x16 sprites, packed tiles (flags 3)
 	dl NHLPATiles					; its tiles
 NHLPASprite:						; the NHLPA logo
 	dw NHLPAFrames,NHLPAFramesEnd	; the frame list and its end (the script pointer)
-	dl DATA8_C104E0+$51				; into the $04E2 run (loaded, not used)
+	dl SpriteField4DataUnused+$51	; into the $04E2 run (loaded, not used)
 	db 10,4,14						; the most 8x8, 16x16 and both sprites in a frame
 	dw 0,39,0,55					; x from, x to, y from, y to (a box: not traced)
 	dw 38							; palette number (SpritePalettes)
@@ -979,10 +979,11 @@ TiledBackMap:						; tilemap of a 16 x 3 block of tiles repeated over the screen
 	dw $0700						; unpacked size in bytes, then the LZSS stream
 	incbin "../Extracted/segments/bankC0_8000.bin":$7F9..$939
 .end:								; the end of the set
-DATA8_C08939:						; not traced: a set with the same length word (another format), then
-									; 7 bytes
+TileSetUnused:						; after TiledBackMap: a word ($01D5), then $30 and tile-like bytes (not
+									; decoded); nothing reads it
 	incbin "../Extracted/segments/bankC0_8000.bin":$939..$B17
-DATA8_C08B17:						; not traced: 16 colours, magenta then blues
+BluesPaletteUnused:					; 16 colours: magenta, a ramp of blues, then magenta again; nothing reads
+									; them
 	dw $7C1F,$7C00,$7800,$7400,$6C00,$7400,$6C00,$6800
 	dw $6400,$6800,$6400,$6000,$5800,$7C1F,$7C1F,$7C1F
 InitHooks:							; initial FrameHook, NMIHook, IRQHook (long pointers into the bank $80

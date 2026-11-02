@@ -54,8 +54,11 @@ projxy:								; project rink coordinates and height into screen coordinates
 	sbc.b d1
 	sta.b d1
 	rtl
-DATA8_C3803D:						; not traced: data between routines
-	db $A9,$20,$4E,$85,$83,$6B
+.1:									; unreached: 94S projxy's off-screen exit .t1x (d1 = $4E20); 95 projxy has
+									; no range checks that branch here
+	lda.w #$4E20
+	sta.b d1
+	rtl
 setpads:							; called from other segments
 	txa
 	lsr a
