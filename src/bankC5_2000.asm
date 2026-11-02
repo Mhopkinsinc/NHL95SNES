@@ -2,11 +2,11 @@
 ; their callers), jump tables and the data tables the code reads with long addresses.
 org $C52008
 QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from FaceoffBoxBuf (+
-									; DATA8_C5202F by frame) to FaceoffBoxVRAM
+									; FaceoffBoxFrameOffsets by frame) to FaceoffBoxVRAM
 	asl a
 	tax
 	lda.l $7E2024
-	adc.l DATA8_C5202F,x
+	adc.l FaceoffBoxFrameOffsets,x
 	tay
 	dec.b QueueBusy
 	lda.b $00
@@ -24,7 +24,8 @@ QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from Face
 	stx.b $00
 	stz.b QueueBusy
 	rtl
-DATA8_C5202F:						; not traced: a table read by QueueFaceoffBox
+FaceoffBoxFrameOffsets:				; per face off box frame (A * 2): the offset of its $280 bytes in
+									; FaceoffBoxBuf
 	db $00,$00,$80,$02,$00,$05,$80,$07
 setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the tiles and
 									; the scoreboard
@@ -319,37 +320,39 @@ DrawPadArrows:						; the arrow sprite over the player each pad controls (c1play
 	tcs
 	ldy.w c1playernum
 	bmi PadArrow2
-	ldx.w #$22DF
+	ldx.w #PadArrow2&$FFFF
 	bra DrawPadArrow
-DATA8_C522D1:						; not traced: data between routines
+PadArrow1Data:						; pad 1's arrow, read back from its continuation in X (PadArrow2 - $E on):
+									; its image state word's address, its images (bank $7F), two OAM tile
+									; words, three VRAM addresses
 	db $1B,$15,$2A,$D0,$A0,$25,$45,$24,$00,$7A,$00,$7B,$50,$64
 PadArrow2:							; DrawPadArrows' step for pad 2 (c1playernum+2), continuing with PadArrow3
 	ldy.w c1playernum+2
 	bmi PadArrow3
-	ldx.w #$22F7
+	ldx.w #PadArrow3&$FFFF
 	bra DrawPadArrow
-DATA8_C522E9:						; not traced: data between routines
+PadArrow2Data:						; pad 2's arrow, as PadArrow1Data, read back from PadArrow3
 	db $1D,$15,$CA,$D2,$A2,$25,$48,$24,$20,$7A,$20,$7B,$80,$64
 PadArrow3:							; DrawPadArrows' step for pad 3 (c1playernum+4), continuing with PadArrow4
 	ldy.w c1playernum+4
 	bmi PadArrow4
-	ldx.w #$230F
+	ldx.w #PadArrow4&$FFFF
 	bra DrawPadArrow
-DATA8_C52301:						; not traced: data between routines
+PadArrow3Data:						; pad 3's arrow, as PadArrow1Data, read back from PadArrow4
 	db $1F,$15,$6A,$D5,$A4,$25,$4B,$24,$40,$7A,$40,$7B,$B0,$64
 PadArrow4:							; DrawPadArrows' step for pad 4 (c1playernum+6), continuing with PadArrow5
 	ldy.w c1playernum+6
 	bmi PadArrow5
-	ldx.w #$2327
+	ldx.w #PadArrow5&$FFFF
 	bra DrawPadArrow
-DATA8_C52319:						; not traced: data between routines
+PadArrow4Data:						; pad 4's arrow, as PadArrow1Data, read back from PadArrow5
 	db $21,$15,$2A,$D0,$A6,$27,$4E,$26,$60,$7A,$60,$7B,$E0,$64
 PadArrow5:							; pad 5 player arrow, then PadArrowsDone
 	ldy.w c1playernum+8
 	bmi PadArrowsDone
-	ldx.w #$233F
+	ldx.w #PadArrowsDone&$FFFF
 	bra DrawPadArrow
-DATA8_C52331:						; not traced: data between routines
+PadArrow5Data:						; pad 5's arrow, as PadArrow1Data, read back from PadArrowsDone
 	db $23,$15,$CA,$D2,$A8,$27,$51,$26,$80,$7A,$80,$7B,$10,$65
 PadArrowsDone:						; the end of DrawPadArrows: the OAM pointer ($28) kept, the stack back,
 									; QueueBusy cleared

@@ -7,7 +7,7 @@ GetPeriodTime:						; d0 = the period length in seconds for the period length op
 	lda.w Optperlen
 	asl a
 	tax
-	lda.l DATA8_C51112,x
+	lda.l PeriodTimesBCD,x
 	sta.b tmp0
 	lda.l GetPeriodTime_timetab,x
 	sta.b d0
@@ -16,7 +16,8 @@ GetPeriodTime:						; d0 = the period length in seconds for the period length op
 GetPeriodTime_timetab:				; the period lengths in seconds (300, 600, 1200, 30) GetPeriodTime picks
 									; from
 	db $2C,$01,$58,$02,$B0,$04,$1E,$00
-DATA8_C51112:						; not traced: a table read by GetPeriodTime
+PeriodTimesBCD:						; per period length option (Optperlen * 2): the length as BCD minutes and
+									; seconds ($0500 = 5:00)
 	db $00,$05,$00,$10,$00,$20,$30,$00
 printscores1:						; X = a3; chk4lc, SetFaceoffComputerLine and lcfound_close call it after a
 									; line change
@@ -193,13 +194,15 @@ SetScore:							; the score of the other game a0 for the ticker: its period step
 .6:									; pull X, return
 	plx
 	rtl
-DATA8_C51271:						; not traced: data between routines
+sctab:								; 8 rows (by a 3-bit rating) of the weights of 0, 1, 2 and 3 goals;
+									; SimPeriodGoals adds the scoring team's row (rating bits 4-6) and the
+									; other's (bits 0-2)
 	db $2B,$00,$1E,$00,$17,$00,$04,$00,$27,$00,$20,$00,$18,$00,$05,$00
 	db $23,$00,$21,$00,$1A,$00,$06,$00,$1E,$00,$22,$00,$1E,$00,$06,$00
 	db $1A,$00,$24,$00,$1E,$00,$08,$00,$16,$00,$25,$00,$1F,$00,$0A,$00
 	db $13,$00,$26,$00,$1F,$00,$0C,$00,$0F,$00,$26,$00,$20,$00,$0F,$00
 SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period of another
-									; game, from both teams' weight rows (DATA8_C51271 by their ratings)
+									; game, from both teams' weight rows (sctab by their ratings)
 	asl.b d0
 	lda.w #$00C3
 	sta.b $69
@@ -213,9 +216,9 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	lda.b [a1]
 	and.w #$0070
 	lsr a
-	adc.w #$1271
+	adc.w #sctab&$FFFF
 	sta.b a1
-	lda.w #$00C5
+	lda.w #sctab>>16
 	sta.b $69
 	lda.b [a1]
 	sta.w nibblebuffer
@@ -243,9 +246,9 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	asl a
 	asl a
 	asl a
-	adc.w #$1271
+	adc.w #sctab&$FFFF
 	sta.b a1
-	lda.w #$00C5
+	lda.w #sctab>>16
 	sta.b $69
 	lda.b [a1]
 	adc.w nibblebuffer
@@ -1051,11 +1054,18 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	adc.w #$0020
 	sta.b a3
 	rts
-DATA8_C5195D:						; not traced: data between routines
-	db $00,$01,$02,$03,$04,$05,$06,$00,$00,$01,$05,$03,$04,$02,$00,$00
-	db $00,$03,$05,$01,$04,$00,$00,$00,$00,$04,$04,$04,$04,$04,$04,$00
-	db $00,$00,$06,$FF,$DD,$FF,$CE,$FF,$23,$00,$CE,$FF,$CE,$FF,$F6,$FF
-	db $00,$00,$F1,$FF,$32,$00,$F6,$FF,$00,$00,$C4,$FF
+FaceoffFormations:					; per formation ((6 - tmap) * 8: 6, 5 or 4 men) and position (d1): the
+									; player's face off spot (FaceoffSpots entry)
+	db $00,$01,$02,$03,$04,$05,$06,$00
+	db $00,$01,$05,$03,$04,$02,$00,$00
+	db $00,$03,$05,$01,$04,$00,$00,$00
+PenShotFormation:					; the penalty shot formation: per position (d1), the face off spot: the
+									; skaters all at spot 4
+	db $00,$04,$04,$04,$04,$04,$04,$00
+FaceoffSpots:						; per face off spot (entry * 4): its x and y offset from the face off
+									; point (both negated for pfgoal 0)
+	dw $0000,$FF06,$FFDD,$FFCE,$0023,$FFCE,$FFCE,$FFF6
+	dw $0000,$FFF1,$0032,$FFF6,$0000,$FFC4
 updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from the time left
 									; (fofdata)
 	lda.w temp1,x
@@ -1254,7 +1264,7 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	lda.w #$0010
 	sta.b d2
 	ldx.w fofdata2
-	lda.l DATA8_C51C52-1,x
+	lda.l FaceoffFrameWeights-1,x
 	and.w #$00FF
 	bit.w #$0080
 	beq .1
@@ -1266,7 +1276,7 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	adc.b d2
 	sta.b d2
 	ldx.w fofdata2+4
-	lda.l DATA8_C51C52-1,x
+	lda.l FaceoffFrameWeights-1,x
 	and.w #$00FF
 	bit.w #$0080
 	beq .2
@@ -1389,7 +1399,8 @@ FindPositionSlot:					; Y = the slot (from Y, six of them) of the player in posi
 .1:									; return
 	cpy.w #$0000
 	rts
-DATA8_C51C52:						; not traced: data between routines
+FaceoffFrameWeights:				; per face off frame (fofdata2 / fofdata2+4, 1-6, read at -1): the
+									; centre's edge in the draw (0, 8, 16 for each team's three)
 	db $00,$08,$10,$00,$08,$10
 faceoffinput:						; pad input of a centre taking a face off (assignment $17): the pad
 									; direction to fodir1 / fodir2 by pfgoal; B starts the swing (pf2aip)

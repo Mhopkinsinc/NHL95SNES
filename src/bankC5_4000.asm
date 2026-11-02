@@ -65,7 +65,7 @@ SetLCmode:							; opens the line change box for player X's team when line chang
 .rtl:								; return
 	rtl
 SetLCmode2:							; draws the line change box of team a2: the frame, then a row per line
-									; choice (getlchoice) with its button letter (DATA8_C5410E)
+									; choice (getlchoice) with its button letter (LineChangeButtons)
 	phx
 	jsr.w setlccords
 	sta.b d0
@@ -116,7 +116,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	lda.b $81
 	asl a
 	tax
-	lda.l DATA8_C5410E,x
+	lda.l LineChangeButtons,x
 	sta.w $0001,y
 	lda.b $01,s
 	asl a
@@ -143,7 +143,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	bpl .loop
 	plx
 	rtl
-DATA8_C5410E:						; not traced: a table read by SetLCmode2
+LineChangeButtons:					; per line change choice ($81 * 2): its button (Y, B, A), then a space
 	db $D9,$A0,$C2,$A0,$C1,$A0
 setlccords:							; team a2's line change box: A = its map address (the side by team and the
 									; gmode direction bit), X = the width $B, Y = the height 5, or 4 when
@@ -1030,12 +1030,12 @@ CompLineEvenStrength:				; chooses an even strength line by team, control mode, 
 	lda.w c1playernum,y
 	bmi .2
 	jmp.w CompLineEnergySearch
-.2:									; d1 = $0002, $65 = $00C5, a0 = $4897, if gsp is not $0002 go to .3, ...
+.2:									; d1 = $0002, a0 = EvenStrengthLines, if gsp is not $0002 go to .3, ...
 	lda.w #$0002
 	sta.b d1
-	lda.w #$00C5
+	lda.w #EvenStrengthLines>>16
 	sta.b $65
-	lda.w #$4897
+	lda.w #EvenStrengthLines&$FFFF
 	sta.b a0
 	lda.w gsp
 	cmp.w #$0002
@@ -1045,15 +1045,15 @@ CompLineEvenStrength:				; chooses an even strength line by team, control mode, 
 	cmp.w tmscore,y
 	beq .3
 	php
-	lda.w #$00C5
+	lda.w #EvenStrengthLines>>16
 	sta.b $65
-	lda.w #$48A5
+	lda.w #(EvenStrengthLines+14)&$FFFF
 	sta.b a0
 	plp
 	bpl .3
-	lda.w #$00C5
+	lda.w #EvenStrengthLines>>16
 	sta.b $65
-	lda.w #$48B3
+	lda.w #(EvenStrengthLines+28)&$FFFF
 	sta.b a0
 .3:									; Y = a1, A = tmline,y, A * 2, d1 = A, ...
 	ldy.b a1
@@ -1070,7 +1070,9 @@ CompLineEvenStrength:				; chooses an even strength line by team, control mode, 
 	ldy.b a2
 	sta.w tmline,y
 	jmp.w CompLineReturn
-DATA8_C54897:						; not traced: data between routines
+EvenStrengthLines:					; per score state (rows of 7 words: tied or before the third period, then
+									; leading, trailing) and the other team's line (tmline * 2): the line to
+									; send
 	db $00,$00,$01,$00,$02,$00,$00,$00,$01,$00,$00,$00,$01,$00,$02,$00
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$00,$00,$00,$00,$01,$00
 	db $00,$00,$00,$00,$01,$00,$00,$00,$01,$00
@@ -1078,9 +1080,9 @@ CompLineEnergySearch:				; scans the score-dependent line order for sufficient e
 									; the chosen line
 	lda.w #$0002
 	sta.b d1
-	lda.w #$00C5
+	lda.w #EnergySearchLines>>16
 	sta.b $65
-	lda.w #$491C
+	lda.w #EnergySearchLines&$FFFF
 	sta.b a0
 	lda.w gsp
 	cmp.w #$0002
@@ -1091,15 +1093,15 @@ CompLineEnergySearch:				; scans the score-dependent line order for sufficient e
 	cmp.w tmscore,y
 	beq .loop
 	php
-	lda.w #$00C5
+	lda.w #EnergySearchLines>>16
 	sta.b $65
-	lda.w #$4922
+	lda.w #(EnergySearchLines+6)&$FFFF
 	sta.b a0
 	plp
 	bpl .loop
-	lda.w #$00C5
+	lda.w #EnergySearchLines>>16
 	sta.b $65
-	lda.w #$4928
+	lda.w #(EnergySearchLines+12)&$FFFF
 	sta.b a0
 .loop:								; loop: A = [a0], a0 + 1, a0 + 1, call getlinee, ...
 	lda.b [a0]
@@ -1117,7 +1119,9 @@ CompLineEnergySearch:				; scans the score-dependent line order for sufficient e
 	lda.b [a0]
 	sta.w tmline,y
 	jmp.w CompLineReturn
-DATA8_C5491C:						; not traced: data between routines
+EnergySearchLines:					; per score state (rows of 3 words: tied or before the third period, then
+									; leading, trailing): the lines to try in order until one has the energy
+									; ($0F34)
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$01,$00,$00,$00,$01,$00
 	db $00,$00
 chk4lc:								; the computer calls a line change on the fly (puck in its own end, one
@@ -1655,8 +1659,10 @@ linebar:							; queues an energy bar for line A at the line change row
 	lda.w #$A0A0
 	sta.w $0000,y
 	sta.w $0001,y
-	jmp (DATA8_C54D3A,x)
-DATA8_C54D3A:						; jump table: the routine for each index
+	jmp (LineBarFills,x)
+LineBarFills:						; per energy third (energy * 3 / $1000, * 2): the routine that fills the
+									; line's energy bar up to that tile (LineBarLow, LineBarMiddle,
+									; LineBarHigh)
 	dw LineBarLow,LineBarMiddle,LineBarHigh
 LineBarHigh:						; fills two energy bar tiles and selects the third tile remainder
 	lda.w #$8888

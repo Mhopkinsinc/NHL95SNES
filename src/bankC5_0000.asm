@@ -1164,7 +1164,8 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sta.w carriedy
 .rtl:								; return
 	rtl
-DATA8_C50A00:						; not traced: data between routines
+FrictionFactors:					; the friction factor per frame time (timestep 1-10), then the 10 for a
+									; gliding player; nothing in 95 reads it
 	db $FD,$FA,$F7,$F4,$F1,$EE,$EB,$E8,$E6,$E3,$FF,$FF,$FE,$FE,$FE,$FD
 	db $FD,$FD,$FC,$FC
 clockcont_0:						; called from other segments

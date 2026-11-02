@@ -1139,18 +1139,18 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	cmp.w #$0001
 	bne .20
 	stz.b d4
-.20:								; $69 = $00C5, A = $195D, A + d4, a1 = A, ...
-	lda.w #$00C5
+.20:								; a1 = FaceoffFormations + d4, PenShotFormation in a penalty shot
+	lda.w #FaceoffFormations>>16
 	sta.b $69
-	lda.w #$195D
+	lda.w #FaceoffFormations&$FFFF
 	clc
 	adc.b d4
 	sta.b a1
 	lda.w penshot
 	beq .21
-	lda.w #$00C5
+	lda.w #PenShotFormation>>16
 	sta.b $69
-	lda.w #$1975
+	lda.w #PenShotFormation&$FFFF
 	sta.b a1
 .21:								; Y = d1, A = [a1],y, A and $00FF, A * 2, ...
 	ldy.b d1
@@ -1159,9 +1159,9 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	asl a
 	asl a
 	sta.b d4
-	lda.w #$00C5
+	lda.w #FaceoffSpots>>16
 	sta.b $69
-	lda.w #$197D
+	lda.w #FaceoffSpots&$FFFF
 	sta.b a1
 	ldy.b d4
 	lda.b [a1],y

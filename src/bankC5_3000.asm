@@ -1300,8 +1300,8 @@ CODE_C53A29:						; called from other segments
 	lda.w gsp
 	asl a
 	asl a
-	adc.w #$3A61
-	ldx.w #$00C5
+	adc.w #PeriodLabels&$FFFF
+	ldx.w #PeriodLabels>>16
 	ldy.w #$5B21
 	jsl.l QueueVRAMDMALen
 	lda.w sflags
@@ -1316,7 +1316,8 @@ CODE_C53A29:						; called from other segments
 	ldy.w #$0004
 	lda.w #$5AC0
 	jml.l Framer
-DATA8_C53A61:						; not traced: data between routines
+PeriodLabels:						; per period (gsp * 4): its scoreboard text for QueueVRAMDMALen: a length
+									; byte (3), then 1st, 2nd, 3rd or OT
 	db $03,$B1,$F3,$F4,$03,$B2,$EE,$E4,$03,$B3,$F2,$E4,$03,$CF,$D4,$A0
 PackTeamSecondTextLong:				; PackTeamSecondText for long calls
 	jsr.w PackTeamSecondText
@@ -1554,9 +1555,9 @@ Setplass:							; from forcepldata and other segments
 	lda.w position,x
 	sta.b d0
 	bmi .rtl
-	lda.w #$00C5
+	lda.w #PositionAssignments>>16
 	sta.b $65
-	lda.w #$3C3F
+	lda.w #PositionAssignments&$FFFF
 	sta.b a0
 	ldy.b d0
 	lda.b [a0],y
@@ -1565,7 +1566,8 @@ Setplass:							; from forcepldata and other segments
 	jml.l assreplace
 .rtl:								; return
 	rtl
-DATA8_C53C3F:						; not traced: data between routines
+PositionAssignments:				; per position (position,x): the player's first assignment, an asstab
+									; number (7 assgoalie, 2 assdefd, 3 asswingd, 5 asscenterd)
 	db $07,$02,$02,$03,$05,$03,$05
 setplayer:							; from forcepldata and other segments
 	phx

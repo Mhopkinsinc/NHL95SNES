@@ -54,5 +54,8 @@ QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
 FaceOffMap = $C1CFE2
 rtss = $C4883F
+FaceoffFormations = $C5195D
+PenShotFormation = $C51975
+FaceoffSpots = $C5197D
 
 incsrc "../bankC4_3000.asm"
