@@ -8848,3 +8848,11 @@ $1513,c1playernum+2,,code,"RAM: indexed member of the existing array; traced wri
 $1515,c1playernum+4,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
 $1517,c1playernum+6,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
 $1519,c1playernum+8,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1857,PauseUnused,,94S+code,"RAM: same isolated clear before forceblack as 94S Pausemode",src/ram95s.asm
+$18F0,PauseSprite,,code,"RAM: PauseScreenDraw stores CreateSprite X; resume and replay delete it",src/ram95s.asm
+$7E2378,gamesstarted,,94S+purpose,"increment after game RAM clear in StartGame_go as 94S StartGame",src/ram95s.asm
+$7E3648,PauseSpriteBackup,,code,"BackupPauseBuffers allocates and copies; RestorePauseBuffers restores both",src/ram95s.asm
+$7E364A,pausesavebuf,,94S+purpose,"InitPauseScreen reads VRAM into allocated buffer; QueueSavedTextMap uploads it; 94S pausesavebuf stores saved map directly",src/ram95s.asm
+$7E364C,RestoreScreenBuf,,code,"RestoreGameScreen allocates tiles and map here and queues their VRAM uploads",src/ram95s.asm
+$4828,SpritePalUse+$170,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$482A,SpritePalUse+$172,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm

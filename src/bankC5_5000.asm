@@ -173,7 +173,7 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	sta.w pausetab
 	lda.w #$0802
 	jsl.l AllocWorkBuf
-	sta.l $7E364A
+	sta.l pausesavebuf
 	dec.b QueueBusy
 	lda.b $02
 	tsx
@@ -184,7 +184,7 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	pea.w $5800
 	pea.w $3981
 	pea.w $007E
-	lda.l $7E364A
+	lda.l pausesavebuf
 	pha
 	lda.b $02
 	tsx
@@ -239,7 +239,7 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	sta.b $18
 	lda.w #$001F
 	jsl.l CreateSprite
-	stx.w $18F0
+	stx.w PauseSprite
 	lda.w #$0100
 	sta.b $22
 	lda.w #OAMBuf+$1FF
@@ -999,11 +999,11 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	adc.w #$0008
 	bcc .6
 	inc.b $2E
-.6:									; r0 = A, A = $4100, call AllocWorkBuf, $364C = A, ...
+.6:									; r0 = A, A = $4100, call AllocWorkBuf, RestoreScreenBuf&$FFFF = A, ...
 	sta.b r0
 	lda.w #$4100
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf&$FFFF
 	ldx.w #$007E
 	jsr.w DecompressLZSS
 	dec.b QueueBusy
@@ -1014,7 +1014,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
-	lda.w $364C
+	lda.w RestoreScreenBuf&$FFFF
 	pha
 	ldy.b $00
 	tsx
@@ -1062,7 +1062,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l FreeWorkBuf
 	lda.w #$4E00
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf&$FFFF
 	sta.b r0
 	lda.w #$007E
 	sta.b $2E
@@ -1081,7 +1081,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	asl a
 	adc.w HomeTeam
 	xba
-	adc.w $364C
+	adc.w RestoreScreenBuf&$FFFF
 	pha
 	ldy.b $00
 	tsx
@@ -1116,7 +1116,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l DecompressToVRAM
 	lda.w #$13E0
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf&$FFFF
 	sta.b r1
 	lda.w #$007E
 	sta.b $32
@@ -1132,7 +1132,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	pea.w $4320
 	pea.w $007E
 	clc
-	lda.w $364C
+	lda.w RestoreScreenBuf&$FFFF
 	adc.w #$0A00
 	pha
 	ldy.b $00
@@ -1161,7 +1161,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l WaitTransfers
 	jml.l RestoreWorkBuf
 QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from the buffer at
-									; $364A) to VRAM $5800
+									; pausesavebuf) to VRAM $5800
 	dec.b QueueBusy
 	lda.b $00
 	tsx
@@ -1170,7 +1170,7 @@ QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from
 	pea.w $0800
 	pea.w $5800
 	pea.w $007E
-	lda.w $364A
+	lda.w pausesavebuf&$FFFF
 	inc a
 	inc a
 	pha
@@ -1191,7 +1191,7 @@ FreePauseBuffers:					; frees the pause screen's work buffers (FreeWorkBuf $040E
 RestorePauseBuffers:				; copies BackupPauseBuffers' two buffers back (the sprite objects at
 									; SpriteObjRAM, the palette slots from PalSlotList) and re-uploads the
 									; frames of the objects in use
-	ldx.w $3648
+	ldx.w PauseSpriteBackup&$FFFF
 	ldy.w #SpriteObjRAM
 	lda.w #$01FD
 	mvn $7E,$7E
@@ -1230,11 +1230,11 @@ RestorePauseBuffers:				; copies BackupPauseBuffers' two buffers back (the sprit
 	and.w #$FF00
 	ora.w VisSpritePal
 	jsl.l QueueSpritePalette
-	lda.w $4828
+	lda.w SpritePalUse+$170
 	and.w #$FF00
 	ora.w #$00B8
 	jsl.l QueueSpritePalette
-	lda.w $482A
+	lda.w SpritePalUse+$172
 	and.w #$FF00
 	ora.w #$00B9
 	jsl.l QueueSpritePalette

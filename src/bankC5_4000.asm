@@ -1865,6 +1865,6 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	sta.w WorkBufMark
 	sta.b $08
 	stz.b $22
-	ldx.w $18F0
+	ldx.w PauseSprite
 	jsl.l DeleteSprite
 	jmp.w RestoreGameScreen

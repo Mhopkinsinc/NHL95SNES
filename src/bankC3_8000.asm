@@ -828,7 +828,7 @@ WriteNineMapTiles:					; write nine consecutive tile entries starting at Y to VM
 BackupPauseBuffers:					; allocate and copy the buffers saved for the pause screen
 	lda.w #$01FE
 	jsl.l AllocWorkBuf
-	sta.w $3648
+	sta.w PauseSpriteBackup&$FFFF
 	tay
 	lda.w #$0210
 	jsl.l AllocWorkBuf

@@ -349,6 +349,7 @@ tmdata				=	$17D3		; per team (y = 0/2): the team data address in bank $C3
 tmteam				=	$17D7		; per team struct: the team number
 lcpad				=	$184C		; Per team (y = 0/2) the pad (d4) that opened the line change box, ...
 jmlvector			=	$1850		; RAM jml routine: $5C (jml) at +0, the target at +1..+3 (RunTasks)
+PauseUnused			=	$1857		; cleared when leaving the pause menu
 OptPlayMode			=	$1864		; play mode option: the first word of the option block
 Optperlen			=	$186A		; the period length option (index into GetPeriodTime's tables)
 OptPen				=	$186C		; penalties option (0 off): StartGame_go sets gmode bit $20 when it is 1
@@ -397,6 +398,7 @@ TextSpaceWidth		=	$18DE		; the width of a space in the text fonts (9 after InitT
 WorkBufMark			=	$18E0		; the work buffer pointer saved by MarkWorkBuf
 FaceoffLCClosed		=	$18E2		; per team: its face off line change box was found closed (a word each)
 PauseMapBuf			=	$18EE		; the pause screen's map buffer (InitPauseScreen allocates it)
+PauseSprite			=	$18F0		; sprite object index created for the pause screen
 pausetab			=	$18F2		; pause menu tab: 0 Info, 1 Stats, 2 Options, 3 the quit prompt
 pauseitems			=	$18F4		; the number of items of the pause menu tab shown
 pauseitem			=	$18F6		; the pause menu item (row) of the tab
@@ -541,7 +543,11 @@ SimPickTotal		=	$DBE8		; BuildSimPickTable: the sum of the weights (the random l
 SimPickIndex		=	$DBEA		; BuildSimPickTable: the next entry of SimTable (4 bytes each)
 
 ; work RAM, long addresses
+gamesstarted		=	$7E2378		; count of games started
 Crowdlevel			=	$7E24CA		; crowd noise level: the play raises it, updatecrowdf lets it fade
+PauseSpriteBackup	=	$7E3648		; saved sprite objects followed by palette slots
+pausesavebuf		=	$7E364A		; pointer to the saved game text map buffer
+RestoreScreenBuf	=	$7E364C		; temporary unpack buffer while restoring the game screen
 unpackbuf			=	$7E50DC		; Decompress output buffer (DecompressUnpackbuf)
 rinkmapbuf			=	$7F9C7A		; the rink map the game scrolls (setupice); the bracket map too
 RefsMapBuf			=	$7FC6FA		; the referee frames (RefsMap) with tile base $3420 (setupice)

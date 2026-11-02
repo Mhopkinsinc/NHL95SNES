@@ -77,7 +77,7 @@ StartGame_go:						; starts a game: fade out, the game RAM cleared, the games st
 	inx
 	cpx.w #$2375
 	bcc .loop2
-	inc.w $2378
+	inc.w gamesstarted&$FFFF
 	stz.w gmode
 	stz.w gsp
 	lda.w OptPen
@@ -1604,7 +1604,7 @@ Pausemode:							; the game loop's pause (the sflags pause bit): the game state 
 	stz.w OldVcount
 	jsl.l WaitTransfers
 	stz.w pausemenuon
-	stz.w $1857
+	stz.w PauseUnused
 	jsl.l forceblack
 	stz.w textdirtylo
 	lda.w #$0001
