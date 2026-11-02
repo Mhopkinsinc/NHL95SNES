@@ -1481,21 +1481,21 @@ $C377BB,DATA8_C377BB,,new,"not traced: a table read by CODE_C376CE (in bankC3_70
 $C377BD,DATA8_C377BD,,new,"not traced: a table read by CODE_C376CE (in bankC3_7000)",src/bankC3_7000.asm
 $C3803D,DATA8_C3803D,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
 $C3804B,DATA8_C3804B,,new,"not traced: data between routines (in bankC3_8000)",src/bankC3_8000.asm
-$C3847C,DATA8_C3847C,,new,"not traced: a table read by CODE_C38455 (in bankC3_8000)",src/bankC3_8000.asm
-$C3849C,DATA8_C3849C,,new,"not traced: a table read by CODE_C38455 (in bankC3_8000)",src/bankC3_8000.asm
-$C384BC,DATA8_C384BC,,new,"not traced: a table read by CODE_C38415 (in bankC3_8000)",src/bankC3_8000.asm
-$C384DC,DATA8_C384DC,,new,"not traced: a table read by CODE_C38415 (in bankC3_8000)",src/bankC3_8000.asm
-$C38658,DATA8_C38658,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C3865A,DATA8_C3865A,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C3865E,DATA8_C3865E,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C38660,DATA8_C38660,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C38662,DATA8_C38662,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C38664,DATA8_C38664,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C38666,DATA8_C38666,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
-$C38668,DATA8_C38668,,new,"not traced: a table read by CODE_C38585 (in bankC3_8000)",src/bankC3_8000.asm
+$C3847C,ObjSmallTiles,DATA8_C3847C,code,"DrawSortedGameObject loads it into tmp1, the tile word PutSmallPiece1-4 use; objects get 4 tiles each from tile 0",src/bankC3_8000.asm
+$C3849C,ObjBigTiles,DATA8_C3849C,code,"DrawSortedGameObject loads it into tmp2, the tile word PutBigPiece1-4 use; 2 big tiles per object from tile $A0",src/bankC3_8000.asm
+$C384BC,ObjSmallTilesFlip,DATA8_C384BC,code,"DrawSortedGameObject takes it when attribute,x has bit $0800, then DrawFrameLayoutFlip",src/bankC3_8000.asm
+$C384DC,ObjBigTilesFlip,DATA8_C384DC,code,"DrawSortedGameObject takes it with ObjSmallTilesFlip for flipped objects",src/bankC3_8000.asm
+$C38658,SortObjInitTable,DATA8_C38658,94S+purpose,"94S defaultsprites_0 reads the same records from its local .3 ('as 93S SortObjInitTable'; the first record matches except the frame); 95 defaultsprites_0 reads the fields as SortObjInitTable+2 ... +16,x",src/bankC3_8000.asm
+$C3865A,SortObjInitTable+2,DATA8_C3865A,94S+purpose,"field +2 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+2,x as 94S reads .3+2,x)",src/bankC3_8000.asm
+$C3865E,SortObjInitTable+6,DATA8_C3865E,94S+purpose,"field +6 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+6,x as 94S reads .3+6,x)",src/bankC3_8000.asm
+$C38660,SortObjInitTable+8,DATA8_C38660,94S+purpose,"field +8 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+8,x as 94S reads .3+8,x)",src/bankC3_8000.asm
+$C38662,SortObjInitTable+10,DATA8_C38662,94S+purpose,"field +10 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+10,x as 94S reads .3+10,x)",src/bankC3_8000.asm
+$C38664,SortObjInitTable+12,DATA8_C38664,94S+purpose,"field +12 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+12,x as 94S reads .3+12,x)",src/bankC3_8000.asm
+$C38666,SortObjInitTable+14,DATA8_C38666,94S+purpose,"field +14 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+14,x as 94S reads .3+14,x)",src/bankC3_8000.asm
+$C38668,SortObjInitTable+16,DATA8_C38668,94S+purpose,"field +16 of SortObjInitTable (the label is dropped; defaultsprites_0 reads SortObjInitTable+16,x as 94S reads .3+16,x)",src/bankC3_8000.asm
 $C3884A,SquareTable,DATA8_C3884A,code,"256 words n * n; checkpuckcoll_ccx and the bank $C4 collision code square distances with it where 94S calls Mul8U",src/bankC3_8000.asm
 $C38A4A,SignedSquareTable,DATA8_C38A4A,code,"256 words; PlayerAccDir0 ... and bank $C3 code read it",src/bankC3_8000.asm
-$C38D43,DATA8_C38D43,,new,"not traced: a table read by CODE_C38D0E (in bankC3_8000)",src/bankC3_8000.asm
+$C38D43,RefFrameOffsets,DATA8_C38D43,code,"PushRef reads entry tmp0 and hands it to CopyRefereeFrameToVRAM as X; 94S PushRef multiplies the frame by $70 into RefsMap instead",src/bankC3_8000.asm
 $C38EFE,Sample03,,new,"sound sample 3 of the sample list: header, then BRR blocks",src/bankC3_9000.asm
 $C3965A,Sample04,,new,"sound sample 4 of the sample list: header, then BRR blocks",src/bankC3_9000.asm
 $C3AC29,Sample05,,new,"sound sample 5 of the sample list: header, then BRR blocks",src/bankC3_A000.asm

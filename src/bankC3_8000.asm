@@ -513,18 +513,18 @@ DrawSortedGameObject:				; draw the current sorted object with its frame and fli
 	lda.w attribute,x
 	and.w #$0800
 	beq .1
-	lda.l DATA8_C384BC,x
+	lda.l ObjSmallTilesFlip,x
 	sta.b tmp1
-	lda.l DATA8_C384DC,x
+	lda.l ObjBigTilesFlip,x
 	sta.b tmp2
 	lda.w frame+$20,x
 	bmi NextSortedGameObject
 	beq NextSortedGameObject
 	jml.l DrawFrameLayoutFlip
-.1:									; tmp1 = DATA8_C3847C,x, tmp2 = DATA8_C3849C,x, ...
-	lda.l DATA8_C3847C,x
+.1:									; tmp1 = ObjSmallTiles,x, tmp2 = ObjBigTiles,x, ...
+	lda.l ObjSmallTiles,x
 	sta.b tmp1
-	lda.l DATA8_C3849C,x
+	lda.l ObjBigTiles,x
 	sta.b tmp2
 	lda.w frame+$20,x
 	bmi NextSortedGameObject
@@ -541,16 +541,17 @@ NextSortedGameObject:				; advance the sorted object loop or restore the caller 
 	sty.b $2A
 	stz.b QueueBusy
 	rtl
-DATA8_C3847C:						; not traced: a table read by DrawSortedGameObject
+ObjSmallTiles:						; per game object (X = object * 2): the OAM tile and attribute word of its
+									; 8 x 8 pieces
 	db $00,$20,$04,$20,$08,$20,$0C,$20,$10,$20,$14,$20,$18,$22,$1C,$22
 	db $20,$22,$24,$22,$28,$22,$2C,$22,$30,$20,$30,$20,$34,$20,$35,$20
-DATA8_C3849C:						; not traced: a table read by DrawSortedGameObject
+ObjBigTiles:						; per game object: the OAM tile and attribute word of its 16 x 16 pieces
 	db $A0,$20,$A8,$20,$C0,$20,$C8,$20,$E0,$20,$E8,$20,$00,$23,$08,$23
 	db $20,$23,$28,$23,$40,$23,$48,$23,$60,$21,$68,$21,$80,$21,$80,$35
-DATA8_C384BC:						; not traced: a table read by DrawSortedGameObject
+ObjSmallTilesFlip:					; ObjSmallTiles with the x flip bit ($4000), for flipped objects
 	db $00,$60,$04,$60,$08,$60,$0C,$60,$10,$60,$14,$60,$18,$62,$1C,$62
 	db $20,$62,$24,$62,$28,$62,$2C,$62,$30,$60,$30,$60,$34,$60,$35,$60
-DATA8_C384DC:						; not traced: a table read by DrawSortedGameObject
+ObjBigTilesFlip:					; ObjBigTiles with the x flip bit ($4000), for flipped objects
 	db $A0,$60,$A8,$60,$C0,$60,$C8,$60,$E0,$60,$E8,$60,$00,$63,$08,$63
 	db $20,$63,$28,$63,$40,$63,$48,$63,$60,$61,$68,$61,$80,$61,$80,$75
 SprSort:							; from defaultsprites_0 and other segments
@@ -638,28 +639,28 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	sta.w oldframe,y
 	sta.w frame+$20,y
 	sta.w pnum,y
-	lda.l DATA8_C38658,x
+	lda.l SortObjInitTable,x
 	sta.w Xpos,y
-	lda.l DATA8_C3865A,x
+	lda.l SortObjInitTable+2,x
 	sta.w Ypos,y
-	lda.l DATA8_C3865E,x
+	lda.l SortObjInitTable+6,x
 	sta.w frame,y
-	lda.l DATA8_C38660,x
+	lda.l SortObjInitTable+8,x
 	sta.w attribute,y
-	lda.l DATA8_C38662,x
+	lda.l SortObjInitTable+10,x
 	sta.w radiusx,y
-	lda.l DATA8_C38664,x
+	lda.l SortObjInitTable+12,x
 	sta.w radiusy,y
 	lda.b d6
 	asl a
 	asl a
 	asl a
 	tay
-	lda.l DATA8_C38666,x
+	lda.l SortObjInitTable+14,x
 	sta.w asslist,y
 	ldy.b a3
 	sta.w asscur,y
-	lda.l DATA8_C38668,x
+	lda.l SortObjInitTable+16,x
 	sta.w pflags,y
 	lda.w #$0000
 	sta.w pfnc,y
@@ -714,38 +715,24 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	lda.w frame+$1E
 	sta.w frame+$3E
 	jmp.w SprSort
-DATA8_C38658:						; not traced: a table read by defaultsprites_0
-	db $60,$01
-DATA8_C3865A:						; not traced: a table read by defaultsprites_0
-	db $C0,$00,$00,$00
-DATA8_C3865E:						; not traced: a table read by defaultsprites_0
-	db $01,$00
-DATA8_C38660:						; not traced: a table read by defaultsprites_0
-	db $00,$00
-DATA8_C38662:						; not traced: a table read by defaultsprites_0
-	db $08,$00
-DATA8_C38664:						; not traced: a table read by defaultsprites_0
-	db $04,$00
-DATA8_C38666:						; not traced: a table read by defaultsprites_0
-	db $00,$00
-DATA8_C38668:						; not traced: a table read by defaultsprites_0
-	db $00,$00,$38,$FF,$9C,$FF,$00,$00,$01,$00,$00,$00,$08,$00,$04,$00
-	db $00,$00,$00,$00,$38,$FF,$B0,$FF,$00,$00,$01,$00,$00,$00,$08,$00
-	db $04,$00,$00,$00,$00,$00,$38,$FF,$C4,$FF,$00,$00,$01,$00,$00,$00
-	db $08,$00,$04,$00,$00,$00,$00,$00,$38,$FF,$D8,$FF,$00,$00,$01,$00
-	db $00,$00,$08,$00,$04,$00,$00,$00,$00,$00,$38,$FF,$EC,$FF,$00,$00
-	db $01,$00,$00,$00,$08,$00,$04,$00,$00,$00,$00,$00,$C0,$00,$C0,$00
-	db $00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00,$00,$00,$38,$FF
-	db $28,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00,$00,$00
-	db $38,$FF,$3C,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00
-	db $00,$00,$38,$FF,$50,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00
-	db $00,$00,$00,$00,$38,$FF,$64,$00,$00,$00,$01,$00,$01,$00,$08,$00
-	db $04,$00,$00,$00,$00,$00,$38,$FF,$78,$00,$00,$00,$01,$00,$01,$00
-	db $08,$00,$04,$00,$00,$00,$00,$00,$00,$00,$17,$01,$00,$00,$BE,$01
-	db $00,$00,$16,$00,$0A,$00,$00,$00,$00,$00,$00,$00,$E8,$FE,$00,$00
-	db $BF,$01,$00,$00,$17,$00,$0A,$00,$00,$00,$00,$00,$00,$00,$00,$00
-	db $00,$00,$B4,$01,$00,$00,$05,$00,$05,$00,$18,$00,$01,$00,$00,$00
-	db $00,$00,$00,$00,$B3,$01,$00,$00,$03,$00,$03,$00,$19,$00,$00,$00
+SortObjInitTable:					; a record of 9 words per object: x, y, height, frame, attribute,
+									; collision width and height, assignment, flags
+	dw $0160,$00C0,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FF9C,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFB0,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFC4,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFD8,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFEC,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $00C0,$00C0,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0028,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$003C,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0050,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0064,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0078,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $0000,$0117,$0000,$01BE,$0000,$0016,$000A,$0000,$0000
+	dw $0000,$FEE8,$0000,$01BF,$0000,$0017,$000A,$0000,$0000
+	dw $0000,$0000,$0000,$01B4,$0000,$0005,$0005,$0018,$0001
+	dw $0000,$0000,$0000,$01B3,$0000,$0003,$0003,$0019,$0000
 ApproxLength:						; called from other segments
 	cmp.w #$0000
 	bpl .1
@@ -1015,11 +1002,11 @@ PushRef:							; draw a referee frame or clear the referee window
 	beq .1
 	lda.w #$0001
 	sta.w refwindow
-.1:									; A = tmp0, A * 2, X = A, A = DATA8_C38D43,x, ...
+.1:									; A = tmp0, A * 2, X = A, A = RefFrameOffsets,x, ...
 	lda.b tmp0
 	asl a
 	tax
-	lda.l DATA8_C38D43,x
+	lda.l RefFrameOffsets,x
 	tax
 	ldy.w #$5842
 	jsr.w CopyRefereeFrameToVRAM
@@ -1039,7 +1026,8 @@ PushRef:							; draw a referee frame or clear the referee window
 	tsb.w sflags
 	stz.w refwindow
 	rtl
-DATA8_C38D43:						; not traced: a table read by PushRef
+RefFrameOffsets:					; per referee frame: its offset in RefsMapBuf (frames 7 words wide, rows
+									; of frames $310 apart)
 	db $00,$00,$0E,$00,$1C,$00,$2A,$00,$38,$00,$46,$00,$54,$00,$10,$03
 	db $1E,$03,$2C,$03,$3A,$03,$48,$03,$56,$03,$64,$03,$20,$06,$2E,$06
 	db $3C,$06,$4A,$06,$58,$06,$66,$06,$74,$06
