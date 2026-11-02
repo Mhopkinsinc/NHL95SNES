@@ -8990,3 +8990,19 @@ $C42970,SPAboardback,,94S+code,"the 94S SPA list of the same place: between SPAb
 $C429EA,SPAboardright,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
 $C42A64,SPAboardleft,,94S+code,"the 94S SPA list of the same place: spa94.py (FallDown)",src/bankC4_2000.asm
 $C42ADE,SPAbenchcheckr,,94S+code,"the 94S SPA list of the same place: spa94.py 2/2 (updateanim); the last list (GlideBack follows)",src/bankC4_2000.asm
+$C35806,PracPlayerValues,,code,"the Home / Visitor Players values: a count (6), then texts Zero ... Five (decoded with textdec.py)",src/bankC3_5000.asm
+$C35814,PenaltyValues,,code,"the Penalties values: a count (3), then texts Off, On, No Offsides (decoded with textdec.py)",src/bankC3_5000.asm
+$C3581C,UserRecordValues,,code,"the User Records values: a count (2), then texts Off, On (decoded with textdec.py)",src/bankC3_5000.asm
+$C35822,LineChangeValues,,code,"the Line Changes values: a count (3), then texts Off, On, Automatic (decoded with textdec.py)",src/bankC3_5000.asm
+$C3582A,RosterValues,,code,"the Rosters values: a count (2), then texts Default, With Trades (decoded with textdec.py)",src/bankC3_5000.asm
+$C35830,GoalieValues,,code,"the Goalies values: a count (2), then texts Automatic, Manual (decoded with textdec.py)",src/bankC3_5000.asm
+$C35836,PlayoffValues,,code,"the Playoffs values: a count (2), then texts Single Game and a multi game series (decoded with textdec.py)",src/bankC3_5000.asm
+$C3583C,PlayModeValues,,code,"the Play Mode values: a count (7), then the play mode texts (decoded with textdec.py)",src/bankC3_5000.asm
+$C35852,PeriodLengthValues,,code,"the Period Length values: a count (3), then texts 5, 10, 20 Minutes (decoded with textdec.py)",src/bankC3_5000.asm
+$C3585A,TeamValues,,code,"the team lines' values: a count (28), then TeamCityNames (decoded with textdec.py)",src/bankC3_5000.asm
+$C35BCD,ExhibitionOptions,,code,"the Exhibition setup lines: a count, then per line its title text, value list, variable and routine; PlayModeOptionLists points here",src/bankC3_5000.asm
+$C35C17,SeasonOptionLines,,code,"the Season setup lines: a count, then title, value list, variable, routine per line; PlayModeOptionLists points here",src/bankC3_5000.asm
+$C35C51,TradeOptions,,code,"the Trades setup lines: a count, then title, value list, variable, routine per line; PlayModeOptionLists points here",src/bankC3_5000.asm
+$C35C6B,FreeAgentOptions,,code,"the Free Agent and Release setup lines: a count, then title, value list, variable, routine; PlayModeOptionLists points here",src/bankC3_5000.asm
+$C35C7D,MakePlayerOptions,,code,"the Make Player setup lines: the Play Mode line only (a count of 1, then its row); PlayModeOptionLists points here",src/bankC3_5000.asm
+$C35C87,PracticeOptions,,code,"the Practice setup lines: a count, then title, value list, variable, routine per line; PlayModeOptionLists points here",src/bankC3_5000.asm

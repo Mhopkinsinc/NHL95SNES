@@ -383,7 +383,8 @@ DrawPlayModeOptions:				; the Play Mode line's routine (setoptions calls it too)
 	rts
 PlayModeOptionLists:				; per play mode (OptPlayMode * 2): its option list in bank $C3 for
 									; DrawOptionList (modes 4 and 5 share one)
-	db $CD,$5B,$87,$5C,$17,$5C,$51,$5C,$6B,$5C,$6B,$5C,$7D,$5C
+	dw ExhibitionOptions&$FFFF,PracticeOptions&$FFFF,SeasonOptionLines&$FFFF,TradeOptions&$FFFF
+	dw FreeAgentOptions&$FFFF,FreeAgentOptions&$FFFF,MakePlayerOptions&$FFFF
 DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lines of name,
 									; values, variable, routine) from row $10: up to 4 lines, values centred
 									; (right for play mode 7), the arrows set, line 0 palette 0

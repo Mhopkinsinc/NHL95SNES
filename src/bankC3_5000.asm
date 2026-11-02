@@ -129,12 +129,38 @@ org $C35000
 	db $0D,$80,$2F,$4A,$0E,$80,$3A,$4A,$0F,$80,$45,$4A,$10,$80,$4D,$4A
 	db $11,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0,$A6,$49,$18,$80,$AF,$49
 	db $19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80,$00,$00,$10,$00,$00,$01
-	db $C9,$47,$02,$00,$00,$00,$06,$00,$99,$48,$9D,$48,$A1,$48,$A5,$48
-	db $AA,$48,$AE,$48,$03,$00,$7F,$48,$7C,$48,$4D,$4B,$02,$00,$7F,$48
-	db $7C,$48,$03,$00,$7F,$48,$7C,$48,$75,$48,$02,$00,$8B,$47,$91,$47
-	db $02,$00,$75,$48,$70,$48,$02,$00,$C0,$48,$CA,$48,$07,$00,$1F,$48
-	db $27,$48,$2E,$48,$33,$48,$43,$48,$50,$48,$E4,$48,$02,$00,$55,$49
-	db $51,$49,$03,$00,$56,$48,$5E,$48,$67,$48,$1C,$00
+	db $C9,$47,$02,$00,$00,$00
+PracPlayerValues:					; the Home / Visitor Players values: a count (6), then texts Zero ... Five
+	dw 6
+	dw $4899,$489D,$48A1,$48A5,$48AA,$48AE
+PenaltyValues:						; the Penalties values: a count (3), then texts Off, On, No Offsides
+	dw 3
+	dw $487F,$487C,$4B4D
+UserRecordValues:					; the User Records values: a count (2), then texts Off, On
+	dw 2
+	dw $487F,$487C
+LineChangeValues:					; the Line Changes values: a count (3), then texts Off, On, Automatic
+	dw 3
+	dw $487F,$487C,$4875
+RosterValues:						; the Rosters values: a count (2), then texts Default, With Trades
+	dw 2
+	dw $478B,$4791
+GoalieValues:						; the Goalies values: a count (2), then texts Automatic, Manual
+	dw 2
+	dw $4875,$4870
+PlayoffValues:						; the Playoffs values: a count (2), then texts Single Game and a multi
+									; game series
+	dw 2
+	dw $48C0,$48CA
+PlayModeValues:						; the Play Mode values: a count (7), then the play mode texts
+	dw 7
+	dw $481F,$4827,$482E,$4833,$4843,$4850,$48E4
+	db $02,$00,$55,$49,$51,$49
+PeriodLengthValues:					; the Period Length values: a count (3), then texts 5, 10, 20 Minutes
+	dw 3
+	dw $4856,$485E,$4867
+TeamValues:							; the team lines' values: a count (28), then TeamCityNames
+	dw 28
 TeamCityNames:						; per team (A * 2): the address of its city name (packed text, bank $C3),
 									; then the texts
 	db $94,$58,$9A,$58,$9F,$58,$A5,$58,$AB,$58,$B1,$58,$B6,$58,$BC,$58
@@ -192,44 +218,77 @@ TeamCityNames:						; per team (A * 2): the address of its city name (packed tex
 	db $6B,$E1,$BD,$90,$20,$4D,$92,$B1,$5F,$74,$83,$8A,$B9,$5D,$D9,$F3
 	db $10,$0D,$BC,$81,$89,$5C,$03,$6B,$1F,$27,$14,$C1,$7B,$11,$60,$28
 	db $D9,$6F,$01,$4C,$A2,$F4,$D2,$1C,$48,$E9,$04,$02,$13,$B9,$E6,$AB
-	db $01,$09,$00,$B7,$47,$3C,$58,$64,$18,$A9,$92,$D9,$47,$5A,$58,$C9
-	db $17,$6A,$A4,$E2,$47,$5A,$58,$CB,$17,$C1,$A3,$ED,$47,$52,$58,$6A
-	db $18,$E2,$E3,$F8,$47,$30,$58,$70,$18,$F0,$E3,$FE,$47,$1C,$58,$04
-	db $19,$FE,$E3,$08,$48,$14,$58,$6C,$18,$D4,$E3,$0F,$48,$22,$58,$6E
-	db $18,$C6,$E3,$19,$48,$2A,$58,$72,$18,$0C,$E4,$07,$00,$B7,$47,$3C
-	db $58,$64,$18,$A9,$92,$ED,$47,$52,$58,$6A,$18,$E2,$E3,$F8,$47,$30
-	db $58,$70,$18,$F0,$E3,$08,$48,$14,$58,$6C,$18,$D4,$E3,$0F,$48,$22
-	db $58,$6E,$18,$C6,$E3,$B2,$48,$36,$58,$0A,$19,$AE,$E3,$FE,$47,$1C
-	db $58,$04,$19,$FE,$E3,$03,$00,$B7,$47,$3C,$58,$64,$18,$A9,$92,$D4
-	db $48,$5A,$58,$C9,$17,$FF,$A3,$DA,$48,$5A,$58,$CB,$17,$56,$A3,$02
-	db $00,$B7,$47,$3C,$58,$64,$18,$A9,$92,$E0,$48,$5A,$58,$CB,$17,$C1
-	db $A3,$01,$00,$B7,$47,$3C,$58,$64,$18,$A9,$92,$07,$00,$B7,$47,$3C
-	db $58,$64,$18,$A9,$92,$83,$48,$06,$58,$06,$19,$4B,$92,$8D,$48,$06
-	db $58,$08,$19,$7A,$92,$D9,$47,$5A,$58,$C9,$17,$6A,$A4,$E2,$47,$5A
-	db $58,$CB,$17,$C1,$A3,$ED,$47,$52,$58,$6A,$18,$E2,$E3,$19,$48,$2A
-	db $58,$72,$18,$0C,$E4,$01,$00,$58,$49,$4C,$58,$02,$19,$00,$00,$05
-	db $00,$00,$00,$6E,$59,$00,$00,$7A,$59,$00,$00,$87,$59,$00,$00,$9E
-	db $59,$46,$53,$00,$00,$03,$00,$00,$00,$6E,$59,$00,$00,$7A,$59,$00
-	db $00,$9E,$59,$03,$00,$00,$00,$A6,$59,$00,$00,$B1,$59,$00,$00,$BE
-	db $59,$02,$00,$00,$00,$CB,$59,$00,$00,$37,$5D,$06,$00,$00,$00,$CB
-	db $59,$00,$00,$D7,$59,$00,$00,$E2,$59,$08,$53,$00,$00,$20,$53,$00
-	db $00,$00,$00,$37,$5D,$02,$00,$00,$00,$2B,$5D,$00,$00,$37,$5D,$0B
-	db $D2,$E5,$F3,$F5,$ED,$E5,$A0,$C7,$E1,$ED,$E5,$09,$D1,$F5,$E9,$F4
-	db $A0,$C7,$E1,$ED,$E5,$07,$00,$00,$00,$61,$59,$00,$00,$61,$59,$00
-	db $00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00
-	db $00,$61,$59,$11,$99,$4B,$00,$AB,$12,$FF,$FF,$9E,$4B,$00,$97,$12
-	db $FF,$FF,$A3,$4B,$04,$AB,$12,$97,$12,$AE,$4B,$02,$5F,$12,$63,$12
-	db $B7,$4B,$06,$73,$12,$FF,$FF,$BF,$4B,$00,$77,$12,$FF,$FF,$C6,$4B
-	db $00,$7F,$12,$FF,$FF,$CD,$4B,$00,$7B,$12,$FF,$FF,$D4,$4B,$02,$E7
+	db $01
+ExhibitionOptions:					; the Exhibition setup lines: a count, then per line its title text, value
+									; list, variable and routine
+	dw 9
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw $47D9,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
+	dw $47E2,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw $47F8,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
+	dw $47FE,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
+	dw $4808,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
+	dw $480F,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
+	dw $4819,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
+SeasonOptionLines:					; the Season setup lines: a count, then title, value list, variable,
+									; routine per line
+	dw 7
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw $47F8,GoalieValues&$FFFF,OptGoalie,SaveOptGoalie&$FFFF
+	dw $4808,PenaltyValues&$FFFF,OptPen,SaveOptPen&$FFFF
+	dw $480F,LineChangeValues&$FFFF,OptLine,SaveOptLine&$FFFF
+	dw $48B2,PlayoffValues&$FFFF,OptPlayoffs,SaveOptPlayoffs&$FFFF
+	dw $47FE,UserRecordValues&$FFFF,OptUserRec,SaveOptUserRec&$FFFF
+TradeOptions:						; the Trades setup lines: a count, then title, value list, variable,
+									; routine per line
+	dw 3
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw $48D4,TeamValues&$FFFF,HomeTeam,TradeTeam1Hook&$FFFF
+	dw $48DA,TeamValues&$FFFF,VisTeam,TradeTeam2Hook&$FFFF
+FreeAgentOptions:					; the Free Agent and Release setup lines: a count, then title, value list,
+									; variable, routine
+	dw 2
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw $48E0,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+MakePlayerOptions:					; the Make Player setup lines: the Play Mode line only (a count of 1, then
+									; its row)
+	dw 1
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+PracticeOptions:					; the Practice setup lines: a count, then title, value list, variable,
+									; routine per line
+	dw 7
+	dw $47B7,PlayModeValues&$FFFF,OptPlayMode,DrawPlayModeOptions&$FFFF
+	dw $4883,PracPlayerValues&$FFFF,homepracplayers,SaveOptHomePracPlayers&$FFFF
+	dw $488D,PracPlayerValues&$FFFF,awaypracplayers,SaveOptAwayPracPlayers&$FFFF
+	dw $47D9,TeamValues&$FFFF,HomeTeam,PrintHomeTeamName&$FFFF
+	dw $47E2,TeamValues&$FFFF,VisTeam,PrintVisTeamName&$FFFF
+	dw $47ED,PeriodLengthValues&$FFFF,Optperlen,SaveOptperlen&$FFFF
+	dw $4819,RosterValues&$FFFF,OptRosters,SaveOptRosters&$FFFF
+	db $01,$00,$58,$49,$4C,$58,$02,$19,$00,$00,$05,$00,$00,$00,$6E,$59
+	db $00,$00,$7A,$59,$00,$00,$87,$59,$00,$00,$9E,$59,$46,$53,$00,$00
+	db $03,$00,$00,$00,$6E,$59,$00,$00,$7A,$59,$00,$00,$9E,$59,$03,$00
+	db $00,$00,$A6,$59,$00,$00,$B1,$59,$00,$00,$BE,$59,$02,$00,$00,$00
+	db $CB,$59,$00,$00,$37,$5D,$06,$00,$00,$00,$CB,$59,$00,$00,$D7,$59
+	db $00,$00,$E2,$59,$08,$53,$00,$00,$20,$53,$00,$00,$00,$00,$37,$5D
+	db $02,$00,$00,$00,$2B,$5D,$00,$00,$37,$5D,$0B,$D2,$E5,$F3,$F5,$ED
+	db $E5,$A0,$C7,$E1,$ED,$E5,$09,$D1,$F5,$E9,$F4,$A0,$C7,$E1,$ED,$E5
+	db $07,$00,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00
+	db $61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$00,$00,$61,$59,$11,$99
+	db $4B,$00,$AB,$12,$FF,$FF,$9E,$4B,$00,$97,$12,$FF,$FF,$A3,$4B,$04
+	db $AB,$12,$97,$12,$AE,$4B,$02,$5F,$12,$63,$12,$B7,$4B,$06,$73,$12
+	db $FF,$FF,$BF,$4B,$00,$77,$12,$FF,$FF,$C6,$4B,$00,$7F,$12,$FF,$FF
+	db $CD,$4B,$00,$7B,$12,$FF,$FF,$D4,$4B,$02,$E7,$12,$E3,$12,$DC,$4B
+	db $02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF,$12,$EB,$12,$F0,$4B,$00,$B3
+	db $12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$08,$48,$00,$67,$12,$6B
+	db $12,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF,$12,$11
+	db $4C,$04,$DB,$12,$DF,$12,$0B,$99,$4B,$00,$AB,$12,$FF,$FF,$9E,$4B
+	db $00,$97,$12,$FF,$FF,$A3,$4B,$04,$AB,$12,$97,$12,$D4,$4B,$02,$E7
 	db $12,$E3,$12,$DC,$4B,$02,$FB,$12,$F7,$12,$E5,$4B,$02,$EF,$12,$EB
-	db $12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$08
-	db $48,$00,$67,$12,$6B,$12,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02
-	db $DB,$12,$DF,$12,$11,$4C,$04,$DB,$12,$DF,$12,$0B,$99,$4B,$00,$AB
-	db $12,$FF,$FF,$9E,$4B,$00,$97,$12,$FF,$FF,$A3,$4B,$04,$AB,$12,$97
-	db $12,$D4,$4B,$02,$E7,$12,$E3,$12,$DC,$4B,$02,$FB,$12,$F7,$12,$E5
-	db $4B,$02,$EF,$12,$EB,$12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00
-	db $D7,$12,$FF,$FF,$01,$4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12
-	db $DF,$12,$11,$4C,$04,$DB,$12,$DF,$12
+	db $12,$F0,$4B,$00,$B3,$12,$FF,$FF,$F7,$4B,$00,$D7,$12,$FF,$FF,$01
+	db $4C,$06,$6F,$12,$FF,$FF,$0B,$4C,$02,$DB,$12,$DF,$12,$11,$4C,$04
+	db $DB,$12,$DF,$12
 PerLabels:							; the period labels (1st, 2nd, 3rd, OT): addresses of packed texts, by
 									; period
 	db $59,$4F,$5D,$4F,$61,$4F,$65,$4F

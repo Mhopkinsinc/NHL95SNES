@@ -2,6 +2,7 @@
 ;	on its own for checking against the ROM (tools/verify_segment.sh bankC3_5000). The org is in the segment
 ;	file.
 hirom
+incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 PhotoPalettesSTL = $CEDDCB			; the St. Louis photo set
@@ -30,5 +31,19 @@ PhotoPalettesWSH = $CD25E0			; the Washington photo set
 PhotoPalettesTB = $C04CE7
 PhotoPalettesTOR = $C05DAC
 PhotoPalettesVAN = $C06E6D
+DrawPlayModeOptions = $C592A9
+PrintHomeTeamName = $C5A46A
+PrintVisTeamName = $C5A3C1
+SaveOptAwayPracPlayers = $C5927A
+SaveOptGoalie = $C5E3F0
+SaveOptHomePracPlayers = $C5924B
+SaveOptLine = $C5E3C6
+SaveOptPen = $C5E3D4
+SaveOptPlayoffs = $C5E3AE
+SaveOptRosters = $C5E40C
+SaveOptUserRec = $C5E3FE
+SaveOptperlen = $C5E3E2
+TradeTeam1Hook = $C5A3FF
+TradeTeam2Hook = $C5A356
 
 incsrc "../bankC3_5000.asm"

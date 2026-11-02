@@ -96,5 +96,11 @@ GradientBarTiles = $C0083D
 TeamPalettes = $C00000
 TiledBackMap = $C087F2
 AwayUniformPalettes = $C03F02
+ExhibitionOptions = $C35BCD
+FreeAgentOptions = $C35C6B
+MakePlayerOptions = $C35C7D
+PracticeOptions = $C35C87
+SeasonOptionLines = $C35C17
+TradeOptions = $C35C51
 
 incsrc "../bankC5_9000.asm"
