@@ -904,7 +904,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w #$FFFF
 	sta.w recsfx
 	sta.w recsfx2
-	stz.w $2346
+	stz.w hattrick
 	lda.l Crowdlevel
 	cmp.w #$0258
 	bcc .2
@@ -990,19 +990,19 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w puckvx
 	stz.w puckvy
 	stz.w puckvz
-	stz.w $09B8
-	stz.w $09D8
+	stz.w Xvel+24
+	stz.w Yvel+24
 	stz.w Xpos+24
 	lda.w #$0117
 	sta.w Ypos+24
-	stz.w $09BA
-	stz.w $09DA
-	stz.w $082E
+	stz.w Xvel+26
+	stz.w Yvel+26
+	stz.w Xpos+26
 	lda.w #$FEE8
 	sta.w Ypos+26
 	lda.w #$01B3
 	sta.w frame+$1E
-	stz.w $0C9E
+	stz.w SPA+$1E
 	stz.w attribute+$1E
 	stz.w attribute+28
 	lda.w #$0040

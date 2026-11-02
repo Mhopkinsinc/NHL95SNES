@@ -8830,3 +8830,9 @@ $CF0239,LoadSampleEnvelopeAndData,CODE_CF0239,code,"LoadSample continuation with
 $CF04A8,StartSelectedTeamSong,CODE_CF04A8,code,"shared tail of PlayTeamSong and PlayTeamSongNow; saved X required on stack",src/bankCF_0000.asm
 $2D91,TaskListEnd,,code,"RAM: InitTasks builds it like a TaskSlots entry ($C bytes: next 0, routine TaskFrameEnd, +6 $FFFF) and points TaskListHead at it; TaskListHead is the head entry just below it (+2 / +4 TaskFrameEnd, +6 0)",src/ram95s.asm
 $2D9F,TasksDoneLast,,code,"RAM: InitTasks keeps TasksDone here and clears TasksDone; TaskEndCheck sets TasksDone = TasksDoneLast + 1, so each task loop ends with a new value",src/ram95s.asm
+$2346,hattrick,,94S+code,"RAM: 94S puckfaceoff2 clears hattrick right after setting recsfx / recsfx2 to $FFFF, as 95 does with $2346; refwindow and ScoreSum sit at the same 94S offset on both sides",src/ram95s.asm
+$2350,setuphome,,94S+code,"RAM: 94S ShootoutShooters stores HomeTeam,x in setupvis and $FFFF in setuphome before SetupScreen, as 95 does with $2352 / $2350; at pspuckback's 94S offset",src/ram95s.asm
+$2352,setupvis,,94S+code,"RAM: 94S ShootoutShooters stores HomeTeam,x (a2's team) in setupvis, as 95 does here",src/ram95s.asm
+$2358,matchuphome,,94S+code,"RAM: 94S PrintShooterNames stores the slot's roster index ([a3] and $FF, minus 1) in matchuphome and reads it back, as 95 does with $2358",src/ram95s.asm
+$2364,drawlinesback,,94S+code,"RAM: 94S ShootersBackground draws DrawShootersBack while drawlinesback is set and clears it after WaitFrame, as 95 does with $2364; 2 bytes nearer pausemenuon than in 94S (95 drops one word between)",src/ram95s.asm
+$249C,charofs2,,94S+code,"RAM: 94S DrawShootersBack loads charofs2 and adds $0C00 before PasteMap, as 95 does with $249C; gsflags and blankchar give the same 94S offset",src/ram95s.asm

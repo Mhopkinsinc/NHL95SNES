@@ -656,8 +656,8 @@ PushNumberWrap:						; a1 = d0 as d1 digits right-aligned after spaces in a buff
 	plx
 	rtl
 ResetClock:							; sets the period length: gameclock, PerTimeTotal and gmclock from
-									; GetPeriodTime (25 in the shootout, 300 in overtime when $1864 is 0) and
-									; the clock digits
+									; GetPeriodTime (25 in the shootout, 300 in overtime when OptPlayMode is
+									; 0) and the clock digits
 	jsl.l GetPeriodTime
 	lda.w shootoutmode
 	beq .1

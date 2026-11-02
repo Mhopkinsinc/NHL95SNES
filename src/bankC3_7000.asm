@@ -1271,17 +1271,17 @@ adda43:								; from adda4 and other segments
 	dey
 	bpl .loop
 	lda.b $80
-	sta.w $0818,x
+	sta.w Xpos+4,x
 	lda.b $80
 	sta.w r3
 	and.w #$000F
 	bit.w #$0008
 	beq .4
 	ora.w #$00F0
-.4:									; $0819,x = A, $089A,x = $80, A = r3, A / 2, ...
-	sta.w $0819,x
+.4:									; Xpos+5,x = A, Ypos+4,x = $80, A = r3, A / 2, ...
+	sta.w Xpos+5,x
 	lda.b $80
-	sta.w $089A,x
+	sta.w Ypos+4,x
 	lda.w r3
 	lsr a
 	lsr a
@@ -1290,8 +1290,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .5
 	ora.w #$00F0
-.5:									; $089B,x = A, frame+$4,x = $80, r3 = $80, A and $003F, ...
-	sta.w $089B,x
+.5:									; Ypos+5,x = A, frame+$4,x = $80, r3 = $80, A and $003F, ...
+	sta.w Ypos+5,x
 	lda.b $80
 	sta.w frame+$4,x
 	lda.b $80
@@ -1318,8 +1318,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .6
 	ora.w #$00F0
-.6:									; $082D,x = A, Ypos+24,x = $80, A = r3, A / 2, ...
-	sta.w $082D,x
+.6:									; Xpos+25,x = A, Ypos+24,x = $80, A = r3, A / 2, ...
+	sta.w Xpos+25,x
 	lda.b $80
 	sta.w Ypos+24,x
 	lda.w r3
@@ -1330,8 +1330,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .7
 	ora.w #$00F0
-.7:									; $08AF,x = A, frame+$18,x = $80, r3 = $80, A and $003F, ...
-	sta.w $08AF,x
+.7:									; Ypos+25,x = A, frame+$18,x = $80, r3 = $80, A and $003F, ...
+	sta.w Ypos+25,x
 	lda.b $80
 	sta.w frame+$18,x
 	lda.b $80

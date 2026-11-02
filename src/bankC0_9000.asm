@@ -605,12 +605,12 @@ ShootoutShooters:					; pick the shootout shooters of a pad's team: up / down mo
 	cmp.b d0
 	beq .8
 	jmp.w .10
-.8:									; X = a2, $2352 = HomeTeam,x, $2350 = $FFFF, call ShootersSetup, ...
+.8:									; X = a2, setupvis = HomeTeam,x, setuphome = $FFFF, ...
 	ldx.b a2
 	lda.w HomeTeam,x
-	sta.w $2352
+	sta.w setupvis
 	lda.w #$FFFF
-	sta.w $2350
+	sta.w setuphome
 	jsl.l ShootersSetup
 	jsl.l ShootersBackground
 	stz.w curitem
@@ -709,13 +709,13 @@ DrawShootersBack:					; the shooters back with its drawing gone: the eraser box 
 	lda.w #$001C
 	ldx.w #$0000
 	ldy.w #$0000
-	lda.w $249C
+	lda.w charofs2
 	clc
 	adc.w #$0C00
 	rtl
-ShootersBackground:					; the shooters screen background: DrawShootersBack when $2364 is set, d1 =
-									; HomeTeam or VisTeam by a2, then irqline2 $50
-	lda.w $2364
+ShootersBackground:					; the shooters screen background: DrawShootersBack when drawlinesback is
+									; set, d1 = HomeTeam or VisTeam by a2, then irqline2 $50
+	lda.w drawlinesback
 	beq .1
 	jsl.l DrawShootersBack
 .1:									; X = $0058, Y = $0018, d1 = HomeTeam, if a2 = 0 go to .2, ...
@@ -727,17 +727,17 @@ ShootersBackground:					; the shooters screen background: DrawShootersBack when 
 	beq .2
 	lda.w VisTeam
 	sta.b d1
-.2:									; if $2364 = 0 go to .rtl, call WaitFrame, irqline2 = $0050, $2364 = 0
-	lda.w $2364
+.2:									; if drawlinesback = 0 go to .rtl, call WaitFrame, irqline2 = $0050, ...
+	lda.w drawlinesback
 	beq .rtl
 	jsl.l WaitFrame
 	lda.w #$0050
 	sta.w irqline2
-	stz.w $2364
+	stz.w drawlinesback
 .rtl:								; return
 	rtl
 PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), the rows printed
-									; with the cursor row ($1878) marked
+									; with the cursor row (curitem) marked
 	lda.w #$0020
 	sta.b d0
 	lda.w #$0013
@@ -795,14 +795,14 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	lda.b [a3]
 	and.w #$00FF
 	dec a
-	sta.w $2358
+	sta.w matchuphome
 	phx
 	ldx.b a2
 	lda.w HomeTeam,x
 	cmp.w #$0018
 	bcc .2
 	ldx.w #$0000
-	lda.w $2358
+	lda.w matchuphome
 .2:									; pull X
 	plx
 .3:									; printx = $0005, printx = $0008, A = [a3], A and $00FF, ...
@@ -895,7 +895,7 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	jsl.l eraser
 	ldx.w #$0001
 	ldy.w #$0001
-	lda.w $249C
+	lda.w charofs2
 	clc
 	adc.w #$0C00
 	jsl.l WaitFrame
@@ -978,9 +978,9 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	bit.w #$8080
 	beq .loop
 	jsl.l SetShooter
-.8:									; $2364 = $0001, return
+.8:									; drawlinesback = $0001, return
 	lda.w #$0001
-	sta.w $2364
+	sta.w drawlinesback
 	rtl
 .9:									; A = DispAttribCtr, A + 1, if A - $0010 >= 0 go to .loop, ...
 	lda.w DispAttribCtr
