@@ -794,7 +794,7 @@ TitleStartMusicTask:				; starts the title music after the task delay and disabl
 	bcc CODE_C4B6EA
 	lda.w #$00A4
 	jsl.l StartSound
-	stz.w $1EA7
+	stz.w MenuMusicPending
 	lda.w #CODE_C4B6EA
 	sta.w $0002,x
 CODE_C4B6EA:						; a task routine: stored as the next routine of a task

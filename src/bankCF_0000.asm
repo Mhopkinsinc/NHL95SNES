@@ -3,7 +3,7 @@
 org $CF0000
 InitSoundSystem:					; uploads the sound driver and initializes the CPU sound state and fade
 									; volume
-	stz.w $4DCE
+	stz.w SoundAllocWraps
 	jsl.l UploadSoundDriver
 	lda.w #$8001
 	sta.w $4ABC
@@ -22,10 +22,10 @@ UploadSoundDriver:					; uploads SoundRAMClear and SoundDriver, acknowledges dri
 	jsl.l SPCUpload
 	sep #$20
 	lda.b #$7F
-.loop:								; loop: if A is not $002143 go to .loop, $002140 = A, A 16-bit, ...
-	cmp.l $002143
+.loop:								; loop: if A is not APUIO3 go to .loop, APUIO0 = A, A 16-bit, ...
+	cmp.l APUIO3
 	bne .loop
-	sta.l $002140
+	sta.l APUIO0
 	rep #$20
 	lda.w #$FFFF
 	sta.w $4BC0
@@ -38,16 +38,16 @@ SPCUpload:							; upload the blocks at X:A to the sound CPU boot loader (94S SP
 	sta.b r0
 	sep #$20
 	txa
-	sta.b $2E
+	sta.b r0+2
 	lda.b #$1B
-	sta.w $2143
+	sta.w APUIO3
 	rep #$20
 	lda.w #$BBAA
 	jsr.w WaitSPCUploadAck
 	sep #$20
 	lda.b #$CC
-	bra CODE_CF008B
-CODE_CF0069:						; from CODE_CF0098
+	bra SPCUploadNextBlock
+SPCUploadBlockBytes:				; sends X bytes through the boot loader, then reads the next block header
 	jsr.w ReadSPCUploadByte
 	xba
 	lda.b #$00
@@ -58,9 +58,9 @@ CODE_CF0069:						; from CODE_CF0098
 	xba
 	jsr.w WaitSPCUploadAck
 	inc a
-.1:									; A 16-bit, $2140 = A, A 8-bit, X - 1, ...
+.1:									; A 16-bit, APUIO0 = A, A 8-bit, X - 1, ...
 	rep #$20
-	sta.w $2140
+	sta.w APUIO0
 	sep #$20
 	dex
 	bne .loop
@@ -68,31 +68,32 @@ CODE_CF0069:						; from CODE_CF0098
 .loop2:								; loop: A + $03, if the result = 0 go to .loop2
 	adc.b #$03
 	beq .loop2
-CODE_CF008B:						; from SPCUpload
+SPCUploadNextBlock:					; reads the next block length and destination, preserving the handshake
+									; byte
 	pha
 	rep #$20
 	jsr.w ReadSPCUploadWord
 	tax
 	jsr.w ReadSPCUploadWord
-	sta.w $2142
-CODE_CF0098:						; called from other segments
+	sta.w APUIO2
+SPCUploadBlockHandshake:			; signals data or execution to the boot loader from the block length in X
 	sep #$20
 	cpx.w #$0001
 	lda.b #$00
 	rol a
-	sta.w $2141
+	sta.w APUIO1
 	adc.b #$7F
 	pla
-	sta.w $2140
+	sta.w APUIO0
 	jsr.w WaitSPCUploadAck
-	bvs CODE_CF0069
+	bvs SPCUploadBlockBytes
 	lda.b #$00
-	sta.w $2140
+	sta.w APUIO0
 	rep #$20
 	plb
 	rtl
 WaitSPCUploadAck:					; waits for port 0 to equal A during SPCUpload
-	cmp.w $2140
+	cmp.w APUIO0
 	bne WaitSPCUploadAck
 	rts
 ReadSPCUploadByte:					; reads the next upload byte through r0 and advances the source pointer
@@ -100,7 +101,7 @@ ReadSPCUploadByte:					; reads the next upload byte through r0 and advances the 
 	ldy.b r0
 	iny
 	bne .1
-	inc.b $2E
+	inc.b r0+2
 	ldy.w #$8000
 .1:									; r0 = Y, return
 	sty.b r0
@@ -110,12 +111,12 @@ ReadSPCUploadWord:					; reads the next upload word through r0 and advances the 
 	ldy.b r0
 	iny
 	bne .1
-	inc.b $2E
+	inc.b r0+2
 	ldy.w #$8000
-.1:									; Y + 1, if the result is not 0 go to .2, $2E + 1, Y = $8000
+.1:									; Y + 1, if the result is not 0 go to .2, r0+2 + 1, Y = $8000
 	iny
 	bne .2
-	inc.b $2E
+	inc.b r0+2
 	ldy.w #$8000
 .2:									; r0 = Y, return
 	sty.b r0
@@ -124,17 +125,17 @@ QueueSoundCmd:						; queues sound driver command A with the arguments X and Y (
 									; queue, 4 bytes an entry)
 	phy
 	ldy.w SoundQueueHead
-	sta.w $4AC0,y
+	sta.w SoundCmdQueue,y
 	txa
-	sta.w $4AC1,y
+	sta.w SoundCmdQueue+1,y
 	pla
-	sta.w $4AC2,y
+	sta.w SoundCmdQueue+2,y
 	tya
 	clc
 	adc.w #$0004
 	and.w #$00FF
 	sta.w SoundQueueHead
-CODE_CF00FD:						; called from other segments
+QueueSoundCmdReturn:				; returns after advancing the sound command queue head
 	rtl
 SendQueuedSoundCmd:					; loads the queue tail and sends one command if the CPU sound queue is not
 									; empty
@@ -150,20 +151,20 @@ SendSoundCmdAtTail:					; sends the queued command at X unless X equals the queu
 	adc.w #$0004
 	and.w #$00FF
 	sta.w SoundQueueTail
-	lda.l $7E4AC2,x
+	lda.l $7E0000+SoundCmdQueue+2,x
 	tay
-	lda.l $7E4AC1,x
+	lda.l $7E0000+SoundCmdQueue+1,x
 	pha
-	lda.l $7E4AC0,x
+	lda.l $7E0000+SoundCmdQueue,x
 	plx
 	pha
 	tya
-	sta.w $2141
+	sta.w APUIO1
 	sep #$20
 	txa
-	sta.w $2140
+	sta.w APUIO0
 	pla
-	sta.w $2143
+	sta.w APUIO3
 	pla
 	rep #$20
 	rtl
@@ -181,9 +182,9 @@ LoadSounds:							; loads the samples and sounds of the list at X:A into the sou
 	sta.b tmp0
 	ldx.w #$00FE
 	lda.w #$FFFF
-.loop:								; loop: $4BC8,x = A, $4CCA,x = A, SampleSlots,x = 0, X - 1, ...
-	sta.w $4BC8,x
-	sta.w $4CCA,x
+.loop:								; loop: LoadedSampleSources,x = A, SequenceAddrs,x = A, ...
+	sta.w LoadedSampleSources,x
+	sta.w SequenceAddrs,x
 	stz.w SampleSlots,x
 	dex
 	dex
@@ -195,7 +196,7 @@ LoadSounds:							; loads the samples and sounds of the list at X:A into the sou
 AppendSounds:						; loads the list at X:A using the current sample allocation, then uploads
 									; the sound lookup tables
 	sta.b r2
-	stx.b $36
+	stx.b r2+2
 .loop:								; loop: A = [r2], A and $00FF, if a $0080 bit set go to .1, r2 + 1, ...
 	lda.b [r2]
 	and.w #$00FF
@@ -216,31 +217,31 @@ AppendSounds:						; loads the list at X:A using the current sample allocation, 
 UploadSoundTables:					; finishes the allocation bounds and uploads sequence pointers, sample
 									; slots, envelopes and sample parameters
 	adc.w #$0B80
-	sta.w $4DCA
+	sta.w SoundAllocBound
 	eor.w #$FFFF
 	inc a
-	sta.w $4DCC
+	sta.w SoundAllocNegBound
 	lda.w #$0100
-	sta.w $4CC8
-	lda.w #$4CC8
+	sta.w SequenceAddrsSize
+	lda.w #SequenceAddrsSize
 	ldx.w #$007E
 	ldy.w #$F600
 	jsl.l UploadSoundData
 	lda.w #$0100
-	sta.w $48B8
-	lda.w #$48B8
+	sta.w SampleSlotsSize
+	lda.w #SampleSlotsSize
 	ldx.w #$007E
 	ldy.w #$F480
 	jsl.l UploadSoundData
 	lda.w #$0080
-	sta.w $5052
-	lda.w #$5052
+	sta.w SampleEnvelopesSize
+	lda.w #SampleEnvelopesSize
 	ldx.w #$007E
 	ldy.w #$F580
 	jsl.l UploadSoundData
 	lda.w #$0280
-	sta.w $4DD0
-	lda.w #$4DD0
+	sta.w SampleTablesSize
+	lda.w #SampleTablesSize
 	ldx.w #$007E
 	ldy.w #$FD00
 	jmp.w UploadSoundData
@@ -264,50 +265,51 @@ LoadSample:							; assigns sample A a driver slot, copies its header parameters
 	asl a
 	tax
 	lda.l SampleList,x
-	sta.w $49BC,y
+	sta.w SampleSlotSources,y
 	lda.l SampleList+2,x
-	sta.w $49BE,y
+	sta.w SampleSlotSources+2,y
 	tyx
 	bra .2
 .1:									; A * 2, A * 2, X = A
 	asl a
 	asl a
 	tax
-.2:									; r1 = $49BC,x, $32 = $49BE,x, $4DD2,x = [r1], Y = $0002, ...
-	lda.w $49BC,x
+.2:									; r1 = SampleSlotSources,x, r1+2 = SampleSlotSources+2,x, ...
+	lda.w SampleSlotSources,x
 	sta.b r1
-	lda.w $49BE,x
-	sta.b $32
+	lda.w SampleSlotSources+2,x
+	sta.b r1+2
 	lda.b [r1]
-	sta.w $4DD2,x
+	sta.w SampleParams,x
 	ldy.w #$0002
 	lda.b [r1],y
-	sta.w $4DD4,x
+	sta.w SampleParams+2,x
 	txa
 	lsr a
 	tax
 	ldy.w #$0004
 	lda.b [r1],y
-	sta.w $4FD2,x
+	sta.w SampleNoteParams,x
 	ldy.w #$0006
-CODE_CF0239:						; called from other segments
+LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or allocates and uploads
+									; it
 	lda.b [r1],y
-	sta.w $5054,x
+	sta.w SampleEnvelopes,x
 	txa
 	asl a
 	tax
 	ldy.w #$0000
-.1:									; if $4BC8,y is not r1 go to .2, if $4BCA,y is not $32 go to .2, ...
-	lda.w $4BC8,y
+.1:									; if LoadedSampleSources,y is not r1 go to .2, ...
+	lda.w LoadedSampleSources,y
 	cmp.b r1
 	bne .2
-	lda.w $4BCA,y
-	cmp.b $32
+	lda.w LoadedSampleSources+2,y
+	cmp.b r1+2
 	bne .2
-	lda.w $4ED2,y
-	sta.w $4ED2,x
-	lda.w $4ED4,y
-	sta.w $4ED4,x
+	lda.w SampleDirectory,y
+	sta.w SampleDirectory,x
+	lda.w SampleDirectory+2,y
+	sta.w SampleDirectory+2,x
 	rtl
 .2:									; Y + 1, Y + 1, Y + 1, Y + 1, ...
 	iny
@@ -317,18 +319,18 @@ CODE_CF0239:						; called from other segments
 	cpy.w #$0100
 	bne .1
 	lda.b r1
-	sta.w $4BC8,x
-	lda.b $32
-	sta.w $4BCA,x
+	sta.w LoadedSampleSources,x
+	lda.b r1+2
+	sta.w LoadedSampleSources+2,x
 	clc
 	ldy.w #$0008
 	lda.b [r1],y
 	beq .3
 	adc.b tmp0
-.3:									; $4ED4,x = A, $4ED2,x = tmp0, A = r1, A + $000A, ...
-	sta.w $4ED4,x
+.3:									; SampleDirectory+2,x = A, SampleDirectory,x = tmp0, A = r1, ...
+	sta.w SampleDirectory+2,x
 	lda.b tmp0
-	sta.w $4ED2,x
+	sta.w SampleDirectory,x
 	lda.b r1
 	adc.w #$000A
 	sta.b r1
@@ -341,41 +343,41 @@ AppendSoundData:					; allocates space for the length-prefixed block at r1 and s
 	bcs .1
 	cmp.w #$F47F
 	bcc .2
-.1:									; $4DCE + 1, A = $0C00, Y = A
-	inc.w $4DCE
+.1:									; SoundAllocWraps + 1, A = $0C00, Y = A
+	inc.w SoundAllocWraps
 	lda.w #$0C00
 	tay
-.2:									; tmp0 = A, A = r1, X = $32
+.2:									; tmp0 = A, A = r1, X = r1+2
 	sta.b tmp0
 	lda.b r1
-	ldx.b $32
+	ldx.b r1+2
 UploadSoundData:					; sends the length-prefixed block at X:A to sound RAM Y with command $19
 									; and port handshakes
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	tya
 	tyx
-	sta.l $002141
+	sta.l APUIO1
 	lda.b [r0]
 	tax
 	ldy.w #$0002
 	stz.b tmp1
 	sep #$20
 	lda.b #$19
-	sta.l $002143
+	sta.l APUIO3
 	lda.b #$00
-.loop:								; loop: if A is not $002143 go to .loop
-	cmp.l $002143
+.loop:								; loop: if A is not APUIO3 go to .loop
+	cmp.l APUIO3
 	bne .loop
-.loop2:								; loop: $002140 = [r0],y, Y + 1, $002141 = [r0],y, Y + 1, ...
+.loop2:								; loop: APUIO0 = [r0],y, Y + 1, APUIO1 = [r0],y, Y + 1, ...
 	lda.b [r0],y
-	sta.l $002140
+	sta.l APUIO0
 	iny
 	lda.b [r0],y
-	sta.l $002141
+	sta.l APUIO1
 	iny
 	lda.b [r0],y
-	sta.l $002142
+	sta.l APUIO2
 	iny
 	lda.b tmp1
 	inc a
@@ -389,9 +391,9 @@ UploadSoundData:					; sends the length-prefixed block at X:A to sound RAM Y wit
 	beq .3
 	dex
 	beq .2
-	sta.l $002143
-.loop3:								; loop: if A is not $002143 go to .loop3, go to .loop2
-	cmp.l $002143
+	sta.l APUIO3
+.loop3:								; loop: if A is not APUIO3 go to .loop3, go to .loop2
+	cmp.l APUIO3
 	bne .loop3
 	bra .loop2
 .2:									; A = $83, go to .5
@@ -402,11 +404,11 @@ UploadSoundData:					; sends the length-prefixed block at X:A to sound RAM Y wit
 	bra .5
 .4:									; A = $81
 	lda.b #$81
-.5:									; $002143 = A, A = $7E
-	sta.l $002143
+.5:									; APUIO3 = A, A = $7E
+	sta.l APUIO3
 	lda.b #$7E
-.loop4:								; loop: if A is not $002143 go to .loop4, A 16-bit, return
-	cmp.l $002143
+.loop4:								; loop: if A is not APUIO3 go to .loop4, A 16-bit, return
+	cmp.l APUIO3
 	bne .loop4
 	rep #$20
 	rtl
@@ -420,16 +422,16 @@ LoadSequence:						; uploads sequence A and its referenced samples, recording th
 	asl a
 	tax
 	lda.b tmp0
-	sta.w $4CCA,y
+	sta.w SequenceAddrs,y
 	lda.l SoundSequenceTable,x
 	sta.b r1
 	lda.l SoundSequenceTable+2,x
-	sta.b $32
+	sta.b r1+2
 	jsl.l AppendSoundData
 	lda.b r1
 	sta.b r2
-	lda.b $32
-	sta.b $36
+	lda.b r1+2
+	sta.b r2+2
 	ldy.w #$0003
 	lda.b [r2],y
 	and.w #$007F
@@ -466,14 +468,14 @@ LoadSequence:						; uploads sequence A and its referenced samples, recording th
 	asl a
 	tay
 	lda.l $CF0001,x
-	sta.w $4DD4,y
+	sta.w SampleParams+2,y
 	inx
 	inx
 	inx
 	bra .loop2
-.1:									; pull A, $36 = A, pull A, r2 = A, ...
+.1:									; pull A, r2+2 = A, pull A, r2 = A, ...
 	pla
-	sta.b $36
+	sta.b r2+2
 	pla
 	sta.b r2
 	rtl
@@ -575,7 +577,7 @@ LoadTeamSongs:						; the home team's 6 songs from TeamSongs into a list (each $
 	adc.w HomeTeam
 	asl a
 	tax
-	lda.w #$50D4
+	lda.w #TeamSongList
 	sta.b r0
 	ldy.w #$0005
 .loop:								; loop: A = TeamSongs,x, A and $00FF, if A is not $00FF go to .1, ...
@@ -597,7 +599,7 @@ LoadTeamSongs:						; the home team's 6 songs from TeamSongs into a list (each $
 	bpl .loop
 	lda.w #$FFFF
 	sta.b (r0)
-	lda.w #$50D4
+	lda.w #TeamSongList
 	ldx.w #$007E
 	jsl.l AppendSounds
 	ldx.w #$001B
@@ -606,12 +608,12 @@ LoadTeamSongs:						; the home team's 6 songs from TeamSongs into a list (each $
 	asl a
 	tax
 	lda.w #$00E8
-	sta.w $4FD2,x
+	sta.w SampleNoteParams,x
 	rtl
 PlayTeamSongNow:					; queues home team song A without polling the driver status
 	phx
 	sta.b tmp0
-	bra CODE_CF04A8
+	bra StartSelectedTeamSong
 PlayTeamSong:						; plays song A of the home team's songs (LoadTeamSongs) when the sound CPU
 									; is ready and not busy
 	phx
@@ -620,16 +622,16 @@ PlayTeamSong:						; plays song A of the home team's songs (LoadTeamSongs) when 
 .loop:								; loop: X - 1, if the result < 0 go to PlayTeamSongReturn, ...
 	dex
 	bmi PlayTeamSongReturn
-	lda.l $002143
+	lda.l APUIO3
 	and.w #$00FF
 	cmp.w #$007E
 	bne .loop
-	lda.l $002142
+	lda.l APUIO2
 	and.w #$0038
 	bne PlayTeamSongReturn
-CODE_CF04A8:						; from PlayTeamSongNow
+StartSelectedTeamSong:				; starts the team song selected by tmp0, then restores X and returns
 	ldx.b tmp0
-	lda.w $50D4,x
+	lda.w TeamSongList,x
 	and.w #$00FF
 	jsl.l StartSound
 PlayTeamSongReturn:					; PlayTeamSong's exit: X pulled, rtl
@@ -638,12 +640,12 @@ PlayTeamSongReturn:					; PlayTeamSong's exit: X pulled, rtl
 StartMenuMusic:						; reloads and starts the front end song $A4 (LoadSounds of DATA8_CF05D4,
 									; StartSound) between SoundVolumeDown and SoundVolumeUp; on its first call
 									; it only sets its flag, unless the request flag is set
-	lda.w $1EA7
+	lda.w MenuMusicPending
 	bne .1
-	lda.w $1EA9
+	lda.w MenuMusicVisited
 	beq .2
-.1:									; $1EA7 = 0, call SoundVolumeDown, X = DATA8_CF05D4>>16, ...
-	stz.w $1EA7
+.1:									; MenuMusicPending = 0, call SoundVolumeDown, X = DATA8_CF05D4>>16, ...
+	stz.w MenuMusicPending
 	jsl.l SoundVolumeDown
 	ldx.w #DATA8_CF05D4>>16
 	lda.w #DATA8_CF05D4&$FFFF
@@ -651,9 +653,9 @@ StartMenuMusic:						; reloads and starts the front end song $A4 (LoadSounds of 
 	lda.w #$00A4
 	jsl.l StartSound
 	jsl.l SoundVolumeUp
-.2:									; $1EA9 = $0001, return
+.2:									; MenuMusicVisited = $0001, return
 	lda.w #$0001
-	sta.w $1EA9
+	sta.w MenuMusicVisited
 	rtl
 SoundSequenceTable:					; sequence pointers read by LoadSequence, each followed by a flag byte
 									; whose selection role is unresolved
