@@ -1098,7 +1098,8 @@ NextMapSetChunkWRAM:				; r2 (bank $36) to the next chunk of the map set: + its 
 	inc.b $36
 .rts:								; return
 	rts
-CODE_C5888F:						; called from other segments
+Mul16x8XS24:						; X (16 bits, signed) * A (low byte, unsigned) into $14 (3 bytes) by the
+									; hardware multiplier, a byte of X at a time; no caller found
 	sep #$20
 	sta.l WRMPYA
 	rep #$20
@@ -1143,7 +1144,8 @@ CODE_C5888F:						; called from other segments
 .2:									; $14 = A, return
 	sta.b $14
 	rts
-CODE_C588EB:						; called from other segments
+Div32x16U:							; X:A (32 bits) / Y (16 bits) into X:A, the remainder in Y, unsigned
+									; (shift and subtract); no caller found
 	stx.b $2E
 	sta.b r0
 	stz.b r1

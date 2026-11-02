@@ -5814,13 +5814,13 @@ $C587FE,.loop4,CODE_C587FE,new,"branch target only used in MapSetMode7ToVRAM",sr
 $C5882B,.1,CODE_C5882B,new,"branch target only used in MapSetToWRAM",src/bankC5_8000.asm
 $C58867,.loop,CODE_C58867,new,"branch target only used in MapSetToWRAM",src/bankC5_8000.asm
 $C5888E,.rts,CODE_C5888E,new,"branch target only used in NextMapSetChunkWRAM",src/bankC5_8000.asm
-$C588B9,.1,CODE_C588B9,new,"branch target only used in CODE_C5888F",src/bankC5_8000.asm
-$C588E8,.2,CODE_C588E8,new,"branch target only used in CODE_C5888F",src/bankC5_8000.asm
-$C588FC,.loop,CODE_C588FC,new,"branch target only used in CODE_C588EB",src/bankC5_8000.asm
-$C58903,.loop2,CODE_C58903,new,"branch target only used in CODE_C588EB",src/bankC5_8000.asm
-$C58923,.1,CODE_C58923,new,"branch target only used in CODE_C588EB",src/bankC5_8000.asm
-$C58925,.2,CODE_C58925,new,"branch target only used in CODE_C588EB",src/bankC5_8000.asm
-$C58934,.3,CODE_C58934,new,"branch target only used in CODE_C588EB",src/bankC5_8000.asm
+$C588B9,.1,CODE_C588B9,new,"branch target only used in Mul16x8XS24",src/bankC5_8000.asm
+$C588E8,.2,CODE_C588E8,new,"branch target only used in Mul16x8XS24",src/bankC5_8000.asm
+$C588FC,.loop,CODE_C588FC,new,"branch target only used in Div32x16U",src/bankC5_8000.asm
+$C58903,.loop2,CODE_C58903,new,"branch target only used in Div32x16U",src/bankC5_8000.asm
+$C58923,.1,CODE_C58923,new,"branch target only used in Div32x16U",src/bankC5_8000.asm
+$C58925,.2,CODE_C58925,new,"branch target only used in Div32x16U",src/bankC5_8000.asm
+$C58934,.3,CODE_C58934,new,"branch target only used in Div32x16U",src/bankC5_8000.asm
 $C58A9F,.loop,CODE_C58A9F,new,"branch target only used in FadeOutWait",src/bankC5_8000.asm
 $C58BD0,.loop,CODE_C58BD0,new,"branch target only used in CopyFlipString2",src/bankC5_8000.asm
 $C58C4A,.loop,CODE_C58C4A,new,"branch target only used in Framer",src/bankC5_8000.asm
@@ -9371,3 +9371,5 @@ $C535EF,GetPlayerRecord,CODE_C535EF,94S+purpose,"PlayerShortName reads the recor
 $C539D7,DrawScoreBox,CODE_C539D7,code,"from puckfaceoff2, Goal (after PenGoalStuff), setupice, setupice_reset and lcfound_close; with DrawPeriodBox it does the job of 94S printscores1's period and score boxes, split differently",src/bankC5_3000.asm
 $C53A29,DrawPeriodBox,CODE_C53A29,code,"RedrawPeriodBox blanks the rows and redraws through it; called from puckfaceoff2, PracticeFaceoffSetup, updatepwrplay, setupice and RestoreGameScreen; with DrawScoreBox it does the job of 94S printscores1's period and score boxes",src/bankC5_3000.asm
 $C43FC1,PracticeFaceoffSetup,CODE_C43FC1,code,"puckfaceoff2 jumps here when OptPlayMode is 1 instead of drawing the face off box (.38)",src/bankC4_3000.asm
+$C5888F,Mul16x8XS24,CODE_C5888F,code,"the code: WRMPYA = A, X's low and high bytes through WRMPYB, the products added at $14 / $15, negated for a negative X; Mul16x8XS (into r2) is another routine",src/bankC5_8000.asm
+$C588EB,Div32x16U,CODE_C588EB,code,"the code: dividend $2E:r0 = X:A, divisor $32:r1 = Y:0 normalised, the quotient bits into r2 / $36, returns A = r2, X = $36, Y = r0; not 94S Div32x32U (r2 / r1 into r0)",src/bankC5_8000.asm
