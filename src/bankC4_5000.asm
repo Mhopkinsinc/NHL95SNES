@@ -593,9 +593,9 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	and.w #$0007
 	asl a
 	tay
-	lda.w #DATA8_C45519>>16
+	lda.w #CheckAnimByDir>>16
 	sta.b $65
-	lda.w #DATA8_C45519
+	lda.w #CheckAnimByDir
 	sta.b a0
 	sta.w pf2aip,x
 	cpy.w #$0000
@@ -693,7 +693,9 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	jsl.l AddPenalty
 .8:									; go to FallDown
 	jmp.w FallDown
-DATA8_C45519:						; not traced: a table read by CheckPlayerContact
+CheckAnimByDir:						; per direction of the player hit against the checker's facing (* 2): the
+									; check animation (SPA): SPAcrosscheck straight ahead, other checks to the
+									; sides
 	db $30,$20,$26,$21,$8A,$21,$8A,$21,$8A,$21,$58,$21,$58,$21,$F4,$20
 check4check:						; called from other segments
 	lda.w #$0014
@@ -1391,7 +1393,7 @@ PlayerAccFrames:					; the acceleration routine of each direction (0 up, clockwi
 	dw PlayerAccDir0x2,PlayerAccDir1x2,PlayerAccDir2x2,PlayerAccDir3x2
 	dw PlayerAccDir4x2,PlayerAccDir5x2,PlayerAccDir6x2,PlayerAccDir7x2
 PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1434,7 +1436,7 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1489,7 +1491,7 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	rtl
 PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1534,7 +1536,7 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1587,7 +1589,8 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	jml.l setpde
 .rtl:								; return
 	rtl
-DATA8_C45C7D:						; jump table: the routine for each index
+ScaleSkatingSpeeds:					; per leg speed (legspd * 2): the ScaleSkatingSpeed routine that
+									; multiplies A by it
 	dw ScaleSkatingSpeed0,ScaleSkatingSpeed1,ScaleSkatingSpeed2,ScaleSkatingSpeed3
 	dw ScaleSkatingSpeed4,ScaleSkatingSpeed5,ScaleSkatingSpeed6,ScaleSkatingSpeed7
 	dw ScaleSkatingSpeed8,ScaleSkatingSpeed9,ScaleSkatingSpeed10,ScaleSkatingSpeed11
@@ -1691,9 +1694,9 @@ ScaleSkatingSpeed15:				; multiply the bounded skating speed factor in A by 15
 	sbc.b r2
 	rts
 PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1748,7 +1751,7 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1807,9 +1810,9 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	rtl
 PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1868,7 +1871,7 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1926,7 +1929,7 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 .rtl:								; return
 	rtl
 PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -1969,7 +1972,7 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a

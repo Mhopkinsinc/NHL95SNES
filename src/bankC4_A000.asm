@@ -345,11 +345,11 @@ dopass_count:						; from dopass and other segments
 	bra .3
 .2:									; A = facedir,y
 	lda.w facedir,y
-.3:									; A and $0007, A * 2, X = A, A = DATA8_C41E48,x, ...
+.3:									; A and $0007, A * 2, X = A, A = SPAonetimerf,x, ...
 	and.w #$0007
 	asl a
 	tax
-	lda.l DATA8_C41E48,x
+	lda.l SPAonetimerf,x
 	tax
 	lda.l $C40000,x
 	ldx.b a3

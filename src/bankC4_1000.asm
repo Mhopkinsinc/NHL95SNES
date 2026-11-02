@@ -1,5 +1,5 @@
-; Segment bankC4_1000: data tables (not traced yet), labelled where code reads them with a long address. From
-; DATA8_C41E48 they look like animation lists: word pointers per direction to (frame, value) pairs.
+; Segment bankC4_1000: data tables (not traced yet), labelled where code reads them with a long address. After
+; TeamRoundSlots come the animation lists (SPA): word pointers per direction to (frame, time) pairs.
 org $C41006
 BracketWin1CellX:					; per bracket cell (BracketCursorCell * 2): window 1's x on the map
 	db $18,$00,$92,$00,$0A,$01,$27,$01,$EB,$01,$61,$02,$DA,$02,$18,$00
@@ -245,7 +245,8 @@ TeamRoundSlots:						; per playoff team (SRPOTeams index * 8) and round (* 2): i
 	db $EC,$FF,$EA,$01,$04,$00,$EA,$01,$04,$00,$EB,$01,$04,$00,$57,$02
 	db $04,$00,$56,$02,$00,$00,$56,$02,$00,$00,$55,$02,$00,$00,$56,$02
 	db $EC,$FF
-DATA8_C41E48:						; not traced: a table read by dopass_count
+SPAonetimerf:						; per direction (facedir & 7, * 2): the one-timer forehand animation:
+									; (frame, time) pairs, the last time negative
 	db $5A,$1E,$6E,$1E,$82,$1E,$96,$1E,$AA,$1E,$BE,$1E,$D2,$1E,$E6,$1E
 	db $00,$00,$C1,$01,$1B,$00,$C2,$01,$02,$00,$C3,$01,$02,$00,$C4,$01
 	db $02,$00,$C5,$01,$EC,$FF,$C7,$01,$1B,$00,$C8,$01,$02,$00,$C9,$01

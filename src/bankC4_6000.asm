@@ -3,7 +3,7 @@
 org $C45FAC
 PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -48,7 +48,7 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -102,9 +102,9 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 .rtl:								; return
 	rtl
 PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -160,7 +160,7 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -219,9 +219,9 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	rtl
 PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -281,7 +281,7 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -339,7 +339,7 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 .rtl:								; return
 	rtl
 PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -383,7 +383,7 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -438,7 +438,7 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	rtl
 PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -484,7 +484,7 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -538,9 +538,9 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 .rtl:								; return
 	rtl
 PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -597,7 +597,7 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -656,9 +656,9 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	rtl
 PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -719,7 +719,7 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -777,7 +777,7 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 .rtl:								; return
 	rtl
 PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -821,7 +821,7 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -876,7 +876,7 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	rtl
 PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -922,7 +922,7 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -976,9 +976,9 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 .rtl:								; return
 	rtl
 PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1034,7 +1034,7 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1093,9 +1093,9 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	rtl
 PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1155,7 +1155,7 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
@@ -1212,9 +1212,11 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	jml.l setpde
 .rtl:								; return
 	rtl
-DATA8_C4692F:						; not traced: a table read by PlayerAccDir2x2, PlayerAccDir3, ...
+PlayerAccStepX:						; per direction (d2 * 2, 0 up, clockwise): the x step of the acceleration
+									; (0, 4, 7, 4, 0, -4, -7, -4)
 	db $00,$00,$04,$00,$07,$00,$04,$00,$00,$00,$FC,$FF,$F9,$FF,$FC,$FF
-DATA8_C4693F:						; not traced: a table read by PlayerAccDir3, PlayerAccDir3x2, ...
+PlayerAccStepY:						; per direction (d2 * 2, 0 up, clockwise): the y step of the acceleration
+									; (7, 4, 0, -4, -7, -4, 0, 4)
 	db $07,$00,$04,$00,$00,$00,$FC,$FF,$F9,$FF,$FC,$FF,$00,$00,$04,$00
 doplayeracc:						; from skatetopuck and other segments
 	lda.w position,x

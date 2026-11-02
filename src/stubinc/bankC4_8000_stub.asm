@@ -49,5 +49,6 @@ Mul16x8XS = $C08F95
 QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
 priolist = $C09B2A					; position orders for SetPlList (bankC0_A000)
+assgoalie_list = $C4932C
 
 incsrc "../bankC4_8000.asm"

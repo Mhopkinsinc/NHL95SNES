@@ -688,8 +688,8 @@ $C410AE,BracketWin2CellY,DATA8_C410AE,code,"UpdateBracketWindows, as BracketWin1
 $C410E6,TeamBarRoundCells,DATA8_C410E6,code,"PopulateBracketTeams copies the team's bar there (CopyBracketTeamBar) for each round it reached and keeps the offset in BracketTeamBarCells",src/bankC4_1000.asm
 $C41166,BracketCellSeries,DATA8_C41166,code,"BracketMarkSeries and DrawBracketSeriesSummary read entry BracketCursorCell; TeamRoundSlots follows it (28 entries)",src/bankC4_1000.asm
 $C4119E,TeamRoundSlots,,code,"PopulateBracketTeams reads it with the TeamBarRoundCells index (slot * 8 + round * 2) and puts the team in BracketSlotTeams at that slot; SPA animation lists follow from $C4121E, under this label",src/bankC4_1000.asm
-$C41E48,DATA8_C41E48,,new,"not traced: a table read by CODE_C4A2A3 (in bankC4_1000)",src/bankC4_1000.asm
-$C42030,DATA8_C42030,,new,"not traced: more of the data from bankC4_1000 (pointer tables, lists) (in bankC4_2000)",src/bankC4_2000.asm
+$C41E48,SPAonetimerf,DATA8_C41E48,94S+code,"94S dopass_count reads SPAonetimerf,x and the list's first frame as 95 dopass_count does; 95 asspassrec / assbreakaway code sets it (#$1E48) where 94S sets SPAonetimerf (Findhittype 0; $1EFA, SPAonetimerb's place, otherwise); the 95 lists hold the first frame 27 where 94S has 55",src/bankC4_1000.asm
+$C42030,SPAcrosscheck,DATA8_C42030,94S+code,"94S findpc lets a skater whose SPA is from SPAcrosscheck to $F343 (the checks) past the pfalock test; 95 findpcSearch does the same for $2030-$21BD; CheckAnimByDir starts with it as 94S checkcheck .4 does; SPAsweepchk's place ($C42082, as Sweepcheck and doplayeracc compare) follows it as in 94S",src/bankC4_2000.asm
 $C42DC5,DATA8_C42DC5,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm
 $C43078,DATA8_C43078,,new,"an rtl no traced code reaches (in bankC4_2000)",src/bankC4_2000.asm
 $C43079,CenterOSpots,DATA8_C43079,94S+code,"the same 32 bytes as 94S CenterOSpots (routines/snes/CenterOSpots.asm), read by asscentero in both",src/bankC4_2000.asm
@@ -701,24 +701,24 @@ $C43530,DATA8_C43530,,new,"an rtl no traced code reaches (in bankC4_3000)",src/b
 $C436DC,DATA8_C436DC,,new,"an rtl no traced code reaches (in bankC4_3000)",src/bankC4_3000.asm
 $C436DD,WingZoneSpots,DATA8_C436DD,code,"the same 32 bytes as 94S asswingo's local table .9 (a0 = .9 by zone d2); asswingo reads it in 95",src/bankC4_3000.asm
 $C44CDD,TwoThirds,DATA8_C44CDD,code,"the same 96 bytes as 94S checkpuckcoll_ccx's local .8 ('index * 2 / 3, rounded'); PuckCollisionStickRange reads it",src/bankC4_4000.asm
-$C45519,DATA8_C45519,,new,"not traced: a table read by CODE_C45413 (in bankC4_5000)",src/bankC4_5000.asm
+$C45519,CheckAnimByDir,DATA8_C45519,code,"the same table as 94S checkcheck .4 ('check animation by direction': SPAcrosscheck, shoulderchkr, hipchkr x 3, hipchkl x 2, shoulderchkl); CheckPlayerContact loads it into a0 and pf2aip as 94S checkcheck does",src/bankC4_5000.asm
 $C45ACD,PlayerAccOneFrame,DATA8_C45ACD,code,"playeracc jumps through it by d2 when d7 = 1",src/bankC4_5000.asm
 $C45ADD,PlayerAccFrames,DATA8_C45ADD,code,"playeracc jumps through it by d2 otherwise; its routines add the step at $0D80,x twice where PlayerAccOneFrame's add it once",src/bankC4_5000.asm
-$C45C7D,DATA8_C45C7D,,new,"jump table: the routine for each index (in bankC4_5000)",src/bankC4_5000.asm
-$C4692F,DATA8_C4692F,,new,"not traced: a table read by CODE_C45FAC, CODE_C46075, CODE_C4615F, ... (in bankC4_6000)",src/bankC4_6000.asm
-$C4693F,DATA8_C4693F,,new,"not traced: a table read by CODE_C46075, CODE_C4615F, CODE_C4624F, ... (in bankC4_6000)",src/bankC4_6000.asm
+$C45C7D,ScaleSkatingSpeeds,DATA8_C45C7D,code,"the PlayerAccDir routines jsr through it with legspd * 2 for the acceleration factor",src/bankC4_5000.asm
+$C4692F,PlayerAccStepX,DATA8_C4692F,code,"94S playeracc .8 ('x and y steps (words) for eight directions', interleaved there, 6 / 4 where 95 has 7 / 4); the PlayerAccDir routines read PlayerAccStepX,x / PlayerAccStepY,x",src/bankC4_6000.asm
+$C4693F,PlayerAccStepY,DATA8_C4693F,code,"94S playeracc .8 (the y steps); the PlayerAccDir routines read it with X = d2 * 2",src/bankC4_6000.asm
 $C46B26,TurnSteps,DATA8_C46B26,code,"the same 16 bytes as 94S doplayeracc's local .10 ('steps for eight directions'); doplayeracc reads it",src/bankC4_6000.asm
 $C46DB0,AvoidGoalHandlers,DATA8_C46DB0,code,"94S avdgoal's jsr (.26,x) table, the same layout; its entries are the AvoidGoal handlers; avdgoal calls through it",src/bankC4_6000.asm
 $C46F93,GoalieAvoidHandlers,DATA8_C46F93,code,"94S avdgoal's second jsr table (.47), the same layout; its entries are the GoalieAvoid handlers",src/bankC4_6000.asm
 $C48B47,DATA8_C48B47,,new,"not traced: data between routines (in bankC4_8000)",src/bankC4_8000.asm
 $C4883F,rtss,,94S,"an rtl that asstab entry 0 points at (no assignment); 94S rtss is the same (entry 0 is 0 in the 94 and the 95 Genesis order); also passed as a long pointer to CODE_C45950",src/bankC4_8000.asm
-$C4932C,DATA8_C4932C,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
+$C4932C,assgoalie_list,DATA8_C4932C,94S+code,"the same reader as 94S assgoalie (a1 = assgoalie_list, [a1],y to pfalock and SetSPAFromA, Crowdlevel + 150); the 95 offsets sort as 94S's SPAgglover ... SPAgbutterfly do in its SPA list",src/bankC4_9000.asm
 $C49B35,doshot_shotsets,DATA8_C49B35,94S+code,"the same 36 bytes as 94S doshot_shotsets (routines/input/doshot_shotsets.asm); no reference in the traced 95 code",src/bankC4_9000.asm
 $C49B66,DATA8_C49B66,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
-$C49C87,DATA8_C49C87,,new,"not traced: a table read by CODE_C49BE0 (in bankC4_9000)",src/bankC4_9000.asm
-$C49CC3,DATA8_C49CC3,,new,"not traced: a table read by CODE_C49C88 (in bankC4_9000)",src/bankC4_9000.asm
-$C49DBC,DATA8_C49DBC,,new,"not traced: a table read by CODE_C49D8D (in bankC4_9000)",src/bankC4_9000.asm
-$C49DBF,DATA8_C49DBF,,new,"not traced: a table read by CODE_C49DB0 (in bankC4_9000)",src/bankC4_9000.asm
+$C49C87,BreakawayNoCallback,DATA8_C49C87,code,"94S assbreakaway .nocallback ('skateto callback: nothing to avoid'), passed in a0 the same way",src/bankC4_9000.asm
+$C49CC3,BreakawayPathPoints,DATA8_C49CC3,code,"94S assbreakaway .10 ('path points: x, y and the y of the next point'; 95 has 80, 140, 230, 183, 233 where 94S has 74, 134, 224, 177, 227); AdvanceBreakawayPath reads it as 94S .9 does",src/bankC4_9000.asm
+$C49DBC,HitTypes,DATA8_C49DBC,code,"the same 11 bytes as 94S Findhittype .1 ('1 = backhand; the x flip table starts here, the unflipped one at .1+3'), read the same way",src/bankC4_9000.asm
+$C49DBF,HitTypes+3,DATA8_C49DBF,code,"HitTypes+3: the unflipped half; the label is dropped; Findhittype reads HitTypes+3,x as 94S reads .1+3,x",src/bankC4_9000.asm
 $C49E41,DATA8_C49E41,,new,"not traced: data between routines (in bankC4_9000)",src/bankC4_9000.asm
 $C4A5FD,DumpInSpreadX,DATA8_C4A5FD,code,"the same 24 bytes as 94S assdumpin's local .6 ('by target: the x spread'); LaunchDumpIn reads it",src/bankC4_A000.asm
 $C4A615,DumpInSpreadY,DATA8_C4A615,code,"the same 24 bytes as 94S assdumpin's local .7 ('by target: the y spread'); LaunchDumpIn reads it",src/bankC4_A000.asm

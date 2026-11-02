@@ -1,7 +1,8 @@
 ; Segment bankC4_2000: data tables (not traced yet), then game code (routines keep their address as a name,
 ; with their callers).
 org $C42030
-DATA8_C42030:						; not traced: more of the data from bankC4_1000 (pointer tables, lists)
+SPAcrosscheck:						; per direction (facedir & 7, * 2): the cross check animation: (frame,
+									; time) pairs, the last time negative
 	db $42,$20,$4A,$20,$52,$20,$5A,$20,$62,$20,$6A,$20,$72,$20,$7A,$20
 	db $00,$00,$2A,$03,$0A,$00,$2A,$03,$F8,$FF,$2B,$03,$0A,$00,$2B,$03
 	db $F8,$FF,$2C,$03,$0A,$00,$2C,$03,$F8,$FF,$2D,$03,$0A,$00,$2D,$03

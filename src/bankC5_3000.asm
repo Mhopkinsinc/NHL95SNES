@@ -1054,7 +1054,7 @@ findpcSearch:						; searches the pad team for the eligible skater with the lowe
 	bit.w #$1000
 	bne .4
 	lda.w SPA,x
-	cmp.w #$2030
+	cmp.w #SPAcrosscheck&$FFFF
 	bcc .1
 	cmp.w #$21BD
 	bcc .2

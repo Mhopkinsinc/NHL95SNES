@@ -2127,11 +2127,11 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bmi .75
 	dec.b d0
 	dec.b d0
-.75:								; d0 * 2, $69 = $00C4, a1 = $932C, Y = d0, ...
+.75:								; d0 * 2, a1 = assgoalie_list, Y = d0, ...
 	asl.b d0
-	lda.w #$00C4
+	lda.w #assgoalie_list>>16
 	sta.b $69
-	lda.w #$932C
+	lda.w #assgoalie_list&$FFFF
 	sta.b a1
 	ldy.b d0
 	lda.b [a1],y

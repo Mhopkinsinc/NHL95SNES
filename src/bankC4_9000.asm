@@ -29,7 +29,9 @@ ClampGoalieTargetY:					; clamp the goalie target between goal lines and make it
 	sta.b d1
 GoalieTargetReturn:					; return from goalie targeting
 	rtl
-DATA8_C4932C:						; not traced: data between routines
+assgoalie_list:						; per save type (d0 * 2): the goalie's save animation (SPA), in 94S's
+									; order: glove, stack and stick saves right / left, the sprawls, the
+									; butterfly
 	db $02,$13,$34,$13,$CA,$13,$0C,$14,$66,$13,$98,$13,$2C,$18,$9A,$17
 	db $08,$17
 AdjustFacingDirection:				; called from other segments
@@ -1071,10 +1073,10 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	sec
 	sbc.b d1
 	sta.b d1
-.4:									; $65 = DATA8_C49C87>>16, a0 = DATA8_C49C87, A = temp2,x, ...
-	lda.w #DATA8_C49C87>>16
+.4:									; $65 = BreakawayNoCallback>>16, a0 = BreakawayNoCallback, ...
+	lda.w #BreakawayNoCallback>>16
 	sta.b $65
-	lda.w #DATA8_C49C87
+	lda.w #BreakawayNoCallback
 	sta.b a0
 	lda.w temp2,x
 	sec
@@ -1137,25 +1139,25 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	beq .11
 	lda.w #$1EFA
 	bra .12
-.11:								; A = $1E48
-	lda.w #$1E48
+.11:								; A = SPAonetimerf
+	lda.w #SPAonetimerf&$FFFF
 .12:								; call SetSPAFromA, call updateanim, SPAcnt,x = $0002, go to doshot
 	jsl.l SetSPAFromA
 	jsl.l updateanim
 	lda.w #$0002
 	sta.w SPAcnt,x
 	jml.l doshot
-DATA8_C49C87:						; not traced: a table read by BreakawayFollowPath
-	db $6B
+BreakawayNoCallback:				; the skateto callback of BreakawayFollowPath: an rtl, nothing to avoid
+	rtl
 AdvanceBreakawayPath:				; load the next breakaway waypoint and its advance threshold
 	lda.w sopathpoint
 	asl a
 	adc.w sopathpoint
 	asl a
 	tay
-	lda.w #DATA8_C49CC3>>16
+	lda.w #BreakawayPathPoints>>16
 	sta.b $65
-	lda.w #DATA8_C49CC3
+	lda.w #BreakawayPathPoints
 	sta.b a0
 	lda.b [a0],y
 	sta.b d0
@@ -1178,7 +1180,8 @@ AdvanceBreakawayPath:				; load the next breakaway waypoint and its advance thre
 	sta.w sopathnext
 	inc.w sopathpoint
 	rts
-DATA8_C49CC3:						; not traced: a table read by AdvanceBreakawayPath
+BreakawayPathPoints:				; the computer breakaway path: per point (sopathpoint * 6) its x (mirrored
+									; by sopathside), its y and the y where the next starts (-1 ends it)
 	db $28,$00,$78,$00,$50,$00,$EA,$FF,$97,$00,$8C,$00,$EA,$FF,$E6,$00
 	db $B7,$00,$2C,$00,$E9,$00,$FF,$FF
 InitBreakawayPath:					; choose the starting side and waypoint of the breakaway path
@@ -1277,20 +1280,21 @@ Findhittype:						; from SetShotMode, dopass_swing, PassReceiverOneTimer, ...
 	beq .1
 	phx
 	ldx.b d0
-	lda.l DATA8_C49DBC,x
+	lda.l HitTypes,x
 	plx
 	and.w #$00FF
 	rtl
-.1:									; push X, X = d0, A = DATA8_C49DBF,x, pull X, ...
+.1:									; push X, X = d0, A = HitTypes+3,x, pull X, ...
 	phx
 	ldx.b d0
-	lda.l DATA8_C49DBF,x
+	lda.l HitTypes+3,x
 	plx
 	and.w #$00FF
 	rtl
-DATA8_C49DBC:						; not traced: a table read by Findhittype
+HitTypes:							; per direction of the target against the player's facing (facedir - d0, &
+									; 7): 1 a backhand swing, 0 a forehand; read from HitTypes+3, from
+									; HitTypes when x flipped
 	db $00,$00,$00
-DATA8_C49DBF:						; not traced: a table read by Findhittype
 	db $00,$01,$01,$01,$01,$00,$00,$00
 setpassmode:						; called from other segments
 	lda.w position,x
@@ -1383,7 +1387,7 @@ PassReceiverReturn:					; return from the pass receiver update
 	rtl
 PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	lda.w SPA,x
-	cmp.w #$1E48
+	cmp.w #SPAonetimerf&$FFFF
 	beq .7
 	cmp.w #$1EFA
 	beq .7
@@ -1419,8 +1423,8 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	beq .4
 	lda.w #$1EFA
 	bra .5
-.4:									; A = $1E48
-	lda.w #$1E48
+.4:									; A = SPAonetimerf
+	lda.w #SPAonetimerf&$FFFF
 .5:									; call SetSPAFromA, go to PassReceiverReturn
 	jsl.l SetSPAFromA
 	jmp.w PassReceiverReturn

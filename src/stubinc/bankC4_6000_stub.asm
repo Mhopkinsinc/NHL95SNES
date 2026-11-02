@@ -16,7 +16,7 @@ playeracc = $C45ABE
 getpde = $C54A0E
 setpde = $C54A2F
 MaxSpeed = $C09BC4
-DATA8_C45C7D = $C45C7D
+ScaleSkatingSpeeds = $C45C7D
 Mul16x8S = $C08FB7
 
 incsrc "../bankC4_6000.asm"
