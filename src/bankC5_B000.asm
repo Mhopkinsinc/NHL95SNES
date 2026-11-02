@@ -236,16 +236,16 @@ StandingsStatTitles:				; the packed text of each standings stat title: Wins / L
 									; Points, Goals Scored Avg., Goals Allowed Avg., Save %, Shooting Pct.,
 									; Shots Per Game, Shots Allowed
 	db $2E,$56,$75,$4B,$3D,$56,$4C,$56,$5C,$56,$6B,$56,$76,$56,$83,$56
-DayFirstGame:						; d4 = the number of games on the days before d0 (DATA8_C360D4), the
+DayFirstGame:						; d4 = the number of games on the days before d0 (SeasonSchedule), the
 									; season index of day d0's first game
 	stz.b d4
 	lda.b d0
 	asl a
 	tax
 	bra .1
-.loop:								; loop: Y = X, A = DATA8_C360D4,x, X = A, A = $C30000,x, ...
+.loop:								; loop: Y = X, A = SeasonSchedule,x, X = A, A = $C30000,x, ...
 	txy
-	lda.l DATA8_C360D4,x
+	lda.l SeasonSchedule,x
 	tax
 	lda.l $C30000,x
 	and.w #$00FF
@@ -285,7 +285,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C360D4,x
+	lda.l SeasonSchedule,x
 	sta.b d1
 	stz.b $85
 	tax

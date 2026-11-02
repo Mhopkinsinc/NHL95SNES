@@ -1475,7 +1475,7 @@ $C35EAB,PhotoPaletteTable,,new,"per team (team order) a long pointer to its phot
 $C35F60,SeasonDates,DATA8_C35F60,code,"MakeDateString decodes it so; SeasonOptions / MenuPlayGames start the playoffs when the word for SeasonDay is 0; GamesTodayKeys reads the next day's word as SeasonDates+2,x; 186 words to the 0 that ends the season, run on into bankC3_6000",src/bankC3_5000.asm
 $C35F62,SeasonDates+2,DATA8_C35F62,code,"SeasonDates+2: the label is dropped; GamesTodayKeys reads the next day's date as SeasonDates+2,x",src/bankC3_5000.asm
 $C36000,SeasonDates+$A0,DATA8_C36000,code,"SeasonDates+$A0: the rest of SeasonDates in the next segment (no reference); the label is dropped",src/bankC3_6000.asm
-$C360D4,DATA8_C360D4,,new,"not traced: a table read by CODE_C5B22D, CODE_C5AE8D, CODE_C5B216 (in bankC3_6000)",src/bankC3_6000.asm
+$C360D4,SeasonSchedule,DATA8_C360D4,genesis+purpose,"95 Genesis SeasonSchedule holds the same day entries (count byte, then 2 bytes a game) as one list; the SNES puts a word per day in front pointing at each entry; DayFirstGame, DrawDayGames and MenuPlayGames read entry day * 2, then the count at $C30000,x",src/bankC3_6000.asm
 $C36D2A,PadDirection,DATA8_C36D2A,94S+code,"the same 16 bytes as 94S PadDirection; ReadPads reads it",src/bankC3_6000.asm
 $C377BB,DATA8_C377BB,,new,"not traced: a table read by CODE_C376CE (in bankC3_7000)",src/bankC3_7000.asm
 $C377BD,DATA8_C377BD,,new,"not traced: a table read by CODE_C376CE (in bankC3_7000)",src/bankC3_7000.asm

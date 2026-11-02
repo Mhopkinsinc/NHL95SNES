@@ -8,7 +8,7 @@ incsrc "../ram95s.asm"
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
 TeamCityNames = $C3585C
-DATA8_C360D4 = $C360D4
+SeasonSchedule = $C360D4
 PlayerList = $C30038
 ByteBitMasks = $C4C4A6
 SendTextMap = $C4C2AA

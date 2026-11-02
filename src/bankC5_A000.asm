@@ -1743,11 +1743,11 @@ MenuPlayGames:						; League Menu Play Games: when the season is over (play mode
 	jsl.l SetupPlayoffs
 	inc.w OptPlayMode
 	jmp.w ReturnToLeagueMenu
-.2:									; A = d0, A * 2, X = A, A = DATA8_C360D4,x, ...
+.2:									; A = d0, A * 2, X = A, A = SeasonSchedule,x, ...
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C360D4,x
+	lda.l SeasonSchedule,x
 	tax
 	lda.l $C30000,x
 	and.w #$00FF
