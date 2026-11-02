@@ -658,7 +658,7 @@ CODE_C553D6:						; from ShowPenaltyBoxPlayer
 	cmp.b #$3F
 	bne .loop
 	lda.b #$3A
-	sta.w $04F4,x
+	sta.w mesarea-1,x
 	rep #$20
 	lda.w #$0020
 	jsl.l AllocWorkBuf
@@ -753,7 +753,7 @@ PutPauseScore:						; the three big digits PushNumberWrap left (width 3) to paus
 	jsr.w PutClockDigit
 	iny
 	iny
-	lda.w $055C
+	lda.w PushWidthBuf+3
 	jsr.w PutClockDigit
 	iny
 	iny
