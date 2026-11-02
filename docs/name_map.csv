@@ -8828,3 +8828,5 @@ $CF0098,SPCUploadBlockHandshake,CODE_CF0098,code,"continuation with handshake by
 $CF00FD,QueueSoundCmdReturn,CODE_CF00FD,code,"bare rtl at the end of QueueSoundCmd; no separate API inferred",src/bankCF_0000.asm
 $CF0239,LoadSampleEnvelopeAndData,CODE_CF0239,code,"LoadSample continuation with slot times two in X and header offset six in Y",src/bankCF_0000.asm
 $CF04A8,StartSelectedTeamSong,CODE_CF04A8,code,"shared tail of PlayTeamSong and PlayTeamSongNow; saved X required on stack",src/bankCF_0000.asm
+$2D91,TaskListEnd,,code,"RAM: InitTasks builds it like a TaskSlots entry ($C bytes: next 0, routine TaskFrameEnd, +6 $FFFF) and points TaskListHead at it; TaskListHead is the head entry just below it (+2 / +4 TaskFrameEnd, +6 0)",src/ram95s.asm
+$2D9F,TasksDoneLast,,code,"RAM: InitTasks keeps TasksDone here and clears TasksDone; TaskEndCheck sets TasksDone = TasksDoneLast + 1, so each task loop ends with a new value",src/ram95s.asm

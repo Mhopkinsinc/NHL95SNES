@@ -436,8 +436,8 @@ SetPlList:							; from setpersonel and other segments
 	lda.w #PlList
 	sta.b a4
 	stz.w PlList
-	stz.w $200A
-	stz.w $200C
+	stz.w PlList+2
+	stz.w PlList+4
 	lda.w #$00C0
 	sta.b $65
 	lda.w #$9B2A

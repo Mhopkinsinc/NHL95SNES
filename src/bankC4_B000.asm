@@ -52,11 +52,11 @@ IntroMode7Hook:						; writes the intro Mode 7 scale, centre, control and main-s
 	sta.w M7D
 	lda.w introM7X
 	sta.w M7X
-	lda.w $18D3
+	lda.w introM7X+1
 	sta.w M7X
 	lda.w introM7Y
 	sta.w M7Y
-	lda.w $18D5
+	lda.w introM7Y+1
 	sta.w M7Y
 	lda.w introM7SEL
 	sta.w M7SEL
@@ -815,21 +815,21 @@ InitTasks:							; empties the task list: 10 free task slots, the list head and 
 	stz.w TaskSlotStack,x
 	stz.w TaskFreeIndex
 	lda.w #TaskFrameEnd
-	sta.w $2D87
-	sta.w $2D93
+	sta.w TaskListHead+2
+	sta.w TaskListEnd+2
 	lda.w #TaskFrameEnd>>16
-	sta.w $2D89
-	sta.w $2D95
-	stz.w $2D8B
-	lda.w #$2D91
+	sta.w TaskListHead+4
+	sta.w TaskListEnd+4
+	stz.w TaskListHead+6
+	lda.w #TaskListEnd
 	sta.w TaskListHead
 	lda.w #$FFFF
-	sta.w $2D97
-	stz.w $2D91
+	sta.w TaskListEnd+6
+	stz.w TaskListEnd
 	lda.w #$8002
 	sta.b $85
 	lda.w TasksDone
-	sta.w $2D9F
+	sta.w TasksDoneLast
 	stz.w TasksDone
 	rtl
 AddStartKeyTask:					; adds TaskStartKey to the task list (priority $F000)
@@ -937,7 +937,7 @@ TaskEndCheck:						; a task: once task flag bit 15 is cleared, fades out and set
 	bit.b $85
 	bmi .rtl
 	jsl.l FadeOutWait
-	lda.w $2D9F
+	lda.w TasksDoneLast
 	tax
 	inc a
 	sta.w TasksDone

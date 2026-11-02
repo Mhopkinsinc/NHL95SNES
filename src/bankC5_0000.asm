@@ -927,10 +927,10 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sta.w PadControlObj+10
 	sta.w PadControlObj+12
 	stz.w padinputdone
-	stz.w $05A6
-	stz.w $05A8
-	stz.w $05AA
-	stz.w $05AC
+	stz.w padinputdone+2
+	stz.w padinputdone+4
+	stz.w padinputdone+6
+	stz.w padinputdone+8
 	stz.b $BD
 	lda.w #$0002
 	sta.b $BF
