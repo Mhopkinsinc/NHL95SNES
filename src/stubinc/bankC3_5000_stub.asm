@@ -209,5 +209,7 @@ TxtYes = $C34951
 GoalieModeItemText = $C55308
 OtherScoresItemText = $C55346
 TimeoutItemText = $C55320
+TxtOverallRating = $C34984
+TxtUnusedPoints = $C3498F
 
 incsrc "../bankC3_5000.asm"

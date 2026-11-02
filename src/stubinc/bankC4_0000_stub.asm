@@ -65,5 +65,6 @@ GradientBarTiles = $C0083D
 PlayoffBracketMap = $C1DC7B
 TeamNameBarsMap = $C1E9B2
 TxtNotAvail = $C34781
+TxtSeasonPlayoffs = $C34777
 
 incsrc "../bankC4_0000.asm"

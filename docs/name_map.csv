@@ -9301,3 +9301,21 @@ $C35D21,QuitPromptItems,,code,"PauseTabLists / PrintPauseItems; decoded from the
 $C35D2B,StrResumeGame,,code,"an item of the pause item lists",src/bankC3_5000.asm
 $C35D37,StrQuitGame,,code,"an item of the pause item lists",src/bankC3_5000.asm
 $C35D41,BlankPauseItems,,code,"PauseTabLists / PrintPauseItems; decoded from the ROM",src/bankC3_5000.asm
+$C34720,TxtThe,,code,"textdec.py decodes $4720 to this text",src/bankC3_4000.asm
+$C34777,TxtSeasonPlayoffs,,code,"textdec.py decodes $4777 to this text",src/bankC3_4000.asm
+$C34984,TxtOverallRating,,code,"textdec.py decodes $4984 to this text",src/bankC3_4000.asm
+$C3498F,TxtUnusedPoints,,code,"textdec.py decodes $498F to this text",src/bankC3_4000.asm
+$C34DB9,TxtWelcomeToASoldOut,,code,"textdec.py decodes $4DB9 to this text",src/bankC3_4000.asm
+$C34DC8,TxtTonightsGameFeatures,,code,"textdec.py decodes $4DC8 to this text",src/bankC3_4000.asm
+$C34DED,TxtHasBeenPlaying,,code,"textdec.py decodes $4DED to this text",src/bankC3_4000.asm
+$C34DFA,TxtWellRecently,,code,"textdec.py decodes $4DFA to this text",src/bankC3_4000.asm
+$C34E06,TxtAreOnHotStreaksAnd,,code,"textdec.py decodes $4E06 to this text",src/bankC3_4000.asm
+$C34E17,TxtAreOffTheirGame,,code,"textdec.py decodes $4E17 to this text",src/bankC3_4000.asm
+$C34E7D,TxtLine,,code,"textdec.py decodes $4E7D to this text",src/bankC3_4000.asm
+$C34EC1,TxtStat,,code,"textdec.py decodes $4EC1 to this text",src/bankC3_4000.asm
+$C34EE1,TxtBGoals,,code,"textdec.py decodes $4EE1 to this text",src/bankC3_4000.asm
+$C350B4,TxtWinsTheStanleyCup,,code,"textdec.py decodes $50B4 to this text",src/bankC3_5000.asm
+$C350C4,TxtDefeating,,code,"textdec.py decodes $50C4 to this text",src/bankC3_5000.asm
+$C350CC,TxtInTheFinal,,code,"textdec.py decodes $50CC to this text",src/bankC3_5000.asm
+$C3576C,CreateGoalieRatingsPage,,code,"PrintTextPage reads it when d0 is 0 (the goalie); decoded with pages.py",src/bankC3_5000.asm
+$C357AE,CreateSkaterRatingsPage,,code,"PrintTextPage reads it when d0 is not 0; decoded with pages.py",src/bankC3_5000.asm

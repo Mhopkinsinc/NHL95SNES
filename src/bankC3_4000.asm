@@ -74,7 +74,9 @@ TxtPadUDChangeDivision:				; the packed text "Pad U>D? Change Division"
 	db $BC,$71,$17,$E7,$21,$40,$4E,$0D
 TxtXExitMenu:						; the packed text "X? EXIT MENU"
 	db $D7,$7F,$93,$8B,$E6,$66,$A4,$51
-	db $0D,$93,$1F,$A2,$01
+	db $0D
+TxtThe:								; the packed text "The"
+	db $93,$1F,$A2,$01
 TxtASeasonIsInProgress:				; the packed text "A Season is in progress="
 	db $60,$4B,$4E,$80,$74,$6D,$23,$B9,$51,$DB,$2F
 	db $3A,$13,$89,$94,$BE,$1A
@@ -91,7 +93,9 @@ TxtContinueOld:						; the packed text "Continue Old"
 	db $82,$BB,$36,$51,$A3,$64,$73,$C7,$D7,$D0
 TxtStartNew:						; the packed text "Start New"
 	db $92
-	db $4F,$10,$E7,$E6,$8D,$13,$AB,$01,$92,$00,$E9,$DA,$7E,$0B,$60,$57
+	db $4F,$10,$E7,$E6,$8D,$13,$AB,$01
+TxtSeasonPlayoffs:					; the packed text "SEASON PLAYOFFS"
+	db $92,$00,$E9,$DA,$7E,$0B,$60,$57
 	db $8A,$D4
 TxtNotAvail:						; the packed text "Not Avail="
 	db $8D,$BB,$B9,$39,$E0,$15,$A0,$E5,$AB,$01
@@ -249,7 +253,10 @@ TxtPosition2:						; the packed text "Position?"
 	db $8F,$3B,$89,$26,$72,$CD,$5F,$03
 TxtWeight2:							; the packed text "Weight?"
 	db $96
-	db $13,$64,$CE,$F4,$D7,$8E,$57,$12,$C1,$5A,$3B,$82,$89,$9A,$F1,$D7
+	db $13,$64,$CE,$F4,$D7
+TxtOverallRating:					; the packed text "Overall rating?"
+	db $8E,$57,$12,$C1,$5A,$3B,$82,$89,$9A,$F1,$D7
+TxtUnusedPoints:					; the packed text "Unused Points?"
 	db $94,$37,$2A,$C9,$D8,$FC,$71,$87,$DA,$94,$FE,$1A
 TxtHand:							; the packed text "Hand?"
 	db $87,$83,$36,$FC
@@ -502,19 +509,33 @@ TxtWin2:							; the packed text "win"
 TxtLose:							; the packed text "lose"
 	db $7C,$39,$49,$34
 TxtTie:								; the packed text "tie"
-	db $7C,$22,$A2,$01,$DC,$92,$25,$1C,$23,$7B
-	db $BA,$0D,$B6,$74,$6B,$6C,$47,$E7,$D6,$BE,$DB,$87,$4F,$D7,$90,$39
+	db $7C,$22,$A2,$01
+TxtWelcomeToASoldOut:				; the packed text "welcome to a sold out "
+	db $DC,$92,$25,$1C,$23,$7B
+	db $BA,$0D,$B6,$74,$6B,$6C,$47,$E7,$D6
+TxtTonightsGameFeatures:			; the packed text "= 9tonight:s national hockey league game features the "
+	db $BE,$DB,$87,$4F,$D7,$90,$39
 	db $D3,$4B,$EE,$06,$26,$72,$0D,$AC,$7D,$9C,$50,$04,$EF,$45,$80,$A1
-	db $64,$1B,$C0,$C8,$2E,$04,$4C,$1A,$89,$DC,$F3,$90,$AD,$01,$9B,$1F
-	db $20,$77,$20,$A4,$ED,$B7,$00,$46,$CD,$6C,$0D,$DC,$92,$B5,$76,$24
-	db $82,$B4,$B9,$B0,$EF,$F6,$D1,$9B,$83,$48,$B6,$6B,$FB,$B8,$B9,$E5
-	db $8C,$04,$28,$B9,$41,$1B,$5B,$03,$9B,$83,$48,$B6,$2B,$65,$CF,$43
+	db $64,$1B,$C0,$C8,$2E,$04,$4C,$1A,$89,$DC,$F3,$90,$AD,$01
+TxtHasBeenPlaying:					; the packed text " has been playing "
+	db $9B,$1F
+	db $20,$77,$20,$A4,$ED,$B7,$00,$46,$CD,$6C,$0D
+TxtWellRecently:					; the packed text "well recently= 9"
+	db $DC,$92,$B5,$76,$24
+	db $82,$B4,$B9,$B0,$EF,$F6,$D1
+TxtAreOnHotStreaksAnd:				; the packed text " are on hot streaks and "
+	db $9B,$83,$48,$B6,$6B,$FB,$B8,$B9,$E5
+	db $8C,$04,$28,$B9,$41,$1B,$5B,$03
+TxtAreOffTheirGame:					; the packed text " are off their game= 9"
+	db $9B,$83,$48,$B6,$2B,$65,$CF,$43
 	db $50,$DC,$06,$30,$E2,$BB,$7D,$34,$FC,$45,$22,$E5,$96,$13,$C4,$B9
 	db $A7,$DB,$81,$18,$D4,$3E,$F6,$3C,$64,$83,$0D,$DA,$D8,$78,$07,$3A
 	db $A7,$6B,$72,$4F,$B7,$A5,$88,$6E,$AD,$3D,$4F,$74,$D4,$9C,$3D,$0F
 	db $D9,$93,$00,$B6,$19,$98,$E2,$D0,$27,$3F,$B6,$8B,$7B,$1E,$B2,$EF
 	db $0E,$74,$4E,$D7,$F6,$74,$3B,$92,$8A,$88,$DD,$F3,$90,$4D,$2A,$58
-	db $14,$4C,$E4,$DA,$76,$65,$CF,$43,$F6,$24,$80,$49,$5F,$0D,$8B,$A3
+	db $14,$4C,$E4,$DA,$76,$65,$CF,$43,$F6,$24,$80,$49,$5F,$0D
+TxtLine:							; the packed text "Line? "
+	db $8B,$A3
 	db $46,$FC,$B7,$06
 TxtScoring1:						; the packed text "Scoring 1"
 	db $92,$0B,$17,$51,$33,$BB,$47,$03
@@ -531,7 +552,9 @@ TxtPenaltyKill1:					; the packed text "Penalty Kill 1"
 	db $2B,$8E,$D6,$DA,$3D,$1A
 TxtPenaltyKill2:					; the packed text "Penalty Kill 2"
 	db $8F,$93,$06,$D6,$C4,$9B,$2B,$8E,$D6,$DA
-	db $5D,$1A,$92,$4F,$30,$FD,$B7,$06
+	db $5D,$1A
+TxtStat:							; the packed text "Stat? "
+	db $92,$4F,$30,$FD,$B7,$06
 TxtStatus:							; the packed text "Status"
 	db $92,$4F,$30,$A9,$D4
 TxtOverall:							; the packed text "Overall"
@@ -543,7 +566,9 @@ TxtHanded:							; the packed text "Handed"
 	db $87,$83,$36,$C8,$D0
 TxtWeight:							; the packed text "Weight"
 	db $96,$13,$64
-	db $CE,$D4,$3C,$F8,$6F,$E3,$C0,$92,$1A,$3C,$F8,$6F,$09,$2A,$91,$1A
+	db $CE,$D4
+TxtBGoals:							; the packed text "b? goals"
+	db $3C,$F8,$6F,$E3,$C0,$92,$1A,$3C,$F8,$6F,$09,$2A,$91,$1A
 	db $3C,$F8,$6F,$79,$DC,$94,$1A
 TxtBGoalies:						; the packed text "b? goalies"
 	db $3C,$F8,$6F,$E3,$C0,$42,$44,$6A

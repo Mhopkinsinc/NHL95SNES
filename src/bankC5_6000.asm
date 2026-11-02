@@ -514,8 +514,8 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	lda.b $7B
 	beq .2
 	ldy.w #$1287
-	ldx.w #$4B9E
-	lda.w #$4EE1
+	ldx.w #TxtShots&$FFFF
+	lda.w #TxtBGoals&$FFFF
 	sta.b a1
 .2:									; a0 = Y, Y = $000F, call PrintItalicCentred, Y = $0011, ...
 	sty.b a0

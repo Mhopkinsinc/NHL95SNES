@@ -92,5 +92,7 @@ TxtTie = $C34DB5
 TxtWin = $C34DA8
 TxtWin2 = $C34DAD
 TxtXExitMenu = $C34717
+TxtLine = $C34E7D
+TxtStat = $C34EC1
 
 incsrc "../bankC5_7000.asm"

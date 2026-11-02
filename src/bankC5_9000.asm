@@ -1779,10 +1779,10 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	jsl.l ClearRAM7E
 	ldy.w #$5C00
 	jsl.l ClearVRAM
-	lda.w #$576C
+	lda.w #CreateGoalieRatingsPage&$FFFF
 	ldx.b d0
 	beq .9
-	lda.w #$57AE
+	lda.w #CreateSkaterRatingsPage&$FFFF
 .9:									; call PrintTextPage, call WaitTransfers, X = a0, A = $0003, ...
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers

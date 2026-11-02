@@ -69,5 +69,15 @@ TxtGameOfThePlayoffs = $C350D6
 TxtGoalie = $C349B8
 TxtOverall = $C34ECC
 TxtScoutingReport = $C34C9F
+TxtAreOffTheirGame = $C34E17
+TxtAreOnHotStreaksAnd = $C34E06
+TxtDefeating = $C350C4
+TxtHasBeenPlaying = $C34DED
+TxtInTheFinal = $C350CC
+TxtThe = $C34720
+TxtTonightsGameFeatures = $C34DC8
+TxtWelcomeToASoldOut = $C34DB9
+TxtWellRecently = $C34DFA
+TxtWinsTheStanleyCup = $C350B4
 
 incsrc "../bankC4_E000.asm"

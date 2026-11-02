@@ -93,14 +93,14 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	tax
 	jsl.l UnpackText
 	phx
-	ldx.w #$50B4
+	ldx.w #TxtWinsTheStanleyCup&$FFFF
 	jsl.l UnpackText
 	txy
 	plx
 	jsl.l ConcatStringsLong
 	ldy.w #$0015
 	jsl.l PrintBoldCentredStr
-	ldx.w #$50C4
+	ldx.w #TxtDefeating&$FFFF
 	jsl.l UnpackText
 	phx
 	lda.b $65
@@ -115,7 +115,7 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	plx
 	jsl.l ConcatStringsLong
 	phx
-	ldx.w #$50CC
+	ldx.w #TxtInTheFinal&$FFFF
 	jsl.l UnpackText
 	txy
 	plx
@@ -1091,7 +1091,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 									; the hot and cold players
 	jsl.l MarkWorkBuf
 	stz.b $81
-	ldx.w #$4DB9
+	ldx.w #TxtWelcomeToASoldOut&$FFFF
 	jsr.w AppendScoutText
 	lda.w HomeTeam
 	asl a
@@ -1106,7 +1106,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	stx.b d0
 	jsl.l SkipPackedTextLong
 	jsr.w AppendScoutText
-	ldx.w #$4DC8
+	ldx.w #TxtTonightsGameFeatures&$FFFF
 	jsr.w AppendScoutText
 	plx
 	lda.w HomeTeam
@@ -1145,7 +1145,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	plx
 	lda.w VisTeam
 	bne .2
-	ldx.w #$4720
+	ldx.w #TxtThe&$FFFF
 .2:									; call AppendScoutText, ScratchBuf,y = $0020, Y + 1, $81 = Y, ...
 	jsr.w AppendScoutText
 	lda.w #$0020
@@ -1172,7 +1172,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	lda.l $C30002,x
 	tax
 	jsr.w AppendScoutText
-	ldx.w #$4DED
+	ldx.w #TxtHasBeenPlaying&$FFFF
 	jsr.w AppendScoutText
 	lda.w hotterteam
 	bpl .3
@@ -1192,7 +1192,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	tay
 .3:									; $81 = Y, X = $4DFA, call AppendScoutText
 	sty.b $81
-	ldx.w #$4DFA
+	ldx.w #TxtWellRecently&$FFFF
 	jsr.w AppendScoutText
 .4:									; d0 = HomeRoster, A = HomeTeam, X = HomeHotCold, ...
 	lda.w #HomeRoster
@@ -1313,13 +1313,13 @@ AppendScoutHotColdParagraph:		; appends a team's name and its hot and cold playe
 	sty.b $81
 	lda.b $01,s
 	jsr.w AppendScoutPlayerTrio
-	ldx.w #$4E06
+	ldx.w #TxtAreOnHotStreaksAnd&$FFFF
 	jsr.w AppendScoutText
 	pla
 	clc
 	adc.w #$0006
 	jsr.w AppendScoutPlayerTrio
-	ldx.w #$4E17
+	ldx.w #TxtAreOffTheirGame&$FFFF
 	jmp.w AppendScoutText
 PrintNextScoutWord:					; prints the next scouting word, wrapping or advancing lines as needed
 	ldx.b $7D

@@ -14,8 +14,14 @@ org $C35000
 	db $24,$40,$BA,$B6,$23,$11,$2E,$0E,$0D
 TxtCongratulations:					; the packed text "CONGRATULATIONS;"
 	db $C2,$35,$13,$C1,$A4,$0B,$4C
-	db $E4,$9A,$F4,$D3,$9B,$5B,$D4,$E4,$9E,$87,$6C,$39,$41,$5B,$04,$6F
-	db $41,$DF,$87,$06,$7C,$90,$42,$C0,$44,$CD,$6C,$0D,$9B,$A3,$B6,$E7
+	db $E4,$9A,$F4,$D3
+TxtWinsTheStanleyCup:				; the packed text " wins the stanley cup@"
+	db $9B,$5B,$D4,$E4,$9E,$87,$6C,$39,$41,$5B,$04,$6F
+	db $41,$DF,$87,$06
+TxtDefeating:						; the packed text "defeating "
+	db $7C,$90,$42,$C0,$44,$CD,$6C,$0D
+TxtInTheFinal:						; the packed text " in the final"
+	db $9B,$A3,$B6,$E7
 	db $21,$BB,$A0,$06,$96,$06
 TxtGameOfThePlayoffs:				; the packed text "game of the playoffs"
 	db $DC,$00,$46,$B6,$2B,$7B,$1E,$B2,$DF,$02
@@ -295,15 +301,43 @@ PlayerInfoPage:						; Create Player's position, weight, number and hand prompts
 	dw TxtXCancel&$FFFF,$8018
 	dw TxtStartDone&$FFFF,$8019
 	dw 0
-	db $18,$00,$A0,$00,$00,$00,$00,$00,$F2,$49,$08,$80,$F7,$49,$09,$80
-	db $10,$4A,$0A,$80,$54,$4A,$0B,$80,$68,$4A,$0C,$80,$5E,$4A,$0D,$80
-	db $71,$4A,$0E,$80,$7A,$4A,$0F,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0
-	db $A6,$49,$18,$80,$AF,$49,$19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80
-	db $00,$00,$18,$00,$A0,$00,$00,$00,$00,$00,$F2,$49,$07,$80,$F7,$49
-	db $08,$80,$FD,$49,$09,$80,$04,$4A,$0A,$80,$10,$4A,$0B,$80,$1C,$4A
-	db $0C,$80,$26,$4A,$0D,$80,$2F,$4A,$0E,$80,$3A,$4A,$0F,$80,$45,$4A
-	db $10,$80,$4D,$4A,$11,$80,$84,$49,$15,$A0,$8F,$49,$16,$A0,$A6,$49
-	db $18,$80,$AF,$49,$19,$80,$FF,$FF,$A8,$00,$CF,$4C,$19,$80,$00,$00
+CreateGoalieRatingsPage:			; Create Player's goalie ratings text page (position 0)
+	dw $0018,$00A0,0,$0000
+	dw TxtSpeed&$FFFF,$8008
+	dw TxtAgility&$FFFF,$8009
+	dw TxtDefAwareness&$FFFF,$800A
+	dw TxtPuckControl&$FFFF,$800B
+	dw TxtStickLeft&$FFFF,$800C
+	dw TxtStickRight&$FFFF,$800D
+	dw TxtGloveLeft&$FFFF,$800E
+	dw TxtGloveRight&$FFFF,$800F
+	dw TxtOverallRating&$FFFF,$A015
+	dw TxtUnusedPoints&$FFFF,$A016
+	dw TxtPadSelect&$FFFF,$8018
+	dw TxtStartDone&$FFFF,$8019
+	dw $FFFF,$00A8
+	dw TxtXCancel&$FFFF,$8019
+	dw 0
+CreateSkaterRatingsPage:			; Create Player's skater ratings text page
+	dw $0018,$00A0,0,$0000
+	dw TxtSpeed&$FFFF,$8007
+	dw TxtAgility&$FFFF,$8008
+	dw TxtEndurance&$FFFF,$8009
+	dw TxtOffAwareness&$FFFF,$800A
+	dw TxtDefAwareness&$FFFF,$800B
+	dw TxtStickhandling&$FFFF,$800C
+	dw TxtShotPower&$FFFF,$800D
+	dw TxtShotAccuracy&$FFFF,$800E
+	dw TxtPassAccuracy&$FFFF,$800F
+	dw TxtAggression&$FFFF,$8010
+	dw TxtChecking&$FFFF,$8011
+	dw TxtOverallRating&$FFFF,$A015
+	dw TxtUnusedPoints&$FFFF,$A016
+	dw TxtPadSelect&$FFFF,$8018
+	dw TxtStartDone&$FFFF,$8019
+	dw $FFFF,$00A8
+	dw TxtXCancel&$FFFF,$8019
+	dw 0
 ControllerSetupPage:				; the Controller Setup text page (ControllerSetupScreen)
 	dw $0010,$0100,TxtControllerSetup&$FFFF,$0002
 	dw 0

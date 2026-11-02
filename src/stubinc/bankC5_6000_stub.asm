@@ -86,5 +86,6 @@ TxtPenalties = $C34808
 TxtPoints = $C34B75
 TxtShots = $C34B9E
 BlankPauseItems = $C35D41
+TxtBGoals = $C34EE1
 
 incsrc "../bankC5_6000.asm"

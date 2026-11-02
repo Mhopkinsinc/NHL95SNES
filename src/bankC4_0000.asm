@@ -669,7 +669,7 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	rep #$20
 	pld
 	jsl.l InitTextMap
-	ldx.w #$4777
+	ldx.w #TxtSeasonPlayoffs&$FFFF
 	ldy.w #$0001
 	stz.b $CF
 	lda.w #$0100

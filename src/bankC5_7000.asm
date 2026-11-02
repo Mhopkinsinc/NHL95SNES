@@ -33,7 +33,7 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 .2:									; call UnpackText, push X, X = $4E7D, call UnpackText, ...
 	jsl.l UnpackText
 	phx
-	ldx.w #$4E7D
+	ldx.w #TxtLine&$FFFF
 	jsl.l UnpackText
 	ply
 	jsr.w ConcatStrings
@@ -52,7 +52,7 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 	tax
 	jsl.l UnpackText
 	phx
-	ldx.w #$4EC1
+	ldx.w #TxtStat&$FFFF
 	jsl.l UnpackText
 	ply
 	jsr.w ConcatStrings

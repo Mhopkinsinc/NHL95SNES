@@ -113,5 +113,7 @@ TxtStartNew = $C3476E
 TxtStartedDataFromThe = $C34743
 TxtWarning = $C3479B
 TxtWhenANewSeasonIs = $C34735
+CreateGoalieRatingsPage = $C3576C
+CreateSkaterRatingsPage = $C357AE
 
 incsrc "../bankC5_9000.asm"
