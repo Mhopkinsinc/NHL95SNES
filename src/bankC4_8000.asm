@@ -317,7 +317,7 @@ prefmes:							; the message for penalty d0 (negative: none): penmsgbox cleared,
 	inx
 	txa
 	asl a
-	sta.w $1541
+	sta.w RefMessageWidth
 	ldy.w #$0002
 	lda.w #$5941
 	jsl.l Framer

@@ -411,7 +411,7 @@ Multi5Bios:							; called from other segments
 	lsr a
 	rol.w mp5padsig+2
 	stz.w $4201
-	lda.w $059E
+	lda.w mp5readall
 	ora.w mp5warning
 	bne .3
 	lda.w cont4team

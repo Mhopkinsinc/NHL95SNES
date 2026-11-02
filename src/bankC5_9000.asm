@@ -157,7 +157,7 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	jsl.l SeedRandom
 	jsl.l FadeOutWait
 	lda.w #$0001
-	sta.w $059E
+	sta.w mp5readall
 	jsl.l ResetTransferQueues
 	jsl.l ResetWorkBuf
 	lda.w #$007F

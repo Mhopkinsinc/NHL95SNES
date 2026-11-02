@@ -1056,7 +1056,7 @@ ClearRefereeMessage:				; queue blank tiles over the referee message rows
 	tcs
 	stx.b $00
 	clc
-	lda.w $1541
+	lda.w RefMessageWidth
 	adc.w #$0002
 	tay
 	ldx.w #$0002

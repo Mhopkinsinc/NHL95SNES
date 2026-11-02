@@ -86,6 +86,7 @@ pausepad			=	$0591		; the controller that owns the pause menu
 mp5padsig			=	$0595		; Multi5Bios: 5 bytes, one per pad: the low nibble of JOYxL (controller
 fadestep			=	$059A		; fade: a delay counting down to a fade in, or $FFFF to fade out (NMI)
 SoundVolume			=	$059C		; the sound volume (SoundVolumeDown / SoundVolumeUp step it)
+mp5readall			=	$059E		; force all multitap pads to be read each frame
 puckc				=	$05A0		; object index of the puck carrier, negative = loose
 timestep			=	$05A2		; Gameloop/SaveRegsStartHL2/ReplayMode/PauseReplay store d7 (frames
 padinputdone		=	$05A4		; per pad: set when its input has run; updateplayers clears it
@@ -328,6 +329,7 @@ mp5portchg			=	$1539		; the port change bit (Multi5Bios)
 mp5present			=	$153B		; bit 0: multitap on port 2 (pads 3-5 are read)
 mp5warning			=	$153D		; bit 0 multitap in port 1, bit 1 Super Scope, bit 2 mouse:
 InIntermission		=	$153F		; 1 during the intermission (Intermission)
+RefMessageWidth		=	$1541		; referee message frame width in bytes
 HotColdTable		=	$1543		; per player and rating: the hot / cold bytes added to the ratings
 PerTimeTotal		=	$17B3		; length of this period (seconds): ResetClock sets it
 cont1team			=	$17B5		; Team on pad 1 (0 none, 1 home, 2 away); StartGame turns cont1team,x into

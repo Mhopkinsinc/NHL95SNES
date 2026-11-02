@@ -323,29 +323,29 @@ DrawPadArrows:						; the arrow sprite over the player each pad controls (c1play
 	bra DrawPadArrow
 DATA8_C522D1:						; not traced: data between routines
 	db $1B,$15,$2A,$D0,$A0,$25,$45,$24,$00,$7A,$00,$7B,$50,$64
-PadArrow2:							; DrawPadArrows' step for pad 2 ($1513), continuing with PadArrow3
-	ldy.w $1513
+PadArrow2:							; DrawPadArrows' step for pad 2 (c1playernum+2), continuing with PadArrow3
+	ldy.w c1playernum+2
 	bmi PadArrow3
 	ldx.w #$22F7
 	bra DrawPadArrow
 DATA8_C522E9:						; not traced: data between routines
 	db $1D,$15,$CA,$D2,$A2,$25,$48,$24,$20,$7A,$20,$7B,$80,$64
-PadArrow3:							; DrawPadArrows' step for pad 3 ($1515), continuing with PadArrow4
-	ldy.w $1515
+PadArrow3:							; DrawPadArrows' step for pad 3 (c1playernum+4), continuing with PadArrow4
+	ldy.w c1playernum+4
 	bmi PadArrow4
 	ldx.w #$230F
 	bra DrawPadArrow
 DATA8_C52301:						; not traced: data between routines
 	db $1F,$15,$6A,$D5,$A4,$25,$4B,$24,$40,$7A,$40,$7B,$B0,$64
-PadArrow4:							; DrawPadArrows' step for pad 4 ($1517), continuing with PadArrow5
-	ldy.w $1517
+PadArrow4:							; DrawPadArrows' step for pad 4 (c1playernum+6), continuing with PadArrow5
+	ldy.w c1playernum+6
 	bmi PadArrow5
 	ldx.w #$2327
 	bra DrawPadArrow
 DATA8_C52319:						; not traced: data between routines
 	db $21,$15,$2A,$D0,$A6,$27,$4E,$26,$60,$7A,$60,$7B,$E0,$64
-PadArrow5:							; DrawPadArrows' step for pad 5 ($1519), continuing with PadArrowsDone
-	ldy.w $1519
+PadArrow5:							; pad 5 player arrow, then PadArrowsDone
+	ldy.w c1playernum+8
 	bmi PadArrowsDone
 	ldx.w #$233F
 	bra DrawPadArrow

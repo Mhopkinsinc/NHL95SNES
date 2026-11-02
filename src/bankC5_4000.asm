@@ -1824,12 +1824,12 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	jsl.l StartSound
 	jsl.l SoundVolumeUp
 	dec.w PauseMusicOn
-.2:									; call InitPauseScreen, X = $0002, call SetPauseTab, $059E = $0001
+.2:									; call InitPauseScreen, X = $0002, call SetPauseTab, mp5readall = $0001
 	jsr.w InitPauseScreen
 	ldx.w #$0002
 	jsr.w SetPauseTab
 	lda.w #$0001
-	sta.w $059E
+	sta.w mp5readall
 .3:									; TransfersReady + 1
 	inc.w TransfersReady
 .loop:								; loop: if TransfersReady is not 0 go to .loop, A = teampads, ...

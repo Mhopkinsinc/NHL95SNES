@@ -8842,3 +8842,9 @@ $00C9,PadRaw5,,94S+code,"RAM: as PadRaw3 for pad 5 (94S PadRaw1+8, padlast+8)",s
 $0674,OneTimerDist,,code,"RAM: asspassrec, PassReceiverTryOneTimer and doinput set $7FFF with onetimerreq; PassReceiverOneTimer stores the stick (GetFrameHot) to puck ApproxLength each frame and, once it stops shrinking with the puck within $1C, sets $FFFF and takes the puck; 94S has passwait right after onetimerreq (95 only)",src/ram95s.asm
 $18AA,LCBoxesClosed,,code,"RAM: ShowGoalBox, ShowInjuryBox and CloseLCBoxes add 1; assfaceoff / assfaceoffpl and LoadTeamLines (OptLine 0) clear it; while it is set setlccords opens the top line change box lower ($5995, not $5855); the 94S neighbours disagree (95 only)",src/ram95s.asm
 $18E2,FaceoffLCClosed,,code,"RAM: UpdateFaceoffLineChangeTimer sets team a2's word the first time the team's box is closed (tmflags bit 3 clear), ends its timer (temp1 high byte $FF) and calls SetLCmode2; puckfaceoff clears both words",src/ram95s.asm
+$059E,mp5readall,,94S+code,"RAM: Multi5Bios matches 94S mp5readall test before unused-pad delay",src/ram95s.asm
+$1541,RefMessageWidth,,code,"RAM: prefmes doubles framed text width; ClearRefereeMessage adds borders and clears rows",src/ram95s.asm
+$1513,c1playernum+2,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1515,c1playernum+4,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1517,c1playernum+6,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
+$1519,c1playernum+8,,code,"RAM: indexed member of the existing array; traced writer and reader",src/ram95s.asm
