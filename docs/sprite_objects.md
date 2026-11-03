@@ -164,19 +164,19 @@ The source comments in bankC0_8000 describe the commands at each script. The poi
 
 | List | Index | Script | Behavior |
 |---|---|---|---|
-| Sprite28FramesEnd | 0 | SpriteScript_C0853E | Frames 2-12, toggle h flip ($8B), frames 5, 4, 3, 2, toggle h flip ($8B), frame 13, restart ($81) |
+| Sprite28FramesEnd | 0 | Sprite28ShineScript | Frames 2-12, toggle h flip ($8B), frames 5, 4, 3, 2, toggle h flip ($8B), frame 13, restart ($81) |
 | Sprite28FramesEnd | 1 | OneFrameScript | Frame 0, hold ($80) |
-| Sprite28FramesEnd | 2 | SpriteScript_C08551 | Frame 1, hold ($80) |
-| Sprite28FramesEnd | 3 | SpriteScript_C08553 | Frames 14-26, 28, 29, restart ($81); frame 27 is not in this script |
-| Sprite28FramesEnd | 4 | SpriteScript_C08563 | Frame 30, hold ($80) |
-| Sprite28FramesEnd | 5 | SpriteScript_C08565 | Frame 31, hold ($80) |
-| PadNumbersFramesEnd | 0 | SpriteScript_C085C4 | Upload frames 0 + 1 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 1 | SpriteScript_C085C9 | Upload frames 0 + 2 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 2 | SpriteScript_C085CE | Upload frames 0 + 3 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 3 | SpriteScript_C085D3 | Upload frames 0 + 4 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 4 | SpriteScript_C085D8 | Upload frames 0 + 5 together ($87, count 2), then hold ($80) |
-| SkaterFramesEnd | 0 | SpriteScript_C08634 | Set speed $0060 ($86), frames 0, 1, 2, hold ($80) |
-| SkaterFramesEnd | 1 | SpriteScript_C0863B | Set speed $0060 ($86), frames 3, 4, 5, hold ($80) |
+| Sprite28FramesEnd | 2 | Sprite28DownArrowScript | Frame 1, hold ($80) |
+| Sprite28FramesEnd | 3 | Sprite28SparkleScript | Frames 14-26, 28, 29, restart ($81); frame 27 is not in this script |
+| Sprite28FramesEnd | 4 | Sprite28CopyrightScript | Frame 30, hold ($80) |
+| Sprite28FramesEnd | 5 | Sprite28RegisteredScript | Frame 31, hold ($80) |
+| PadNumbersFramesEnd | 0 | PadNumber1Script | Upload frames 0 + 1 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 1 | PadNumber2Script | Upload frames 0 + 2 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 2 | PadNumber3Script | Upload frames 0 + 3 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 3 | PadNumber4Script | Upload frames 0 + 4 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 4 | PadNumber5Script | Upload frames 0 + 5 together ($87, count 2), then hold ($80) |
+| SkaterFramesEnd | 0 | SkaterSwingScript | Set speed $0060 ($86), frames 0, 1, 2, hold ($80) |
+| SkaterFramesEnd | 1 | SkaterSwing2Script | Set speed $0060 ($86), frames 3, 4, 5, hold ($80) |
 
 Every other record's list has one pointer to OneFrameScript. Frame numbers in this table are decimal;
 command bytes and the speed word are hexadecimal. The five additional words after Sprite28FramesEnd's
@@ -202,7 +202,8 @@ $46B8 palette use per index, $46A8 free palette slots ($1B06, count $1B08).
 
 ## Open questions
 - Render records 0-27 (palette = record index, tiles + pieces) to confirm the team logos and the team order.
-- What records 28-40 are (rec 28: 32 small frames; rec 33-36 big).
+- What records 31-40 are (rec 33-36 big). Record 28 is small symbols (scroll arrows, a shine, a sparkle, the copyright and
+  registered marks); record 30 is the face off box's centre (FaceoffSpriteLeft / FaceoffSpriteRight).
 - The intended contracts of commands $89/$8E and the JSR/RTL mismatch in $88 (literal behavior above).
 - Record +4 (pointer to $04E2 / the 00 byte), +10..+17 (box) and +22: no reader seen.
 - The entry and job of the $C4B567 code that reads the piece origin.

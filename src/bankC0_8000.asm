@@ -644,7 +644,9 @@ Sprite28Frame31:					; 2 8x8 and 0 16x16 sprites, packed tiles
 	dw Sprite28Pieces30-SpritePieces	; its pieces
 	db 1							; flags: bit 0 packed, bit 1 the 16x16 part packed
 	dl Sprite28Tiles31				; its tiles
-Sprite28Sprite:						; sprite 28 (an arrow, then a spinning disc)
+Sprite28Sprite:						; sprite 28, small symbols: up and down arrows (StartScrollList's scroll
+									; marks), a shine on a ball, a sparkle, the copyright and registered marks
+									; (CopyrightScreen)
 	dw Sprite28Frames,Sprite28FramesEnd	; the frame list and its end (the script pointer)
 	dl SpriteField4DataUnused+$39	; into the $04E2 run (loaded, not used)
 	db 2,1,2						; the most 8x8, 16x16 and both sprites in a frame
@@ -662,19 +664,22 @@ Sprite28Frames:						; its frames
 	dw Sprite28Frame24,Sprite28Frame25,Sprite28Frame26,Sprite28Frame27
 	dw Sprite28Frame28,Sprite28Frame29,Sprite28Frame30,Sprite28Frame31
 Sprite28FramesEnd:					; animation script pointer list, selected by SetSpriteAnim
-	dw SpriteScript_C0853E
+	dw Sprite28ShineScript
 									; additional script pointers, indexed after entry zero
-	dw OneFrameScript,SpriteScript_C08551,SpriteScript_C08553,SpriteScript_C08563,SpriteScript_C08565
-SpriteScript_C0853E:				; show frames 2 through 12, $8B toggles h flip, show 5 through 2, then $8B
-									; toggles h flip again, show frame 13 and $81 restarts this script
+	dw OneFrameScript,Sprite28DownArrowScript,Sprite28SparkleScript,Sprite28CopyrightScript,Sprite28RegisteredScript
+Sprite28ShineScript:				; sprite 28's default script: a shine turning on a ball, frames 2 to 12,
+									; $8B flips, 5 to 2, $8B flips back, frame 13, then $81 restarts
 	db $02,$03,$04,$05,$06,$07,$08,$09,$0A,$0B,$0C,$8B,$05,$04,$03,$02,$8B,$0D,$81
-SpriteScript_C08551:				; show frame 1, then $80 holds on itself
+Sprite28DownArrowScript:			; sprite 28's script 2: the down arrow, frame 1, then $80 holds on itself
 	db $01,$80
-SpriteScript_C08553:				; show the listed frames, then $81 restarts this script
+Sprite28SparkleScript:				; sprite 28's script 3: a sparkle, frames 14 to 26, 28 and 29, then $81
+									; restarts
 	db $0E,$0F,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1A,$1C,$1D,$81
-SpriteScript_C08563:				; show frame 30, then $80 holds on itself
+Sprite28CopyrightScript:			; sprite 28's script 4: the copyright mark, frame 30, then $80 holds on
+									; itself (CopyrightScreen)
 	db $1E,$80
-SpriteScript_C08565:				; show frame 31, then $80 holds on itself
+Sprite28RegisteredScript:			; sprite 28's script 5: the registered mark, frame 31, then $80 holds on
+									; itself (CopyrightScreen)
 	db $1F,$80
 PadNumbersFrame00:					; 0 8x8 and 2 16x16 sprites, packed tiles (flags 2)
 	db 0,2							; the 8x8 and 16x16 sprite counts
@@ -718,23 +723,23 @@ PadNumbersFrames:					; its frames
 	dw PadNumbersFrame00,PadNumbersFrame01,PadNumbersFrame02,PadNumbersFrame03
 	dw PadNumbersFrame04,PadNumbersFrame05
 PadNumbersFramesEnd:				; animation script pointer list, selected by SetSpriteAnim
-	dw SpriteScript_C085C4
+	dw PadNumber1Script
 									; additional script pointers, indexed after entry zero
-	dw SpriteScript_C085C9,SpriteScript_C085CE,SpriteScript_C085D3,SpriteScript_C085D8
-SpriteScript_C085C4:				; upload frames 0 and 1 together with $87 (count 2), then $80 holds on
-									; itself
+	dw PadNumber2Script,PadNumber3Script,PadNumber4Script,PadNumber5Script
+PadNumber1Script:					; the controller and the number 1: frames 0 and 1 uploaded together with
+									; $87 (count 2), then $80 holds
 	db $87,$02,$00,$01,$80
-SpriteScript_C085C9:				; upload frames 0 and 2 together with $87 (count 2), then $80 holds on
-									; itself
+PadNumber2Script:					; the controller and the number 2: frames 0 and 2 uploaded together with
+									; $87 (count 2), then $80 holds
 	db $87,$02,$00,$02,$80
-SpriteScript_C085CE:				; upload frames 0 and 3 together with $87 (count 2), then $80 holds on
-									; itself
+PadNumber3Script:					; the controller and the number 3: frames 0 and 3 uploaded together with
+									; $87 (count 2), then $80 holds
 	db $87,$02,$00,$03,$80
-SpriteScript_C085D3:				; upload frames 0 and 4 together with $87 (count 2), then $80 holds on
-									; itself
+PadNumber4Script:					; the controller and the number 4: frames 0 and 4 uploaded together with
+									; $87 (count 2), then $80 holds
 	db $87,$02,$00,$04,$80
-SpriteScript_C085D8:				; upload frames 0 and 5 together with $87 (count 2), then $80 holds on
-									; itself
+PadNumber5Script:					; the controller and the number 5: frames 0 and 5 uploaded together with
+									; $87 (count 2), then $80 holds
 	db $87,$02,$00,$05,$80
 SkaterFrame00:						; 7 8x8 and 6 16x16 sprites, packed tiles (flags 3)
 	db 7,6							; the 8x8 and 16x16 sprite counts
@@ -766,7 +771,8 @@ SkaterFrame05:						; 5 8x8 and 7 16x16 sprites, packed tiles (flags 3)
 	dw SkaterPieces05-SpritePieces	; its pieces
 	db 3							; flags: bit 0 packed, bit 1 the 16x16 part packed
 	dl SkaterTiles05				; its tiles
-SkaterSprite:						; a skating player
+SkaterSprite:						; a skating player: the face off box's centre (puckfaceoff2 makes
+									; FaceoffSpriteLeft / FaceoffSpriteRight), two stick swings of 3 frames
 	dw SkaterFrames,SkaterFramesEnd	; the frame list and its end (the script pointer)
 	dl SpriteField4DataUnused+$3D	; into the $04E2 run (loaded, not used)
 	db 11,8,18						; the most 8x8, 16x16 and both sprites in a frame
@@ -778,14 +784,15 @@ SkaterFrames:						; its frames
 	dw SkaterFrame00,SkaterFrame01,SkaterFrame02,SkaterFrame03
 	dw SkaterFrame04,SkaterFrame05
 SkaterFramesEnd:					; animation script pointer list, selected by SetSpriteAnim
-	dw SpriteScript_C08634
+	dw SkaterSwingScript
 									; additional script pointers, indexed after entry zero
-	dw SpriteScript_C0863B
-SpriteScript_C08634:				; set timer speed to $0060 with $86, show frames 0, 1, 2, then $80 holds
-									; on itself
+	dw SkaterSwing2Script
+SkaterSwingScript:					; the face off centre's default script: a stick swing, timer speed $0060
+									; ($86), frames 0, 1, 2, then $80 holds; restarted ($30,x = 0) when a
+									; centre swipes
 	db $86,$60,$00,$00,$01,$02,$80
-SpriteScript_C0863B:				; set timer speed to $0060 with $86, show frames 3, 4, 5, then $80 holds
-									; on itself
+SkaterSwing2Script:					; the face off centre's script 1: a second swing, timer speed $0060 ($86),
+									; frames 3, 4, 5, then $80 holds
 	db $86,$60,$00,$03,$04,$05,$80
 RedDotFrame:						; 2 8x8 and 0 16x16 sprites, packed tiles
 	db 2,0							; the 8x8 and 16x16 sprite counts

@@ -299,19 +299,19 @@
   and its "Visiting Team" line VisTeam; the jerseys agree (white for HomeTeam, as 94S home). The last pair of uniform
   palettes (after the all-star teams) is not traced. The team order is 94S's (the
   sprite logos render WSH before WPG).
-- Sprite objects (`docs/sprite_objects.md`): SpriteObjects in bankC0_8000 is source (header, SpriteRecordList, 41 records
-  <Name>Sprite, frame lists, frame headers <Name>Frame[NN], animation scripts), pointing at bank $C1: SpritePalettes, the frame
-  tiles <Name>Tiles[NN] (incbin) and SpritePieces (source). The records were rendered: 0-27 the team logos in 94S team order
-  (WSH before WPG, then ASE, ASW), 28 not known (an arrow, then a spinning disc), 29 a pad and 1-5, 30 a skater, then the EA
-  intro pieces, a box, the NHL and NHLPA logos. Readers in bank $C5 (CreateSprite, CreateSpriteSharePal, UploadSpriteFrame and
-  AnimateSprites are source in bankC5_E000): $C5E665 (create), $C5EEF3, $C5E8A5 (frame to VRAM), $C5F071 (format 0 without a
-  header), $C5F0D1 (OAM), AnimateSprites (scripts, dispatched through SpriteAnimCommands).
-  The command bytes $80-$9D are documented in sprite_objects.md; no record script uses $89 or $8E, whose handlers
-  (SpriteAnimIncWordUnused / SpriteAnimCallUnused) treat UploadSpriteFrames code bytes as pointers.
-  SpriteAnimDelete ($88) calls the RTL-returning DeleteSprite via JSR; no record script uses it. The unreached
-  helpers are named from what they do with the Unused suffix (CopySpriteFrameUnused, ClearSpriteFrameUnused,
-  CopySpriteFramesUnused, StartSpriteAnimUnused, FreeSpritePaletteUnused); their intended entry contracts are
-  unverified.
+- Sprite objects (`docs/sprite_objects.md`): SpriteObjects in bankC0_8000 is source (header, SpriteRecordList, 41
+  records <Name>Sprite, frame lists, frame headers <Name>Frame[NN], animation scripts), pointing at bank $C1:
+  SpritePalettes, the frame tiles <Name>Tiles[NN] (incbin) and SpritePieces (source). The records were rendered: 0-27
+  the team logos in 94S team order (WSH before WPG, then ASE, ASW), 28 small symbols (scroll arrows, a shine, a
+  sparkle, the copyright and registered marks), 29 a pad and 1-5, 30 the face off box's centre, then the EA intro
+  pieces, a box, the NHL and NHLPA logos. Readers in bank $C5 (CreateSprite, CreateSpriteSharePal, UploadSpriteFrame
+  and AnimateSprites are source in bankC5_E000): $C5E665 (create), $C5EEF3, $C5E8A5 (frame to VRAM), $C5F071 (format 0
+  without a header), $C5F0D1 (OAM), AnimateSprites (scripts, dispatched through SpriteAnimCommands). The command bytes
+  $80-$9D are documented in sprite_objects.md; no record script uses $89 or $8E, whose handlers
+  (SpriteAnimIncWordUnused / SpriteAnimCallUnused) treat UploadSpriteFrames code bytes as pointers. SpriteAnimDelete
+  ($88) calls the RTL-returning DeleteSprite via JSR; no record script uses it. The unreached helpers are named from
+  what they do with the Unused suffix (CopySpriteFrameUnused, ClearSpriteFrameUnused, CopySpriteFramesUnused,
+  StartSpriteAnimUnused, FreeSpritePaletteUnused); their intended entry contracts are unverified.
 - PadButtonsMap: confirmed instant replay controller legend. ReplayMode unpacks it with MapSetToWRAM,
   adjusts entries by $3E4B, then queues tiles to $44B0, map to $5821 and colours to CGRAM $70.
   Genesis ReplayMap is a replay banner; that is not evidence for renaming this four-button legend.
