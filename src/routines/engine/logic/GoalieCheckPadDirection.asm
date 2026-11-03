@@ -173,7 +173,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.w PadRaw1,y
 	bit.w #$4000
 	bne .20
-	lda.w padnew,y
+	lda.w padnew1,y
 	bit.w #$0040
 	beq .15
 	lda.w paddir,y

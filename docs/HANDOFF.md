@@ -17,7 +17,13 @@
   files moved to the folder the inventory now gives them. 26 unsure matches were left alone (list: the Code Cleanup project
   file `95s-inventory/naming_pass.md`). Report pairing gate OK (752 known pairs).
 - Last check: `tools/verify_all.sh` MATCH (2026-11-03).
-- Next: phase 5, RAM (`ram95s.asm` names by the same rules, then the merged order).
+- Phase 5 done: `ram95s.asm` renames padlast / padnew / tmpassatt to the 94S (93S, 94G) padlast1 / padnew1 / tmpasses,
+  then the merged order (94S's order, 95G-only names after the 95G name before them, 95S-only names after the name
+  before them). Matched names out of order: 1 against 94S (penshot), 0 against 95G. A wider RAM naming pass by reading
+  (180 95S-only names) did not run (rate limit); the packet generator is in the naming notes.
+- Last check: `tools/verify_all.sh` MATCH (2026-11-03).
+- Next: optional: the RAM naming pass, and the 26 unsure routine matches (Code Cleanup project file
+  `95s-inventory/naming_pass.md`).
 - Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
   cannot link a 95S known pair to its new name.
 - Unsure: none placed by guess; the 68 `plurality` and 4 `follows` rows are the low-confidence placements for checkpoint 1.

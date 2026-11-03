@@ -37,18 +37,18 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 	lda.b PadRaw5
 	and.w #$FFF0
 	bne .6
-.5:									; padchangeany = 0, padlast = 0, pausepad = $FFFF, return
+.5:									; padchangeany = 0, padlast1 = 0, pausepad = $FFFF, return
 	stz.w padchangeany
-	stz.w padlast
+	stz.w padlast1
 	lda.w #$FFFF
 	sta.w pausepad
 	rtl
-.6:									; padchangeany = A, repeatdelayframes + 1, if A = padlast go to .rtl, ...
+.6:									; padchangeany = A, repeatdelayframes + 1, if A = padlast1 go to .rtl, ...
 	sta.w padchangeany
 	inc.w repeatdelayframes
-	cmp.w padlast
+	cmp.w padlast1
 	beq .rtl
 	stz.w repeatdelayframes
-	sta.w padlast
+	sta.w padlast1
 .rtl:								; return
 	rtl

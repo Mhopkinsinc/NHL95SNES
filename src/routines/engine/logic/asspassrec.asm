@@ -17,7 +17,7 @@ asspassrec:							; called from other segments
 	bne PassReceiverOneTimer
 	ldy.w playerpad,x
 	bmi PassReceiverTryOneTimer
-	lda.w padnew,y
+	lda.w padnew1,y
 	bit.w #$8000
 	bne EndPassReceiverAssignment
 	bit.w #$0080

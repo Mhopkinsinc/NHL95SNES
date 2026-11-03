@@ -52,6 +52,6 @@ ScrollTradeListDown:				; the list's first row + 1, then it scrolls down a row o
 	bpl .1
 	pla
 	pla
-	stz.w padlast
+	stz.w padlast1
 	stz.w repeatdelayframes
 	rts

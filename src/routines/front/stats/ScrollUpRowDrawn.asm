@@ -42,8 +42,8 @@ ScrollListUpAnim:					; scrolls the list up a row over 8 frames by the BG3 scrol
 	dec.w BG3ScrollHDMA+$7
 	dec.w BG3ScrollHDMA+$A
 	bra .loop
-.2:									; padlast = 0, padchangeany = 0
-	stz.w padlast
+.2:									; padlast1 = 0, padchangeany = 0
+	stz.w padlast1
 	stz.w padchangeany
 ScrollListUpReturn:					; the rts ScrollListUp leaves through when the list is at its top
 	rts

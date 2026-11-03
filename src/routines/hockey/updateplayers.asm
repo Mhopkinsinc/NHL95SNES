@@ -583,7 +583,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sta.b d3
 	lda.w padchange,y
 	sta.b d2
-	lda.w padnew,y
+	lda.w padnew1,y
 	sta.b d1
 	lda.w paddir,y
 	sta.b d0

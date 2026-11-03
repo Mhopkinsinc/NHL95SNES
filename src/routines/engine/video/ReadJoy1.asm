@@ -3,7 +3,7 @@ ReadJoy1:							; called from other segments
 	sta.b d3
 	lda.w padchange
 	sta.b d2
-	lda.w padnew
+	lda.w padnew1
 	sta.b d1
 	lda.w paddir
 	sta.b d0

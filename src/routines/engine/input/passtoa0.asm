@@ -3,9 +3,9 @@ passtoa0:							; from dopass and other segments
 	lda.w gmclock
 	bne .1
 	ldy.b a2
-	lda.w tmpassatt,y
+	lda.w tmpasses,y
 	inc a
-	sta.w tmpassatt,y
+	sta.w tmpasses,y
 .1:									; X = topgoalie,y, A = aidef,x, A / 2, A + $0001, ...
 	ldx.w topgoalie,y
 	lda.w aidef,x

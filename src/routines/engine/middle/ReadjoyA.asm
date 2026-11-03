@@ -6,7 +6,7 @@ ReadjoyA:							; from ReadPausePad and other segments
 	sta.b d3
 	lda.w padchange,x
 	sta.b d2
-	lda.w padnew,x
+	lda.w padnew1,x
 	sta.b d1
 	lda.w paddir,x
 	sta.b d0

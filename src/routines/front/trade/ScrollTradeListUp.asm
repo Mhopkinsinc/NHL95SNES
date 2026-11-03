@@ -49,6 +49,6 @@ ScrollTradeListUp:					; scrolls the moved trade list up a row over 8 frames, th
 	bpl .1
 	pla
 	pla
-	stz.w padlast
+	stz.w padlast1
 	stz.w repeatdelayframes
 	rts

@@ -1,6 +1,6 @@
 MoveLinePlayerCursor:				; list row A (the old cursor) back to palette 0 and cursor row $7B in
 									; palette 1 (RecolourTextRow, rows wrapped as RedrawScrollList does), the
-									; map sent; a delay when padlast is set
+									; map sent; a delay when padlast1 is set
 	ldx.b a3+2
 	inx
 	stx.b tmp1
@@ -32,7 +32,7 @@ MoveLinePlayerCursor:				; list row A (the old cursor) back to palette 0 and cur
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	ldx.w #$0000
-	lda.w padlast
+	lda.w padlast1
 	beq .rts
 .loop3:								; loop: X - 1, if the result is not 0 go to .loop3, ...
 	dex

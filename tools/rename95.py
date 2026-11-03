@@ -5,8 +5,8 @@ one, and its rows in docs/name_map.csv (old name kept in old_name) and docs/rout
     python3 tools/rename95.py PROPOSALS.csv...       # columns s95_label,new_name,partner,confidence,evidence
     python3 tools/rename95.py --dry-run PROPOSALS.csv...
 
-Only rows with confidence "sure" are applied. A row is skipped (and printed) when the old label is not a global label of
-the source, when the new name is already a label or equate (any case), or when two rows want the same new name.
+Only rows with confidence "sure" are applied. A row is skipped (and printed) when the old name is not a global label or
+equate of the source, when the new name is already a label or equate (any case), or when two rows want the same new name.
 """
 import csv, glob, os, re, sys
 
@@ -47,8 +47,7 @@ def main(argv):
     for f, t in text.items():
         for m in re.finditer(r'^([A-Za-z_]\w*)(:|\s*=)', t, re.M):
             symbols.add(m.group(1).lower())
-            if m.group(2) == ':':
-                glob_labels.setdefault(m.group(1), f)
+            glob_labels.setdefault(m.group(1), f)      # a label or an equate (RAM names)
     plan, seen_new, skipped = [], set(), []
     for r in rows:
         old, new = r['s95_label'].strip(), r['new_name'].strip()
