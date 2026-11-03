@@ -1382,10 +1382,10 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	sta.w FaceoffBoxTimer
 	jsl.l QueueFaceoffBox
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $09C0
 	pea.w $4320
 	pea.w $007E
@@ -1393,21 +1393,21 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w FaceoffBoxBuf
 	adc.w #$0A00
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$09C0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w fodropy

@@ -1042,10 +1042,10 @@ ClearRefereeMessage:				; queue blank tiles over the referee message rows
 	ldy.w #ScratchBuf+$2
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	clc
 	lda.w RefMessageWidth
 	adc.w #$0002
@@ -1060,10 +1060,10 @@ ClearRefereeMessage:				; queue blank tiles over the referee message rows
 	pea.w ScratchBuf
 	dex
 	bpl .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 CopyRefereeFrameToVRAM:				; copy the selected referee map frame to VRAM

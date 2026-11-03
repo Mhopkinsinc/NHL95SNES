@@ -1456,19 +1456,19 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	adc.w #$0414
 	jsr.w PutPauseText
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
 	lda.w PauseMapBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldx.w #$0096

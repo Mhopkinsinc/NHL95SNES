@@ -1008,10 +1008,10 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	sty.b $12
 	tay
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	tya
 	xba
@@ -1036,11 +1036,11 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	lda.b $03,s
 	inc a
 	sta.b $03,s
-.3:									; A = $04, $04 = X, QueueBusy = 0, Y = $12, ...
-	lda.b $04
+.3:									; A = CGRAMQueueSP, CGRAMQueueSP = X, QueueBusy = 0, Y = $12, ...
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ldy.b $12
 	bra .5
@@ -1256,7 +1256,7 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	dec.b QueueBusy
 	tsc
 	sta.b $0A
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	lda.b tmp2
 	beq .1
@@ -1387,9 +1387,9 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	pha
 	pei ($32)
 	pei ($30)
-.9:									; $00 = A, A = $0A, QueueBusy = 0, X = Y, ...
+.9:									; VRAMQueueSP = A, A = $0A, QueueBusy = 0, X = Y, ...
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $0A
 	tcs
 	stz.b QueueBusy
@@ -1856,7 +1856,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	dec.b QueueBusy
 	tsc
 	sta.b $0A
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	lda.b $28,x
 .1:									; A * 2, A + $26,x, X = A, A = $00,x, ...
@@ -2025,9 +2025,9 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	bmi .12
 	ldx.b $18
 	jmp.w .1
-.12:								; $00 = A, A = $0A, QueueBusy = 0, Y = $18, ...
+.12:								; VRAMQueueSP = A, A = $0A, QueueBusy = 0, Y = $18, ...
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $0A
 	tcs
 	stz.b QueueBusy
@@ -2094,10 +2094,10 @@ QueueSpritePalette:					; queues the 16 colours of sprite palette A (low byte) t
 	phy
 	tay
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	tya
 	xba
@@ -2129,12 +2129,12 @@ QueueSpritePalette:					; queues the 16 colours of sprite palette A (low byte) t
 	lsr a
 	lsr a
 	adc.w #$3F02
-.2:									; push A, A = $04, $04 = X, QueueBusy = 0, ...
+.2:									; push A, A = CGRAMQueueSP, CGRAMQueueSP = X, QueueBusy = 0, ...
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	plx
 	rtl

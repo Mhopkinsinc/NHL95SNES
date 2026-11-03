@@ -995,10 +995,10 @@ updatepwrplay_clr:					; from updatepwrplay and other segments
 RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws the period box
 									; (DrawPeriodBox)
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.l TextMapFill
 	sta.w ListBuf
 	ldx.w #ListBuf
@@ -1016,10 +1016,10 @@ RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws
 	adc.w #$0020
 	dey
 	bpl .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jml.l DrawPeriodBox
 updatepwrplay_clrReturn:			; the rtl updatepwrplay_clr branches to

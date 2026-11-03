@@ -574,10 +574,10 @@ QueueHomePaletteLong:				; QueueHomePalette for long calls
 QueueHomePalette:					; queues HomeTeam's 16 colours (TeamPalettes as unpacked at $7F:D80A) for
 									; CGRAM $20
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0020
 	pea.w $007F
@@ -588,10 +588,10 @@ QueueHomePalette:					; queues HomeTeam's 16 colours (TeamPalettes as unpacked a
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rts
 QueueVisPaletteLong:				; QueueVisPalette for long calls
@@ -600,10 +600,10 @@ QueueVisPaletteLong:				; QueueVisPalette for long calls
 QueueVisPalette:					; queues VisTeam's 16 colours (TeamPalettes as unpacked at $7F:D80A) for
 									; CGRAM $30
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007F
@@ -614,10 +614,10 @@ QueueVisPalette:					; queues VisTeam's 16 colours (TeamPalettes as unpacked at 
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rts
 DeleteArrowSpritesLong:				; DeleteArrowSprites for long calls
@@ -1585,28 +1585,28 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	ldy.w #$5C00
 	jsl.l QueueClearVRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0600
 	pea.w $0130
 	pea.w $007E
 	pea.w $50DC
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w WonCheckPalette>>16
 	pea.w WonCheckPalette&$FFFF
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldx.w #$0060

@@ -175,10 +175,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	ldy.w #$3000
 	jsl.l QueueClearVRAM
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $02C0
 	pea.w $0000
 	pea.w $5400
@@ -197,10 +197,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	pea.w $1809
 	pea.w ZeroFillWord>>16
 	pea.w ZeroFillWord&$FFFF
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$5420
@@ -212,10 +212,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	ldy.w #$2A50
 	jsl.l MapSetToVRAM
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0010
 	ldx.w #TitleLogoMap>>16
@@ -223,10 +223,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	jsr.w GetMapSetPalettePointer
 	phx
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$5820
 	sta.b tmp0
@@ -652,18 +652,18 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	bne .loop
 	stx.b $95
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0180
 	pea.w $56C0
 	pea.w $007E
 	pei ($D3)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rts
 GetMapSetPalettePointer:			; returns the map set palette data pointer in X:A
@@ -885,18 +885,18 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	lda.w #GradientBarTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0640
 	pea.w $007E
 	pei ($34)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldy.w #$2864
@@ -1033,10 +1033,10 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	tyx
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.b a0
 	lda.l AwardPicTileCounts,x
 	and.w #$00FF
@@ -1054,27 +1054,27 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	adc.w #$00EA
 	pha
 	adc.b tmp0
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007E
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.w #$50B3
 	ldy.b $08
 .loop:								; loop: push X, push Y, A = Y, A + $0012, ...
@@ -1092,10 +1092,10 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	tax
 	cmp.w #$5253
 	bne .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
@@ -1174,20 +1174,20 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	ply
 	sta.b a2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pei ($6B)
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($71)
@@ -1198,10 +1198,10 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	lsr a
 	adc.b a3
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ldx.b a4
 	lda.b $22,x
@@ -1227,18 +1227,18 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 .2:									; $CF = $0010, $D1 = $0080, A = $65, A * 2, ...
 	lda.w #$0010
@@ -1282,18 +1282,18 @@ DrawPresidentsWinner:				; winner A of the Presidents Trophy: the team's name an
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b a4
 	lda.b $22,x

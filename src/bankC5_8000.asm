@@ -1202,10 +1202,10 @@ TextMapFill:						; the blank text map entry (tile $DF, attribute byte $22): Cle
 ClearTextMapTop:					; ClearTextMap for the map's top half ($200 words)
 	phx
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0200
 	pea.w $0000
 	pea.w $5800
@@ -1218,20 +1218,20 @@ ClearTextMapTop:					; ClearTextMap for the map's top half ($200 words)
 	pea.w $1908
 	pea.w TextMapFill>>16
 	pea.w (TextMapFill+1)&$FFFF
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	plx
 	rtl
 ClearTextMap:						; fills the text map (VRAM $5800, $400 words) with the blank entry
 									; TextMapFill, two queued fixed-source DMAs
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0400
 	pea.w $0000
 	pea.w $5800
@@ -1244,18 +1244,18 @@ ClearTextMap:						; fills the text map (VRAM $5800, $400 words) with the blank 
 	pea.w $1908
 	pea.w TextMapFill>>16
 	pea.w (TextMapFill+1)&$FFFF
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	rtl
 ClearVRAM:							; QueueClearVRAM, then WaitTransfers
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0400
 	pea.w $0000
 	phy
@@ -1268,19 +1268,19 @@ ClearVRAM:							; QueueClearVRAM, then WaitTransfers
 	pea.w $1908
 	pea.w ZeroFillWord>>16
 	pea.w ZeroFillWord
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jml.l WaitTransfers
 QueueClearVRAM:						; queues a clear of $400 words of VRAM at Y (two DMAs from ZeroFillWord:
 									; the low bytes, then the high)
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0400
 	pea.w $0000
 	phy
@@ -1293,20 +1293,20 @@ QueueClearVRAM:						; queues a clear of $400 words of VRAM at Y (two DMAs from 
 	pea.w $1908
 	pea.w ZeroFillWord>>16
 	pea.w ZeroFillWord
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	rtl
 QueueVRAMDMALen:					; queue a DMA to VRAM at Y of the bytes at X:A after their length byte
 	sta.w r0
 	stx.w r0+2
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	lda.b [r0]
 	and.w #$00FF
 	pha
@@ -1317,10 +1317,10 @@ QueueVRAMDMALen:					; queue a DMA to VRAM at Y of the bytes at X:A after their 
 	lda.b r0
 	inc a
 	pha
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	rtl
 SetupMode3Screen:					; sets mode 3 with BG1 and sprites, configures the maps and clears map and
@@ -1353,18 +1353,18 @@ DecompressToVRAM:					; Decompress A:X into a $1000 byte heap block and queue it
 	plx
 	stx.b tmp0
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $1000
 	pei ($9F)
 	pea.w $007E
 	phy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 FadeOutWait:						; fadestep = $FFFF, then wait until the screen is black (94S FadeOut, ...
@@ -1615,10 +1615,10 @@ Framer:								; draws a frame X tiles wide and Y high (its corners, edges and i
 	lda.w #$229F
 	sta.w ScratchBuf+$2,x
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.b tmp1
 	asl a
 	sta.b tmp1
@@ -1644,10 +1644,10 @@ Framer:								; draws a frame X tiles wide and Y high (its corners, edges and i
 	pla
 	adc.b tmp1
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jml.l WaitTransfers
 RandomBelowA:						; A = a random number below A: the next byte of its generator divided by

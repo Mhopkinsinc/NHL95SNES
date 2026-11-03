@@ -2,6 +2,9 @@
 ; no bytes. Names follow the 94S RAM names (src/ram94s.asm there) where the job is the same.
 
 ; direct page
+VRAMQueueSP			=	$00			; VRAM queue stack pointer: 8-byte DMA records, from $03FF down
+VRAMModeQueueSP		=	$02			; VRAM queue stack pointer: 12-byte records with VMAIN / DMAP, $01FF down
+CGRAMQueueSP		=	$04			; CGRAM queue stack pointer: palette DMA records, from $048F down
 QueueBusy			=	$06			; negative while a routine pushes a record onto a transfer queue
 r0					=	$2C			; math result (divides: the quotient)
 r1					=	$30			; math operand (divides: the divisor, 4 bytes)

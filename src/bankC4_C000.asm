@@ -366,10 +366,10 @@ QueueTextTiles:						; queues the tiles DrawText made for VRAM (text row Y)
 	adc.b p0
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.b $12
 	and.w #$FFF8
 	pha
@@ -398,11 +398,11 @@ QueueTextTiles:						; queues the tiles DrawText made for VRAM (text row Y)
 	lda.b $07,s
 	adc.w #$0200
 	pha
-.1:									; A = $00, $00 = X, QueueBusy = 0, TransfersReady + 1, ...
-	lda.b $00
+.1:									; A = VRAMQueueSP, VRAMQueueSP = X, QueueBusy = 0, TransfersReady + 1, ...
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	inc.w TransfersReady
 	rtl
@@ -447,18 +447,18 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	rtl
 SendTextMap:						; queues the text map ($800 bytes) for VRAM at $5C00
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0800
 	pea.w $5C00
 	pea.w $007E
 	pei ($D3)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns TextColLow to
@@ -499,7 +499,7 @@ SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns Te
 	dec.b QueueBusy
 	tsc
 	sta.b $1C
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 .loop:								; loop: push X, push Y, A = X, A + $0020, ...
 	pei ($14)
@@ -515,7 +515,7 @@ SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns Te
 	dec.b $A5
 	bne .loop
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $1C
 	tcs
 	stz.b QueueBusy
@@ -821,24 +821,24 @@ FreeWorkBuf:						; gives the last A bytes back to the work buffer (AllocWorkBuf
 	inc a
 	sta.b $08
 	rtl
-ResetTransferQueues:				; empties the transfer queues: their stack pointers $00 = $03FF, $02 =
-									; $01FF, $04 = $048F, with QueueBusy set around the stores
+ResetTransferQueues:				; empties the transfer queues: VRAMQueueSP = $03FF, VRAMModeQueueSP =
+									; $01FF, CGRAMQueueSP = $048F, with QueueBusy set around the stores
 	lda.w #$FFFF
 	sta.b QueueBusy
 	lda.w #$03FF
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.w #$01FF
-	sta.b $02
+	sta.b VRAMModeQueueSP
 	lda.w #$048F
-	sta.b $04
+	sta.b CGRAMQueueSP
 	stz.b QueueBusy
 	rtl
 ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues and uploads sprite
 									; OAM
-	ldx.b $02
+	ldx.b VRAMModeQueueSP
 	dex
 	stz.b $00,x
-	ldx.b $00
+	ldx.b VRAMQueueSP
 	dex
 	stz.b $00,x
 	sep #$11
@@ -1583,7 +1583,7 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	lda.w #$2200
 	sta.w DMAP0
 	rep #$30
-	ldx.w $0004
+	ldx.w CGRAMQueueSP
 	dex
 	stz.w $0000,x
 	sep #$10
@@ -1803,16 +1803,16 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	lda.b $00
 	sta.w A1T0L
 	sty.w MDMAEN
-.75:								; A = $0000, $00 = $03FF, $02 = $01FF, $04 = $048F, ...
+.75:								; A = $0000, VRAMQueueSP = $03FF, VRAMModeQueueSP = $01FF, ...
 	rep #$31
 	lda.w #$0000
 	tcd
 	lda.w #$03FF
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.w #$01FF
-	sta.b $02
+	sta.b VRAMModeQueueSP
 	lda.w #$048F
-	sta.b $04
+	sta.b CGRAMQueueSP
 	stz.w $2102
 	sec
 	lda.b $28
@@ -1862,14 +1862,14 @@ TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and
 	sta.b r0
 	stx.b $2E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
-	lda.b $00
+	stx.b VRAMQueueSP
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 InitSaveRAM:						; checks the save signatures and initializes save RAM and defaults on

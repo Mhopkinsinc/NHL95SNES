@@ -406,7 +406,7 @@ QueueTeamPalette:					; queues team A's 16 colours (TeamPalettes as unpacked at 
 	dec.b QueueBusy
 	tsc
 	sta.b tmp0
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tcs
 	pea.w $0020
 	phx
@@ -419,7 +419,7 @@ QueueTeamPalette:					; queues team A's 16 colours (TeamPalettes as unpacked at 
 	adc.w #$D80A
 	pha
 	tsc
-	sta.b $04
+	sta.b CGRAMQueueSP
 	lda.b tmp0
 	tcs
 	stz.b QueueBusy

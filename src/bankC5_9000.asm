@@ -175,18 +175,18 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	ldx.w #GradientBarTiles>>16
 	jsl.l DecompressUnpackbuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0010
 	pea.w $007E
 	pea.w $50DC
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	stz.w DMAEnShadow
 	jsl.l WaitTransfers
@@ -223,18 +223,18 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	lda.w #$3000
 	sta.b tmp1
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0080
 	pea.w AwayUniformPalettes>>16
 	pea.w AwayUniformPalettes&$FFFF
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l InitTextMap
 	lda.w #GameSetupPage&$FFFF

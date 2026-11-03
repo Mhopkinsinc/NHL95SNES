@@ -212,18 +212,18 @@ ExitPlayoffBracket:					; leaves the playoff bracket for the League Menu (Season
 	ldx.w #GradientBarTiles>>16
 	jsl.l DecompressUnpackbuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0010
 	pea.w $007E
 	pea.w $50DC
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	stz.w fadestep
@@ -377,10 +377,10 @@ AdvancePlayoffTeam:					; the playoff team A one round on (SRPOTeamRounds + 1 in
 	rts
 DrawBracketSeriesSummary:			; queues the selected series teams and win counts into the summary map
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w BracketCursorCell
 	asl a
 	tax
@@ -444,7 +444,7 @@ DrawBracketSeriesSummary:			; queues the selected series teams and win counts in
 	lsr a
 	lsr a
 	adc.b $D3
-.4:									; push Y, push A, A = $00, $00 = X, ...
+.4:									; push Y, push A, A = VRAMQueueSP, VRAMQueueSP = X, ...
 	pea.w $0006
 	pea.w $5F29
 	pea.w $007E
@@ -453,10 +453,10 @@ DrawBracketSeriesSummary:			; queues the selected series teams and win counts in
 	pea.w $5F24
 	pea.w $007E
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rts
 ScrollBracketToCursor:				; moves the bracket's scroll position ($65) toward the cursor column's
@@ -586,28 +586,28 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	lda.w #$FFFF
 	sta.w BG2VScroll
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0D40
 	pea.w $2300
 	pea.w $007E
 	pea.w $66BC
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0020
 	pea.w $007E
 	pea.w $73FC
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #TeamNameBarsMap&$FFFF
@@ -625,20 +625,20 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	dex
 	bpl .loop2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $3980
 	pea.w $0000
 	pea.w $007E
 	pea.w $55BC
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0040
 	pea.w $0040
 	pea.w $007E
@@ -652,10 +652,10 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	dex
 	dex
 	bpl .loop3
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsr.w RebuildBracketTeams
 	stz.b a0
@@ -772,10 +772,10 @@ RefreshBracketColumns:				; uploads the visible bracket map columns while preser
 	rts
 QueueBracketColumn:					; gathers and queues one bracket map column for the scrolling background
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0038
 	pea.w $0081
 	lda.b a0
@@ -797,10 +797,10 @@ QueueBracketColumn:					; gathers and queues one bracket map column for the scro
 	jsl.l AllocWorkBuf
 	pha
 	tay
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	clc
 	lda.b a0

@@ -8,19 +8,19 @@ QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from Face
 	adc.l FaceoffBoxFrameOffsets,x
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0280
 	lda.w FaceoffBoxVRAM
 	pha
 	pea.w $007E
 	phy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 FaceoffBoxFrameOffsets:				; per face off box frame (A * 2): the offset of its $280 bytes in
@@ -45,20 +45,20 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	dex
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
 	pea.w $7B5C
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $001E
 	pea.w $0001
 	pea.w GamePalette0>>16
@@ -89,10 +89,10 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lsr a
 	adc.w #$3F02
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$2030
 	sta.b tmp1
@@ -113,10 +113,10 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lda.w #SPFpuck
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$01E0
 	pha
 	jsl.l AllocWorkBuf
@@ -129,20 +129,20 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lda.w #DigitFontTiles&$FFFF
 	ldx.w #DigitFontTiles>>16
 	jsl.l Decompress
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #CenterIceTiles&$FFFF
 	ldx.w #CenterIceTiles>>16
 	jsl.l DecompressUnpackbuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0300
 	pea.w $2080
 	pea.w $007E
@@ -152,12 +152,12 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	xba
 	adc.w #unpackbuf&$FFFF
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0060
 	pea.w $00C2
@@ -169,10 +169,10 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	asl a
 	adc.w #$ADCA
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #RefsMap&$FFFF
@@ -188,28 +188,28 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	dex
 	bpl .loop2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $18A0
 	pea.w $2200
 	pea.w $007E
 	pea.w $5A0C
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pea.w $007E
 	pea.w $72AC
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	stz.w vramrow
@@ -732,7 +732,7 @@ QueuePadArrowVert:					; queues the pad's up / down edge arrow image (from + 0 o
 									; in bank $7F) to its three VRAM blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -756,7 +756,7 @@ QueuePadArrowVert:					; queues the pad's up / down edge arrow image (from + 0 o
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -764,7 +764,7 @@ QueuePadArrowCorner:				; queues the pad's corner arrow image (source + $E0) to 
 									; blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -789,7 +789,7 @@ QueuePadArrowCorner:				; queues the pad's corner arrow image (source + $E0) to 
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -797,7 +797,7 @@ QueuePadArrowSide:					; queues the pad's left / right edge arrow image (source 
 									; three VRAM blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -822,7 +822,7 @@ QueuePadArrowSide:					; queues the pad's left / right edge arrow image (source 
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -1159,12 +1159,12 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	sec
 	sbc.b tmp1
 	sta.b tmp0
-.4:									; QueueBusy - 1, A = $00, $00 = X, A = $0020, ...
+.4:									; QueueBusy - 1, A = VRAMQueueSP, VRAMQueueSP = X, A = $0020, ...
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$0020
 	sec
 	sbc.b tmp2
@@ -1234,10 +1234,10 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	pea.w $007F
 	adc.w #$1540
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 .6:									; A = Hscroll, A + $00C0, BG2HScroll = A, return
 	lda.w Hscroll

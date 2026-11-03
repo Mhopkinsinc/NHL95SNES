@@ -1418,10 +1418,10 @@ lcfound_close:						; closes team a2's line change box: its six rows overwritten
 	tay
 	jsl.l WaitTransfers
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	ldx.w #$0006
 .loop:								; loop: push Y, A = Y, A + $0020, Y = A, ...
 	pea.w $000B
@@ -1436,10 +1436,10 @@ lcfound_close:						; closes team a2's line change box: its six rows overwritten
 	tay
 	dex
 	bne .loop
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	pla
@@ -1698,10 +1698,10 @@ LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (t
 	rep #$20
 	ply
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0003
 	pea.w $0000
 	lda.b d0
@@ -1711,10 +1711,10 @@ LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (t
 	pea.w $1800
 	pea.w $007E
 	phy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	rts
 lcfound:							; from lineinput and other segments

@@ -27,10 +27,10 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	lda.w #StanleyCupMap&$FFFF
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.w #$506D
 	ldy.b $08
 .loop:								; loop: push X, push Y, A = Y, A + $0010, ...
@@ -56,20 +56,20 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	adc.w #$00E0
 	pha
 	adc.w #$0AE0
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007E
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$0010
@@ -496,20 +496,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($6D)
@@ -520,10 +520,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ply
 	bra .4
@@ -552,20 +552,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pei ($6D)
@@ -576,10 +576,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ply
 	bra .6
@@ -692,20 +692,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($6D)
@@ -716,10 +716,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	bra .9
 .8:									; call ScoutUseHomeTeamLogo
@@ -740,20 +740,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pei ($6D)
@@ -764,10 +764,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	bra .11
 .10:								; call ScoutUseVisTeamLogo
@@ -843,10 +843,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
@@ -855,10 +855,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	pea.w $0370
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b d7
 	lda.b $22,x
@@ -1725,20 +1725,20 @@ ScoutUseVisTeamLogo:				; clears the left photo tiles and shows the visiting tea
 	stz.w mesarea
 	stz.w ScratchBuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	lda.w #$0480
 	jsl.l AllocClearWorkBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b d7
 	lda.b $22,x
@@ -1753,20 +1753,20 @@ ScoutUseHomeTeamLogo:				; clears the right photo tiles and shows the home team 
 	stz.w mesarea
 	stz.w ScratchBuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	lda.w #$0480
 	jsl.l AllocClearWorkBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b $9D
 	lda.b $22,x

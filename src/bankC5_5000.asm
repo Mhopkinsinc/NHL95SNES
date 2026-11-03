@@ -125,19 +125,19 @@ DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from PauseTab
 	dey
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
 	lda.w PauseMapBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jmp.w ShowPenaltyBoxes
 PauseTabLists:						; per pause tab (pausetab * 2: Info, Stats, Options, the quit prompt): its
@@ -179,10 +179,10 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	jsl.l AllocWorkBuf
 	sta.l pausesavebuf
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0802
 	pea.w $0080
 	pea.w $5800
@@ -190,10 +190,10 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	pea.w $007E
 	lda.l pausesavebuf
 	pha
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsl.l BackupPauseBuffers
@@ -279,10 +279,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	bpl .loop
 	rep #$20
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
@@ -294,21 +294,21 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	clc
 	adc.w #$08C0
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0040
 	pea.w $0050
 	pea.w $007E
 	adc.w #$2200
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$4100
 	jsl.l AllocWorkBuf
@@ -322,10 +322,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	pla
 	sta.b r0
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0280
 	pea.w $3430
 	pea.w $007E
@@ -360,10 +360,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	asl a
 	adc.b r0
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsr.w PauseScoresClock
@@ -694,7 +694,7 @@ ShowPenaltyBoxPlayerBody:			; draws the penalty box player after the row limit c
 	dec.b QueueBusy
 	tsc
 	sta.b r3
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	phx
 	lda.w #$5800
@@ -705,7 +705,7 @@ ShowPenaltyBoxPlayerBody:			; draws the penalty box player after the row limit c
 	pea.w $007E
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b r3
 	tcs
 	stz.b QueueBusy
@@ -814,10 +814,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l MapSetToWRAM
 	ply
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $18A0
 	pea.w $2200
 	pea.w $007E
@@ -825,21 +825,21 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	clc
 	adc.w #$0930
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pea.w $007E
 	adc.w #$18A0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$21F0
@@ -948,10 +948,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w #SPFreplay
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$01E0
 	pha
 	jsl.l AllocWorkBuf
@@ -964,10 +964,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w #DigitFontTiles&$FFFF
 	ldx.w #DigitFontTiles>>16
 	jsl.l Decompress
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$01E0
@@ -1015,21 +1015,21 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	ldx.w #$007E
 	jsr.w DecompressLZSS
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
 	lda.w RestoreScreenBuf
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $001E
 	pea.w $0001
 	pea.w GamePalette0>>16
@@ -1060,10 +1060,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lsr a
 	adc.w #$3F02
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$4100
@@ -1078,10 +1078,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w #CenterIceTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0300
 	pea.w $2080
 	pea.w $007E
@@ -1091,12 +1091,12 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	xba
 	adc.w RestoreScreenBuf
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0060
 	pea.w $00C2
@@ -1108,10 +1108,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	asl a
 	adc.w #$ADCA
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$4E00
@@ -1132,10 +1132,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $09C0
 	pea.w $4320
 	pea.w $007E
@@ -1143,21 +1143,21 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w RestoreScreenBuf
 	adc.w #$0A00
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$09C0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
@@ -1171,10 +1171,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from the buffer at
 									; pausesavebuf) to VRAM $5800
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0800
 	pea.w $5800
 	pea.w $007E
@@ -1182,10 +1182,10 @@ QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from
 	inc a
 	inc a
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$0802
@@ -1296,18 +1296,18 @@ SetupScreen:						; common start of the stats screens: the tiled background, VRA
 	lda.w #GradientBarTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0010
 	pea.w $007E
 	pei ($34)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsr.w QueueHomePalette
 	jsr.w QueueVisPalette
@@ -1863,13 +1863,13 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lda.b a2
 	beq .1
 	ldy.w VisTeam
-.1:									; push Y, QueueBusy - 1, A = $04, $04 = X, ...
+.1:									; push Y, QueueBusy - 1, A = CGRAMQueueSP, CGRAMQueueSP = X, ...
 	phy
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0020
 	pea.w $007F
@@ -1880,10 +1880,10 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.b $01,s
 	jsl.l CreateSprite

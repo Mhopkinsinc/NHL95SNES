@@ -503,10 +503,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	dey
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $06A0
 	pea.w $44B0
 	pea.w $007E
@@ -518,21 +518,21 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	pea.w $5821
 	pea.w $007E
 	pei ($08)
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$06A0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w recbpr
 	pha

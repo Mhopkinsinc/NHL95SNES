@@ -9392,3 +9392,6 @@ $C04914,BG2ScrollHDMA,,code,"GamesToday's SetupHDMA (channel 4, DMAP $42, BBAD $
 $C40FEA,BracketWindowHDMA1,,code,"SetupPlayoffBracket's SetupHDMA (channel 6, DMAP $44, BBAD $26, bank $7E) points at it; it follows BracketWindowShape's 43 edge pairs",src/bankC4_0000.asm
 $C40FF1,BracketWindowHDMA2,,code,"SetupPlayoffBracket's SetupHDMA (channel 5, DMAP $44, BBAD $26, bank $7E) points at it",src/bankC4_0000.asm
 $C4D103,TitleBG34HDMA,,code,"TitleScreen's SetupHDMA (channel 7, DMAP 0, BBAD $0C) points at it; it follows TitleMapFill's two bytes",src/bankC4_D000.asm
+$0000,VRAMQueueSP,,code,"RAM: ResetTransferQueues sets $03FF; the queue routines swap it with S to push records (dec QueueBusy, lda / tsx / tcs / stx); ProcessQueuedTransfers reads the records with D = $0300",src/ram95s.asm
+$0002,VRAMModeQueueSP,,code,"RAM: ResetTransferQueues sets $01FF; ClearTextMap, QueueClearVRAM and others push through it; ProcessQueuedTransfers reads the records with D = $0100",src/ram95s.asm
+$0004,CGRAMQueueSP,,code,"RAM: ResetTransferQueues sets $048F; QueueHomePalette and the colour queue routines push through it; ProcessQueuedTransfers sends the records to CGDATA with D = $0400",src/ram95s.asm

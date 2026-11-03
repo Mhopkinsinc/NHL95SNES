@@ -430,10 +430,10 @@ QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM addr
 									; VRAM slots in tmp2 / tmp1
 	sta.b tmp0
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.b tmp0
 	asl a
 	tax
@@ -490,11 +490,11 @@ QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM addr
 	pha
 	pei ($2E)
 	phx
-.3:									; A = $00, $00 = X, QueueBusy = 0, return
-	lda.b $00
+.3:									; A = VRAMQueueSP, VRAMQueueSP = X, QueueBusy = 0, return
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 PackOAMHigh:						; packs the 128 size / X bit bytes at OAMHighBytes (BuildSpriteOAM) into

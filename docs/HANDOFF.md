@@ -379,7 +379,7 @@
   and ShowInjuryBox count it up; the face off clears it; setlccords opens the top line change box lower while it is set).
 - RAM left unnamed: dp $A5 (248 scratch uses; its tmp2 / tmp4 neighbours put 94S tmp3 there, but 94S uses tmp3 only in
   IntroSequence, so layout is the only evidence); $0085 (absolute d1+2, but the season screens use dp $85 as a game
-  number); $0004 (the CGRAM queue stack pointer, dp $04 unnamed); $7E8F3C / $8F5C (a palette inside the unpacked bracket
+  number); $7E8F3C / $8F5C (a palette inside the unpacked bracket
   map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
   puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
 - No DATA8_ labels are left (the data table pass: ../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):

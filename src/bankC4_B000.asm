@@ -519,10 +519,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	lda.w #$0040
 	sta.b a4
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	lda.w brightness
 	cmp.w #$0080
 	bne .loop2
@@ -538,7 +538,7 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 .4:									; A xor $FFFF, A + 1
 	eor.w #$FFFF
 	inc a
-.5:									; push A, $75 = A, A = $02, $02 = X, ...
+.5:									; push A, $75 = A, A = VRAMModeQueueSP, VRAMModeQueueSP = X, ...
 	pha
 	sta.b $75
 	pea.w $0080
@@ -546,10 +546,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	pea.w $1900
 	pea.w $007E
 	pei ($08)
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	lda.b $75
 	adc.b a4
@@ -567,10 +567,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	lda.w #$F254
 	sta.b d3
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	bra .loop2
 .6:									; A = d3, A + $75, d3 = A, if A < $FF10 go to .7, ...
 	lda.b d3
@@ -688,10 +688,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	dec.b $77
 	bne .loop4
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b a4
 	lda.b $08
 	clc
@@ -709,10 +709,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	adc.b $08
 	dex
 	bpl .loop5
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	inc.w TransfersReady
 	wai
@@ -989,20 +989,20 @@ QueueColours:						; queues d3 colours from X:A for CGRAM at Y (a record on the 
 	sta.b $77
 	stx.b $79
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	lda.b d3
 	asl a
 	pha
 	phy
 	pei ($79)
 	pei ($77)
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rtl
 PackFadeColours:					; writes the colour fade's d3 current colours as BGR words at A (the 8.8
@@ -1327,10 +1327,10 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	tya
 	beq .1
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	tya
 	asl a
 	asl a
@@ -1339,10 +1339,10 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	pea.w $0000
 	pea.w TextPalettes>>16
 	pea.w TextPalettes&$FFFF
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 .1:									; $CF = 0, $D1 = $0100, TextSpaceWidth = $0009, TextColLow = $FFFF, ...
 	stz.b $CF
