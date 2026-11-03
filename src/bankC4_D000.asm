@@ -712,8 +712,8 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsl.l MapSetToVRAM
 	sep #$20
@@ -826,8 +826,8 @@ InitAwardScreen:					; prepares the shared awards background, sprites, text map 
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsl.l MapSetToVRAM
 	ldy.w #$5000

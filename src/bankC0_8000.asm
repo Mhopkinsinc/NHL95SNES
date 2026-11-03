@@ -1,6 +1,7 @@
 ; Segment bankC0_8000: data, then the start of the engine: the NMI and IRQ with their hooks, the frame waits,
 ; the pad waits, RandomWord, the screen on / off routines and the 8 and 16 x 8 bit multiplies (as in 94S's
-; engine bank). The data before the engine is not traced to a use, except TiledBackMap.
+; engine bank). The data before the engine: the sprite objects (docs/sprite_objects.md), MenuBackMap and two
+; tables nothing reads.
 org $C08000
 SpriteObjects:						; the sprite objects (docs/sprite_objects.md): the record list, then the
 									; palettes; each record is one sprite, its frames point into bank $C1
@@ -976,8 +977,9 @@ SpriteRecordList:					; the records, by sprite number (the team logos first, by 
 	dw EASportsSprite,EALogoESprite,EALogoASprite,SportsWordSprite
 	dw ElectronicWordSprite,ItsInTheSprite,BlackBoxSprite,NHLShieldSprite
 	dw NHLPASprite
-TiledBackMap:						; tilemap of a 16 x 3 block of tiles repeated over the screen, LZSS
-									; packed; screen set-ups have the map unpacker send it to VRAM
+MenuBackMap:						; the menu screens' background: a 16 x 3 block of tiles repeated over a 32
+									; x 28 tilemap, LZSS packed; screen set-ups (SetupScreen, setoptions,
+									; ScoutingReport ...) have the map unpacker send it to VRAM
 	dw .end-.width					; bytes after this word
 .width:								; map width in tiles
 	db $20
@@ -986,7 +988,7 @@ TiledBackMap:						; tilemap of a 16 x 3 block of tiles repeated over the screen
 	dw $0700						; unpacked size in bytes, then the LZSS stream
 	incbin "../Extracted/segments/bankC0_8000.bin":$7F9..$939
 .end:								; the end of the set
-TileSetUnused:						; after TiledBackMap: a word ($01D5), then $30 and tile-like bytes (not
+TileSetUnused:						; after MenuBackMap: a word ($01D5), then $30 and tile-like bytes (not
 									; decoded); nothing reads it
 	incbin "../Extracted/segments/bankC0_8000.bin":$939..$B17
 BluesPaletteUnused:					; 16 colours: magenta, a ramp of blues, then magenta again; nothing reads

@@ -337,8 +337,8 @@
   entries), carry M/X through calls, size jump tables against the decoded code, and skip the 6 inline parameter bytes after
   calls to SetBGMapRegs and SetupHDMA. Several routines end in brk traps (the map unpacker's unhandled header forms).
 - asar: write a branch to a label, never to a number (bcc $C090D2 assembled the low byte as the offset); pei is `pei ($nn)`.
-- bankC0_8000: TileSetUnused and BluesPaletteUnused have no reader. TiledBackMap is named from
-  its pattern (94S MenuBackMap may be the same job: not checked). TransfersReady, DMAEnShadow, QueueBusy are named from the
+- bankC0_8000: TileSetUnused and BluesPaletteUnused have no reader. MenuBackMap takes 94S's
+  name: the same job (the menu screens' background, SetupScreen and the others), packed as one map set in 95. TransfersReady, DMAEnShadow, QueueBusy are named from the
   NMI code only. Mul8S's A-positive / X-negative path multiplies A by -A (tya where 94S has txa): that is in the ROM.
 - bankC0_4000: WordListUnused has no reader; MenuGradientHDMA / BracketGradientHDMA follow BG2ScrollHDMA. LargeSlotTiles maps a 16 x 16 sprite slot to
   its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
