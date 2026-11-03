@@ -48,7 +48,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	tax
 	lda.w $0004,y
 	sta.b tmp1
-	sta.b $A5
+	sta.b tmp3
 .loop2:								; loop: call InsertRankedLineForward, X - 1, X - 1, tmp1 - 1, ...
 	jsr.w InsertRankedLineForward
 	dex
@@ -192,7 +192,7 @@ PickUnusedLineForward:				; selects the next ranked forward not in the used list
 									; pool is exhausted
 	rep #$20
 	lda.b tmp2
-	cmp.b $A5
+	cmp.b tmp3
 	beq NoLineForward
 	asl a
 	tay

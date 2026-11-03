@@ -87,7 +87,7 @@ SetMarkedPlayersTeam:				; each player marked in the list at Y (bit 0; roster X)
 									; SRPlayerTeams entry
 	stx.b tmp2
 	sty.b tmp1
-	sta.b $A5
+	sta.b tmp3
 	asl a
 	asl a
 	asl a
@@ -119,7 +119,7 @@ SetMarkedPlayersTeam:				; each player marked in the list at Y (bit 0; roster X)
 	tax
 	lda.l SRPlayerTeams,x
 	and.w #$FFE0
-	ora.b $A5
+	ora.b tmp3
 	sta.l SRPlayerTeams,x
 .3:									; Y + 1, if Y is not tmp0 go to .1, return
 	iny
@@ -1656,17 +1656,17 @@ TradeListScrollEntries:				; the BG3 scroll HDMA entries at TradeScrollHDMA,y of
 	lda.b $67,x
 	inc a
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $77,x
-.loop:								; loop: if A < $A5 go to .1, A - $A5, if the result >= 0 go to .loop
-	cmp.b $A5
+.loop:								; loop: if A < tmp3 go to .1, A - tmp3, if the result >= 0 go to .loop
+	cmp.b tmp3
 	bcc .1
-	sbc.b $A5
+	sbc.b tmp3
 	bpl .loop
-.1:									; if A is not $0000 go to .2, A = $A5, A * 2, A * 2, ...
+.1:									; if A is not $0000 go to .2, A = tmp3, A * 2, A * 2, ...
 	cmp.w #$0000
 	bne .2
-	lda.b $A5
+	lda.b tmp3
 	asl a
 	asl a
 	asl a
@@ -1683,7 +1683,7 @@ TradeListScrollEntries:				; the BG3 scroll HDMA entries at TradeScrollHDMA,y of
 	asl a
 	sta.w TradeScrollHDMA+$3,y
 	tax
-	lda.b $A5
+	lda.b tmp3
 	asl a
 	asl a
 	asl a

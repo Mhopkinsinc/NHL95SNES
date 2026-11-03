@@ -1,11 +1,11 @@
 ; Segment bankC5_3000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5308D
 FixLineDefence:						; A = line slot player A if he is a defenceman (roster index $0C up to
-									; $A5, after the forwards), else the first defenceman from $0C not in the
+									; tmp3, after the forwards), else the first defenceman from $0C not in the
 									; line (PlayerInLine)
 	cmp.b $0C
 	bcc .1
-	cmp.b $A5
+	cmp.b tmp3
 	bcc .rts
 .1:									; A = $0C
 	lda.b $0C
@@ -78,7 +78,8 @@ AddRosterPlayer:					; adds player tmp2 to the roster table at tmp1: the count +
 	iny
 	plx
 	rts
-TeamGoalieRange:					; team record A: $A5 = the PlayerList index of its first player, $0A = the
+TeamGoalieRange:					; team record A: tmp3 = the PlayerList index of its first player, $0A =
+									; the
 									; index after its goalies (RecordGoalieCount)
 	tax
 	lda.l $C30000,x
@@ -86,11 +87,11 @@ TeamGoalieRange:					; team record A: $A5 = the PlayerList index of its first pl
 	lsr a
 	sec
 	sbc.w #$001C
-	sta.b $A5
+	sta.b tmp3
 	txa
 	jsr.w RecordGoalieCount
 	clc
-	adc.b $A5
+	adc.b tmp3
 	sta.b $0A
 	rts
 RecordGoalieCount:					; A = the goalie count of the team record at X (A = X on entry): the used
@@ -110,13 +111,13 @@ RecordGoalieCount:					; A = the goalie count of the team record at X (A = X on 
 	bne .loop
 	txa
 	rts
-TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first forward (after
+TeamForwardRange:					; team record A: tmp3 = the PlayerList index of its first forward (after
 									; the goalies), $0A = the index after its forwards (high nibble); no
 									; caller found
 	pha
 	tax
 	jsr.w RecordGoalieCount
-	sta.b $A5
+	sta.b tmp3
 	pla
 	tax
 	lda.l $C30000,x
@@ -125,8 +126,8 @@ TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first f
 	sec
 	sbc.w #$001C
 	clc
-	adc.b $A5
-	sta.b $A5
+	adc.b tmp3
+	sta.b tmp3
 	txa
 	clc
 	adc.l $C30006,x
@@ -137,7 +138,7 @@ TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first f
 	lsr a
 	lsr a
 	lsr a
-	adc.b $A5
+	adc.b tmp3
 	sta.b $0A
 	rts
 UnpackTeamBonuses:					; unpacks the team bonus bytes at X into roster table Y: the nibbles of

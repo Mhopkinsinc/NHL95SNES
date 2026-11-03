@@ -1212,8 +1212,8 @@ PopulateBracketTeams:				; places playoff teams and their name bars through the 
 	cmp.w #$0004
 	bcc .1
 	lda.w #$0003
-.1:									; $A5 = A, A = X, tmp1 = X, A * 2, ...
-	sta.b $A5
+.1:									; tmp3 = A, A = X, tmp1 = X, A * 2, ...
+	sta.b tmp3
 	txa
 	stx.b tmp1
 	asl a
@@ -1235,7 +1235,7 @@ PopulateBracketTeams:				; places playoff teams and their name bars through the 
 	plx
 	inx
 	inx
-	dec.b $A5
+	dec.b tmp3
 	bpl .loop2
 	ldx.b tmp1
 	dex
@@ -1339,9 +1339,9 @@ AddPlayerSeasonStats:				; adds one team's game player stats to the season total
 	sta.b tmp2
 	pea.w $7E7F
 	plb
-.1:									; $A5 = $7E003A,x, $0A = X, $0C = Y, tmp2 - 1, ...
+.1:									; tmp3 = $7E003A,x, $0A = X, $0C = Y, tmp2 - 1, ...
 	lda.l $7E003A,x
-	sta.b $A5
+	sta.b tmp3
 	stx.b $0A
 	sty.b $0C
 	dec.b tmp2
@@ -1354,9 +1354,9 @@ AddPlayerSeasonStats:				; adds one team's game player stats to the season total
 	clc
 	adc.b tmp0
 	tax
-	lda.b $A5
+	lda.b tmp3
 	jsr.w SetSeasonGoals
-	lda.b $A5
+	lda.b tmp3
 	jsl.l SeasonAssistsLong
 	stx.b tmp0
 	ldy.b $0C
@@ -1365,20 +1365,20 @@ AddPlayerSeasonStats:				; adds one team's game player stats to the season total
 	clc
 	adc.b tmp0
 	tax
-	lda.b $A5
+	lda.b tmp3
 	jsr.w SetSeasonAssists
 	bra .3
-.2:									; A = $003A,y, A or $00A2,y, if the result = 0 go to .3, A = $A5, ...
+.2:									; A = $003A,y, A or $00A2,y, if the result = 0 go to .3, A = tmp3, ...
 	lda.w $003A,y
 	ora.w $00A2,y
 	and.w #$00FF
 	beq .3
-	lda.b $A5
+	lda.b tmp3
 	jsl.l SeasonGoalieGamesLong
 	inx
-	lda.b $A5
+	lda.b tmp3
 	jsr.w SetSeasonGoalieGames
-	lda.b $A5
+	lda.b tmp3
 	jsl.l SeasonGoalsAgainstLong
 	ldy.b $0C
 	lda.w $003A,y
@@ -1388,9 +1388,9 @@ AddPlayerSeasonStats:				; adds one team's game player stats to the season total
 	txa
 	adc.b $0E
 	tax
-	lda.b $A5
+	lda.b tmp3
 	jsr.w SetSeasonGoalsAgainst
-	lda.b $A5
+	lda.b tmp3
 	jsl.l SeasonSavesLong
 	stx.b tmp0
 	ldy.b $0C
@@ -1401,7 +1401,7 @@ AddPlayerSeasonStats:				; adds one team's game player stats to the season total
 	clc
 	adc.b tmp0
 	tax
-	lda.b $A5
+	lda.b tmp3
 	jsr.w SetSeasonSaves
 .3:									; X = $0A, Y = $0C, X + 1, X + 1, ...
 	ldx.b $0A
@@ -1676,10 +1676,10 @@ AddPlayoffTeamPlayerStats:			; adds a team's game player goals and assists to th
 	sta.b tmp2
 	lda.w #$0018
 	sta.b tmp1
-.loop2:								; loop: A = $003A,y, A and $00FF, $A5 = A, A = $006E,y, ...
+.loop2:								; loop: A = $003A,y, A and $00FF, tmp3 = A, A = $006E,y, ...
 	lda.w $003A,y
 	and.w #$00FF
-	sta.b $A5
+	sta.b tmp3
 	lda.w $006E,y
 	and.w #$00FF
 	sta.b $0A
@@ -1697,23 +1697,23 @@ AddPlayoffTeamPlayerStats:			; adds a team's game player goals and assists to th
 	sta.b $0E
 	dec.b $0E
 	bmi .2
-.loop3:								; loop: $A5 * 2, $0A * 2, $10 * 2, $0E - 1, ...
-	asl.b $A5
+.loop3:								; loop: tmp3 * 2, $0A * 2, $10 * 2, $0E - 1, ...
+	asl.b tmp3
 	asl.b $0A
 	sec
 	rol.b $0C
 	asl.b $10
 	dec.b $0E
 	bpl .loop3
-.2:									; A = SRPOGoals,x, A and $10, A + $A5, $A5 = A, ...
+.2:									; A = SRPOGoals,x, A and $10, A + tmp3, tmp3 = A, ...
 	lda.l SRPOGoals,x
 	and.b $10
 	clc
-	adc.b $A5
-	sta.b $A5
+	adc.b tmp3
+	sta.b tmp3
 	lda.l SRPOGoals,x
 	and.b $0C
-	ora.b $A5
+	ora.b tmp3
 	sta.l SRPOGoals,x
 	lda.l SRPOAssists,x
 	and.b $10

@@ -488,11 +488,11 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	cpy.w #$0008
 	bne .loop
 	jmp.w .15
-.4:									; call CreatedPlayerBits, call NextSaveBits3, $A5 = $0000
+.4:									; call CreatedPlayerBits, call NextSaveBits3, tmp3 = $0000
 	jsr.w CreatedPlayerBits
 	jsr.w NextSaveBits3
 	ldx.w #$0000
-	stx.b $A5
+	stx.b tmp3
 .5:									; push X, call NextSaveBits5, pull X, if A = $0000 go to .8, ...
 	phx
 	jsr.w NextSaveBits5
@@ -503,14 +503,14 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bne .6
 	lda.w #$003D
 	bra .7
-.6:									; A + $0040, A + $A5
+.6:									; A + $0040, A + tmp3
 	clc
 	adc.w #$0040
-	adc.b $A5
-.7:									; mesarea,x = A, $A5 = $0020, X + 1, if X is not $0008 go to .5, ...
+	adc.b tmp3
+.7:									; mesarea,x = A, tmp3 = $0020, X + 1, if X is not $0008 go to .5, ...
 	sta.w mesarea,x
 	lda.w #$0020
-	sta.b $A5
+	sta.b tmp3
 	inx
 	cpx.w #$0008
 	bne .5
@@ -527,10 +527,10 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bra .loop2
 .9:									; pull X
 	plx
-.10:								; mesarea,x = $0020, $A5 = 0, X + 1, push X
+.10:								; mesarea,x = $0020, tmp3 = 0, X + 1, push X
 	lda.w #$0020
 	sta.w mesarea,x
-	stz.b $A5
+	stz.b tmp3
 	inx
 	phx
 .11:								; push X, call NextSaveBits5, pull X, if A = $0000 go to .loop3, ...
@@ -543,14 +543,14 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bne .12
 	lda.w #$003D
 	bra .13
-.12:								; A + $0040, A + $A5
+.12:								; A + $0040, A + tmp3
 	clc
 	adc.w #$0040
-	adc.b $A5
-.13:								; mesarea,x = A, $A5 = $0020, X + 1, A = X, ...
+	adc.b tmp3
+.13:								; mesarea,x = A, tmp3 = $0020, X + 1, A = X, ...
 	sta.w mesarea,x
 	lda.w #$0020
-	sta.b $A5
+	sta.b tmp3
 	inx
 	txa
 	sec
@@ -851,7 +851,7 @@ JerseyNumberTaken:					; carry set when a player of VisTeam in SRPlayerTeams alr
 .4:									; return
 	sec
 	rts
-RecordOverallLong:					; RecordOverall for long calls, tmp0, $A5 and $0A kept
+RecordOverallLong:					; RecordOverall for long calls, tmp0, tmp3 and $0A kept
 	pei ($9F)
 	pei ($A5)
 	pei ($0A)
@@ -861,7 +861,7 @@ RecordOverallLong:					; RecordOverall for long calls, tmp0, $A5 and $0A kept
 	plx
 	stx.b $0A
 	plx
-	stx.b $A5
+	stx.b tmp3
 	plx
 	stx.b tmp0
 	rtl
@@ -872,9 +872,9 @@ RecordOverall:						; A = the overall rating (25-100) of the player record in me
 	lda.l $7E24DC
 	beq .1
 	ldx.w #$F0C9
-.1:									; tmp0 = X, $A5 = 0, A = $000F
+.1:									; tmp0 = X, tmp3 = 0, A = $000F
 	stx.b tmp0
-	stz.b $A5
+	stz.b tmp3
 	lda.w #$000F
 .loop:								; loop: $0A = A, A * 2, X = A, A = BitMaskTable2,x, ...
 	sta.b $0A
@@ -903,13 +903,13 @@ RecordOverall:						; A = the overall rating (25-100) of the player record in me
 	tyx
 	jsl.l Mul8U
 	clc
-	adc.b $A5
-	sta.b $A5
+	adc.b tmp3
+	sta.b tmp3
 .3:									; A = $0A, A - 1, if the result is not 0 go to .loop, ...
 	lda.b $0A
 	dec a
 	bne .loop
-	lda.b $A5
+	lda.b tmp3
 	bpl .4
 	lda.w #$0000
 .4:									; if RatingMode = 0 go to .5, A / 2

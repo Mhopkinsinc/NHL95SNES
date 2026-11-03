@@ -185,7 +185,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	lda.b $0A
 	and.w #$FFF8
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	tay
 	sep #$20
 	lda.l $C00000,x
@@ -376,14 +376,14 @@ QueueTextTiles:						; queues the tiles DrawText made for VRAM (text row Y)
 	asl a
 	phy
 	pea.w $007E
-	adc.b $A5
+	adc.b tmp3
 	pha
 	lda.b $0A
 	adc.w #$0007
 	sec
 	sbc.b $07,s
 	and.w #$FFF8
-	sta.b $A5
+	sta.b tmp3
 	asl a
 	sta.b $07,s
 	tax
@@ -412,11 +412,11 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	asl a
 	adc.b $D3
 	tax
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b p0
 	sec
 	sbc.w #$3000
@@ -436,10 +436,10 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	tya
 	adc.w #$001F
 	sta.l $7E0040,x
-.1:									; X + 1, X + 1, $A5 - 1, if the result is not 0 go to .loop, ...
+.1:									; X + 1, X + 1, tmp3 - 1, if the result is not 0 go to .loop, ...
 	inx
 	inx
-	dec.b $A5
+	dec.b tmp3
 	bne .loop
 	lda.b $0A
 	sec
@@ -463,7 +463,7 @@ SendTextMap:						; queues the text map ($800 bytes) for VRAM at $5C00
 	rtl
 SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns TextColLow to
 									; TextColHigh, to the VRAM map at $5C00 from row X; nothing calls it
-	sty.b $A5
+	sty.b tmp3
 	tay
 	lda.w TextColLow
 	lsr a
@@ -512,7 +512,7 @@ SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns Te
 	tya
 	adc.w #$0040
 	tay
-	dec.b $A5
+	dec.b tmp3
 	bne .loop
 	tsc
 	sta.b VRAMQueueSP

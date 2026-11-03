@@ -377,8 +377,10 @@
 - setlccords (was setlccords) is resolved: the bytes at $C54120 are `ldy.w #$5AB5`. The old `phy` entry at $C54122 was
   its operand's last byte, and that entry's caller was a false match. $18AA is LCBoxesClosed (CloseLCBoxes, ShowGoalBox
   and ShowInjuryBox count it up; the face off clears it; setlccords opens the top line change box lower while it is set).
-- RAM left unnamed: dp $A5 (248 scratch uses; its tmp2 / tmp4 neighbours put 94S tmp3 there, but 94S uses tmp3 only in
-  IntroSequence, so layout is the only evidence); $0085 (absolute d1+2, but the season screens use dp $85 as a game
+- dp $A5 is tmp3: 95 keeps 94S's direct page register block (d0-d7, a0-a3, tmp0-tmp4) in order, $26 lower, and $A5
+  is tmp3's slot, used as a scratch word. dp $00 / $02 / $04 are 95's transfer queue stack pointers (VRAMQueueSP,
+  VRAMModeQueueSP, CGRAMQueueSP); 94S has no such queues.
+- RAM left unnamed: $0085 (absolute d1+2, but the season screens use dp $85 as a game
   number); $7E8F3C / $8F5C (a palette inside the unpacked bracket
   map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
   puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.

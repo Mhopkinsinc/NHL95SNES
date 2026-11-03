@@ -363,7 +363,7 @@ PadArrowsDone:						; the end of DrawPadArrows: the OAM pointer ($28) kept, the 
 	rtl
 DrawPadArrow:						; the arrow for player Y: over him when he is on screen, else at the
 									; screen edge pointing at him; then on to the continuation in X
-	stx.b $A5
+	stx.b tmp3
 	lda.w Xpos,y
 	clc
 	adc.w #$0080
@@ -895,7 +895,7 @@ DrawPadTag:							; pad Y's tag ($0F: none): the player's screen spot, then his 
 	adc.w #$2436
 	sta.b tmp2
 	lda.w #TagSecondDigit
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagSecondDigit:						; a tag continuation: the second roster number digit, 8 pixels right
 	clc
@@ -905,7 +905,7 @@ TagSecondDigit:						; a tag continuation: the second roster number digit, 8 pix
 	lda.b tmp2
 	sta.b tmp1
 	lda.w #TagPositionMark
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagPositionMark:					; a tag continuation: the position mark (PositionMarkTiles), none for
 									; position 0
@@ -918,7 +918,7 @@ TagPositionMark:					; a tag continuation: the position mark (PositionMarkTiles)
 	lda.l PositionMarkTiles,x
 	sta.b tmp1
 	lda.w #TagPadMarker
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagPadMarker:						; a tag continuation: the pad's marker 20 pixels up, its tile
 									; (PadMarkerTiles) and its mirror, 16 x 16 each
@@ -1046,7 +1046,7 @@ TagReplayMarker:					; the replay camera cursor's marker (tag slot $0C): the fou
 	adc.w #$0010
 	sta.b $0C
 	lda.w #PadTagFrameDoneJump&$FFFF
-	sta.b $A5
+	sta.b tmp3
 	ldy.b $2A
 	lda.w #SPFreplay
 	jml.l DrawFrameLayout
@@ -1060,7 +1060,7 @@ PadMarkerTiles:						; the marker tile of each pad
 PositionMarkTiles:					; the position mark tile of each position
 	db $8E,$27,$40,$24,$40,$24,$41,$24,$42,$24,$43,$24,$44,$24
 PutTagChar:							; writes one 8 x 8 tag sprite (tile tmp1) at screen x $0A, y $0C into the
-									; OAM buffer (skipped off screen), then on to the continuation in $A5
+									; OAM buffer (skipped off screen), then on to the continuation in tmp3
 	ldy.b $2A
 	pei ($A1)
 	ldx.w #$0000
@@ -1179,7 +1179,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	lsr a
 	lsr a
 	pha
-	stx.b $A5
+	stx.b tmp3
 	tax
 	lda.b tmp2
 	xba
@@ -1204,7 +1204,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	pha
 	stz.b tmp2
 	lda.b tmp0
-	adc.b $A5
+	adc.b tmp3
 	sta.b tmp0
 .5:									; A = tmp1, A / 2, A / 2, push A, ...
 	lda.b tmp1
@@ -1745,7 +1745,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	ldy.b tmp1
 	lda.w $0000,y
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	lda.w $0002,y
 	inc a
 	sta.b $0A
@@ -1814,7 +1814,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	adc.b $0A
 	sta.b $0A
 	lda.w $003A,y
-	cmp.b $A5
+	cmp.b tmp3
 	bcs .7
 	jmp.w .13
 .7:									; if A < $0A go to .8, go to .13
@@ -1834,12 +1834,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	pla
 	lda.w #$0500
 	bra .12
-.9:									; A = $003A,y, A - $A5, A + 1, $A5 = A, ...
+.9:									; A = $003A,y, A - tmp3, A + 1, tmp3 = A, ...
 	lda.w $003A,y
 	sec
-	sbc.b $A5
+	sbc.b tmp3
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	pla
 	tax
 	sec
@@ -1848,27 +1848,27 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	sta.b $0A
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 .10:								; $00AC,y = $FFFF, $00DE,y = A, go to .14
 	lda.w #$FFFF
@@ -1931,7 +1931,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	asl a
 	asl a
 	adc.b tmp1
-	sta.b $A5
+	sta.b tmp3
 	pha
 	lda.b $03,s
 	tay
@@ -1940,9 +1940,9 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	jsr.w NextSaveBits3
 	stz.b $0C
 	pei ($A5)
-.19:								; call NextSaveBits5, X = $A5, if A = $0000 go to .22, ...
+.19:								; call NextSaveBits5, X = tmp3, if A = $0000 go to .22, ...
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	cmp.w #$0000
 	beq .22
 	cmp.w #$001D
@@ -1953,12 +1953,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	clc
 	adc.w #$0040
 	adc.b $0C
-.21:								; $0118,x = A, $0C = $0020, X + 1, $A5 = X, ...
+.21:								; $0118,x = A, $0C = $0020, X + 1, tmp3 = X, ...
 	sta.w $0118,x
 	lda.w #$0020
 	sta.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	txa
 	sec
 	sbc.b $01,s
@@ -1986,11 +1986,11 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	sta.w $0118,x
 	stz.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	phx
-.25:								; call NextSaveBits5, X = $A5, if A = $0000 go to .loop7, ...
+.25:								; call NextSaveBits5, X = tmp3, if A = $0000 go to .loop7, ...
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	cmp.w #$0000
 	beq .loop7
 	cmp.w #$001D
@@ -2001,12 +2001,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	clc
 	adc.w #$0040
 	adc.b $0C
-.27:								; $0118,x = A, $0C = $0020, X + 1, $A5 = X, ...
+.27:								; $0118,x = A, $0C = $0020, X + 1, tmp3 = X, ...
 	sta.w $0118,x
 	lda.w #$0020
 	sta.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	txa
 	sec
 	sbc.b $01,s
@@ -2020,25 +2020,25 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	cmp.w #$0009
 	beq .28
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	inx
-	stx.b $A5
+	stx.b tmp3
 	bra .loop7
-.28:								; pull X, pull A, $A5 = A, call NextSaveBits7, ...
+.28:								; pull X, pull A, tmp3 = A, call NextSaveBits7, ...
 	plx
 	pla
-	sta.b $A5
+	sta.b tmp3
 	jsr.w NextSaveBits7
-	ldx.b $A5
+	ldx.b tmp3
 	sta.w $0110,x
 	lda.w #$0006
 	sta.b $0A
-.loop8:								; loop: call NextSaveBits8, A 8-bit, X = $A5, X + 1, ...
+.loop8:								; loop: call NextSaveBits8, A 8-bit, X = tmp3, X + 1, ...
 	jsr.w NextSaveBits8
 	sep #$20
-	ldx.b $A5
+	ldx.b tmp3
 	inx
-	stx.b $A5
+	stx.b tmp3
 	sta.w $0110,x
 	rep #$20
 	dec.b $0A

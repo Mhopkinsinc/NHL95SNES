@@ -34,6 +34,7 @@ d7					=	$9B			; frames elapsed, added into speeds
 tmp0				=	$9F			; scratch word; tmp0+1 is the next byte
 tmp1				=	$A1			; scratch word
 tmp2				=	$A3			; scratch byte; tmp2+1 is the next byte
+tmp3				=	$A5			; scratch word (the frame code's continuation in jmp ($00A5))
 tmp4				=	$A7			; scratch word
 curobj				=	$B7			; object index of the object being updated (updateplayers,
 PadRaw1				=	$C1			; controller 1 buttons held

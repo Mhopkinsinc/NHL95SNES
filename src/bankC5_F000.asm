@@ -112,13 +112,13 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	lsr a
 	lsr a
 	and.w #$01FF
-	sta.b $A5
+	sta.b tmp3
 	lda.b $34,x
 	and.w #$FF00
 	asl a
 	ora.b $36,x
 	tsb.b tmp2
-	tsb.b $A5
+	tsb.b tmp3
 	lda.b $28,x
 .6:									; A * 2, A + $26,x, X = A, A = $00,x, ...
 	asl a
@@ -228,16 +228,16 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	sta.w $0000,y
 	iny
 	sty.b $2A
-.19:								; A = $A5, A + 1, A + 1, if $0010 bits clear go to .20, ...
-	lda.b $A5
+.19:								; A = tmp3, A + 1, A + 1, if $0010 bits clear go to .20, ...
+	lda.b tmp3
 	inc a
 	inc a
 	bit.w #$0010
 	beq .20
 	clc
 	adc.w #$0010
-.20:								; $A5 = A, X + 1, X + 1, tmp1 - 1, ...
-	sta.b $A5
+.20:								; tmp3 = A, X + 1, X + 1, tmp1 - 1, ...
+	sta.b tmp3
 	inx
 	inx
 	dec.b tmp1
@@ -268,12 +268,12 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	lsr a
 	lsr a
 	and.w #$01FF
-	sta.b $A5
+	sta.b tmp3
 	lda.b $34,x
 	and.w #$FF00
 	asl a
 	ora.b $36,x
-	tsb.b $A5
+	tsb.b tmp3
 	tsb.b tmp2
 	lda.b $28,x
 .24:								; A * 2, A + $26,x, X = A, A = $00,x, ...
@@ -393,16 +393,16 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	sta.w $0000,y
 	iny
 	sty.b $2A
-.37:								; A = $A5, A + 1, A + 1, if $0010 bits clear go to .38, ...
-	lda.b $A5
+.37:								; A = tmp3, A + 1, A + 1, if $0010 bits clear go to .38, ...
+	lda.b tmp3
 	inc a
 	inc a
 	bit.w #$0010
 	beq .38
 	clc
 	adc.w #$0010
-.38:								; $A5 = A, X + 1, X + 1, tmp1 - 1, ...
-	sta.b $A5
+.38:								; tmp3 = A, X + 1, X + 1, tmp1 - 1, ...
+	sta.b tmp3
 	inx
 	inx
 	dec.b tmp1

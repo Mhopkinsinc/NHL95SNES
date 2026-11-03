@@ -578,7 +578,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	pha
 	tay
 	asl a
-	sta.b $A5
+	sta.b tmp3
 .loop:								; loop: A = tmboxlist,y, Y + 1, A and $00FF, ...
 	lda.w tmboxlist,y
 	iny
@@ -586,7 +586,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	bit.w #$0080
 	bne .1
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmpdst,x
 	bit.w #$4000
@@ -602,7 +602,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	bit.w #$0080
 	bne rtsmenu
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmpdst,x
 	bit.w #$4000

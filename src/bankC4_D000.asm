@@ -57,14 +57,14 @@ InitPlayerTeams:					; SRPlayerTeams from the team data: each player of teams $1
 	tya
 	and.w #$07FF
 	tax
-.2:									; tmp2 = X, A = X, A - $0038, $A5 = A, ...
+.2:									; tmp2 = X, A = X, A - $0038, tmp3 = A, ...
 	stx.b tmp2
 	txa
 	sec
 	sbc.w #$0038
-	sta.b $A5
+	sta.b tmp3
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	lsr a
 	lsr a
 	tay
@@ -76,28 +76,28 @@ InitPlayerTeams:					; SRPlayerTeams from the team data: each player of teams $1
 	asl a
 	asl a
 	asl a
-	sta.b $A5
+	sta.b tmp3
 	lda.l $C2FFFF,x
 	and.w #$7F00
 	asl a
-	tsb.b $A5
+	tsb.b tmp3
 	lda.w SRPlayerTeams&$FFFF,y
 	and.w #$000F
 	bra .4
-.3:									; A = tmp0, A / 2, $A5 = A, A = $C2FFFF,x, ...
+.3:									; A = tmp0, A / 2, tmp3 = A, A = $C2FFFF,x, ...
 	lda.b tmp0
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.l $C2FFFF,x
 	and.w #$7F00
 	lsr a
 	lsr a
 	lsr a
-	tsb.b $A5
+	tsb.b tmp3
 	lda.w SRPlayerTeams&$FFFF,y
 	and.w #$F000
-.4:									; A or $A5, SRPlayerTeams&$FFFF,y = A, X = tmp2, X + 1, ...
-	ora.b $A5
+.4:									; A or tmp3, SRPlayerTeams&$FFFF,y = A, X = tmp2, X + 1, ...
+	ora.b tmp3
 	sta.w SRPlayerTeams&$FFFF,y
 	ldx.b tmp2
 	inx

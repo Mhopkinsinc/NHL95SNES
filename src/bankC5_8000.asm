@@ -231,7 +231,7 @@ Decompress:							; unpack the set at X:A (size word, format word, stream) to [$
 	sta.b $A6
 	lda.b $2E
 	sta.b $A4
-	sta.b $A5
+	sta.b tmp3
 	sta.b $A0
 	stx.b tmp1
 	rep #$31
@@ -743,11 +743,11 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	dex
 	bne .loop
 	bra .7
-.6:									; Y = $0003, A = [r1],y, A and $00FF, $A5 = A, ...
+.6:									; Y = $0003, A = [r1],y, A and $00FF, tmp3 = A, ...
 	ldy.w #$0003
 	lda.b [r1],y
 	and.w #$00FF
-	sta.b $A5
+	sta.b tmp3
 	ldy.w #$0002
 	lda.b tmp0
 .loop2:								; loop: VMADDL = A, X = $001F
@@ -777,7 +777,7 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	lda.b tmp0
 	adc.w #$0020
 	sta.b tmp0
-	dec.b $A5
+	dec.b tmp3
 	bne .loop2
 .7:									; pull A, call FreeWorkBuf, call NextMapSetChunk, Y = $0004, ...
 	pla
@@ -790,11 +790,11 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	ldy.w #$0005
 	lda.b [r1],y
 	and.w #$00FF
-	sta.b $A5
+	sta.b tmp3
 	ldy.w #$0006
 	lda.b [r1],y
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	bne .8
 	ldy.w #$0007
 	lda.b [r1],y
@@ -812,7 +812,7 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	adc.w #$0000
 	sta.b $2E
 	lda.b [r1],y
-	sta.b $A5
+	sta.b tmp3
 	sta.b $0A
 	lsr.b $0A
 	pha
@@ -827,12 +827,12 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	lda.b tmp2
 	sta.l VMADDL
 	ldy.w #$0000
-.loop5:								; loop: VMDATAL = [r0],y, Y + 1, Y + 1, if Y < $A5 go to .loop5, ...
+.loop5:								; loop: VMDATAL = [r0],y, Y + 1, Y + 1, if Y < tmp3 go to .loop5, ...
 	lda.b [r0],y
 	sta.l VMDATAL
 	iny
 	iny
-	cpy.b $A5
+	cpy.b tmp3
 	bcc .loop5
 	pla
 	jsl.l FreeWorkBuf
@@ -911,7 +911,7 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	sta.l VMAIN
 	ldy.w #$0003
 	lda.b [r1],y
-	sta.b $A5
+	sta.b tmp3
 	stz.b $A6
 	ldy.w #$0002
 	lda.b [r1],y
@@ -932,7 +932,7 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	sta.b tmp2
 	sta.l VMADDL
 	sep #$20
-	dec.b $A5
+	dec.b tmp3
 	bne .loop
 	rep #$20
 	pla
@@ -971,7 +971,7 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	adc.w #$0000
 	sta.b $2E
 	lda.b [r1],y
-	sta.b $A5
+	sta.b tmp3
 	pha
 	jsl.l AllocWorkBuf
 	pha
@@ -988,11 +988,11 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	lda.b #$80
 	sta.l VMAIN
 	ldy.w #$0000
-.loop3:								; loop: VMDATAH = [r0],y, Y + 1, if Y < $A5 go to .loop3, A 16-bit, ...
+.loop3:								; loop: VMDATAH = [r0],y, Y + 1, if Y < tmp3 go to .loop3, A 16-bit, ...
 	lda.b [r0],y
 	sta.l VMDATAH
 	iny
-	cpy.b $A5
+	cpy.b tmp3
 	bcc .loop3
 	rep #$20
 	pla

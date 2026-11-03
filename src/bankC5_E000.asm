@@ -5,7 +5,7 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 									; shared out, each goal to a random skater (+$3A goals, +$A2 shots), then
 									; the assists
 	lda.w $000C,y
-	sta.b $A5
+	sta.b tmp3
 	lda.w $0020,y
 	sta.b $0A
 	lda.w $001E,y
@@ -59,8 +59,8 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	inc.w $003A,x
 	inc.w $00A2,x
 	bra .loop2
-.1:									; if $A5 is not 0 go to .2, go to SimPlayerStatsReturn
-	lda.b $A5
+.1:									; if tmp3 is not 0 go to .2, go to SimPlayerStatsReturn
+	lda.b tmp3
 	bne .2
 	jmp.w SimPlayerStatsReturn
 .2:									; Y = $0002, SimGroupStart = [p0],y, SimPickFirst = A, Y + 1, ...
@@ -85,10 +85,10 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	bne .3
 	xba
 	bra .4
-.3:									; X = $00C0, call Mul16U, A = $A5, A - $36, ...
+.3:									; X = $00C0, call Mul16U, A = tmp3, A - $36, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
-	lda.b $A5
+	lda.b tmp3
 	sec
 	sbc.b $36
 	sta.w SimGiveLater
@@ -104,20 +104,20 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	sta.w SimGiveCount
 	jsr.w SimGiveGoals
 	stz.w SimGiveLater
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	beq SimPlayerStatsReturn
-	sta.b $A5
+	sta.b tmp3
 	xba
 	and.w #$FF00
 	cmp.w #$0100
 	bne .5
 	xba
 	bra .6
-.5:									; X = $00C0, call Mul16U, A = $A5, A - $36, ...
+.5:									; X = $00C0, call Mul16U, A = tmp3, A - $36, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
-	lda.b $A5
+	lda.b tmp3
 	sec
 	sbc.b $36
 	sta.w SimGiveLater
@@ -323,7 +323,7 @@ SaveDayGameStats:					; for each of the day's games not played by a user: AddTea
 	pla
 	sta.b $0A
 	pla
-	sta.b $A5
+	sta.b tmp3
 	pla
 	sta.b tmp2
 	pla
@@ -465,14 +465,14 @@ WriteTeamStatBit:					; writes bit 0 of tmp1 to bit r2 of the team stats bit str
 	lda.l ByteBitMasks,x
 	and.w #$00FF
 	eor.w #$FFFF
-	sta.b $A5
+	sta.b tmp3
 	lda.b r2
 	lsr a
 	lsr a
 	lsr a
 	tax
 	lda.l SRTeamStats,x
-	and.b $A5
+	and.b tmp3
 	sta.l SRTeamStats,x
 	inc.b r2
 	rts
@@ -482,14 +482,14 @@ WriteTeamStatBit:					; writes bit 0 of tmp1 to bit r2 of the team stats bit str
 	tax
 	lda.l ByteBitMasks,x
 	and.w #$00FF
-	sta.b $A5
+	sta.b tmp3
 	lda.b r2
 	lsr a
 	lsr a
 	lsr a
 	tax
 	lda.l SRTeamStats,x
-	ora.b $A5
+	ora.b tmp3
 	sta.l SRTeamStats,x
 	inc.b r2
 	rts
@@ -659,18 +659,18 @@ ClearPlayerGoals:					; clears player A's 9-bit field of SRGoals
 ClearCreatedGoals:					; ClearPlayerGoals for each created player slot in use (its first 3 bits
 									; not 0), players $26A on
 	lda.w #$026A
-	sta.b $A5
+	sta.b tmp3
 	ldy.w #$0000
-.loop:								; loop: call NextSaveBits3, if A = $0000 go to .1, push Y, A = $A5, ...
+.loop:								; loop: call NextSaveBits3, if A = $0000 go to .1, push Y, A = tmp3, ...
 	jsr.w NextSaveBits3
 	cmp.w #$0000
 	beq .1
 	phy
-	lda.b $A5
+	lda.b tmp3
 	jsr.w ClearPlayerGoals
 	ply
-.1:									; $A5 + 1, A = Y, A + $0099, Y = A, ...
-	inc.b $A5
+.1:									; tmp3 + 1, A = Y, A + $0099, Y = A, ...
+	inc.b tmp3
 	clc
 	tya
 	adc.w #$0099
@@ -1250,7 +1250,7 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	and.w #$FF00
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $04,x
 	sta.b tmp0
 	dec.b QueueBusy
@@ -1295,8 +1295,8 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	pha
 	adc.b tmp2
 	tax
-.3:									; if $A5 is not 0 go to .4, go to .9
-	lda.b $A5
+.3:									; if tmp3 is not 0 go to .4, go to .9
+	lda.b tmp3
 	bne .4
 	jmp.w .9
 .4:									; A = tmp0, if $0002 bits clear go to .6, ...
@@ -1307,9 +1307,9 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	beq .5
 	sec
 	lda.b $08
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r1
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r0
 	clc
 	lda.w #$007E
@@ -1329,23 +1329,23 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	lda.b $08
 	sta.b r0
 	sty.b $08
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 	ldy.b $42
 	bra .7
-.6:									; r0 = X, A = X, A + $A5, r1 = A
+.6:									; r0 = X, A = X, A + tmp3, r1 = A
 	stx.b r0
 	txa
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 .7:									; $0C = $0014,y
 	lda.w $0014,y
 	sta.b $0C
-.loop:								; loop: A and $00FF, A * 2, $0E = A, A + $A5, ...
+.loop:								; loop: A and $00FF, A * 2, $0E = A, A + tmp3, ...
 	and.w #$00FF
 	asl a
 	sta.b $0E
-	adc.b $A5
+	adc.b tmp3
 	cmp.w #$0201
 	bcc .8
 	lda.w #$0200
@@ -1368,9 +1368,9 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	adc.b $0E
 	sta.b r1
 	sec
-	lda.b $A5
+	lda.b tmp3
 	sbc.b $0E
-	sta.b $A5
+	sta.b tmp3
 	lda.b $0C
 	adc.w #$01FF
 	and.w #$FF00
@@ -1876,7 +1876,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	and.w #$FF00
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $04,x
 	sta.b p1
 	lda.b tmp2
@@ -1918,8 +1918,8 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	pha
 	adc.b tmp2
 	tax
-.4:									; if $A5 is not 0 go to .5, go to .11
-	lda.b $A5
+.4:									; if tmp3 is not 0 go to .5, go to .11
+	lda.b tmp3
 	bne .5
 	jmp.w .11
 .5:									; A = p1, if $0002 bits clear go to .7, if $0001 bits clear go to .6, ...
@@ -1930,9 +1930,9 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	beq .6
 	sec
 	lda.b $08
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r1
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r0
 	clc
 	lda.w #$007E
@@ -1952,23 +1952,23 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	lda.b $08
 	sta.b r0
 	sty.b $08
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 	ldy.b $42
 	bra .8
-.7:									; r0 = X, A = X, A + $A5, r1 = A
+.7:									; r0 = X, A = X, A + tmp3, r1 = A
 	stx.b r0
 	txa
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 .8:									; $0C = $12
 	lda.b $12
 	sta.b $0C
-.loop:								; loop: A and $00FF, A * 2, $0E = A, A + $A5, ...
+.loop:								; loop: A and $00FF, A * 2, $0E = A, A + tmp3, ...
 	and.w #$00FF
 	asl a
 	sta.b $0E
-	adc.b $A5
+	adc.b tmp3
 	cmp.w #$0201
 	bcc .9
 	lda.w #$0200
@@ -1991,15 +1991,15 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	adc.b $0E
 	sta.b r1
 	sec
-	lda.b $A5
+	lda.b tmp3
 	sbc.b $0E
-	sta.b $A5
+	sta.b tmp3
 	lda.b $0C
 	adc.w #$01FF
 	and.w #$FF00
 	sta.b $0C
 	bra .loop
-.9:									; A = $0C, A + $0100, push A, A = $A5, ...
+.9:									; A = $0C, A + $0100, push A, A = tmp3, ...
 	pei ($A5)
 	pei ($0C)
 	pei ($2E)
@@ -2010,7 +2010,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	pha
 	pei ($32)
 	pei ($30)
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	adc.b $0C
 	bit.w #$0100

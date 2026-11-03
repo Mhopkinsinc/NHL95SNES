@@ -764,8 +764,8 @@ SortPlayerStats:					; sorts team a2's skaters by stat column $7D (PlayerStatCol
 	beq .1
 	ldx.w #VisRoster
 	ldy.w #$001A
-.1:									; $A5 = Y, ScratchBuf = $0002,x, $0C = A, tmp1 = A, ...
-	sty.b $A5
+.1:									; tmp3 = Y, ScratchBuf = $0002,x, $0C = A, tmp1 = A, ...
+	sty.b tmp3
 	lda.w $0002,x
 	sta.w ScratchBuf
 	sta.b $0C
@@ -813,11 +813,12 @@ SortPlayerStats:					; sorts team a2's skaters by stat column $7D (PlayerStatCol
 	cpx.b $0E
 	bne .loop3
 	bra .2
-PlayerStatColumn:					; A = stat column $7D of roster player Y (+ $A5 for the away team): goals,
+PlayerStatColumn:					; A = stat column $7D of roster player Y (+ tmp3 for the away team):
+									; goals,
 									; assists, points, shots or penalty minutes
 	tya
 	clc
-	adc.b $A5
+	adc.b tmp3
 	pha
 	ldx.b $7D
 	jmp (PlayerStatColumns,x)
@@ -864,8 +865,8 @@ SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2
 	beq .1
 	ldx.w #VisRoster
 	ldy.w #$001A
-.1:									; $A5 = Y, ScratchBuf = 0, $0C = 0, tmp1 = 0, ...
-	sty.b $A5
+.1:									; tmp3 = Y, ScratchBuf = 0, $0C = 0, tmp1 = 0, ...
+	sty.b tmp3
 	stz.w ScratchBuf
 	stz.b $0C
 	stz.b tmp1
@@ -874,21 +875,21 @@ SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2
 	sta.b tmp0
 	lda.w #$0002
 	sta.b tmp2
-.loop:								; loop: tmp1 + 1, A = tmp1, A + $A5, X = A, ...
+.loop:								; loop: tmp1 + 1, A = tmp1, A + tmp3, X = A, ...
 	inc.b tmp1
 	lda.b tmp1
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmgoals,x
 	and.w #$00FF
 	sta.b $0A
 	ldy.b $0C
 	stz.b $0E
-.loop2:								; loop: A = Y, A + $A5, X = A, A = tmgoals,x, ...
+.loop2:								; loop: A = Y, A + tmp3, X = A, A = tmgoals,x, ...
 	tya
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmgoals,x
 	and.w #$00FF

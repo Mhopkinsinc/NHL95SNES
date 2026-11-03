@@ -1863,7 +1863,7 @@ BuildTeamLinesPreserveTemps:		; calls BuildTeamLines while saving and restoring 
 	pla
 	sta.b $0A
 	pla
-	sta.w $00A5
+	sta.w tmp3
 	pla
 	sta.w tmp2
 	pla

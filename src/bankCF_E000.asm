@@ -1,9 +1,9 @@
 ; Segment bankCF_E000: game code, jump tables and the data tables the code reads with long addresses.
 org $CFEE1D
 NextSortedGameObjectJump:			; jumps to NextSortedGameObject: DrawSortedGameObject's continuation (in
-									; $A5) for the frame code
+									; tmp3) for the frame code
 	jml.l NextSortedGameObject
-PadTagFrameDoneJump:				; jumps to PadTagFrameDone: the tags' continuation (in $A5) for the frame
+PadTagFrameDoneJump:				; jumps to PadTagFrameDone: the tags' continuation (in tmp3) for the frame
 									; code
 	jml.l PadTagFrameDone
 DrawFrameLayoutFlip:				; DrawFrameLayout for an x-flipped object: the flipped offsets and the
@@ -43,7 +43,7 @@ DrawFrameLayoutFlip:				; DrawFrameLayout for an x-flipped object: the flipped o
 	jmp ($00A5)
 DrawFrameLayout:					; draws frame A of a game object at x $0A / y $0C from its bank $CF layout
 									; record: 1-4 16 x 16 pieces, then 1-4 8 x 8 ones, into the OAM buffer;
-									; then on through $A5
+									; then on through tmp3
 	asl a
 	tax
 	lda.l FrameOffsetX,x

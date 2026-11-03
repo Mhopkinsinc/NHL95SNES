@@ -1776,10 +1776,10 @@ DrawText:							; draws the text at X (zero ended) from pixel column A into new 
 	lsr a
 	bcs .2
 	ldy.w #$0200
-.2:									; A = Y, call AllocClearWorkBuf, $A5 = A, push X
+.2:									; A = Y, call AllocClearWorkBuf, tmp3 = A, push X
 	tya
 	jsl.l AllocClearWorkBuf
-	sta.b $A5
+	sta.b tmp3
 	phx
 DrawNextTextCharacter:				; read the next character and prepare its glyph for drawing
 	ply
@@ -1883,7 +1883,7 @@ DrawNextTextCharacter:				; read the next character and prepare its glyph for dr
 	lda.b $0A
 	and.w #$FFF8
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	tay
 DrawGlyphRow:						; load a glyph row and dispatch by its destination pixel column
 	phx

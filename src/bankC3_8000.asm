@@ -494,7 +494,7 @@ UpdateGameObjectSprites:			; queue changed player frames and build sorted object
 	tcs
 	ldy.b $2A
 	lda.w #NextSortedGameObjectJump&$FFFF
-	sta.b $A5
+	sta.b tmp3
 	ldx.w #$000F
 DrawSortedGameObject:				; draw the current sorted object with its frame and flip attributes
 	lda.w OOlist,x

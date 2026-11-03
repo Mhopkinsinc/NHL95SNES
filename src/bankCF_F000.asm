@@ -217,7 +217,7 @@ PutSmallPiece1:						; the first 8 x 8 piece's sprite (x $E7 / y $EF), then Layo
 	pha
 	stx.b $00,y
 	iny
-LayoutDone:							; the end of a frame layout: on to the caller's continuation in $A5
+LayoutDone:							; the end of a frame layout: on to the caller's continuation in tmp3
 	jmp ($00A5)
 LayoutSizes:						; per layout (the high byte of a FrameBankLayout word) a size word:
 									; QueueFrameTiles queues two transfers of twice its low byte, then one of
@@ -927,7 +927,7 @@ Layout141:							; the layout record of LayoutPointers entry 141: 16 x 16 pieces
 									; pairs), then the 8 x 8 ones
 	db $04,$00,$00,$00,$10,$10,$06,$08
 GoalFrameLayout:					; the layout code of the second net, SPFgoal+1 (layouts $8F / $90): its 16
-									; x 16 pieces at fixed offsets, then on through $A5
+									; x 16 pieces at fixed offsets, then on through tmp3
 	pei ($A3)
 	ldx.w #$0002
 	lda.b $0A
@@ -1207,7 +1207,7 @@ GoalFrameLayout:					; the layout code of the second net, SPFgoal+1 (layouts $8F
 .40:								; jump through $00A5
 	jmp ($00A5)
 PuckFrameLayout:					; the layout code of the flipping puck, SPFpuck+1 to +10 (layouts $91 /
-									; $92): one 8 x 8 piece raised by puckz * 3 / 2, then on through $A5
+									; $92): one 8 x 8 piece raised by puckz * 3 / 2, then on through tmp3
 	pei ($A1)
 	ldx.w #$0000
 	lda.b $0A

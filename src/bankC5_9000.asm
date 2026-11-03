@@ -1390,13 +1390,13 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 									; bits each, free when the first letter is 0): its entry at SRPlayerTeams,
 									; both names at 5 bits a letter, the ratings, then GameSetUp
 	lda.w #$026A
-	sta.b $A5
+	sta.b tmp3
 	ldy.w #$0003
-.loop:								; loop: call ReadSaveBits5, if A = $0000 go to .1, $A5 + 1, A = Y, ...
+.loop:								; loop: call ReadSaveBits5, if A = $0000 go to .1, tmp3 + 1, A = Y, ...
 	jsr.w ReadSaveBits5
 	cmp.w #$0000
 	beq .1
-	inc.b $A5
+	inc.b tmp3
 	clc
 	tya
 	adc.w #$009C
@@ -1567,7 +1567,7 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 	jsr.w RatingNibble
 	sta.b tmp2
 	jsr.w WriteSaveBits4
-	lda.b $A5
+	lda.b tmp3
 	jsr.w ClearPlayerGoals
 	jmp.w ExitCreatePlayer3
 .11:								; A = CreateRatings+$2, call RatingNibble, tmp2 = A, ...
