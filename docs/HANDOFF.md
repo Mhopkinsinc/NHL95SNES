@@ -1,6 +1,16 @@
 # Handoff
 
-## State (2026-10-31)
+## Now (alignment)
+
+- Plan: the 95S alignment plan (`alignment-plan/95s_alignment_plan.md` in the Code Cleanup project files). Rules: `docs/RULES.md`.
+- Branch: `claude/project-thread-ggw7zu`
+- Phase: 0 done (kit: AGENTS.md working rules, docs/RULES.md, `.cursor/rules/main.mdc`, `.claude/agents/`, `tools/check_scope.py`).
+- Last check: `tools/verify_all.sh` MATCH (2026-11-03).
+- Next: phase 1, add 95S to the report in nhl-disasm-report (segment-layout reader, 95S rows in `known_pairs.csv`, a 95S
+  baseline) so the pairing gate covers 95S before anything moves. Then phase 2, the inventory script (`docs/routines95s.csv`).
+- Unsure: none yet.
+
+## Segment work: state (2026-10-31, finished)
 
 - Full build MATCH (SHA-1 `0b939f267377801d2c805b05c06a7ee6c880c5fc`, 1,048,576 bytes); `tools/verify_all.sh` MATCH (full build and
   all 256 segments built on their own from their stubs).
