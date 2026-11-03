@@ -91,5 +91,6 @@ TitlePlayersMap = $C20AB8
 ZeroFillWord = $C58A63
 CopyrightPage = $C354F9
 SeasonAwardsPage = $C35419
+MenuGradientHDMA = $C0491B
 
 incsrc "../bankC4_D000.asm"

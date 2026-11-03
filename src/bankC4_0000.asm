@@ -179,7 +179,9 @@ ExitPlayoffBracket:					; leaves the playoff bracket for the League Menu (Season
 	jsl.l WaitTransfers
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #BlueColoursHook&$FFFF
 	ldx.w #BlueColoursHook>>16
 	jsl.l SetNMIHook
@@ -546,7 +548,9 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	wai
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$A8,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl BracketGradientHDMA			; the HDMA table
+	db $00							; the indirect bank
 	ldx.w #$0060
 	jsl.l SetupHDMA
 	db $44,$26,$EA,$0F,$C4,$7E		; inline parameters

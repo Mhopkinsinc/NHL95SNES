@@ -98,5 +98,6 @@ TxtLeftDefense = $C349BD
 TxtLeftWing = $C349D7
 TxtRightDefense = $C349C7
 TxtRightWing = $C349E0
+MainScreenHDMA = $C04A35
 
 incsrc "../bankC5_A000.asm"

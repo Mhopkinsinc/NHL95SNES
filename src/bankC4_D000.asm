@@ -695,7 +695,9 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	wai
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$FFFF
 	stz.w BG1HScroll
 	stz.w BG2HScroll
@@ -813,7 +815,9 @@ InitAwardScreen:					; prepares the shared awards background, sprites, text map 
 	jsl.l CreateSprite
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0400
 	sta.b tmp1
 	lda.w #$5800

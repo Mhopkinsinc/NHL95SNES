@@ -1612,7 +1612,9 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	jsl.l WaitTransfers
 	ldx.w #$0060
 	jsl.l SetupHDMA
-	db $40,$2C,$35,$4A,$C0,$7E		; inline parameters
+	db $40,$2C						; inline parameters: DMAP and BBAD
+	dl MainScreenHDMA				; the HDMA table
+	db $7E							; the indirect bank
 	ldx.w #$0050
 	jsl.l SetupHDMA
 	db $42,$12,$8C,$46,$7E,$7E		; inline parameters

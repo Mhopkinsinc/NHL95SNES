@@ -66,5 +66,7 @@ PlayoffBracketMap = $C1DC7B
 TeamNameBarsMap = $C1E9B2
 TxtNotAvail = $C34781
 TxtSeasonPlayoffs = $C34777
+BracketGradientHDMA = $C049A8
+MenuGradientHDMA = $C0491B
 
 incsrc "../bankC4_0000.asm"

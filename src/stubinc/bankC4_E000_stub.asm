@@ -79,5 +79,6 @@ TxtTonightsGameFeatures = $C34DC8
 TxtWelcomeToASoldOut = $C34DB9
 TxtWellRecently = $C34DFA
 TxtWinsTheStanleyCup = $C350B4
+MenuGradientHDMA = $C0491B
 
 incsrc "../bankC4_E000.asm"

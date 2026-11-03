@@ -92,5 +92,6 @@ PauseStatsItems = $C35CEF
 PracticeInfoItems = $C35CE1
 PracticeOptionsItems = $C35CFD
 QuitPromptItems = $C35D21
+MenuGradientHDMA = $C0491B
 
 incsrc "../bankC5_5000.asm"

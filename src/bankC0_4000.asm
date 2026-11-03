@@ -37,10 +37,11 @@ BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so 
 	db $40,$C2,$04					; the short table: 64 lines
 	db $01,$C2,$04					; 1 line
 	db $00							; end
-HDMATableUnused1:					; an HDMA table in the form of its neighbours: (line count, 4 bytes)
-									; entries, a 0 at the end; nothing points at it
+MenuGradientHDMA:					; the menu screens' blue background: HDMA to CGADD / CGDATA, per group of
+									; lines one of colours $11-$1C set to a blue (SetupHDMA, DMAP 3)
 	incbin "../Extracted/segments/bankC0_4000.bin":$91B..$9A8
-HDMATableUnused2:					; a second table of the same form and length; nothing points at it
+BracketGradientHDMA:				; the playoff bracket's version, darker blues (SetupHDMA in
+									; SetupPlayoffBracket)
 	incbin "../Extracted/segments/bankC0_4000.bin":$9A8..$A35
 MainScreenHDMA:						; indirect HDMA table for TM (line count, address of the layers to show)
 	db $40,$4E,$36					; 64 lines

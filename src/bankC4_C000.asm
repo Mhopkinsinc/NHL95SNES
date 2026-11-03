@@ -1858,7 +1858,7 @@ WaitTransfers:						; lets the NMI run the queued transfers (TransfersReady + 1)
 	inc.w TransfersReady
 	wai
 	rtl
-TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and closed twice with no
+TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and closed once with no
 									; record; nothing calls it
 	sta.b r0
 	stx.b $2E

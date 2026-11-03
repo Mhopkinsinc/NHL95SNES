@@ -2034,9 +2034,9 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	ldy.b $18
 	tyx
 	rts
-FreeSpritePaletteUnused:			; gives back sprite object X's palette ($34,x): its use count in
-									; SpritePalUse - 1, and at 0 its slot back on PalSlotList (PalSlotsUsed -
-									; 1); nothing calls it
+FreeSpritePaletteUnused:			; gives back sprite object X's palette ($34,x): with more users (the low
+									; byte of SpritePalUse) one fewer, else its slot back on PalSlotList
+									; (PalSlotsUsed - 1); nothing calls it
 	phx
 	lda.b $34,x
 	and.w #$00FF
