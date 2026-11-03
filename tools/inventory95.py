@@ -12,14 +12,21 @@ is data (db, dw, dl, incbin, fill...) is a data row: it goes to src/data/ in ste
 
 The folder of a routine (docs/RULES.md "This repo"), first rule that applies:
   95G      a label of the run is a NHL95Genesis label: that 95G file (engine/collide, front/season, hockey, ...)
+  family   an engine service (FAMILIES: interrupts, transfers, fades, sprites, print, work buffers, math, pads, tasks,
+           option lines):
+           the 95G file for that job, else the 94S folder, else where the job lives
   94S      a label of the run is a NHL94SNES routine: the 94S folder, under its 95G group when 95G has a file of that name
            (video -> engine/video, main -> main), else as is (sound, decompress)
-  callers  the folder most of its callers (jsl / jsr / jml / jmp) are in, repeated until nothing changes
+  callers  the folder most of its callers (jsl / jsr / jml / jmp) are in, repeated until nothing changes; then the same
+           with any other reference (branches, pointer tables, #Label task and hook pointers). Plurality: the top
+           folder holds no majority of the placed callers
+  follows  unreferenced code: the folder of the routine before it in ROM (same bank), as 95G FILE_ORIGINS rule 5
+  span     a plurality or unplaced routine between two 95G / 94S anchors of one folder in the same bank: that folder
   UNSURE   none of these; placed by the owner at checkpoint 1
 Columns: address, size, kind (code / data), head (the routine's file name), label, callers, name_source (the
 name_map.csv source tag), folder, rule, evidence.
 """
-import argparse, collections, csv, glob, os, re, sys
+import argparse, bisect, collections, csv, glob, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'src')
@@ -28,10 +35,31 @@ NOEMIT = re.compile(r'^\s*(=|equ\b|macro\b)', re.I)
 INCSRC = re.compile(r'^\s*incsrc\s+"([^"]+)"', re.I)
 DATA = re.compile(r'^\s*(db|dw|dl|dd|incbin|fill|fillbyte|padbyte|pad|skip|base|table|cleartable)\b', re.I)
 INSN = re.compile(r'^\s*([a-z]{3})(?:\.[bwl])?\b\s*([^;]*)', re.I)
-IDENT = re.compile(r'(?<![\w.$#])([A-Za-z_]\w*)')
+IDENT = re.compile(r'(?<![\w.$])([A-Za-z_]\w*)')   # also #Label, #<Label, #>Label (task and hook pointers)
 CALL = {'jsl', 'jsr', 'jml', 'jmp'}
 END = {'rts', 'rtl', 'rti', 'jmp', 'jml', 'bra', 'brl', 'stp'}
 SNES_JOB = ('video', 'sound', 'decompress', 'middle', 'main')
+# Engine services every screen calls. Callers would scatter them over the screens that use them, so each family goes,
+# whole, to the 95G file that does that job (fades: engine/video cramfade / forcefade; sprites: display SprSort /
+# updateanim; print: engine/middle print / printz; pads: control setpads / burst), else to the 94S folder for it
+# (transfer queue: video), else where the code's job lives (tasks: main, the frame loop). Checked against the names
+# in the 95G and 94S sources, 2026-11-03.
+FAMILIES = [
+    ('interrupts', r'(NMI\w*|IRQ\w*|NullInterrupt|BRKHandler|SetNMIHook|ClearNMIHook|SetIRQ)', 'engine/video'),
+    ('transfers', r'(WaitTransfers|Queue\w*VRAM\w*|ClearVRAM|\w*TransferQueues?\w*|SendTextMap\w*)', 'engine/video'),
+    ('fades', r'(Fade\w*|\w*ColourFade|PackFadeColours|SetFadeTables|QueueFadeStep|QueueColours16|BlackBackdrop)',
+     'engine/video'),
+    ('sprites', r'(\w*SpriteAnim\w*|DispatchSpriteAnim|UploadSpriteFrames|\w*SpritePalette\w*|\w*SpriteFrames?Unused'
+                r'|UpdateMenuSprites\w*|UpdateGameObjectSprites|NextSortedGameObject|RemoveSpriteSlot\w*)', 'display'),
+    ('print', r'(Print(Bold|Italic)\w*|PrintTextPage|InitTextMap|TextWidth|CopyBankC3String|ExtendTextDirty\w*'
+              r'|QueueTextTiles|MapTextTiles|UnpackText\d*|CentreText)',
+     'engine/middle'),
+    ('work buffers', r'(\w*WorkBuf\d*)', 'engine/middle'),
+    ('math', r'(Mul\d\w*|Div\d\w*|DivAByX)', 'engine/middle'),
+    ('pads', r'(Read\w*Pads?|Wait\w*Pads?Release|ReadJoy\w*|ProcessInputWithRepeat)', 'control'),
+    ('tasks', r'(InitTasks|RunTasks|StartTasks|AddStartKeyTask|TaskStartKey|SetTasksDone\w*)', 'main'),
+    ('options', r'(Limit\w*Team\d?)', 'engine/setup'),
+]
 
 
 def year_key(name):
@@ -171,6 +199,10 @@ def main():
                 folder[h], rule[h], ev[h] = k, '95G', f"{r['label']} in 95G {k}"
                 break
         else:
+            fam = next(((n, f) for n, rx, f in FAMILIES if re.fullmatch(rx, h)), None)
+            if fam:
+                folder[h], rule[h], ev[h] = fam[1], 'family', f"{fam[0]} family"
+                continue
             for r in members[h]:
                 t = s94.get(r['label'].lower())
                 if t:
@@ -199,8 +231,28 @@ def main():
                 v = vote(h, srcs[h])
                 if v:
                     (k, n), = v.most_common(1)
-                    folder[h], rule[h], ev[h] = k, 'callers', f"{n} of {len(srcs[h])} {label} in {k}"
+                    nv = sum(v.values())
+                    folder[h], rule[h], ev[h] = k, 'callers' if n * 2 > nv else 'plurality', f"{n} of {nv} placed {label} in {k}"
                     changed = True
+    # span: a routine with no majority (plurality or none) that sits in ROM between two 95G / 94S anchors of one
+    # folder in the same bank takes that folder (code from one source module is contiguous)
+    code = [h for h in heads if kind[h] == 'code']
+    anchors = [n for n, h in enumerate(code) if rule.get(h) in ('95G', '94S')]
+    for n, h in enumerate(code):
+        if h in folder and rule[h] != 'plurality':
+            continue
+        k = bisect.bisect_left(anchors, n)
+        if 0 < k < len(anchors):
+            lo, hi = code[anchors[k - 1]], code[anchors[k]]
+            if folder[lo] == folder[hi] and addr.get(lo, 0) >> 16 == addr.get(hi, -1) >> 16:
+                old = f"; callers said {folder[h]}" if h in folder else ''
+                folder[h], rule[h], ev[h] = folder[lo], 'span', f"between {lo} and {hi} ({folder[lo]}){old}"
+    # follows: code nothing calls or names (dead code) stays with the routine before it in ROM, in the same bank,
+    # as 95G's docs/FILE_ORIGINS.md rule 5 does
+    for n, h in enumerate(code):
+        if h not in folder and n > 0 and code[n - 1] in folder and not callers[h] and not refs[h] \
+                and addr.get(code[n - 1], 0) >> 16 == addr.get(h, -1) >> 16:
+            folder[h], rule[h], ev[h] = folder[code[n - 1]], 'follows', f"unreferenced; after {code[n - 1]}"
     for h in heads:
         if h not in folder:
             folder[h], rule[h], ev[h] = '', 'UNSURE', f"{len(callers[h])} callers, {len(refs[h])} references, none placed"
@@ -236,6 +288,14 @@ def main():
                     continue
                 c = collections.Counter(rule[h] for h in code if folder[h] == k)
                 fh.write(f"| {k} | {v} | {c['95G']} | {c['94S']} | {c['callers']} |\n")
+            for rn, title in (('follows', 'Unreferenced code placed after its ROM neighbour'),
+                              ('plurality', 'Placed by a plurality of callers (no majority)')):
+                xs = [h for h in code if rule[h] == rn]
+                fh.write(f'\n## {title} ({len(xs)})\n\nThe lowest-confidence placements; worth a look.\n\n')
+                fh.write('| Routine | Address | Folder | Evidence |\n|---|---|---|---|\n')
+                for h in xs:
+                    ad = addr.get(h)
+                    fh.write(f"| {h} | {'$%06X' % ad if ad is not None else ''} | {folder[h]} | {ev[h]} |\n")
             uns = [h for h in code if rule[h] == 'UNSURE']
             fh.write(f'\n## UNSURE ({len(uns)})\n\nNo 95G or 94S partner and no placed caller. Largest first:\n\n')
             fh.write('| Routine | Address | Labels in run | Callers | References |\n|---|---|---|---|---|\n')

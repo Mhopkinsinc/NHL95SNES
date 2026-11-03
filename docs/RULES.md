@@ -39,3 +39,4 @@ rule in the same commit as the fix that confirmed it, newest last: `- YYYY-MM-DD
 
 ## Learned
 - 2026-11-03 branch: all work goes onto `claude/project-thread-ggw7zu` and nothing merges to `main` yet; push there without asking once the checks pass, and stop only at the plan's review checkpoints. (owner)
+- 2026-11-03 placement: a `#Label` operand (task and hook pointers) is a reference; without it 64 routines looked unreferenced. Engine services (interrupts, transfers, fades, sprites, print, work buffers, math, pads, tasks) are placed as whole families by job, not by callers, which scatter them over the screens that use them. (inventory95.py, 97 UNSURE to 0)
