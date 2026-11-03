@@ -243,7 +243,7 @@
     CheckGlyphLeftOverlap's glyph buffer, EditLinesScreen / PrintPositionCounts text map cells, the roster bonus fields
     $0430-$043C), and the code that moves D.
 - Data tables (PR #3): ../work/datasurvey.py lists the DATA8_ labels (size, comment, references; --list FILE...).
-  - 94S names by content: data94.py compares each table with every labelled db / dw block of the 94S source (local
+  - 94S names by content: a table-matching script (not kept) compares each table with every labelled db / dw block of the 94S source (local
     labels split a 94S table into blocks, so sublist / priolist were compared by hand); datamap.py aligns 95 / 94S
     routine pairs (as rammap.py) for table operands. A 94S local table gets a code name from what 94S says it holds.
   - Packed text pointer tables in bank $C3: textdec.py OFF... decodes the strings (city names stay out of the source).
