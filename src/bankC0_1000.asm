@@ -296,6 +296,7 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	pop x
 	asl a
 	mov x,a
+									; sample header +4 adds a note transpose; +5 is signed pitch fine tuning
 	mov a,$FF00+x
 	adc a,$13
 	mov $14,a

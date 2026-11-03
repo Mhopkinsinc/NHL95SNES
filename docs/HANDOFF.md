@@ -351,8 +351,19 @@
   Playerdata (team offset 0); its CalcAttrib reads the trailing eight attributes. Do not apply
   that name-first layout to 95's attribute-first records. TeamRecordUnused still has no TeamList
   reference. No separate use for otherwise masked upper rating bits is established here.
-- bankC0_A000: the sample header (12 bytes: a pitch-like word, two volume-like bytes, ...) is not decoded; the samples are
-  named by their index in the sample list. MaxSpeed also gets a long pointer from PrintShooterRows the way InitShooters does.
+- Sample headers (bankC0_A000 and the other Sample labels), traced CPU to SoundDriver:
+  +0 word default DSP pitch; +2 byte left volume; +3 byte right volume; +4 byte note
+  transpose; +5 signed fine tuning; +6 ADSR1; +7 ADSR2 if +6 bit 7 is set, otherwise GAIN;
+  +8 word loop offset (zero stays zero; nonzero adds allocation base); +10 word BRR byte
+  count; +12 starts BRR. LoadSample populates SampleParams / SampleNoteParams and
+  LoadSampleEnvelopeAndData populates SampleEnvelopes / SampleDirectory. UploadSoundTables
+  transfers these to the driver. SoundDriver.setDefaultSamplePitch and .setDefaultSampleVolume
+  write pitch/stereo volume, .setSampleEnvelope chooses ADSR2 versus GAIN; .l0263 adds +4
+  before division by 12 and uses signed +5 to adjust the note-table pitch. Sequence channels
+  can instead select the default pitch. Every header byte has a reader; no unused field found.
+  These are not 94S's prebuilt SPC upload blocks; no equivalent earlier field labels were found.
+  Samples retain their sample-list index names. MaxSpeed also gets a long pointer from
+  PrintShooterRows the way InitShooters does.
 - bankC0_9000: there is a brk at $C09419 (in the ROM, not reached by the traced code).
 - asar: mvn / mvp take the operands in byte order, destination bank first (`mvn $7E,$C0` copies from $C0 to $7E).
 - Code banks: decode by recursive descent from the jsl targets in code banks (not from raw byte scans, which give false

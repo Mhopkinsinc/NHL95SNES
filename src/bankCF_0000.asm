@@ -279,6 +279,7 @@ LoadSample:							; assigns sample A a driver slot, copies its header parameters
 	sta.b r1
 	lda.w SampleSlotSources+2,x
 	sta.b r1+2
+									; header +0 pitch word; +2 left and +3 right volume, sent to the driver
 	lda.b [r1]
 	sta.w SampleParams,x
 	ldy.w #$0002
@@ -287,12 +288,14 @@ LoadSample:							; assigns sample A a driver slot, copies its header parameters
 	txa
 	lsr a
 	tax
+									; header +4 note transpose, +5 signed fine tune, used by sequence notes
 	ldy.w #$0004
 	lda.b [r1],y
 	sta.w SampleNoteParams,x
 	ldy.w #$0006
 LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or allocates and uploads
 									; it
+									; header +6 ADSR1; +7 ADSR2 if ADSR1 bit 7 is set, otherwise GAIN
 	lda.b [r1],y
 	sta.w SampleEnvelopes,x
 	txa
@@ -323,6 +326,7 @@ LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or 
 	lda.b r1+2
 	sta.w LoadedSampleSources+2,x
 	clc
+									; header +8 loop offset: zero stays zero; nonzero adds BRR allocation base
 	ldy.w #$0008
 	lda.b [r1],y
 	beq .3
@@ -332,6 +336,7 @@ LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or 
 	lda.b tmp0
 	sta.w SampleDirectory,x
 	lda.b r1
+									; header +10 upload length word, followed at +12 by the BRR payload
 	adc.w #$000A
 	sta.b r1
 AppendSoundData:					; allocates space for the length-prefixed block at r1 and sends it to the
