@@ -44,7 +44,7 @@ passtoa0:							; from dopass and other segments
 	ldy.b a0
 	sta.w frame,y
 	lda.b a0
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	ldy.b a0
 	pla
 	sta.w frame,y

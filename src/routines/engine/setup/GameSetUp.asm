@@ -5,8 +5,8 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	lda.w DemoMode
 	beq .1
 	jsl.l LoadSavedGameOptions
-.1:									; fadestep = 0, DemoMode = 0
-	stz.w fadestep
+.1:									; fadein = 0, DemoMode = 0
+	stz.w fadein
 	stz.w DemoMode
 .reenter:							; the idle count cleared, ...
 									; after Start New

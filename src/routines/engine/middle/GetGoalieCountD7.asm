@@ -1,4 +1,4 @@
-RecordGoalieCount:					; A = the goalie count of the team record at X (A = X on entry): the used
+GetGoalieCountD7:					; A = the goalie count of the team record at X (A = X on entry): the used
 									; nibbles of the word its +8 offset points at
 	clc
 	adc.l $C30008,x

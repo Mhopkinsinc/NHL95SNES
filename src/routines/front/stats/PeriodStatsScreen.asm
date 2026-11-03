@@ -5,7 +5,7 @@ PeriodStatsScreen:					; pause menu Period Stats: DrawPeriodStats; B switches be
 	stz.b $7B
 	jsr.w DrawPeriodStats
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

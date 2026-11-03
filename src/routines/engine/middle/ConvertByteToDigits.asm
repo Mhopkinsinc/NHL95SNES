@@ -1,4 +1,4 @@
-ConvertByteToDigits:				; from PlayerShortName and other segments
+ConvertByteToDigits:				; from FormatPlayerNumInitial and other segments
 	lda.w #$2020
 	sta.b tmp0
 	lda.b d0

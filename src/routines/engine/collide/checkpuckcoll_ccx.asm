@@ -44,7 +44,7 @@ checkpuckcoll_ccx:					; puck collision with player Y: the stick (puckstick) whe
 	cmp.w #$0100
 	bpl .1
 	tya
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	ldy.b a2
 	lda.b d0
 	clc

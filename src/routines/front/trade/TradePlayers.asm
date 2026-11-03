@@ -3,7 +3,7 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	jsl.l CheckTradesFrozen
 	jsl.l FadeOutWait
 	jsr.w DrawTradePage
-	stz.w fadestep
+	stz.w fadein
 .1:									; TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

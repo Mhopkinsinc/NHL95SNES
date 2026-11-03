@@ -1,4 +1,4 @@
-GetUserName:						; user A's name into mesarea: 12 letters of 5 bits from SRUserNames (+ $40
+GetLogName:							; user A's name into mesarea: 12 letters of 5 bits from SRUserNames (+ $40
 									; a letter, $1B a space, $1F the end)
 	asl a
 	asl a

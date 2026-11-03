@@ -69,8 +69,8 @@ DeveloperCredits:					; the developer credits: HIGH SCORE PRODUCTIONS AND / VISU
 	ldx.w #$007E
 	ldy.w #$0000
 	jsl.l QueueColours
-	stz.w fadestep
-	stz.w fadestep
+	stz.w fadein
+	stz.w fadein
 	lda.w #CreditsWaitForFade
 	ldx.w #CreditsWaitForFade>>16
 	ldy.w #$0001

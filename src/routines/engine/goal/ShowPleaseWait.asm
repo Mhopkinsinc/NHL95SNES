@@ -13,7 +13,7 @@ ShowPleaseWait:						; fades out and shows the Please Wait= screen, then waits f
 	ldy.w #$000C
 	jsl.l PrintItalicCentred
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 	lda.w #$000F
 .loop:								; loop: if A is not brightness go to .loop, return
 	cmp.w brightness

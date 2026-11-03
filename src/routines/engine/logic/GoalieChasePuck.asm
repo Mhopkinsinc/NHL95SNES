@@ -33,7 +33,7 @@ GoalieChasePuck:					; steer the goalie toward the predicted puck position
 	lda.b d0
 	pha
 	txa
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	lda.b d0
 	eor.w #$FFFF
 	inc a

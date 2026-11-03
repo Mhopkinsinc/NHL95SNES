@@ -31,7 +31,7 @@ pucknorm_move:						; from pucknorm and other segments
 	sta.b a2
 	jsl.l a2touchpuck
 	lda.b a2
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	ldy.b a2
 	lda.b d0
 	clc

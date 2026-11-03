@@ -7,11 +7,11 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	stz.b $7D
 	lda.w #$0000
 	tax
-.1:									; a4 = X, push A, ScratchBuf,x = A, call GetUserName, ...
+.1:									; a4 = X, push A, ScratchBuf,x = A, call GetLogName, ...
 	stx.b a4
 	pha
 	sta.w ScratchBuf,x
-	jsr.w GetUserName
+	jsr.w GetLogName
 	cpx.w #$0000
 	beq .2
 	ldy.w #$0000
@@ -142,10 +142,10 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	jsl.l WaitTransfers
 	ldx.b $7D
 	jsr (RecordPages,x)
-.11:								; call SendTextMap, call WaitTransfers, fadestep = 0
+.11:								; call SendTextMap, call WaitTransfers, fadein = 0
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
-	stz.w fadestep
+	stz.w fadein
 .loop3:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

@@ -1,5 +1,5 @@
-GetPlayerNumInitial:				; formats TempPlOffset's player through PlayerShortName, d0 and a2 kept;
-									; 94S code that nothing reaches in 95 (no caller)
+GetPlayerNumInitial:				; formats TempPlOffset's player through FormatPlayerNumInitial, d0
+									; and a2 kept; 94S code that nothing reaches in 95 (no caller)
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
@@ -12,8 +12,8 @@ GetPlayerNumInitial:				; formats TempPlOffset's player through PlayerShortName,
 	sta.b d0
 	inc.b a2
 	inc.b a2
-.1:									; call PlayerShortName, pull A, a2+2 = A, pull A, ...
-	jsl.l PlayerShortName
+.1:									; call FormatPlayerNumInitial, pull A, a2+2 = A, pull A, ...
+	jsl.l FormatPlayerNumInitial
 	pla
 	sta.b a2+2
 	pla

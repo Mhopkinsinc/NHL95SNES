@@ -1,3 +1,3 @@
-FadeIn:								; fade the screen in (fadestep 0)
-	stz.w fadestep
+FadeIn:								; fade the screen in (fadein 0)
+	stz.w fadein
 	rtl

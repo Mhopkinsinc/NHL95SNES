@@ -3,7 +3,7 @@ ReleasePlayers:						; the Release Players screen: a team's roster (up / down, B
 	jsl.l CheckTradesFrozen
 	jsl.l FadeOutWait
 	jsr.w DrawReleasePage
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

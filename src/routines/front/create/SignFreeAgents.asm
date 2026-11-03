@@ -3,7 +3,7 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	jsl.l CheckTradesFrozen
 	jsl.l FadeOutWait
 	jsr.w SetupFreeAgentsScreen
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

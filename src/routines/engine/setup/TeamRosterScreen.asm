@@ -24,7 +24,7 @@ TeamRosterScreen:					; pause menu Team Roster: the roster of team a2 (ShowRoste
 	lda.w #$00F0
 	sta.b $D1
 	jsr.w TeamLogoSprite
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

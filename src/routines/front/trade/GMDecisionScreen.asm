@@ -1,7 +1,7 @@
 GMDecisionScreen:					; the trade decision: DrawGMDecision, then start does an accepted trade
 									; (CheckTrade, ExecuteTrade) and leaves, X goes back to TradePlayers
 	jsr.w DrawGMDecision
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

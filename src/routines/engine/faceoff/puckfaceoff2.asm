@@ -49,10 +49,10 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	bcc .2
 	lda.w #$0258
 	sta.l Crowdlevel
-.2:									; call FadeOutWait, fadestep = $001E, call WaitTransfers, ...
+.2:									; call FadeOutWait, fadein = $001E, call WaitTransfers, ...
 	jsl.l FadeOutWait
 	lda.w #$001E
-	sta.w fadestep
+	sta.w fadein
 	jsl.l WaitTransfers
 	jsl.l DrawScoreBox
 	lda.w PBnum

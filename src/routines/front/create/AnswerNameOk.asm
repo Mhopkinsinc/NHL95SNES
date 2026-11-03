@@ -48,7 +48,7 @@ AnswerNameOk:						; start on Is the player name ok: No (d6 not 0) starts over
 	jsr.w FieldJersey
 	jsr.w FieldHand
 	lda.w #$0005
-	sta.w fadestep
+	sta.w fadein
 	lda.w #$000B
 	jsr.w SetRowPalette3
 	lda.w #$000E

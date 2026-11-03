@@ -59,7 +59,7 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 	stz.b a0
 	jsl.l WaitTransfers
 	jsr.w DrawAward

@@ -14,7 +14,7 @@ StartPer:							; starts a period: the stack reset (not in the shootout), both t
 	jsl.l ResetClock
 	jsl.l InitCrowdExcite
 	lda.w #$FFFF
-	sta.w pausepad
+	sta.w sfpj
 	lda.w cont1team
 	ora.w cont2team
 	ora.w cont3team

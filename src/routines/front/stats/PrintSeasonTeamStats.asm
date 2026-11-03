@@ -1,4 +1,4 @@
-DrawSeasonTeamStats:				; draws the season stats of the current team (record, goals, save and
+PrintSeasonTeamStats:				; draws the season stats of the current team (record, goals, save and
 									; shooting percentages, shots)
 	lda.w #$00D4
 	sta.b $18
@@ -154,7 +154,7 @@ DrawSeasonTeamStats:				; draws the season stats of the current team (record, go
 	jsr.w BCDTextAt
 	lda.b r2
 	and.w #$000F
-DrawSeasonTeamStatsFinish:			; appends the final shots allowed digit, prints row twenty-one and sends
+PrintSeasonTeamStatsFinish:			; appends the final shots allowed digit, prints row twenty-one and sends
 									; the text map
 	jsr.w BCDTextAt
 	ldx.w #mesarea

@@ -17,7 +17,7 @@ StatsReport:						; pause menu Game Stats: the team stat rows as a scrolling lis
 	lda.w #DrawGameStatRow
 	jsr.w StartScrollList
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

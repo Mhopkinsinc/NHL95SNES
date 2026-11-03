@@ -76,7 +76,7 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	jsl.l WaitTransfers
 	lda.w #$8000
 	sta.w DMAEnShadow
-	stz.w fadestep
+	stz.w fadein
 	stz.b $26
 	stz.b a0
 .loop:								; loop: call UpdateMenuSpritesTwice, call ReadMenuPads, ...

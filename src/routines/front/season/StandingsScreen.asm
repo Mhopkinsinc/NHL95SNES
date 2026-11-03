@@ -49,5 +49,5 @@ DrawStandings:						; draws the standings page: the teams of division d1 sorted 
 	jsl.l WaitTransfers
 	lda.w #$000B
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 	rts

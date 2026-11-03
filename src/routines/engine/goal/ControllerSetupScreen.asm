@@ -43,5 +43,5 @@ ControllerSetupScreen:				; builds the controller setup screen: a sprite for eac
 	lda.w #ControllerSetupPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0005
-	sta.w fadestep
+	sta.w fadein
 	rts

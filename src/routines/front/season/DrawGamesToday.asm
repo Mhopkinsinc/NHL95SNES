@@ -1,4 +1,4 @@
-DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry, d2 its game
+DrawGamesToday:						; draws day d0's games on Games Today: d1 its schedule entry, d2 its game
 									; count, the first two games' names, colours and marks, the down arrow
 									; when there are 3 or more
 	jsr.w DayFirstGame

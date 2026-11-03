@@ -48,5 +48,5 @@ SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and
 	rep #$20
 	lda.w #$000A
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 	rts

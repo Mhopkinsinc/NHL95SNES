@@ -149,12 +149,12 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	sta.b a1
 	lda.w #$0017
 	sta.l TM
-	stz.w fadestep
+	stz.w fadein
 	lda.w #$012C
 	sta.w matchuptimer
 	lda.w #$0019
 	sta.w ScoutingReportTimer
-	jsr.w InitScoutDisplay
+	jsr.w InitScoutingDisplay
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

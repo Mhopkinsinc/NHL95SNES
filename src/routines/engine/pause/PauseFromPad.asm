@@ -1,3 +1,3 @@
 PauseFromPad:						; from demoread and other segments
-	sta.w pausepad
+	sta.w sfpj
 	bra startpause

@@ -38,7 +38,7 @@ puckbody:							; called from other segments
 	sta.b d1
 	bne .4
 	tya
-	jsl.l GetFrameHot
+	jsl.l GetHot
 .4:									; d2 = Xvel,x, d3 = Yvel,x, A 8-bit, Xvel+1,x = d0, ...
 	lda.w Xvel,x
 	sta.b d2

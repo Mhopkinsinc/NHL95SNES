@@ -48,9 +48,9 @@ PenaltySummaryScreen:				; pause menu Penalties: the penalties of the game (Per,
 	ldx.w #$0006
 	ldy.w #$0012
 	jsr.w StartScrollList
-.2:									; call SendTextMap, fadestep = 0
+.2:									; call SendTextMap, fadein = 0
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

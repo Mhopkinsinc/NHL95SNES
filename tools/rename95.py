@@ -6,7 +6,8 @@ one, and its rows in docs/name_map.csv (old name kept in old_name) and docs/rout
     python3 tools/rename95.py --dry-run PROPOSALS.csv...
 
 Only rows with confidence "sure" are applied. A row is skipped (and printed) when the old name is not a global label or
-equate of the source, when the new name is already a label or equate (any case), or when two rows want the same new name.
+equate of the source, when the new name is already a label or equate (any case; for a RAM equate the same case only,
+as asar names are case-sensitive and an equate has no file), or when two rows want the same new name.
 """
 import csv, glob, os, re, sys
 
@@ -43,10 +44,13 @@ def main(argv):
                 rows.append(r)
     files = sorted(glob.glob(os.path.join(SRC, '**', '*.asm'), recursive=True))
     text = {f: open(f, encoding='latin-1').read() for f in files}
-    glob_labels, symbols = {}, set()
+    glob_labels, symbols, exact, equates = {}, set(), set(), set()
     for f, t in text.items():
         for m in re.finditer(r'^([A-Za-z_]\w*)(:|\s*=)', t, re.M):
             symbols.add(m.group(1).lower())
+            exact.add(m.group(1))
+            if m.group(2) != ':':
+                equates.add(m.group(1))
             glob_labels.setdefault(m.group(1), f)      # a label or an equate (RAM names)
     plan, seen_new, skipped = [], set(), []
     for r in rows:
@@ -58,8 +62,8 @@ def main(argv):
             why = 'old label not found'
         elif old == new:
             why = 'same name'
-        elif new.lower() in symbols and new.lower() != old.lower():
-            why = 'new name already a symbol'
+        elif new.lower() in symbols and new.lower() != old.lower() and (new in exact or old not in equates):
+            why = 'new name already a symbol'     # a RAM equate may differ from a label only in case (94S fadein)
         elif new.lower() in seen_new:
             why = 'new name wanted twice'
         if why:

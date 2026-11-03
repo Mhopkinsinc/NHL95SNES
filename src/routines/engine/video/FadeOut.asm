@@ -1,4 +1,4 @@
-FadeOut:							; starts a fade out: fadestep = $FFFF
+FadeOut:							; starts a fade out: fadein = $FFFF
 	lda.w #$FFFF
-	sta.w fadestep
+	sta.w fadein
 	rtl

@@ -53,5 +53,5 @@ ExitPlayoffBracket:					; leaves the playoff bracket for the League Menu (Season
 	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
-	stz.w fadestep
+	stz.w fadein
 	jml.l SeasonOptions

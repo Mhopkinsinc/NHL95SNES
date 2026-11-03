@@ -52,7 +52,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	bit.w OneTimerDist
 	bmi .6
 	txa
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	lda.w Xpos,x
 	clc
 	adc.b d0

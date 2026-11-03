@@ -2,7 +2,7 @@ NameEntryScreen:					; the Name Entry screen of a pad: the 8 user names (up / do
 									; one (EditUserName), start takes it
 	jsl.l FadeOutWait
 	jsr.w DrawNameLog
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1, call ReadPauseMenuPad, $26 + 1, ...
 	inc.w TransfersReady
 	wai

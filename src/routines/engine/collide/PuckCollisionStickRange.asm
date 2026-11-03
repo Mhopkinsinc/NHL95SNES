@@ -1,6 +1,6 @@
 PuckCollisionStickRange:			; test the frame hotspot reach and puck height for stick contact
 	tya
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	lda.b d0
 	bit.w #$8000
 	beq .1
@@ -24,7 +24,7 @@ PuckCollisionStickRange:			; test the frame hotspot reach and puck height for st
 	sta.b d3
 	ldx.b curobj
 	lda.b a2
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	ldy.b a2
 	lda.b d0
 	clc

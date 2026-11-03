@@ -50,14 +50,14 @@ NMI_Tick:							; Vcount + 1, the fade, FrameCount, then the frame hook
 	bcc .1
 	inc.b Vcount+2
 .1:									; the fade
-	lda.w fadestep
+	lda.w fadein
 	bmi .fadeout
 	dec a
 	bmi .fadein
-	sta.w fadestep
+	sta.w fadein
 	sep #$20
 	bra .write
-.fadein:							; fadestep 0: brightness + 1 up to 15
+.fadein:							; fadein 0: brightness + 1 up to 15
 	sep #$20
 	lda.w brightness
 	bpl .up
@@ -68,7 +68,7 @@ NMI_Tick:							; Vcount + 1, the fade, FrameCount, then the frame hook
 	bcs .write
 	sta.w brightness
 	bra .write
-.fadeout:							; fadestep negative: brightness - 1 until negative
+.fadeout:							; fadein negative: brightness - 1 until negative
 	sep #$20
 	lda.w brightness
 	bmi .write

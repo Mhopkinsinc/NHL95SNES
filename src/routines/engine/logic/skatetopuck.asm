@@ -13,7 +13,7 @@ skatetopuck:						; called from other segments
 	pei ($83)
 	pei ($7F)
 	txa
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	lda.b d0
 	eor.w #$FFFF
 	inc a

@@ -145,7 +145,7 @@ setplayer:							; from forcepldata and other segments
 	adc.b r0
 	lsr a
 	ldy.w #$0000
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w legstr,x
 	ldy.b a0
 	lda.w $0112,y
@@ -160,7 +160,7 @@ setplayer:							; from forcepldata and other segments
 	adc.b r0
 	lsr a
 	ldy.w #$0001
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w legspd,x
 	ldy.b a0
 	lda.w $0112,y
@@ -179,7 +179,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w ThirdPBonus
 	ldy.w #$0002
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	eor.w #$000F
 	clc
 	adc.w #$000F
@@ -200,7 +200,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w HmAwBonus
 	ldy.w #$0003
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	pha
 	lda.w position,x
 	beq .15
@@ -227,7 +227,7 @@ setplayer:							; from forcepldata and other segments
 	adc.b r0
 	lsr a
 	ldy.w #$0004
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w shotspd,x
 	ldy.b a0
 	lda.w $0114,y
@@ -244,7 +244,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w ThirdPBonus
 	ldy.w #$0005
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w checking,x
 	ldy.b a0
 	lda.w $0114,y
@@ -275,7 +275,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w HmAwBonus
 	ldy.w #$0006
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w stickhand,x
 	ldy.b a0
 	lda.w $0115,y
@@ -292,7 +292,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w HmAwBonus
 	ldy.w #$0007
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w shotacc,x
 	ldy.b a0
 	lda.w $0116,y
@@ -307,7 +307,7 @@ setplayer:							; from forcepldata and other segments
 	adc.b r0
 	lsr a
 	ldy.w #$0008
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w endurance,x
 	ldy.b a0
 	lda.w $0116,y
@@ -322,7 +322,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w ThirdPBonus
 	ldy.w #$0009
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w spodds,x
 	ldy.b a0
 	lda.w $0117,y
@@ -341,7 +341,7 @@ setplayer:							; from forcepldata and other segments
 	clc
 	adc.w HmAwBonus
 	ldy.w #$000A
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w passacc,x
 	ldy.b a0
 	lda.w $0117,y
@@ -352,7 +352,7 @@ setplayer:							; from forcepldata and other segments
 	adc.b r0
 	lsr a
 	ldy.w #$000B
-	jsr.w HotColdRating
+	jsr.w AttributeCalc
 	sta.w aggress,x
 	txy
 	lda.w weight,x

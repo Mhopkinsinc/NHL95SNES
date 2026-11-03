@@ -63,7 +63,7 @@ PlayerStatsScreen:					; pause menu Player Stats: the skaters of team a2 sorted 
 	jsr.w StartScrollList
 	jsr.w PrintPlayerStatHeads
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

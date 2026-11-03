@@ -34,7 +34,7 @@ ShowAlert:							; prints the Alert page on the stack, waits for start / select,
 	lda.w #$FF80
 	sta.b $05,x
 	sta.b $08,x
-	stz.w fadestep
+	stz.w fadein
 	stz.w repeatdelayframes
 	stz.w padchangeany
 .loop:								; loop: call UpdateMenuSpritesTwice, call ReadMenuPads, ...

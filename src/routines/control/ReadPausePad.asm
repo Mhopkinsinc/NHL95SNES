@@ -1,4 +1,4 @@
 ReadPausePad:						; read the controller that owns the pause menu
-	lda.w pausepad
+	lda.w sfpj
 	lsr a
 	jmp.w ReadjoyA

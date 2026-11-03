@@ -32,7 +32,7 @@ Intermission:						; the intermission between periods: the teams set up
 	lda.w TickerNum
 	sta.w tickerstart
 	lda.w #$FFFF
-	sta.w pausepad
+	sta.w sfpj
 	ldy.w #$0000
 	tyx
 .loop2:								; loop: if cont1team,y is not 0 go to .2, X + 1, X + 1, ...
@@ -43,17 +43,17 @@ Intermission:						; the intermission between periods: the teams set up
 	cpx.w #$0008
 	bne .loop2
 	lda.w #$0001
-.2:									; A xor $FFFF, A + 1, pausepad = A, A = cont1team, ...
+.2:									; A xor $FFFF, A + 1, sfpj = A, A = cont1team, ...
 	eor.w #$FFFF
 	inc a
-	sta.w pausepad
+	sta.w sfpj
 	lda.w cont1team
 	ora.w cont2team
 	ora.w cont3team
 	ora.w cont4team
 	ora.w cont5team
 	bne .3
-	stz.w pausepad
+	stz.w sfpj
 .3:									; InIntermission = $0001, if DemoMode = 0 go to .4, go to .5
 	lda.w #$0001
 	sta.w InIntermission

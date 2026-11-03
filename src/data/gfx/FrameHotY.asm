@@ -1,4 +1,4 @@
-FrameHotY:							; per frame (1060 words): the stick hot spot's y, which GetFrameHot
+FrameHotY:							; per frame (1060 words): the stick hot spot's y, which GetHot
 									; negates into d1
 	dw $0000,$FFF9,$FFFB,$FFFA,$FFFA,$FFF2,$FFF0,$FFF6
 	dw $FFF6,$0005,$FFFF,$FFFE,$FFFD,$FFF8,$FFF6,$FFFA

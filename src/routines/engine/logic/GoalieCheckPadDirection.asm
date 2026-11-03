@@ -306,12 +306,12 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bmi .34
 	cmp.w #$010B
 	bpl .34
-.33:								; d0 = puckx, d1 = pucky, call ClampGoalieTargetY, ...
+.33:								; d0 = puckx, d1 = pucky, call ClampTargetY, ...
 	lda.w puckx
 	sta.b d0
 	lda.w pucky
 	sta.b d1
-	jsl.l ClampGoalieTargetY
+	jsl.l ClampTargetY
 	lda.b d1
 	cmp.w #$FFD2
 	bmi .36
@@ -412,8 +412,8 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	clc
 	adc.w puckx
 	sta.b d0
-.46:								; call ClampGoalieTargetY
-	jsl.l ClampGoalieTargetY
+.46:								; call ClampTargetY
+	jsl.l ClampTargetY
 	pei ($83)
 	pei ($7F)
 .47:								; A = d0, Y = d1, call ApproxLength, d0 = A, ...

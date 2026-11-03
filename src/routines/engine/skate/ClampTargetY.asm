@@ -1,4 +1,4 @@
-ClampGoalieTargetY:					; clamp the goalie target between goal lines and make its Y relative to d3
+ClampTargetY:						; clamp the goalie target between goal lines and make its Y relative to d3
 	lda.w Ypos,x
 	cmp.w #$010E
 	bpl .3

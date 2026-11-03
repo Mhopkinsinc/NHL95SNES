@@ -66,7 +66,7 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	lda.b $01,s
-	jsr.w GetUserName
+	jsr.w GetLogName
 	cpx.w #$0000
 	beq .3
 	lda.w #$0020

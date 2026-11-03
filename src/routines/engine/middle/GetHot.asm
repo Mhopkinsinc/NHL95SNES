@@ -1,4 +1,4 @@
-GetFrameHot:						; return the current frame hot spot in d0 and d1
+GetHot:								; return the current frame hot spot in d0 and d1
 	phx
 	tay
 	lda.w frame,y

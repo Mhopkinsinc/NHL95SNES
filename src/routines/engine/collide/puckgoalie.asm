@@ -161,7 +161,7 @@ puckgoalie:							; called from other segments
 	sta.b d1
 	bne .16
 	lda.b a2
-	jsl.l GetFrameHot
+	jsl.l GetHot
 .16:								; A = d1, A and $00FF, if $0080 bits clear go to .17, A or $FF00
 	lda.b d1
 	and.w #$00FF

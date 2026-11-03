@@ -26,7 +26,7 @@ SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (recor
 	jsl.l MapTileBlock
 	stz.w HomeTeam
 	stz.b d7
-	jsr.w DrawSeasonTeamStats
+	jsr.w PrintSeasonTeamStats
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	sep #$20
@@ -35,5 +35,5 @@ SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (recor
 	rep #$20
 	lda.w #$0009
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 	rts

@@ -3,7 +3,7 @@ CreatePlayer:						; play mode Make Player: CheckCreateSlots, the Create Player 
 	jsl.l FadeOutWait
 	jsl.l CheckCreateSlots
 	jsr.w DrawNameEntry
-	stz.w fadestep
+	stz.w fadein
 ScreenStateLoop:					; the front end loop: each frame the transfers, the pads and the sprites,
 									; then the handler of screen state $99 (ScreenStateHandlers)
 	jsl.l WaitTransfers

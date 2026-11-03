@@ -47,9 +47,9 @@ LineEditor:							; pause menu Edit Lines: the lines of team a2 (pad left / righ
 	sty.b a0+2
 .5:									; call PrintLineNames
 	jsr.w PrintLineNames
-.6:									; call SendTextMap, fadestep = 0
+.6:									; call SendTextMap, fadein = 0
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop2:								; loop: if TransfersReady is not 0 go to .loop2, call ReadMenuPads, ...

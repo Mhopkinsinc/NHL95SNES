@@ -125,7 +125,7 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	stz.w BG2HScroll
-	stz.w fadestep
+	stz.w fadein
 .loop2:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

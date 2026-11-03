@@ -91,11 +91,11 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l SendTextMap
 .11:								; go to .loop
 	jmp.w .loop
-.12:								; if $0040 bits clear go to .13, A = a0+2, call GetUserName, go to .14
+.12:								; if $0040 bits clear go to .13, A = a0+2, call GetLogName, go to .14
 	bit.w #$0040
 	beq .13
 	lda.b a0+2
-	jsr.w GetUserName
+	jsr.w GetLogName
 	bra .14
 .13:								; if $1000 bits clear go to .11, A = a0+2, call PutUserName
 	bit.w #$1000

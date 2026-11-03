@@ -1,4 +1,4 @@
-NMI_Fast:							; NMI: save the registers; just return while NMISkip is set
+VBlank:								; NMI: save the registers; just return while NMISkip is set
 	rep #$30
 	phd
 	phb

@@ -3,7 +3,7 @@ RestartScoutingText:				; deletes the scroll sprites and restarts the scouting c
 	jsl.l DeleteSprite
 	ldx.b $79
 	jsl.l DeleteSprite
-InitScoutDisplay:					; resets the scouting text pointer, cursor and scrolling display
+InitScoutingDisplay:				; resets the scouting text pointer, cursor and scrolling display
 	lda.b $7B
 	sta.b $7D
 	lda.w #$0012

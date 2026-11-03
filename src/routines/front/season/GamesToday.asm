@@ -103,9 +103,9 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	lda.w #$0002
 	sta.b d0+2
 	stz.b d2+2
-	jsr.w DrawDayGames
+	jsr.w DrawGamesToday
 	jsr.w PrintGamesTodayDate
 	lda.w #$0007
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 	rts

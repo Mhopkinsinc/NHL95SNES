@@ -67,7 +67,7 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	cmp.b d0
 	bcs .rts
 	dec.b d0
-	jsr.w DrawDayGames
+	jsr.w DrawGamesToday
 	jmp.w PrintGamesTodayDate
 .7:									; A = d0, A * 2, X = A, if SeasonDates+2,x = 0 go to .rts, ...
 	lda.b d0
@@ -76,7 +76,7 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	lda.l SeasonDates+2,x
 	beq .rts
 	inc.b d0
-	jsr.w DrawDayGames
+	jsr.w DrawGamesToday
 	jmp.w PrintGamesTodayDate
 .8:									; if d1+2 = 0 go to .rts, A - 1, d1+2 = A, if not zero go to .9, ...
 	lda.b d1+2

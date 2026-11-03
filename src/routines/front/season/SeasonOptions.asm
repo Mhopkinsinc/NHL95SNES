@@ -47,7 +47,7 @@ SeasonOptions:						; the League Menu (season mode): draws its page (Play Games,
 	stz.b d6
 	lda.w #$0006
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 PlaceLeagueCursor:					; the cursor sprite (a0) to League Menu item d6: x $30, y d6 * 24 + $3E
 	ldx.b a0
 	lda.w #$0030

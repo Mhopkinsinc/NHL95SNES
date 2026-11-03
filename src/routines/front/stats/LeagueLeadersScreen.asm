@@ -83,5 +83,5 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	jsl.l WaitTransfers
 	lda.w #$0008
 	sta.b d6+2
-	stz.w fadestep
+	stz.w fadein
 	rts

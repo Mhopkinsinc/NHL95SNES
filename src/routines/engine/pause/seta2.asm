@@ -1,7 +1,7 @@
 seta2:								; a2 = the team of the pad that paused (0 home, 2 visitors), from its
 									; entry in cont1team
 	stz.b a2
-	ldx.w pausepad
+	ldx.w sfpj
 	bpl .1
 	txa
 	eor.w #$FFFF

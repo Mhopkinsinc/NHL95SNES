@@ -266,7 +266,7 @@ $C08939,478,data,TileSetUnused,TileSetUnused,0,code,data,data,
 $C08B17,32,data,BluesPaletteUnused,BluesPaletteUnused,0,code,data,data,
 $C08B37,13,data,InitHooks,InitHooks,0,94S,data,data,
 $C08B44,1,code,NullHook,NullHook,0,94S,engine/video,94S,NullHook in 94S routines/video
-$C08B45,61,code,NMI_Fast,NMI_Fast,1,94S,engine/video,family,interrupts family
+$C08B45,61,code,VBlank,VBlank,1,94S+align,engine/video,94S,VBlank in 94S routines/video
 $C08B82,122,code,NMI_HookReturn,NMI_HookReturn,0,94S,engine/video,family,interrupts family
 $C08BFC,104,code,NMI_HookReturn,NMI_Tick,,new,engine/video,,
 $C08C64,18,code,NMI_FrameHookReturn,NMI_FrameHookReturn,0,94S,engine/video,family,interrupts family
@@ -1670,7 +1670,7 @@ $C37ED4,14,code,randomd0sd0,randomd0sd0,1,94S+code,engine/input,callers,1 of 1 p
 $C37EE2,139,code,Sroot,Sroot,0,94S+code,engine/middle,95G,Sroot in 95G engine/middle
 $C37F6D,79,code,vtoa,vtoa,26,94S+code,engine/middle,95G,vtoa in 95G engine/middle
 $C37FBC,38,code,SuperAdd,SuperAdd,0,94S+code,engine/setup,95G,SuperAdd in 95G engine/setup
-$C37FE2,45,code,GetFrameHot,GetFrameHot,10,94S+purpose,engine/logic,94S,GetFrameHot in 94S routines/logic
+$C37FE2,45,code,GetHot,GetHot,10,94S+purpose+align,engine/middle,95G,GetHot in 95G engine/middle
 $C3800F,52,code,projxy,projxy,0,94S+purpose,engine/logic,follows,unreferenced; after GetFrameHot
 $C38043,10,code,setpads,setpads,3,94S+code,control,95G,setpads in 95G control
 $C3804D,40,code,SetupScrollIRQ,SetupScrollIRQ,0,94S+code,engine/video,94S,SetupScrollIRQ in 94S routines/video
@@ -2095,8 +2095,8 @@ $C48B5E,3,code,GoalieCheckManualState,GoalieUpdateStateJump,,code,engine/logic,,
 $C48B61,45,code,GoalieReturnToCrease,GoalieReturnToCrease,0,code,engine/logic,callers,1 of 1 placed refs in engine/logic
 $C48B8E,28,code,GoalieCheckPadDirection,GoalieCheckPadDirection,1,code,engine/logic,callers,1 of 1 placed refs in engine/logic
 $C48BAA,1870,code,GoalieCheckPadDirection,GoalieUpdateState,,code,engine/logic,,
-$C492F8,51,code,ClampGoalieTargetY,ClampGoalieTargetY,1,code,engine/logic,callers,1 of 1 placed refs in engine/logic
-$C4932B,1,code,ClampGoalieTargetY,GoalieTargetReturn,,code,engine/logic,,
+$C492F8,51,code,ClampTargetY,ClampTargetY,1,code+align,engine/skate,95G,ClampTargetY in 95G engine/skate
+$C4932B,1,code,ClampTargetY,GoalieTargetReturn,,code,engine/skate,95G,
 $C4932C,18,data,assgoalie_list,assgoalie_list,0,94S+code,data,data,
 $C4933E,62,code,AdjustFacingDirection,AdjustFacingDirection,3,94S+code,engine/logic,95G,AdjustFacingDirection in 95G engine/logic
 $C4937C,33,code,GoaliePuckVector,GoaliePuckVector,2,94S+code,engine/logic,94S,GoaliePuckVector in 94S routines/logic
@@ -2398,7 +2398,7 @@ $C4E387,23,code,ExitScoutingReport,ExitScoutingReport,1,code,front/scout,callers
 $C4E39E,18,code,NextMatchup,NextMatchup,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4E3B0,15,code,PrevMatchup,PrevMatchup,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4E3BF,12,code,RestartScoutingText,RestartScoutingText,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C4E3CB,80,code,RestartScoutingText,InitScoutDisplay,,94S+purpose,front/scout,,
+$C4E3CB,80,code,RestartScoutingText,InitScoutingDisplay,,94S+purpose+align,front/scout,,
 $C4E41B,1130,code,ShowMatchups,ShowMatchups,3,94S+purpose,front/scout,94S,ShowMatchups in 94S routines/scout
 $C4E885,72,code,RankScoutingHotColdTeams,RankScoutingHotColdTeams,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4E8CD,267,code,RankScoutingHotColdPlayers,RankScoutingHotColdPlayers,1,code,front/scout,callers,1 of 1 placed callers in front/scout
@@ -2569,7 +2569,7 @@ $C530B3,27,code,PlayerInLine,PlayerInLine,2,code,front/scout,callers,2 of 2 plac
 $C530CE,29,code,SwapRosterPlayers,SwapRosterPlayers,1,code,front/awards,callers,1 of 1 placed callers in front/awards
 $C530EB,27,code,AddRosterPlayer,AddRosterPlayer,1,code,front/awards,callers,1 of 1 placed callers in front/awards
 $C53106,25,code,TeamGoalieRange,TeamGoalieRange,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C5311F,23,code,RecordGoalieCount,RecordGoalieCount,2,code,front/scout,callers,1 of 1 placed callers in front/scout
+$C5311F,23,code,GetGoalieCountD7,GetGoalieCountD7,2,code+align,engine/middle,95G,GetGoalieCountD7 in 95G engine/middle
 $C53136,49,code,TeamForwardRange,TeamForwardRange,0,code,front/scout,follows,unreferenced; after RecordGoalieCount
 $C53167,85,code,UnpackTeamBonuses,UnpackTeamBonuses,2,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C531BC,11,code,LoadSeasonHomeRoster,LoadSeasonHomeRoster,7,code,front/awards,callers,7 of 7 placed callers in front/awards
@@ -2577,7 +2577,7 @@ $C531C7,238,code,LoadSeasonRoster,LoadSeasonRoster,2,code,front/scout,plurality,
 $C532B5,16,code,GetForwardCount,GetForwardCount,0,94S+purpose,engine/middle,95G,GetForwardCount in 95G engine/middle
 $C532C5,90,code,LoadTeamLines,LoadTeamLines,1,94S+code,front/stats,95G,LoadTeamLines in 95G front/stats
 $C5331F,43,code,GetPlayerNumInitial,GetPlayerNumInitial,0,94S+purpose,engine/middle,95G,GetPlayerNumInitial in 95G engine/middle
-$C5334A,151,code,PlayerShortName,PlayerShortName,1,94S+code,engine/middle,callers,1 of 1 placed callers in engine/middle
+$C5334A,151,code,FormatPlayerNumInitial,FormatPlayerNumInitial,1,94S+code+align,engine/middle,95G,FormatPlayerNumInitial in 95G engine/middle
 $C533E1,14,code,RosterPlayerShortName,RosterPlayerShortName,3,code,engine/middle,span,between GetPlayerNumInitial and ConvertByteToDigits (engine/middle); callers said engine/penalty
 $C533EF,134,code,RosterPlayerShortName,FormatRosterShortName,,code,engine/middle,,
 $C53475,19,code,EraseScoutName,EraseScoutName,0,94S+code,engine/middle,span,between GetPlayerNumInitial and ConvertByteToDigits (engine/middle)
@@ -2588,7 +2588,7 @@ $C53535,63,code,ResetClock,ResetClock,2,94S+code,engine/middle,95G,ResetClock in
 $C53574,75,code,clearTeamStats,clearTeamStats,1,94S+code,control,95G,clearTeamStats in 95G control
 $C535BF,11,code,restoreteams,restoreteams,1,94S+code,engine/players,95G,restoreteams in 95G engine/players
 $C535CA,37,code,restoreteams,BenchTeamRoster,,code,engine/players,,
-$C535EF,39,code,GetPlayerRecord,GetPlayerRecord,1,94S+code,engine/middle,callers,1 of 1 placed callers in engine/middle
+$C535EF,39,code,GetPlayerNamePointer,GetPlayerNamePointer,1,94S+code+align,engine/middle,95G,GetPlayerNamePointer in 95G engine/middle
 $C53616,22,code,loadTeamStruct,loadTeamStruct,5,94S+code,engine/middle,95G,loadTeamStruct in 95G engine/middle
 $C5362C,2,code,InitScores,InitScores,1,94S+code,engine/penalty,94S,InitScores in 94S routines/penalty
 $C5362E,16,code,GetPlayerCount,GetPlayerCount,2,94S+purpose,engine/players,95G,GetPlayerCount in 95G engine/players
@@ -2622,7 +2622,7 @@ $C53B51,207,code,forcepldata,forcepldata,1,94S+code,engine/players,95G,forceplda
 $C53C20,31,code,Setplass,Setplass,4,94S+code,engine/logic,95G,Setplass in 95G engine/logic
 $C53C3F,7,data,PositionAssignments,PositionAssignments,0,code,data,data,
 $C53C46,800,code,setplayer,setplayer,3,94S+code,engine/players,95G,setplayer in 95G engine/players
-$C53F66,39,code,HotColdRating,HotColdRating,1,code,engine/players,callers,1 of 1 placed callers in engine/players
+$C53F66,39,code,AttributeCalc,AttributeCalc,1,code+align,engine/players,95G,AttributeCalc in 95G engine/players
 $C53F8D,88,code,resetplstuff,resetplstuff,1,94S+code,engine/players,95G,resetplstuff in 95G engine/players
 $C53FE5,101,code,ResetTeamPlayers,ResetTeamPlayers,1,code,engine/players,callers,1 of 1 placed callers in engine/players
 $C5404A,38,code,SetLCmode,SetLCmode,2,94S+code,engine/lines,95G,SetLCmode in 95G engine/lines
@@ -2829,7 +2829,7 @@ $C570F4,85,code,AttribStatus,AttribStatus,0,code+align,engine/setup,95G,AttribSt
 $C57149,62,code,AttribEnergy,AttribEnergy,0,94S+purpose,engine/setup,95G,AttribEnergy in 95G engine/setup
 $C57187,20,code,AttribHanded,AttribHanded,0,code+align,engine/setup,95G,AttribHanded in 95G engine/setup
 $C5719B,25,code,AttribWeight,AttribWeight,0,code+align,engine/setup,95G,AttribWeight in 95G engine/setup
-$C571B4,19,code,RosterColRating,RosterColRating,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
+$C571B4,19,code,AttribRating,AttribRating,0,code+align,engine/setup,95G,AttribRating in 95G engine/setup
 $C571C7,4,code,CalcRosterAttribLong,CalcRosterAttribLong,2,code,front/scout,callers,2 of 2 placed callers in front/scout
 $C571CB,318,code,CalcRosterAttrib,CalcRosterAttrib,4,code,engine/setup,callers,2 of 3 placed callers in engine/setup
 $C57309,32,data,RosterAttribWeights,RosterAttribWeights,0,code,data,data,
@@ -3100,7 +3100,7 @@ $C5B17A,53,code,StandingsScreen,StandingsScreen,1,genesis+purpose,front/season,9
 $C5B1AF,79,code,StandingsScreen,DrawStandings,,genesis+purpose,front/season,,
 $C5B1FE,16,data,StandingsStatTitles,StandingsStatTitles,0,code,data,data,
 $C5B20E,31,code,DayFirstGame,DayFirstGame,2,code,front/season,callers,1 of 1 placed callers in front/season
-$C5B22D,271,code,DrawDayGames,DrawDayGames,2,code,front/season,callers,1 of 1 placed callers in front/season
+$C5B22D,271,code,DrawGamesToday,DrawGamesToday,2,code+align,front/season,95G,DrawGamesToday in 95G front/season
 $C5B33C,33,code,ClearGameSlot,ClearGameSlot,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C5B35D,6,data,GameSlotOffsets,GameSlotOffsets,0,code,data,data,
 $C5B363,6,data,GameSlotRows,GameSlotRows,0,code,data,data,
@@ -3131,8 +3131,8 @@ $C5B670,6,data,GoalieCategoryNames,GoalieCategoryNames,0,code,data,data,
 $C5B676,4,code,BinToBCDLong,BinToBCDLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C5B67A,39,code,BinToBCD,BinToBCD,39,code,front/create,plurality,2 of 11 placed callers in front/create
 $C5B6A1,336,code,DrawLeaderRow,DrawLeaderRow,0,code,front/stats,callers,1 of 1 placed refs in front/stats
-$C5B7F1,361,code,DrawSeasonTeamStats,DrawSeasonTeamStats,2,code,front/stats,callers,1 of 1 placed callers in front/stats
-$C5B95A,19,code,DrawSeasonTeamStats,DrawSeasonTeamStatsFinish,,code,front/stats,,
+$C5B7F1,361,code,PrintSeasonTeamStats,PrintSeasonTeamStats,2,code+align,front/stats,95G,PrintSeasonTeamStats in 95G front/stats
+$C5B95A,19,code,PrintSeasonTeamStats,PrintSeasonTeamStatsFinish,,code+align,front/stats,,
 $C5B96D,18,code,ClearTextColumn,ClearTextColumn,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C5B97F,4,code,BuildTeamSeasonRecordLong,BuildTeamSeasonRecordLong,3,code,front/awards,callers,3 of 3 placed callers in front/awards
 $C5B983,451,code,BuildTeamSeasonRecord,BuildTeamSeasonRecord,4,code,front/stats,callers,2 of 3 placed callers in front/stats
@@ -3218,7 +3218,7 @@ $C5D0F5,97,code,UserNameEntry,UserNameEntry,1,genesis+purpose,front/records,95G,
 $C5D156,111,code,NameEntryScreen,NameEntryScreen,1,genesis+purpose,front/records,95G,NameEntryScreen in 95G front/records
 $C5D1C5,42,code,StartUserNameEntry,StartUserNameEntry,1,code,front/records,callers,1 of 1 placed callers in front/records
 $C5D1EF,197,code,DrawNameLog,DrawNameLog,1,code,front/records,callers,1 of 1 placed callers in front/records
-$C5D2B4,46,code,GetUserName,GetUserName,3,code,front/records,callers,2 of 2 placed callers in front/records
+$C5D2B4,46,code,GetLogName,GetLogName,3,code+align,front/records,95G,GetLogName in 95G front/records
 $C5D2E2,33,code,NextNameBits5,NextNameBits5,1,code,front/records,callers,1 of 1 placed callers in front/records
 $C5D303,55,code,PutUserName,PutUserName,1,code,front/records,callers,1 of 1 placed callers in front/records
 $C5D33A,53,code,PutNameBits5,PutNameBits5,1,code,front/records,callers,1 of 1 placed callers in front/records

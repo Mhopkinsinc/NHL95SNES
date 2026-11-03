@@ -45,6 +45,6 @@ demoread:							; from Gameloop and other segments
 	bne .5
 .rtl:								; return
 	rtl
-.5:									; fadestep = 0, go to Restart
-	stz.w fadestep
+.5:									; fadein = 0, go to Restart
+	stz.w fadein
 	jml.l Restart

@@ -33,10 +33,10 @@ Pausemode_go:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, 
 	lda.b a1
 .2:									; a1+2 = A
 	sta.b a1+2
-.loop:								; loop: call Pausemode_gnum, call SendTextMap, fadestep = 0
+.loop:								; loop: call Pausemode_gnum, call SendTextMap, fadein = 0
 	jsr.w Pausemode_gnum
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop2:								; loop: TransfersReady + 1
 	inc.w TransfersReady
 .loop3:								; loop: if TransfersReady is not 0 go to .loop3, call ReadMenuPads, ...

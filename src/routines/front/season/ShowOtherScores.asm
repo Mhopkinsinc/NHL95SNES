@@ -81,7 +81,7 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 	ldy.w #$000B
 	jsr.w StartScrollList
 	jsl.l SendTextMap
-	stz.w fadestep
+	stz.w fadein
 .loop2:								; loop: TransfersReady + 1, call ReadMenuPads, $26 + 1, ...
 	inc.w TransfersReady
 	wai

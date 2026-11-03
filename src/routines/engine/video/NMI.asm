@@ -1,2 +1,2 @@
-NMI:								; NMI vector: jml NMI_Fast
-	jml.l NMI_Fast
+NMI:								; NMI vector: jml VBlank
+	jml.l VBlank

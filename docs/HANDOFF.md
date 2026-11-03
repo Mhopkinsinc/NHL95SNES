@@ -20,10 +20,16 @@
 - Phase 5 done: `ram95s.asm` renames padlast / padnew / tmpassatt to the 94S (93S, 94G) padlast1 / padnew1 / tmpasses,
   then the merged order (94S's order, 95G-only names after the 95G name before them, 95S-only names after the name
   before them). Matched names out of order: 1 against 94S (penshot), 0 against 95G. A wider RAM naming pass by reading
-  (180 95S-only names) did not run (rate limit); the packet generator is in the naming notes.
+  (180 95S-only names) did not run then (rate limit); it ran in the deep dive below.
+- Deep dive done: the 26 unsure matches read again against 95G and 94S (bodies and callers). 12 were the same job and are
+  renamed (GetFrameHot to GetHot, NMI_Fast to VBlank, DrawDayGames to DrawGamesToday ...; 4 files moved to their 95G
+  folders); 14 keep their names because no routine in 95G or 94S does the same job (list and reasons: the naming notes).
+  RAM pass: of the 177 names neither 95G nor 94S has, two are the same variable as a 94S name (fadestep to fadein,
+  pausepad to sfpj, now in 94S's order); the rest are Visual Concepts engine state (tasks, sprites, sound driver,
+  transfer queues, the bit-packed save RAM) with no partner. DemoMode and RandomState are not demoflag and seed: 95S
+  has those too, at other addresses.
 - Last check: `tools/verify_all.sh` MATCH (2026-11-03).
-- Next: optional: the RAM naming pass, and the 26 unsure routine matches (Code Cleanup project file
-  `95s-inventory/naming_pass.md`).
+- Next: phase 6 (advisor review, pairing baseline, plan marked done).
 - Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
   cannot link a 95S known pair to its new name.
 - Unsure: none placed by guess; the 68 `plurality` and 4 `follows` rows are the low-confidence placements for checkpoint 1.
@@ -126,8 +132,8 @@
   (IceRinkMap, below). ../work/framesseg.py BANK J writes a raw-frame segment (and the picture in the last one), awards.py
   holds the names.
 - Per-frame offsets: FrameHotX ($CDF94A, into bank $CE) and FrameHotY ($CE0192) are two more 1060-word tables
-  indexed by the frame number (as FrameTileSource). GetFrameHot takes the frame from $0856,y and puts the first in $7F
-  (negated when $08E0,y has bit $0800) and the second, negated, in $83: the stick hot spot, as 94S GetFrameHot
+  indexed by the frame number (as FrameTileSource). GetHot takes the frame from $0856,y and puts the first in $7F
+  (negated when $08E0,y has bit $0800) and the second, negated, in $83: the hot spot, as 95G GetHot
   (checkpuckcoll_ccx / PuckCollisionStickRange test the stick's reach with it; pucknorm_move and skatetopuck use it).
 - Rink: IceRinkMap ($CCEEA5) is a three-chunk map set like the award pictures, but 32 x 170 tiles (the two rink halves,
   85 rows each), 520 tiles and 4 palettes, to $CD25DF. setupice loads it (MapSetToUnpackbuf); $C55524 finds its tiles chunk.
@@ -170,7 +176,7 @@
   -1247, per-object arrays -1315 / -1251 ...); a candidate is named when the named neighbours on both sides have its exact
   offset and its 95 uses are the routines 94S names for it.
   ../work/local94.py compares unnamed routines with 94S local subroutines (a called .label to its return): five
-  were the same code (setplayer .8 = HotColdRating ...); they take names from the code. Save RAM (bank $30): the
+  were the same code (setplayer .8 = AttributeCalc ...); they take names from the code. Save RAM (bank $30): the
   season keeps its records there as bit fields; ram95s.asm has a save RAM section (95 Genesis SR* block names where
   the job matches, SeasonDay ...), written by ../work/srnames.py (long operands; offsets by longfix.py). Every save
   RAM address the traced code reads has a name now. The Practice list's two option routines,
@@ -373,7 +379,7 @@
   CalcRosterAttrib selects high nibble for even mask bit n, low for odd, at byte floor(n/2).
   Gameplay normally masks rating levels to three bits; display/overall readers take four.
   RatingNibble converts create-player values 0-15 to stored levels 0-6, not packed-name data.
-  GetPlayerRecord and PlayerShortName are 94S code nothing reaches (GetPlayerNumInitial, their only caller, has no
+  GetPlayerNamePointer and FormatPlayerNumInitial are 94S code nothing reaches (GetPlayerNumInitial, their only caller, has no
   caller); they keep 94S's length/plain-name contract: the former
   doubles the already byte-addressed entry and dereferences again. They do not establish the
   actual packed record layout. NHL94SNES GetPlayerRecord instead walks length+8 records via

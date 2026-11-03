@@ -153,7 +153,7 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	ldy.w #$FF00
 	jsl.l AddTask
 	inc.w MenuMusicPending
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: call RunTasks, call AnimateSprites, ...
 	jsl.l RunTasks
 	jsl.l AnimateSprites

@@ -99,7 +99,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.b a0
 	ldx.w #$0001
 	jsr.w StartIntroScaleTask
-	stz.w fadestep
+	stz.w fadein
 .loop:								; loop: call RunTasks, if TasksDone = 0 go to .loop, go to ClearNMIHook
 	jsl.l RunTasks
 	lda.w TasksDone

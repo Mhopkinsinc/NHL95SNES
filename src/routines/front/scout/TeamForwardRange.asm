@@ -3,7 +3,7 @@ TeamForwardRange:					; team record A: tmp3 = the PlayerList index of its first 
 									; caller found
 	pha
 	tax
-	jsr.w RecordGoalieCount
+	jsr.w GetGoalieCountD7
 	sta.b tmp3
 	pla
 	tax

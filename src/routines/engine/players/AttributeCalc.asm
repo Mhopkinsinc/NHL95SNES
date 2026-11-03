@@ -1,4 +1,4 @@
-HotColdRating:						; A = rating A plus the player's hot / cold byte / 4 (HotColdTable at Y +
+AttributeCalc:						; A = rating A plus the player's hot / cold byte / 4 (HotColdTable at Y +
 									; r3), kept within 0-15
 	sta.b $42
 	tya

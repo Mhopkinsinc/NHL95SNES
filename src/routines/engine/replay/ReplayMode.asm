@@ -1,7 +1,7 @@
 ReplayMode:							; open instant replay and restore the live frame on exit
-	bit.w pausepad
+	bit.w sfpj
 	bpl .1
-	stz.w pausepad
+	stz.w sfpj
 .1:									; SavedGameframes = gameframes, ReplayGameframes = 0, ...
 	lda.b gameframes
 	sta.w SavedGameframes
@@ -139,14 +139,14 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	dec a
 	pha
 	bra .loop4
-.3:									; pull A, replayHpos = Hpos, replayVpos = Vpos, fadestep = $000A, ...
+.3:									; pull A, replayHpos = Hpos, replayVpos = Vpos, fadein = $000A, ...
 	pla
 	lda.b Hpos
 	sta.w replayHpos
 	lda.b Vpos
 	sta.w replayVpos
 	lda.w #$000A
-	sta.w fadestep
+	sta.w fadein
 	jsl.l FadeIn
 	jsl.l SprSort
 	lda.w #$0001

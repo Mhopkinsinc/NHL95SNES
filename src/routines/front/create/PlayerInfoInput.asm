@@ -143,5 +143,5 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	bcc .loop2
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
-	stz.w fadestep
+	stz.w fadein
 	rts

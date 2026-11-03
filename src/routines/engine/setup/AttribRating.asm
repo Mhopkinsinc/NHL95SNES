@@ -1,4 +1,4 @@
-RosterColRating:					; TeamRosterScreen's rating column: the attribute value (CalcRosterAttrib)
+AttribRating:						; TeamRosterScreen's rating column: the attribute value (CalcRosterAttrib)
 	jsr.w CalcRosterAttrib
 	jsr.w BinToBCD
 	jsr.w BCDText

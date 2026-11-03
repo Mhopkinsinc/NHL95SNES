@@ -31,18 +31,18 @@ UserNameEntry:						; with user records on (not in practice): NameEntryScreen fo
 	bne .loop2
 .rts:								; return
 	rts
-.2:									; a2 = HomeTeam, pausepad = Y, call NameEntryScreen, ...
+.2:									; a2 = HomeTeam, sfpj = Y, call NameEntryScreen, ...
 	lda.w HomeTeam
 	sta.b a2
-	sty.w pausepad
+	sty.w sfpj
 	jsr.w NameEntryScreen
 	lda.b a0+2
 	sta.w HomeUserRec
 	bra .1
-.3:									; a2 = VisTeam, pausepad = Y, call NameEntryScreen, VisUserRec = a0+2, ...
+.3:									; a2 = VisTeam, sfpj = Y, call NameEntryScreen, VisUserRec = a0+2, ...
 	lda.w VisTeam
 	sta.b a2
-	sty.w pausepad
+	sty.w sfpj
 	jsr.w NameEntryScreen
 	lda.b a0+2
 	sta.w VisUserRec

@@ -24,14 +24,14 @@ SeasonTeamStatsInput:				; the Season Team Stats screen each frame (screen state
 	cmp.w #$001A
 	bcc .3
 	lda.w #$0000
-.3:									; HomeTeam = A, go to DrawSeasonTeamStats
+.3:									; HomeTeam = A, go to PrintSeasonTeamStats
 	sta.w HomeTeam
-	jmp.w DrawSeasonTeamStats
+	jmp.w PrintSeasonTeamStats
 .4:									; A = HomeTeam, A - 1, if the result >= 0 go to .5, A = $0019
 	lda.w HomeTeam
 	dec a
 	bpl .5
 	lda.w #$0019
-.5:									; HomeTeam = A, go to DrawSeasonTeamStats
+.5:									; HomeTeam = A, go to PrintSeasonTeamStats
 	sta.w HomeTeam
-	jmp.w DrawSeasonTeamStats
+	jmp.w PrintSeasonTeamStats

@@ -207,5 +207,5 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	bpl .loop6
 	wai
 	jsr.w RefreshBracketColumns
-	stz.w fadestep
+	stz.w fadein
 	jmp.w DrawBracketSeriesSummary

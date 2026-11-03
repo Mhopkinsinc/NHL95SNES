@@ -1,5 +1,5 @@
 checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its position
-									; and at its hot spot (GetFrameHot), then checkplcoll
+									; and at its hot spot (GetHot), then checkplcoll
 	stz.w collflag
 	lda.w pfnc,x
 	bne .2
@@ -20,7 +20,7 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	cpx.w #$0018
 	bcs .1
 	txa
-	jsl.l GetFrameHot
+	jsl.l GetHot
 	lda.w Xpos,x
 	clc
 	adc.b d0

@@ -1,4 +1,4 @@
-PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2, reached only
+FormatPlayerNumInitial:				; 94S's number, initial and surname of player d0 of team a2, reached only
 									; from GetPlayerNumInitial (no caller); it expects 94S's records (a length
 									; word, the name, the number)
 	pei ($7F)
@@ -7,7 +7,7 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	pei ($6D)
 	pei ($63)
 	pei ($65)
-	jsl.l GetPlayerRecord
+	jsl.l GetPlayerNamePointer
 	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1

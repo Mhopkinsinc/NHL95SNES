@@ -75,7 +75,7 @@ chkprogress:						; from PenaltyManager and other segments
 	phx
 	jsl.l PushRef
 	plx
-	stz.w fadestep
+	stz.w fadein
 	rtl
 .3:									; call SeatPenaltyBox, if RefCnt < 0 go to .4, go to .rtl2
 	jsl.l SeatPenaltyBox
