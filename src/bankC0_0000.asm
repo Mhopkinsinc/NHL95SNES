@@ -8,8 +8,8 @@ TeamPalettes:						; one 16 colour palette per team in team order (the all-star 
 	dw $0380						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":4..$27E
-ArrowFontTiles:						; 4bpp tiles, packed: a two colour font, ASCII from the space, with
-									; four arrows in place of ^ _ ~ and the last character
+ArrowFontTiles:						; pause menu font and arrows; PauseScreenDraw loads the tiles and
+									; PrintPauseItemText selects character tiles in PauseMapBuf
 	dw $0C00						; unpacked size in bytes
 	dw $0004						; format 4: literal runs and copies from up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$282..$83D
@@ -17,8 +17,9 @@ GradientBarTiles:					; 4bpp tiles, packed: bars shaded from dark to light
 	dw $0240						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$841..$976
-MeterFontTiles:						; 4bpp tiles, packed: meter bars in three colours, a PwrPlay label,
-									; box corners, then a font, ASCII from the space
+MeterFontTiles:						; rink HUD font, meter bars and frame pieces; setupice and
+									; RestoreGameScreen
+									; load it for DrawScoreBox and DrawPeriodBox
 	dw $1000						; unpacked size in bytes
 	dw $0006						; format 6: a flag byte per 8 literal runs or copies, up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$97A..$EE5

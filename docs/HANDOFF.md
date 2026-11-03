@@ -285,8 +285,11 @@
   keep their index names (FrameTiles002 ...). The bank $CF frame code (DrawFrameLayoutFlip / DrawFrameLayout) adds
   FrameOffsetX / FrameOffsetXFlip and FrameOffsetY and reads the layout through FrameBankLayout+1.
 
-- ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
-  VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
+- ArrowFontTiles: InitPauseScreen -> PauseScreenDraw loads VRAM $4A00; PrintPauseItemText writes its character
+  tiles into PauseMapBuf. MeterFontTiles: setupice and RestoreGameScreen load VRAM $4800 for the rink HUD;
+  DrawScoreBox / DrawPeriodBox select its text and frame tiles. No one-to-one match to 94S SmallFontTiles or
+  BigFontTiles established: shared use on a screen is insufficient to identify these mixed tile sets.
+
 - GradientBarTiles: rendered bars; where they are drawn (VRAM $0640 from $C4D864, $0010 from $C59119) is not traced.
 - Home / away: the setup code confirms $17C9 = home, $17CB = away: ExhibitionOptions' "Home Team" line sets HomeTeam
   and its "Visiting Team" line VisTeam; the jerseys agree (white for HomeTeam, as 94S home). The last pair of uniform
@@ -330,7 +333,12 @@
   its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
   DigitFontTiles and LinePieceTiles are named from the rendered tiles; BG3ScrollHDMA1/2 from the HDMA set-up.
 - WonCheckTiles / WonCheckPalette: named from the rendered tiles; the screen is not traced.
-- Fonts: named from their rendered glyphs; the screens that draw with them are not traced.
+- Fonts: BoldFontGlyphs draws bracket/award headings, stats values and roster lists; ItalicFontGlyphs draws
+  setup options, name entry and season team stats; ThinFontGlyphs draws team labels on stats, scouting,
+  awards and Games Today. PrintTextPage dispatches bold/italic by row flags; the Render wrappers set the
+  glyph pointer and DrawText rasterizes each string, then SendTextMap uploads the map. Earlier-game glyph
+  equivalence remains unproven; these are not whole-font DMA loads.
+
 - SoundDriver: CPU uploads and queue sends, sample/sequence starts, volume/pitch controls and data reception are
   named from the CPU/SPC trace. Commands 5/30 (.l0540) snapshot DSP registers then enter command 31 (.l054C), which
   executes a host-port handshake; its full host-side contract is not traced. Commands 10-12 (.l056B, .l0830,
