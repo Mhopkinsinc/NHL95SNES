@@ -242,7 +242,7 @@ DefenceSkateAndCheck:				; skate the defender to the saved target and look for a
 	lda.w temp4,x
 	sta.b d1
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
@@ -294,9 +294,9 @@ OffensiveDefenceThink:				; update computer offensive defender movement
 	lda.w #$0000
 .3:									; temp1,x = A
 	sta.w temp1,x
-.4:									; $65 = EvadePC>>16, a0 = EvadePC, Y = $0050, ...
+.4:									; a0+2 = EvadePC>>16, a0 = EvadePC, Y = $0050, ...
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC
 	sta.b a0
 	ldy.w #$0050
@@ -532,7 +532,7 @@ DefensiveWingUseLimit:				; use the selected depth limit as the defensive wing t
 	sta.b d1
 DefensiveWingSkate:					; finish the defensive wing lateral target and skate there
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w puckx
@@ -649,12 +649,12 @@ asswingo:							; called from other segments
 	lda.w seed
 	cmp.w #$0200
 	bcs .11
-.10:								; temp5,x = d2, Y = A, $65 = WingZoneSpots>>16, a0 = WingZoneSpots, ...
+.10:								; temp5,x = d2, Y = A, a0+2 = WingZoneSpots>>16, a0 = WingZoneSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
 	lda.w #WingZoneSpots>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #WingZoneSpots
 	sta.b a0
 	iny
@@ -698,9 +698,9 @@ asswingo:							; called from other segments
 	sec
 	sbc.b d1
 	sta.b d1
-.13:								; $65 = EvadePC>>16, a0 = EvadePC, go to skateto
+.13:								; a0+2 = EvadePC>>16, a0 = EvadePC, go to skateto
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC
 	sta.b a0
 	jml.l skateto
@@ -784,9 +784,9 @@ assfaceoffpl:						; called from other segments
 	and.w #$FFFD
 	sta.w pflags,x
 	stz.w temp1,x
-.2:									; $65 = $007E, a0 = $2028, if pfteam,x = 0 go to .3, a0 = $202C
+.2:									; a0+2 = $007E, a0 = $2028, if pfteam,x = 0 go to .3, a0 = $202C
 	lda.w #$007E
-	sta.b $65
+	sta.b a0+2
 	lda.w #$2028
 	sta.b a0
 	lda.w pfteam,x
@@ -1135,7 +1135,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.b d4
 .20:								; a1 = FaceoffFormations + d4, PenShotFormation in a penalty shot
 	lda.w #FaceoffFormations>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #FaceoffFormations&$FFFF
 	clc
 	adc.b d4
@@ -1143,7 +1143,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w penshot
 	beq .21
 	lda.w #PenShotFormation>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #PenShotFormation&$FFFF
 	sta.b a1
 .21:								; Y = d1, A = [a1],y, A and $00FF, A * 2, ...
@@ -1154,7 +1154,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	asl a
 	sta.b d4
 	lda.w #FaceoffSpots>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #FaceoffSpots&$FFFF
 	sta.b a1
 	ldy.b d4
@@ -1266,7 +1266,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	lda.w penshot
 	beq .35
 	ldx.w #$0008
@@ -1362,7 +1362,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	sta.b r1
 	jsl.l MarkWorkBuf
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #FaceOffMap&$FFFF
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
@@ -1569,51 +1569,51 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -1711,7 +1711,7 @@ DrawPenaltyShotMatchup:				; draws the penalty shot box: the shooter's and the o
 CentreNameX:						; r0 = the string pointer, A = (20 - its length) / 2 with carry clear: the
 									; column that centres it in the 20-wide box
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	lda.b [r0]
 	and.w #$00FF
 	eor.w #$FFFF

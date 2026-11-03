@@ -56,7 +56,7 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -65,15 +65,15 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -168,7 +168,7 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -177,15 +177,15 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -289,7 +289,7 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -298,15 +298,15 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -391,7 +391,7 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -400,15 +400,15 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -492,7 +492,7 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -501,15 +501,15 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -605,7 +605,7 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -614,15 +614,15 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -727,7 +727,7 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -736,15 +736,15 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -829,7 +829,7 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -838,15 +838,15 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -930,7 +930,7 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -939,15 +939,15 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -1042,7 +1042,7 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1051,15 +1051,15 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1163,7 +1163,7 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1172,15 +1172,15 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1386,12 +1386,12 @@ doplayeracc:						; from skatetopuck and other segments
 	bpl .14
 	lda.w #$0180
 	sta.b d4
-.14:								; A = tmp0, X = d4, call Mul16x8S, $91 = $36, ...
+.14:								; A = tmp0, X = d4, call Mul16x8S, d4+2 = r2+2, ...
 	lda.b tmp0
 	ldx.b d4
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $91
+	lda.b r2+2
+	sta.b d4+2
 	lda.b r2
 	sta.b d4
 	ldx.b a3
@@ -1402,15 +1402,15 @@ doplayeracc:						; from skatetopuck and other segments
 	sbc.b d4
 	sta.b d4
 	lda.w #$0000
-	sbc.b $91
-	sta.b $91
+	sbc.b d4+2
+	sta.b d4+2
 .15:								; A = facefrac,x, A + d4, facefrac,x = A, A = facedir,x, ...
 	lda.w facefrac,x
 	clc
 	adc.b d4
 	sta.w facefrac,x
 	lda.w facedir,x
-	adc.b $91
+	adc.b d4+2
 	and.w #$0007
 	sta.w facedir,x
 	sta.b d2
@@ -1533,11 +1533,11 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	lda.w Xpos,x
 	sta.b p0
 	lda.w Ypos,x
-	sta.b $3A
+	sta.b p0+2
 	lda.b d0
 	sta.b p1
 	lda.b d1
-	sta.b $3E
+	sta.b p1+2
 	lda.w position,x
 	bne .1
 	jmp.w AvoidGoalForGoalie
@@ -1570,19 +1570,19 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	bne .4
 	ldx.b curobj
 	rtl
-.2:									; A = r3, r3 = $42, $42 = A, A = $3A, ...
+.2:									; A = r3, r3 = $42, $42 = A, A = p0+2, ...
 	lda.b r3
 	ldy.b $42
 	sty.b r3
 	sta.b $42
-	lda.b $3A
+	lda.b p0+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3A
-	lda.b $3E
+	sta.b p0+2
+	lda.b p1+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3E
+	sta.b p1+2
 	lda.b tmp0
 	bit.w #$000A
 	beq .3
@@ -1607,15 +1607,15 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	rtl
 AvoidGoalInsideTarget:				; adjust an inside-box target for crossing the goal line or goalie
 	ldx.b curobj
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl .1
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .rts
 	bra AvoidGoalFromBehind
-.1:									; if $3E - $FEF2 < 0 go to .3, if $44 < 0 go to .rts, ...
-	lda.b $3E
+.1:									; if p1+2 - $FEF2 < 0 go to .3, if $44 < 0 go to .rts, ...
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .3
 	ldy.b $44
@@ -1645,7 +1645,7 @@ AvoidGoalLeftEdge:					; set the skating target to the left edge of the goal avo
 	sta.b d0
 	rts
 AvoidGoalInsideStart:				; choose a detour from inside the skater goal avoidance box
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl AvoidGoalFromFront
 AvoidGoalFromBehind:				; route a skater from behind the goal around an edge
@@ -1658,7 +1658,7 @@ AvoidGoalFromBehind:				; route a skater from behind the goal around an edge
 	sta.b d1
 	bra AvoidGoalClampTargetX
 AvoidGoalFromFront:					; route a skater from in front of the goal around the goalie
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bpl .1
 	lda.b $46
@@ -1777,8 +1777,8 @@ ClassifySkaterGoalPath:				; classify the start and target around the skater goa
 	sty.b $42
 	stz.b tmp0
 	stz.b tmp1
-	ldx.b $3A
-	ldy.b $3E
+	ldx.b p0+2
+	ldy.b p1+2
 	cpx.b r3
 	bpl .3
 	lda.w #$0008
@@ -1862,19 +1862,19 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	bne .3
 	ldx.b curobj
 	rtl
-.1:									; A = r3, r3 = $42, $42 = A, A = $3A, ...
+.1:									; A = r3, r3 = $42, $42 = A, A = p0+2, ...
 	lda.b r3
 	ldy.b $42
 	sty.b r3
 	sta.b $42
-	lda.b $3A
+	lda.b p0+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3A
-	lda.b $3E
+	sta.b p0+2
+	lda.b p1+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3E
+	sta.b p1+2
 	lda.b tmp0
 	bit.w #$000A
 	beq .2
@@ -1899,15 +1899,15 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	rtl
 GoalieAvoidInsideTarget:			; route a goalie whose target is inside the avoidance box
 	ldx.b curobj
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl .1
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .rts
 	bra GoalieAvoidFromBehind
-.1:									; if $3E - $FEF2 >= 0 go to .rts, go to GoalieAvoidFarBoundary
-	lda.b $3E
+.1:									; if p1+2 - $FEF2 >= 0 go to .rts, go to GoalieAvoidFarBoundary
+	lda.b p1+2
 	cmp.w #$FEF2
 	bpl .rts
 	bra GoalieAvoidFarBoundary
@@ -1924,7 +1924,7 @@ GoalieAvoidLeftEdge:				; set the goalie target to the left avoidance edge
 	sta.b d0
 	rts
 GoalieAvoidInsideStart:				; choose a detour from inside the goalie avoidance box
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl GoalieAvoidFromFront
 GoalieAvoidFromBehind:				; route a goalie from behind the net around an edge
@@ -2030,8 +2030,8 @@ ClassifyGoalieGoalPath:				; classify the start and target around the goalie avo
 	sty.b $42
 	stz.b tmp0
 	stz.b tmp1
-	ldx.b $3A
-	ldy.b $3E
+	ldx.b p0+2
+	ldy.b p1+2
 	cpx.b r3
 	bpl .3
 	lda.w #$0008

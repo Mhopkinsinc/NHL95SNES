@@ -46,7 +46,7 @@ Restart:							; starts over at the setup screen: the stack reset, StartMenuMusi
 	jsl.l CheckPAL
 	jsl.l GameSetUp
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	stz.w shootoutmode
 	lda.w OptPlayMode
 	cmp.w #$0004
@@ -499,7 +499,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcc .17
-	inc.b $36
+	inc.b r2+2
 .17:								; Xvel,x = $35, go to .20
 	lda.b $35
 	sta.w Xvel,x
@@ -512,7 +512,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcs .19
-	dec.b $36
+	dec.b r2+2
 .19:								; Xvel,x = $35
 	lda.b $35
 	sta.w Xvel,x
@@ -526,7 +526,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcc .21
-	inc.b $36
+	inc.b r2+2
 .21:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -539,7 +539,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcs .23
-	dec.b $36
+	dec.b r2+2
 .23:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -573,7 +573,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcc .26
-	inc.b $36
+	inc.b r2+2
 .26:								; Xvel,x = $35, go to .29
 	lda.b $35
 	sta.w Xvel,x
@@ -589,7 +589,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcs .28
-	dec.b $36
+	dec.b r2+2
 .28:								; Xvel,x = $35
 	lda.b $35
 	sta.w Xvel,x
@@ -607,7 +607,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcc .30
-	inc.b $36
+	inc.b r2+2
 .30:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -623,7 +623,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcs .32
-	dec.b $36
+	dec.b r2+2
 .32:								; Yvel,x = $35
 	lda.b $35
 	sta.w Yvel,x
@@ -633,150 +633,150 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	dec a
 	bne .34
 	jmp.w .38
-.34:								; if Xvel,x < 0 go to .35, $36 = 0, A * 2, A * 2, ...
+.34:								; if Xvel,x < 0 go to .35, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Xvel,x
 	bmi .35
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
 	bra .36
-.35:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.35:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
-.36:								; if Yvel,x < 0 go to .37, $36 = 0, A * 2, A * 2, ...
+.36:								; if Yvel,x < 0 go to .37, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Yvel,x
 	bmi .37
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	jmp.w .42
-.37:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.37:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	jmp.w .42
-.38:								; if Xvel,x < 0 go to .39, $36 = 0, A * 2, A * 2, ...
+.38:								; if Xvel,x < 0 go to .39, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Xvel,x
 	bmi .39
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
 	bra .40
-.39:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.39:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
-.40:								; if Yvel,x < 0 go to .41, $36 = 0, A * 2, A * 2, ...
+.40:								; if Yvel,x < 0 go to .41, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Yvel,x
 	bmi .41
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	bra .42
-.41:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.41:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 .42:								; if X is not $001C go to .44, if puckz < 0 go to .44, ...
 	cpx.w #$001C
@@ -799,7 +799,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	clc
 	adc.w shadowz
 	sta.w shadowz
-	lda.b $36
+	lda.b r2+2
 	adc.w puckz
 	sta.w puckz
 	bpl .44
@@ -1546,51 +1546,51 @@ Pausemode:							; the game loop's pause (the sflags pause bit): the game state 
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	jsl.l FreePauseBuffers
@@ -1744,16 +1744,16 @@ CalcAttrib:							; no caller found (not traced)
 	asl a
 	asl a
 	sta.b r0
-	stz.b $81
+	stz.b d0+2
 	ldy.b a2
 	beq .1
 	lda.b r0
 	clc
 	adc.w #$0138
 	sta.b r0
-.1:									; $65 = $00C3, a0 = tmdata,y, A = [a0], A and $07FF, ...
+.1:									; a0+2 = $00C3, a0 = tmdata,y, A = [a0], A and $07FF, ...
 	lda.w #$00C3
-	sta.b $65
+	sta.b a0+2
 	lda.w tmdata,y
 	sta.b a0
 	clc
@@ -1780,7 +1780,7 @@ CalcAttrib:							; no caller found (not traced)
 	asl a
 	tax
 	lda.l BitMaskTable2,x
-	bit.b $91
+	bit.b d4+2
 	bne .3
 	jmp.w .17
 .3:									; if X = $000C go to .4, if X is not $001A go to .5
@@ -1788,8 +1788,8 @@ CalcAttrib:							; no caller found (not traced)
 	beq .4
 	cpx.w #$001A
 	bne .5
-.4:									; $81 + 1
-	inc.b $81
+.4:									; d0+2 + 1
+	inc.b d0+2
 .5:									; A = $000F, A - d2, p1 = A, A / 2, ...
 	lda.w #$000F
 	sec
@@ -1799,8 +1799,8 @@ CalcAttrib:							; no caller found (not traced)
 	clc
 	adc.b a0
 	sta.b p0
-	lda.b $65
-	sta.b $3A
+	lda.b a0+2
+	sta.b p0+2
 	lda.b [p0]
 	sta.b d3
 	lda.b d2
@@ -1856,8 +1856,8 @@ CalcAttrib:							; no caller found (not traced)
 	sec
 	sbc.b r3
 	sta.b r3
-.11:								; if $91 < 0 go to .15, X = p1, A = SingleAttribWeights,x, ...
-	lda.b $91
+.11:								; if d4+2 < 0 go to .15, X = p1, A = SingleAttribWeights,x, ...
+	lda.b d4+2
 	bmi .15
 	ldx.b p1
 	lda.l SingleAttribWeights,x
@@ -1956,8 +1956,8 @@ CalcAttrib:							; no caller found (not traced)
 	lda.b r2
 	beq .25
 	lsr.b d0
-.25:								; if $81 is not 0 go to .rtl, if d0 < $0065 go to .26, A = $0064
-	lda.b $81
+.25:								; if d0+2 is not 0 go to .rtl, if d0 < $0065 go to .26, A = $0064
+	lda.b d0+2
 	bne .rtl
 	lda.b d0
 	cmp.w #$0065

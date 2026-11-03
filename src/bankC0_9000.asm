@@ -702,7 +702,7 @@ DrawShootersBack:					; the shooters back with its drawing gone: the eraser box 
 	lda.w #$0003
 	sta.b d1
 	lda.w #$007F
-	sta.b $3A
+	sta.b p0+2
 	stz.b p0
 	lda.w #$0020
 	lda.w #$001C
@@ -753,7 +753,7 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	lda.w #InitShooters
 	sta.b $77
 	lda.w #DefaultShooterList>>16
-	sta.b $71
+	sta.b a3+2
 	lda.w #DefaultShooterList&$FFFF
 	sta.b a3
 	lda.w SelectedPlayerIdx
@@ -765,13 +765,13 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	asl a
 	sta.b d0
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 .1:									; $79 = InitShooters>>16, $77 = InitShooters, d1 = $0005
@@ -826,7 +826,7 @@ DefaultShooterList:					; the default shooter slots 1, 2, 3, 4 when no shooter r
 	db $01,$02,$03,$04
 InitShooters:						; the 8 shooters of team a2 (0 home, 2 visitors) into its shooter list
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.w #$2E35
@@ -834,15 +834,15 @@ InitShooters:						; the 8 shooters of team a2 (0 home, 2 visitors) into its sho
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 	lda.w #$3273
 	sta.b a1
-.1:									; Y = a2, $69 = $007E, d0 = $0007
+.1:									; Y = a2, a1+2 = $007E, d0 = $0007
 	ldy.b a2
 	lda.w #$007E
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0007
 	sta.b d0
 .loop:								; loop: A 8-bit, [a3] = [a1], A 16-bit, a1 + 1, ...
@@ -862,13 +862,13 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	bne .3
 	jsl.l GoalieCount
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #homeshooters
 	sta.b a1
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #awayshooters
 	sta.b a1
 .1:									; A = [a1], A and $00FF, A + 1, if A = d0 go to .2, ...
@@ -913,13 +913,13 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	lda.b d0
 	sta.w picktop
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.b a2
 	beq .4
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 .4:									; A = a3, A + curitem, a3 = A, A = [a3], ...
@@ -1047,9 +1047,9 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	sta.w printx
 	lda.w #$0002
 	sta.w printy
-.1:									; $69 = ShooterAttribColumns>>16, a1 = ShooterAttribColumns, ...
+.1:									; a1+2 = ShooterAttribColumns>>16, a1 = ShooterAttribColumns, ...
 	lda.w #ShooterAttribColumns>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #ShooterAttribColumns
 	sta.b a1
 	lda.w DispAttribCtr
@@ -1071,11 +1071,11 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	bpl .4
 	dec.w DispAttribCtr
 	bra .1
-.4:									; printa = $3800, $91 = [a1], Y = $0002, d4 = [a1],y, ...
+.4:									; printa = $3800, d4+2 = [a1], Y = $0002, d4 = [a1],y, ...
 	lda.w #$3800
 	sta.w printa
 	lda.b [a1]
-	sta.b $91
+	sta.b d4+2
 	ldy.w #$0002
 	lda.b [a1],y
 	sta.b d4
@@ -1171,13 +1171,13 @@ SetShooter:							; puts the list player at row curplayer into shooter slot curi
 	and.w #$00FF
 	sta.b d0
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #homeshooters
 	sta.b a1
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #awayshooters
 	sta.b a1
 .1:									; Y = curitem, A 8-bit, A = [a1],y, A 16-bit, ...

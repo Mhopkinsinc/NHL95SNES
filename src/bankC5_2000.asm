@@ -123,7 +123,7 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	pea.w $6360
 	ldx.w #$007E
 	phx
-	stx.b $2E
+	stx.b r0+2
 	pha
 	sta.b r0
 	lda.w #DigitFontTiles&$FFFF
@@ -231,7 +231,7 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lda.w #$D02A
 	sta.b r0
 	lda.w #$007F
-	sta.b $2E
+	sta.b r0+2
 	lda.w #LinePieceTiles&$FFFF
 	ldx.w #LinePieceTiles>>16
 	jsl.l Decompress

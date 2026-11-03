@@ -58,18 +58,18 @@ ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the 
 	ldy.w #$000B
 	jsl.l PrintBoldLeftStr
 	lda.w #$000D
-	sta.b $6D
+	sta.b a2+2
 	stz.b a3
 	ldx.w #HomeRoster
 	lda.b a2
 	beq .5
 	ldx.w #VisRoster
-.5:									; a0 = X, if $79 is not 0 go to ShowRosterLineSlots, $91 = $0010
+.5:									; a0 = X, if $79 is not 0 go to ShowRosterLineSlots, d4+2 = $0010
 	stx.b a0
 	lda.b $79
 	bne ShowRosterLineSlots
 	lda.w #$0010
-	sta.b $91
+	sta.b d4+2
 RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's name, then his stat
 									; column (RosterColumnTable), returning to RosterGoalieRowDone
 	lda.w #$0010
@@ -77,7 +77,7 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	lda.w #$0028
 	sta.b $D1
 	ldx.w #TxtG&$FFFF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
@@ -89,7 +89,7 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	adc.b a0
 	tax
 	lda.w $0008,x
-	sta.b $81
+	sta.b d0+2
 	lda.b a3
 	asl a
 	asl a
@@ -99,7 +99,7 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	adc.b a0
 	adc.w #$0118
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$00D0
 	sta.b $CF
@@ -115,7 +115,7 @@ RosterGoalieRowNext:				; ShowRosterLine's goalie rows (line 0): goalie a3's nam
 	pea.w RosterGoalieRowDone-1
 	jmp (RosterColumnTable,x)
 RosterGoalieRowDone:				; a goalie row drawn: the next row while goalies remain
-	inc.b $6D
+	inc.b a2+2
 	lda.b a3
 	inc a
 	sta.b a3
@@ -125,7 +125,7 @@ RosterGoalieRowDone:				; a goalie row drawn: the next row while goalies remain
 	rts
 ShowRosterLineSlots:				; ShowRosterLine for lines 1 up: the line's five players by slot
 									; (positions from PositionNames)
-	stz.b $91
+	stz.b d4+2
 RosterSlotRowNext:					; a line slot's row: its position text, the player's name, then his stat
 									; column (RosterColumnTable), returning to RosterSlotRowDone
 	lda.w #$0010
@@ -137,7 +137,7 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	tax
 	lda.l PositionNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
@@ -159,7 +159,7 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	adc.b a0
 	tax
 	lda.w $0008,x
-	sta.b $81
+	sta.b d0+2
 	lda.b d0
 	asl a
 	asl a
@@ -169,7 +169,7 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	adc.b a0
 	adc.w #$0118
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$00D0
 	sta.b $CF
@@ -185,7 +185,7 @@ RosterSlotRowNext:					; a line slot's row: its position text, the player's name
 	pea.w RosterSlotRowDone-1
 	jmp (RosterColumnTable,x)
 RosterSlotRowDone:					; a slot row drawn: the next slot while a3 is below 5
-	inc.b $6D
+	inc.b a2+2
 	lda.b a3
 	inc a
 	sta.b a3
@@ -235,9 +235,9 @@ RosterColStatus:					; TeamRoster's status column for player d0: Ice, Bench, Inj
 	lda.w #$2043
 	sta.w mesarea,x
 	stz.w mesarea+2,x
-.4:									; X = mesarea, Y = $6D, call PrintBoldCentredStr, return
+.4:									; X = mesarea, Y = a2+2, call PrintBoldCentredStr, return
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	rts
 .5:									; A * 2, X = A, A = RosterStatusTexts,x, X = A, ...
@@ -245,7 +245,7 @@ RosterColStatus:					; TeamRoster's status column for player d0: Ice, Bench, Inj
 	tax
 	lda.l RosterStatusTexts,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	rts
 AttribEnergy:						; prints the energy of roster player d0 of team a2 as a percentage: the
@@ -271,10 +271,10 @@ AttribEnergy:						; prints the energy of roster player d0 of team a2 as a perce
 	cmp.w #$0065
 	bcc .3
 	lda.w #$0064
-.3:									; call BinToBCD, call BCDText, Y = $6D, X = mesarea, ...
+.3:									; call BinToBCD, call BCDText, Y = a2+2, X = mesarea, ...
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
@@ -286,7 +286,7 @@ RosterColHand:						; TeamRoster's shooting hand column: Left or Right by bit 0 
 	tax
 	lda.l RosterStatusTexts+8,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	rts
 RosterColWeight:					; TeamRoster's weight column: the attribute (CalcRosterAttrib) * 8 + 140
@@ -297,7 +297,7 @@ RosterColWeight:					; TeamRoster's weight column: the attribute (CalcRosterAttr
 	adc.w #$008C
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
@@ -305,7 +305,7 @@ RosterColRating:					; TeamRoster's rating column: the attribute value (CalcRost
 	jsr.w CalcRosterAttrib
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
@@ -315,7 +315,7 @@ CalcRosterAttribLong:				; CalcRosterAttrib for long calls
 CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attributes in mask d4:
 									; CalcAttrib's weighted sum with the hot / cold bytes, read from the
 									; roster table's player record
-	stz.b $81
+	stz.b d0+2
 	ldx.w #HomeRoster
 	lda.b d0
 	asl a
@@ -326,10 +326,10 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	beq .1
 	adc.w #$0138
 	ldx.w #VisRoster
-.1:									; $89 = A, d1 = 0, $85 = 0, A = d0, ...
-	sta.b $89
+.1:									; d2+2 = A, d1 = 0, d1+2 = 0, A = d0, ...
+	sta.b d2+2
 	stz.b d1
-	stz.b $85
+	stz.b d1+2
 	lda.b d0
 	asl a
 	asl a
@@ -353,8 +353,8 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	beq .4
 	cmp.w #$0200
 	bne .5
-.4:									; $81 + 1
-	inc.b $81
+.4:									; d0+2 + 1
+	inc.b d0+2
 .5:									; A = d2, A / 2, A + d0, X = A, ...
 	lda.b d2
 	lsr a
@@ -381,31 +381,31 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	cmp.w #$0006
 	bcc .7
 	dec a
-.7:									; A + $89, X = A, A = HotColdTable,x, A and $00FF, ...
+.7:									; A + d2+2, X = A, A = HotColdTable,x, A and $00FF, ...
 	clc
-	adc.b $89
+	adc.b d2+2
 	tax
 	lda.w HotColdTable,x
 	and.w #$00FF
 	tay
-	sta.b $8D
+	sta.b d3+2
 	cmp.w #$0080
 	bcc .8
 	lda.w #$0100
-	sbc.b $8D
-	sta.b $8D
-.8:									; A * 2, A + $8D, A / 2, A / 2, ...
+	sbc.b d3+2
+	sta.b d3+2
+.8:									; A * 2, A + d3+2, A / 2, A / 2, ...
 	asl a
-	adc.b $8D
+	adc.b d3+2
 	lsr a
 	lsr a
-	sta.b $8D
+	sta.b d3+2
 	cpy.w #$0080
 	bcc .9
 	lda.w #$0000
-	sbc.b $8D
-.9:									; $8D = A, A = d4, if a $0001 bit set go to .13, X = d3, ...
-	sta.b $8D
+	sbc.b d3+2
+.9:									; d3+2 = A, A = d4, if a $0001 bit set go to .13, X = d3, ...
+	sta.b d3+2
 	lda.b d4
 	bit.w #$0001
 	bne .13
@@ -418,7 +418,7 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	lda.w #$0012
 	jsl.l Mul8U
 	clc
-	adc.b $8D
+	adc.b d3+2
 	bpl .10
 	lda.w #$0000
 .10:								; if A < $0065 go to .11, A = $0064
@@ -436,10 +436,10 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 .12:								; A = X, return
 	txa
 	rts
-.13:								; A = d2, A + $91, X = A, A = RosterAttribWeights,x, ...
+.13:								; A = d2, A + d4+2, X = A, A = RosterAttribWeights,x, ...
 	lda.b d2
 	clc
-	adc.b $91
+	adc.b d4+2
 	tax
 	lda.l RosterAttribWeights,x
 	ldx.b d3
@@ -447,27 +447,27 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	clc
 	adc.b d1
 	sta.b d1
-	lda.b $8D
-	ldy.b $91
+	lda.b d3+2
+	ldy.b d4+2
 	beq .14
 	asl a
-.14:								; A + $85, $85 = A
+.14:								; A + d1+2, d1+2 = A
 	clc
-	adc.b $85
-	sta.b $85
+	adc.b d1+2
+	sta.b d1+2
 .15:								; A = d2, A - 1, if the result = 0 go to .16, go to .2
 	lda.b d2
 	dec a
 	beq .16
 	jmp.w .2
-.16:								; if $85 >= 0 go to .18, A xor $FFFF, A + 1, X = A, ...
-	lda.b $85
+.16:								; if d1+2 >= 0 go to .18, A xor $FFFF, A + 1, X = A, ...
+	lda.b d1+2
 	bpl .18
 	eor.w #$FFFF
 	inc a
 	tax
 	lda.w #$000A
-	ldy.b $91
+	ldy.b d4+2
 	beq .17
 	lda.w #$0007
 .17:								; call DivX8U, A xor $FFFF, A + d1, if the result >= 0 go to .20, ...
@@ -478,10 +478,10 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	bpl .20
 	lda.w #$0000
 	bra .20
-.18:								; X = A, A = $000A, if $91 = 0 go to .19, A = $0007
+.18:								; X = A, A = $000A, if d4+2 = 0 go to .19, A = $0007
 	tax
 	lda.w #$000A
-	ldy.b $91
+	ldy.b d4+2
 	beq .19
 	lda.w #$0007
 .19:								; call DivX8U, A + d1, if the result >= 0 go to .20, A = $0000
@@ -490,8 +490,8 @@ CalcRosterAttrib:					; the rating of roster player d0 of team a2 for the attrib
 	adc.b d1
 	bpl .20
 	lda.w #$0000
-.20:								; if $91 = 0 go to .21, A / 2
-	ldx.b $91
+.20:								; if d4+2 = 0 go to .21, A / 2
+	ldx.b d4+2
 	beq .21
 	lsr a
 .21:								; go to .10
@@ -542,7 +542,7 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	lda.w #$00F0
 	sta.b $D1
 	jsr.w TeamLogoSprite
-	stz.b $69
+	stz.b a1+2
 	stz.b $79
 	ldx.w #$0000
 	lda.w OptLine
@@ -568,9 +568,9 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	beq .4
 	ldx.w #VisRoster
 	ldy.w #$1813
-.4:									; a0 = X, $65 = Y
+.4:									; a0 = X, a0+2 = Y
 	stx.b a0
-	sty.b $65
+	sty.b a0+2
 .5:									; call PrintLineNames
 	jsr.w PrintLineNames
 .6:									; call SendTextMap, fadestep = 0
@@ -596,23 +596,23 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	bit.w #$1000
 	beq .7
 	jmp.w .15
-.7:									; if $0800 bits clear go to .8, if $69 = 0 go to .loop, A - 1, go to .9
+.7:									; if $0800 bits clear go to .8, if a1+2 = 0 go to .loop, A - 1, go to .9
 	bit.w #$0800
 	beq .8
-	lda.b $69
+	lda.b a1+2
 	beq .loop
 	dec a
 	bra .9
-.8:									; if $0400 bits clear go to .10, if $69 >= a1 go to .loop, A + 1
+.8:									; if $0400 bits clear go to .10, if a1+2 >= a1 go to .loop, A + 1
 	bit.w #$0400
 	beq .10
-	lda.b $69
+	lda.b a1+2
 	cmp.b a1
 	bcs .loop
 	inc a
-.9:									; X = $69, $69 = A, d0 = $2000, A = X, ...
-	ldx.b $69
-	sta.b $69
+.9:									; X = a1+2, a1+2 = A, d0 = $2000, A = X, ...
+	ldx.b a1+2
+	sta.b a1+2
 	lda.w #$2000
 	sta.b d0
 	txa
@@ -621,7 +621,7 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	jsr.w RecolourTextRow
 	lda.w #$2400
 	sta.b d0
-	lda.b $69
+	lda.b a1+2
 	clc
 	adc.w #$000D
 	jsr.w RecolourTextRow
@@ -660,7 +660,7 @@ EditLinesScreen:					; pause menu Edit Lines: the lines of team a2 (pad left / r
 	jsl.l ClearRAM7E
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
-	stz.b $69
+	stz.b a1+2
 	jmp.w .5
 .13:								; if $8000 bits clear go to .14, call SelectLinePlayer, go to .2
 	bit.w #$8000
@@ -695,18 +695,18 @@ PrintLineNames:						; prints the line being edited: its title (Best Line with l
 	ldy.w #$000A
 	jsl.l PrintTitleBar
 	lda.w #$000D
-	sta.b $6D
+	sta.b a2+2
 	stz.b a3
-.loop:								; loop: X = $2400, if a3 = $69 go to .3, X = $2000
+.loop:								; loop: X = $2400, if a3 = a1+2 go to .3, X = $2000
 	ldx.w #$2400
 	lda.b a3
-	cmp.b $69
+	cmp.b a1+2
 	beq .3
 	ldx.w #$2000
-.3:									; $D5 = X, call PrintLineSlot, $6D + 1, A = a3, ...
+.3:									; $D5 = X, call PrintLineSlot, a2+2 + 1, A = a3, ...
 	stx.b $D5
 	jsr.w PrintLineSlot
-	inc.b $6D
+	inc.b a2+2
 	lda.b a3
 	inc a
 	sta.b a3
@@ -734,7 +734,7 @@ PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position
 	tax
 	lda.l PositionNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
@@ -745,7 +745,7 @@ PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position
 	asl a
 	asl a
 	adc.b a3
-	adc.b $65
+	adc.b a0+2
 	inc a
 	tax
 	lda.w $0000,x
@@ -756,7 +756,7 @@ PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position
 	adc.b a0
 	tax
 	lda.w $0008,x
-	sta.b $81
+	sta.b d0+2
 	lda.b d0
 	asl a
 	asl a
@@ -766,7 +766,7 @@ PrintLineSlot:						; prints slot a3 of the edited line on row $6D: its position
 	adc.b a0
 	adc.w #$0118
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	rts
 RecolourTextRow:					; puts palette bits d0 on the non-blank tiles of text row A (32 tiles;
@@ -805,23 +805,23 @@ SelectLinePlayer:					; picks a player for the line slot: a scrolling list of th
 	jsl.l WaitTransfers
 	stz.b $7D
 	stz.b $7B
-	stz.b $91
+	stz.b d4+2
 	lda.w #$0001
 	sta.w RatingMode
 	ldx.b a0
-	lda.b $69
+	lda.b a1+2
 	cmp.w #$0002
 	bcs .1
 	lda.w $0002,x
 	clc
 	adc.w $0004,x
-	sta.b $65
+	sta.b a0+2
 	lda.w $0006,x
 	sta.b a1
 	bra .2
-.1:									; $65 = $0002,x, a1 = $0004,x
+.1:									; a0+2 = $0002,x, a1 = $0004,x
 	lda.w $0002,x
-	sta.b $65
+	sta.b a0+2
 	lda.w $0004,x
 	sta.b a1
 .2:									; A = DrawLinePlayerRow, X = $000A, Y = $000E, call StartScrollList, ...
@@ -898,15 +898,15 @@ SelectLinePlayer:					; picks a player for the line slot: a scrolling list of th
 	jsr.w PrintLinePlayerHeader
 	jsr.w RedrawScrollList
 	jsl.l SendTextMap
-.10:								; if $8000 bits clear go to .11, A = $65, A + $7B, $7B = A, ...
+.10:								; if $8000 bits clear go to .11, A = a0+2, A + $7B, $7B = A, ...
 	bit.w #$8000
 	beq .11
-	lda.b $65
+	lda.b a0+2
 	clc
 	adc.b $7B
 	sta.b $7B
 	lda.b $05,s
-	sta.b $65
+	sta.b a0+2
 	lda.b $03,s
 	tax
 	lda.b $01,s
@@ -921,11 +921,11 @@ SelectLinePlayer:					; picks a player for the line slot: a scrolling list of th
 	jsl.l DeleteSprite
 	jsr.w RefreshSprites
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b $79
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b $7B
 	jsl.l WaitTransfers
@@ -979,20 +979,20 @@ DrawLinePlayerRow:					; draws row a3 of SelectLinePlayer's list: a player and t
 	cmp.b $7B
 	bne .1
 	ldx.w #$2400
-.1:									; $D5 = X, $CF = $0010, $D1 = $00D0, A + $65, ...
+.1:									; $D5 = X, $CF = $0010, $D1 = $00D0, A + a0+2, ...
 	stx.b $D5
 	ldx.w #$0010
 	stx.b $CF
 	ldx.w #$00D0
 	stx.b $D1
 	clc
-	adc.b $65
+	adc.b a0+2
 	sta.b d0
 	asl a
 	adc.b a0
 	tax
 	lda.w $0008,x
-	sta.b $81
+	sta.b d0+2
 	lda.b d0
 	asl a
 	asl a
@@ -1007,13 +1007,13 @@ DrawLinePlayerRow:					; draws row a3 of SelectLinePlayer's list: a player and t
 	and.w #$00FF
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	lda.w #$0022
 	sta.b $CF
 	plx
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.b $D1
 	sta.b $CF
@@ -1038,7 +1038,7 @@ LinePlayerRowDone:					; DrawLinePlayerRow's column drawn: the text palette back
 MoveLinePlayerCursor:				; list row A (the old cursor) back to palette 0 and cursor row $7B in
 									; palette 1 (RecolourTextRow, rows wrapped as RedrawScrollList does), the
 									; map sent; a delay when padlast is set
-	ldx.b $71
+	ldx.b a3+2
 	inx
 	stx.b tmp1
 	inx
@@ -1081,14 +1081,14 @@ MoveLinePlayerCursor:				; list row A (the old cursor) back to palette 0 and cur
 PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E, the title of stat
 									; column $7D (RatingNames) right-aligned to x $F0
 	lda.w #$000C
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	lda.w #$001E
 	sta.b $CF
 	lda.w #$00D0
 	sta.b $D1
 	ldx.w #TxtPlayer&$FFFF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	lda.b $D1
 	sta.b $CF
@@ -1099,7 +1099,7 @@ PrintLinePlayerHeader:				; the list header on text row 12: 'Player' from x $1E,
 	tax
 	lda.l RatingNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRight
 	rts
 SetLineSlot:						; puts player $7B (+ 1) in slot A of line X of the line block at $65
@@ -1115,7 +1115,7 @@ SetLineSlot:						; puts player $7B (+ 1) in slot A of line X of the line block 
 	asl a
 	asl a
 	asl a
-	adc.b $65
+	adc.b a0+2
 	tax
 	sep #$20
 	jmp ($009F)
@@ -1237,8 +1237,8 @@ PauseGoalie:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, l
 	lda.w tmgoalie,x
 	bpl .2
 	lda.b a1
-.2:									; $69 = A
-	sta.b $69
+.2:									; a1+2 = A
+	sta.b a1+2
 .loop:								; loop: call Pausemode_gnum, call SendTextMap, fadestep = 0
 	jsr.w Pausemode_gnum
 	jsl.l SendTextMap
@@ -1264,19 +1264,19 @@ PauseGoalie:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, l
 	bne .8
 	bit.w #$0800
 	beq .3
-	lda.b $69
+	lda.b a1+2
 	beq .loop2
 	dec a
-	sta.b $69
+	sta.b a1+2
 	bra .loop
-.3:									; if $0400 bits clear go to .4, if $69 = a1 go to .loop2, A + 1, ...
+.3:									; if $0400 bits clear go to .4, if a1+2 = a1 go to .loop2, A + 1, ...
 	bit.w #$0400
 	beq .4
-	lda.b $69
+	lda.b a1+2
 	cmp.b a1
 	beq .loop2
 	inc a
-	sta.b $69
+	sta.b a1+2
 	bra .loop
 .4:									; if $0200 bits clear go to .5, if $7D = 0 go to .loop2, A - 1, ...
 	bit.w #$0200
@@ -1295,10 +1295,10 @@ PauseGoalie:						; pause menu Chnge Goalie: team a2's goalies (pad up / down, l
 	inc a
 	sta.b $7D
 	bra .loop
-.6:									; if $8000 bits clear go to .loop2, if $69 is not a1 go to .7, A = $FFFF
+.6:									; if $8000 bits clear go to .loop2, if a1+2 is not a1 go to .7, A = $FFFF
 	bit.w #$8000
 	beq .loop2
-	lda.b $69
+	lda.b a1+2
 	cmp.b a1
 	bne .7
 	lda.w #$FFFF
@@ -1317,15 +1317,15 @@ Pausemode_gnum:						; PauseGoalie's goalie list: 'Player' and the title of stat
 	ldy.w #$0280
 	jsl.l ClearRAM7E
 	lda.w #$000C
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$00D0
 	sta.b $D1
 	ldx.w #TxtPlayer&$FFFF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
-	ldy.b $6D
+	ldy.b a2+2
 	iny
 	jsl.l PrintTitleBar
 	lda.b $D1
@@ -1337,16 +1337,16 @@ Pausemode_gnum:						; PauseGoalie's goalie list: 'Player' and the title of stat
 	tax
 	lda.l GoalieRatingNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRight
-	ldy.b $6D
+	ldy.b a2+2
 	iny
 	jsl.l PrintTitleBar
 	stz.b a3
 	lda.w #$000E
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0010
-	sta.b $91
+	sta.b d4+2
 	lda.w #$0001
 	sta.w RatingMode
 GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor row $69 in
@@ -1356,7 +1356,7 @@ GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor 
 	lda.b a3
 	ldx.w #$2000
 	sta.b d0
-	cmp.b $69
+	cmp.b a1+2
 	bne .1
 	ldx.w #$2400
 .1:									; $D5 = X, $CF = $0010, $D1 = $00D0, A * 2, ...
@@ -1369,7 +1369,7 @@ GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor 
 	adc.b a0
 	tax
 	lda.w $0008,x
-	sta.b $81
+	sta.b d0+2
 	lda.b d0
 	asl a
 	asl a
@@ -1379,7 +1379,7 @@ GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor 
 	adc.b a0
 	adc.w #$0118
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.b $D1
 	sta.b $CF
@@ -1397,14 +1397,14 @@ GoalieListRowNext:					; Pausemode_gnum's row loop: goalie a3's row (the cursor 
 	pea.w GoalieListRowDone-1
 	jmp (RosterColumnTable,x)
 GoalieListRowDone:					; a goalie row drawn: the next one while below a1, then the None row
-	inc.b $6D
+	inc.b a2+2
 	lda.b a3
 	inc a
 	sta.b a3
 	cmp.b a1
 	bne GoalieListRowNext
 	ldx.w #$2000
-	cmp.b $69
+	cmp.b a1+2
 	bne .1
 	ldx.w #$2400
 .1:									; $D5 = X, $CF = $0010, $D1 = $00D0, X = TxtNone&$FFFF, ...
@@ -1414,7 +1414,7 @@ GoalieListRowDone:					; a goalie row drawn: the next one while below a1, then t
 	lda.w #$00D0
 	sta.b $D1
 	ldx.w #TxtNone&$FFFF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	lda.w #$2000
 	sta.b $D5
@@ -1494,9 +1494,9 @@ ShowOtherScores:					; Other Scores: the date and the other games (DrawOtherScor
 .5:									; A - 1
 	dec a
 	pea.w DrawOtherScoreRow
-.6:									; a1 = A, $69 = 0, pull A, X = $000B, ...
+.6:									; a1 = A, a1+2 = 0, pull A, X = $000B, ...
 	sta.b a1
-	stz.b $69
+	stz.b a1+2
 	pla
 	ldx.w #$000B
 	ldy.w #$000B
@@ -1576,14 +1576,14 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	tax
 	lda.l TeamCityNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	plx
 	lda.l $7F8F00,x
 	jsr.w BinToBCD
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRightStr
 	rts
 .4:									; push X, A = $7F8EFC,x, A * 2, X = A, ...
@@ -1593,7 +1593,7 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	tax
 	lda.l TeamCityNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	lda.b $01,s
 	tax
@@ -1601,12 +1601,12 @@ DrawOtherScoreRow:					; draws row a3 of ShowOtherScores' scrolling list: a game
 	jsr.w BinToBCD
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRightStr
 	lda.w #$00C8
 	sta.b $CF
 	plx
-	ldy.b $6D
+	ldy.b a2+2
 	lda.l $7F8EFE,x
 	bmi .5
 	asl a
@@ -1649,28 +1649,28 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	jsr.w ReadUserRecord
 	lda.b d4
 	clc
-	adc.b $8D
+	adc.b d3+2
 	adc.b d3
 .2:									; if zero go to .5, X = a4, ScratchBuf+$2,x = d0, ...
 	beq .5
 	ldx.b a4
 	lda.b d0
 	sta.w ScratchBuf+$2,x
-	lda.b $85
+	lda.b d1+2
 	sta.w ScratchBuf+$6,x
 	sep #$20
-	lda.b $81
+	lda.b d0+2
 	sta.w ScratchBuf+$4,x
 	lda.b d1
 	sta.w ScratchBuf+$5,x
 	lda.b d2
 	sta.w ScratchBuf+$8,x
-	lda.b $89
+	lda.b d2+2
 	sta.w ScratchBuf+$9,x
 	rep #$20
 	lda.b d4
 	sta.w ScratchBuf+$E,x
-	lda.b $8D
+	lda.b d3+2
 	sta.w ScratchBuf+$C,x
 	lda.b d3
 	sta.w ScratchBuf+$A,x
@@ -1678,7 +1678,7 @@ RecordHoldersScreen:				; pause menu Records: the user records (win percentages 
 	jsl.l Mul16x8U
 	lda.b d4
 	clc
-	adc.b $8D
+	adc.b d3+2
 	bne .3
 	lda.w #$0064
 	bra .4
@@ -1913,13 +1913,13 @@ PrintWinRecords:					; Record Holders page 0: name, win %, wins, losses, ties of
 	ldx.w #TxtTie&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0000
-.loop:								; loop: $65 = A, call PrintWinRecordRow, $6D + 1, A = $65, ...
-	sta.b $65
+.loop:								; loop: a0+2 = A, call PrintWinRecordRow, a2+2 + 1, A = a0+2, ...
+	sta.b a0+2
 	jsr.w PrintWinRecordRow
-	inc.b $6D
-	lda.b $65
+	inc.b a2+2
+	lda.b a0+2
 	inc a
 	cmp.b a1
 	bne .loop
@@ -1936,7 +1936,7 @@ PrintWinRecordRow:					; win page row A on text row $6D: the user's name, win %,
 	sta.b a3
 	adc.w #ScratchBuf+$12
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsr.w PrintWinRecordCell
 	ldx.b a3
 	lda.w #$0088
@@ -1959,7 +1959,7 @@ PrintWinRecordNumber:				; A as a number (BinToBCD, BCDText) centred in the cell
 	jsr.w BinToBCD
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 PrintWinRecordCell:					; PrintBoldCentredStr of X on row Y, then the next column ($D1) becomes
 									; the current one ($CF) and X = a3
 	jsl.l PrintBoldCentredStr
@@ -1979,18 +1979,18 @@ PrintGoalRecords:					; Record Holders page 1: the users' goal records (name, Go
 	ldx.w #TxtGoals&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0000
-.loop:								; loop: $65 = A, call PrintGoalRecordRow, $6D + 1, A = $65, ...
-	sta.b $65
+.loop:								; loop: a0+2 = A, call PrintGoalRecordRow, a2+2 + 1, A = a0+2, ...
+	sta.b a0+2
 	jsr.w PrintGoalRecordRow
-	inc.b $6D
-	lda.b $65
+	inc.b a2+2
+	lda.b a0+2
 	inc a
 	cmp.b a1
 	bne .loop
 PrintGoalRecordsReturn:				; takes back one text row and returns after the records or an empty record
-	dec.b $6D
+	dec.b a2+2
 	rts
 PrintGoalRecordRow:					; goal record A on row $6D: the holder's name, then the goals 'by' the
 									; team 'vs' the other team; nothing (row $6D taken back) when the record's
@@ -2008,7 +2008,7 @@ PrintGoalRecordRow:					; goal record A on row $6D: the holder's name, then the 
 	stx.b $D1
 	adc.w #ScratchBuf+$12
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsr.w PrintGoalRecordCell
 	lda.w #$00F0
 	sta.b $D1
@@ -2053,7 +2053,7 @@ PrintGoalRecordRow:					; goal record A on row $6D: the holder's name, then the 
 	lda.w #$0000
 	sta.w mesarea,y
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 PrintGoalRecordCell:				; PrintBoldCentredStr, then the next column ($D1) becomes the current one
 									; ($CF)
 	jsl.l PrintBoldCentredStr
@@ -2085,15 +2085,15 @@ PrintSaveRecords:					; Record Holders page 2: the users' save records (name, Sa
 	ldx.w #TxtSaves&$FFFF
 	jsr.w PrintHeadRow6
 	lda.w #$0008
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0000
-.loop:								; loop: $65 = A, call PrintSaveRecordRow, $6D + 1, A = $65, ...
-	sta.b $65
+.loop:								; loop: a0+2 = A, call PrintSaveRecordRow, a2+2 + 1, A = a0+2, ...
+	sta.b a0+2
 	jsr.w PrintSaveRecordRow
-	inc.b $6D
-	lda.b $65
+	inc.b a2+2
+	lda.b a0+2
 	inc a
 	cmp.b a1
 	bne .loop
-	dec.b $6D
+	dec.b a2+2
 	rts

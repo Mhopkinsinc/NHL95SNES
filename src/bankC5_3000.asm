@@ -390,14 +390,14 @@ GetPlayerNumInitial:				; formats TempPlOffset's player through PlayerShortName,
 	sta.b d0
 	inc.b a2
 	inc.b a2
-.1:									; call PlayerShortName, pull A, $6D = A, pull A, ...
+.1:									; call PlayerShortName, pull A, a2+2 = A, pull A, ...
 	jsl.l PlayerShortName
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -411,7 +411,7 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	pei ($63)
 	pei ($65)
 	jsl.l GetPlayerRecord
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0002
@@ -432,7 +432,7 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	sta.b [a1]
 	inc.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	lda.b [a0]
@@ -440,8 +440,8 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	clc
 	adc.b a0
 	sta.b a2
-	lda.b $65
-	sta.b $6D
+	lda.b a0+2
+	sta.b a2+2
 	inc.b a0
 	inc.b a0
 	lda.b [a0]
@@ -469,15 +469,15 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	cmp.b a2
 	bne .loop2
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -595,7 +595,7 @@ PutDigits2:							; from PlayerShortName and other segments
 PushNumber:							; a1 = d0 as a decimal string ending at mesareaEnd: the digits backward,
 									; then the length word before them
 	phx
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesareaEnd
 	sta.b a1
 	lda.b d0
@@ -655,7 +655,7 @@ PushNumberWrap:						; a1 = d0 as d1 digits right-aligned after spaces in a buff
 	ldx.w #PushWidthBuf
 	stx.b a1
 	ldx.w #$0000
-	stx.b $69
+	stx.b a1+2
 	plx
 	rtl
 ResetClock:							; sets the period length: gameclock, PerTimeTotal and gmclock from
@@ -752,7 +752,7 @@ GetPlayerRecord:					; 94S's a0 lookup of player d0 of team a2, reached only fro
 									; and read again; it does not fit 95's packed records
 	ldy.b a2
 	lda.w #$00C3
-	sta.b $65
+	sta.b a0+2
 	lda.w tmdata,y
 	sta.b a0
 	lda.b [a0]
@@ -1109,23 +1109,23 @@ findpcSweepcheck:					; runs Sweepcheck for the current player unless animation 
 	pei ($69)
 	jsl.l Sweepcheck
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	bra findpcReturn
@@ -1134,19 +1134,19 @@ findpcAssign:						; gives pad d4 to the best candidate through AssignPadPlayer
 	jsl.l AssignPadPlayer
 findpcReturn:						; restores the saved d0 through d3 words and returns from findpc
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1523,39 +1523,39 @@ forcepldata:						; face offs: moves team a2's players straight to their new pos
 	dec.b d4
 	bpl .loop
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -1565,7 +1565,7 @@ Setplass:							; from forcepldata and other segments
 	sta.b d0
 	bmi .rtl
 	lda.w #PositionAssignments>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #PositionAssignments&$FFFF
 	sta.b a0
 	ldy.b d0
@@ -2020,31 +2020,31 @@ resetplstuff:						; resets the players of both teams (ResetTeamPlayers for a2 =
 	sta.b a2
 	jsl.l ResetTeamPlayers
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3

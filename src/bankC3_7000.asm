@@ -485,7 +485,7 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	sta.w replaylock
 	sta.l $7E24DA
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.b $08
 	sta.b r1
 	ldx.w #PadButtonsMap>>16
@@ -565,11 +565,11 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	sta.b r2
 	lda.w recbpr+2
 	sbc.w #$007F
-	sta.b $36
+	sta.b r2+2
 	lda.w #$007A
 	sta.b r1
 	jsl.l Div32U
-	lda.b $36
+	lda.b r2+2
 	bne .loop2
 	lda.w recbpr+2
 	sta.b $75
@@ -782,11 +782,11 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	bit.w #$0008
 	beq .3
 	jmp.w ProcessReplayPlayback
-.3:									; d5 = A, d4 = $FFFF, $91 = A, replaylock = A, ...
+.3:									; d5 = A, d4 = $FFFF, d4+2 = A, replaylock = A, ...
 	sta.b d5
 	lda.w #$FFFF
 	sta.b d4
-	sta.b $91
+	sta.b d4+2
 	sta.w replaylock
 	lda.w #$0016
 	sta.b a0
@@ -829,9 +829,9 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	tax
 	lda.l SignedSquareTable,x
 	adc.b d0
-	cmp.b $91
+	cmp.b d4+2
 	bcs .5
-	sta.b $91
+	sta.b d4+2
 	lda.b a0
 	sta.b d4
 .5:									; a0 - 1, a0 - 1, if the result >= 0 go to .loop, if d4 < 0 go to .6, ...
@@ -840,7 +840,7 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	bpl .loop
 	lda.b d4
 	bmi .6
-	lda.b $91
+	lda.b d4+2
 	cmp.w #$0002
 	bcs .6
 	lda.b d4
@@ -1736,7 +1736,7 @@ randomd0A:							; from randomd0, randomd0s, randomd0sd0 and other segments
 	jsl.l RandomWord
 	plx
 	jsl.l Mul16U
-	lda.b $36
+	lda.b r2+2
 	clc
 	plx
 	rtl
@@ -1777,7 +1777,7 @@ randomd0sd0:						; called from other segments
 	rtl
 Sroot:								; no caller found (not traced)
 	phx
-	lda.b $81
+	lda.b d0+2
 	beq .7
 	ldx.w #$0100
 	ldy.w #$1000
@@ -1814,8 +1814,8 @@ Sroot:								; no caller found (not traced)
 	jsl.l Mul16U
 	lda.b d0
 	cmp.b r2
-	lda.b $81
-	sbc.b $36
+	lda.b d0+2
+	sbc.b r2+2
 	bcs .5
 	pla
 	sta.b p1

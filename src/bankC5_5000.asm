@@ -203,7 +203,7 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	sta.b r1
 	jsl.l MarkWorkBuf
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #PauseScreenMap&$FFFF
 	ldx.w #PauseScreenMap>>16
 	jsl.l MapSetToWRAM
@@ -315,7 +315,7 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	sta.b r0
 	pha
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #TeamNicknameTiles>>16
 	lda.w #TeamNicknameTiles&$FFFF
 	jsl.l Decompress
@@ -331,10 +331,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	pea.w $007E
 	lda.w HomeTeam
 	asl a
-	sta.b $2E
+	sta.b r0+2
 	asl a
 	asl a
-	adc.b $2E
+	adc.b r0+2
 	asl a
 	asl a
 	asl a
@@ -348,10 +348,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	pea.w $007E
 	lda.w VisTeam
 	asl a
-	sta.b $2E
+	sta.b r0+2
 	asl a
 	asl a
-	adc.b $2E
+	adc.b r0+2
 	asl a
 	asl a
 	asl a
@@ -455,7 +455,7 @@ PrintPauseItems:					; prints pause item list X (bank $C3: a count to pauseitems
 									; routine and a text word an item) into the pause map, an item every two
 									; rows from row 12, attribute $3A00
 	lda.w #$00C3
-	sta.b $2E
+	sta.b r0+2
 	ldy.w #$0314
 	lda.l $C30000,x
 	sta.w pauseitems
@@ -800,11 +800,11 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w PauseMusicOn
 	beq .1
 	jsl.l LoadTeamSongs
-.1:									; DMAEnShadow = 0, call WaitTransfers, $32 = $007E, A = $21F0, ...
+.1:									; DMAEnShadow = 0, call WaitTransfers, r1+2 = $007E, A = $21F0, ...
 	stz.w DMAEnShadow
 	jsl.l WaitTransfers
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #$21F0
 	jsl.l AllocWorkBuf
 	pha
@@ -958,7 +958,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	pea.w $6360
 	ldx.w #$007E
 	phx
-	stx.b $2E
+	stx.b r0+2
 	pha
 	sta.b r0
 	lda.w #DigitFontTiles&$FFFF
@@ -975,38 +975,38 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w #IceRinkMap&$FFFF
 	sta.b r1
 	lda.w #IceRinkMap>>16
-	sta.b $32
+	sta.b r1+2
 	lda.b [r1]
 	clc
 	adc.b r1
 	bcc .2
-	inc.b $32
+	inc.b r1+2
 	clc
-.2:									; A + $0002, if carry clear go to .3, $32 + 1
+.2:									; A + $0002, if carry clear go to .3, r1+2 + 1
 	adc.w #$0002
 	bcc .3
-	inc.b $32
+	inc.b r1+2
 	clc
-.3:									; r0 = A, $2E = $32, r1 = A, A + [r1], ...
+.3:									; r0 = A, r0+2 = r1+2, r1 = A, A + [r1], ...
 	sta.b r0
-	ldx.b $32
-	stx.b $2E
+	ldx.b r1+2
+	stx.b r0+2
 	sta.b r1
 	adc.b [r1]
 	bcc .4
-	inc.b $32
+	inc.b r1+2
 	clc
-.4:									; A + $0009, r1 = A, if carry clear go to .5, $32 + 1
+.4:									; A + $0009, r1 = A, if carry clear go to .5, r1+2 + 1
 	adc.w #$0009
 	sta.b r1
 	bcc .5
-	inc.b $32
-.5:									; A = r0, A + $0008, if carry clear go to .6, $2E + 1
+	inc.b r1+2
+.5:									; A = r0, A + $0008, if carry clear go to .6, r0+2 + 1
 	lda.b r0
 	clc
 	adc.w #$0008
 	bcc .6
-	inc.b $2E
+	inc.b r0+2
 .6:									; r0 = A, A = $4100, call AllocWorkBuf, RestoreScreenBuf = A, ...
 	sta.b r0
 	lda.w #$4100
@@ -1073,7 +1073,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	sta.w RestoreScreenBuf
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #CenterIceTiles>>16
 	lda.w #CenterIceTiles&$FFFF
 	jsl.l Decompress
@@ -1127,7 +1127,7 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	sta.w RestoreScreenBuf
 	sta.b r1
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #FaceOffMap&$FFFF
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
@@ -1291,7 +1291,7 @@ SetupScreen:						; common start of the stats screens: the tiled background, VRA
 	sta.b r0
 	sta.b r2
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #GradientBarTiles>>16
 	lda.w #GradientBarTiles&$FFFF
 	jsl.l Decompress
@@ -1391,9 +1391,9 @@ StartScrollListLong:				; StartScrollList for long calls
 StartScrollList:					; starts a scrolling list: X rows shown from text row Y, each row drawn by
 									; the routine A, a1 = the last row; the first rows drawn
 	sta.b $75
-	stx.b $71
+	stx.b a3+2
 	sty.b a4
-	stz.b $69
+	stz.b a1+2
 	jsl.l WaitTransfers
 	ldx.w #$0060
 	jsl.l SetupHDMA
@@ -1420,7 +1420,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	sta.w BG3ScrollHDMA+$13,x
 	lda.w #$0013
 	sta.w BG3ScrollHDMA+$14,x
-	lda.b $71
+	lda.b a3+2
 	asl a
 	asl a
 	asl a
@@ -1459,9 +1459,9 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	ldx.w #$0050
 	jsl.l SetupHDMA
 	db $02,$12,$8F,$46,$7E,$7E		; inline parameters
-.3:									; X = $FFFF, A = $71, A + 1, A + 1, ...
+.3:									; X = $FFFF, A = a3+2, A + 1, A + 1, ...
 	ldx.w #$FFFF
-	lda.b $71
+	lda.b a3+2
 	inc a
 	inc a
 	asl a
@@ -1488,7 +1488,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	jsl.l SetSpriteAnim
 	lda.b a4
 	clc
-	adc.b $71
+	adc.b a3+2
 	asl a
 	asl a
 	asl a
@@ -1501,7 +1501,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	jsl.l SetSpriteAnim
 	stz.b a3
 	lda.b a4
-	sta.b $6D
+	sta.b a2+2
 StartScrollRowNext:					; StartScrollList's row loop: text row $6D cleared, then the row routine
 									; at $75 (returning to StartScrollRowDrawn)
 	jsr.w ClearTextRow
@@ -1511,30 +1511,30 @@ StartScrollRowDrawn:				; a row drawn for StartScrollList: WaitTransfers, Restor
 									; row while rows and window last, then ScrollListArrows
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
-	inc.b $6D
+	inc.b a2+2
 	inc.b a3
 	lda.b a3
 	cmp.b a1
 	bcs ScrollListArrows
 	dec a
-	cmp.b $71
+	cmp.b a3+2
 	bcc StartScrollRowNext
 ScrollListArrows:					; a scrolling list each frame: its up arrow sprite shown when rows are
 									; above, the down arrow when rows are below
 	ldx.b $77
 	lda.b $22,x
-	ldy.b $69
+	ldy.b a1+2
 	beq .1
 	ora.w #$0001
 	bra .2
 .1:									; A and $FFFE
 	and.w #$FFFE
-.2:									; $22,x = A, X = $79, A = Y, A + $71, ...
+.2:									; $22,x = A, X = $79, A = Y, A + a3+2, ...
 	sta.b $22,x
 	ldx.b $79
 	tya
 	clc
-	adc.b $71
+	adc.b a3+2
 	tay
 	lda.b $22,x
 	cpy.b a1
@@ -1547,16 +1547,16 @@ ScrollListArrows:					; a scrolling list each frame: its up arrow sprite shown w
 	sta.b $22,x
 	rts
 RedrawScrollList:					; redraws the visible scrolling list and its adjacent buffered rows
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $71
+	lda.b a3+2
 	sec
-	adc.b $69
+	adc.b a1+2
 	pha
-	lda.b $69
+	lda.b a1+2
 	beq RedrawScrollRowNext
 	dec a
 RedrawScrollRowNext:				; RedrawScrollList's loop: row A (from the one above the window) while
@@ -1572,10 +1572,10 @@ RedrawScrollRowNext:				; RedrawScrollList's loop: row A (from the one above the
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w RedrawScrollRowDrawn-1
 	jmp ($0075)
@@ -1593,14 +1593,14 @@ ScrollListDownLong:					; calls ScrollListDown for long callers
 	jsr.w ScrollListDown
 	rtl
 ScrollListDown:						; scrolls a scrolling list down a row (the pad's down) when rows are below
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $69
+	lda.b a1+2
 	clc
-	adc.b $71
+	adc.b a3+2
 	cmp.b a1
 	bcs ScrollListDownReturn
 	inc a
@@ -1612,10 +1612,10 @@ ScrollListDown:						; scrolls a scrolling list down a row (the pad's down) when
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w ScrollDownRowDrawn-1
 	jmp ($0075)
@@ -1631,7 +1631,7 @@ ScrollListDownReturn:				; the rts ScrollListDown leaves through when the list i
 	rts
 ScrollListDownAnim:					; scrolls the list down a row over 8 frames by the BG3 scroll HDMA entries
 									; (BG3ScrollHDMA+$6 on), then ScrollListDownDone
-	inc.b $69
+	inc.b a1+2
 	ldx.w #$0008
 .loop:								; loop: X - 1, if the result < 0 go to ScrollListDownDone, ...
 	dex
@@ -1671,15 +1671,15 @@ ScrollListDownAnim:					; scrolls the list down a row over 8 frames by the BG3 s
 	stz.w BG3ScrollHDMA+$F
 	bra .loop
 ScrollListUp:						; scrolls a scrolling list up a row (the pad's up) when rows are above
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $69
+	lda.b a1+2
 	beq ScrollListUpReturn
 	dec a
-	sta.b $69
+	sta.b a1+2
 	dec a
 	bmi ScrollListUpAnim
 	sta.b a3
@@ -1688,10 +1688,10 @@ ScrollListUp:						; scrolls a scrolling list up a row (the pad's up) when rows 
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w ScrollUpRowDrawn-1
 	jmp ($0075)
@@ -1748,7 +1748,7 @@ GameStatFormats:					; per game stat row format (the row's byte at +2 in bank $C
 									; that prints a team's value: a number, a pair, a percentage, a time
 	dw DrawTeamStatNumber,DrawTeamStatPair,DrawTeamStatPercent,DrawTeamStatTime
 ClearTextRow:						; clears row $6D of the text map at $D3 (32 tiles)
-	lda.b $6D
+	lda.b a2+2
 	xba
 	lsr a
 	lsr a
@@ -1764,7 +1764,7 @@ ClearTextRow:						; clears row $6D of the text map at $D3 (32 tiles)
 	bne .loop
 	rts
 DrawTeamStatNumber:					; formats a team stat as a centred decimal value
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
@@ -1774,12 +1774,12 @@ DrawTeamStatNumber:					; formats a team stat as a centred decimal value
 	lda.l BCDTable,x
 	and.w #$00FF
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatPair:					; formats two team stats separated by the pair separator
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
@@ -1793,7 +1793,7 @@ DrawTeamStatPair:					; formats two team stats separated by the pair separator
 	sta.w mesarea,x
 	inx
 	txy
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30005,x
 	clc
 	adc.b a2
@@ -1804,12 +1804,12 @@ DrawTeamStatPair:					; formats two team stats separated by the pair separator
 	and.w #$00FF
 	tyx
 	jsr.w BCDTextAt
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatPercent:				; formats the ratio of two team stats as a percentage capped at 100
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30005,x
 	clc
 	adc.b a2
@@ -1835,23 +1835,23 @@ DrawTeamStatPercent:				; formats the ratio of two team stats as a percentage ca
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
-.2:									; call BCDText, mesarea,x = $003C, Y = $6D, X = mesarea, ...
+.2:									; call BCDText, mesarea,x = $003C, Y = a2+2, X = mesarea, ...
 	jsr.w BCDText
 	lda.w #$003C
 	sta.w mesarea,x
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatTime:					; formats a team stat time as centred minutes and seconds
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
 	sta.b tmp0
 	lda.b (tmp0)
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
@@ -1972,7 +1972,7 @@ FitNameToMesarea:					; FitName into mesarea (Y = mesarea)
 FitName:							; copies the zero-ended name at X to Y in at most A characters: as it is,
 									; else the first name as an initial ('F= Last'), else cut short with '=';
 									; X = Y
-	sty.b $2E
+	sty.b r0+2
 	sta.b r0
 	phx
 	sep #$20
@@ -1991,7 +1991,7 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	cmp.b r0
 	bcc .2
 	beq .2
-	ldx.b $2E
+	ldx.b r0+2
 	txy
 .loop2:								; loop: A = $0001,x, X + 1, if $0001,x is not $20 go to .loop2, ...
 	lda.w $0001,x
@@ -2011,12 +2011,12 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	tya
 	inc a
 	sec
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .2
 	beq .2
 	sep #$20
-	ldy.b $2E
+	ldy.b r0+2
 	ldx.b r0
 .loop4:								; loop: $0000,y = $0003,y, if $0003,y = 0 go to .2, Y + 1, X - 1, ...
 	lda.w $0003,y
@@ -2029,9 +2029,9 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	rep #$20
 	lda.w #$003D
 	sta.w $0000,y
-.2:									; A 16-bit, X = $2E, return
+.2:									; A 16-bit, X = r0+2, return
 	rep #$20
-	ldx.b $2E
+	ldx.b r0+2
 	rts
 FitNameToWorkBuf:					; FitName into a new work buffer entry of A + 2 bytes (long calls)
 	pha
@@ -2045,7 +2045,7 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 									; place, as FitName does
 	sta.b r0
 	jsl.l UnpackText
-	stx.b $2E
+	stx.b r0+2
 	ldy.w #$0000
 	sep #$20
 .loop:								; loop: if $0000,x = 0 go to .1, X + 1, Y + 1, go to .loop
@@ -2054,11 +2054,11 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 	inx
 	iny
 	bra .loop
-.1:									; if Y < r0 go to .3, if zero go to .3, X = $2E, Y = X
+.1:									; if Y < r0 go to .3, if zero go to .3, X = r0+2, Y = X
 	cpy.b r0
 	bcc .3
 	beq .3
-	ldx.b $2E
+	ldx.b r0+2
 	txy
 .loop2:								; loop: A = $0001,x, X + 1, if $0001,x is not $20 go to .loop2, ...
 	lda.w $0001,x
@@ -2078,31 +2078,31 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 	tya
 	inc a
 	sec
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .3
 	beq .3
 	tya
 	dec a
 	clc
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .2
 	beq .2
-	lda.b $2E
+	lda.b r0+2
 	clc
 	adc.b r0
 	adc.w #$0004
 	tax
 	lda.w #$003D
 	sta.w $0000,x
-.2:									; A = $2E, A + $0003, X = A, return
-	lda.b $2E
+.2:									; A = r0+2, A + $0003, X = A, return
+	lda.b r0+2
 	clc
 	adc.w #$0003
 	tax
 	rts
-.3:									; A 16-bit, X = $2E, return
+.3:									; A 16-bit, X = r0+2, return
 	rep #$20
-	ldx.b $2E
+	ldx.b r0+2
 	rts

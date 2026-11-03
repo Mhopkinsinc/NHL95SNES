@@ -134,7 +134,7 @@ DrawGlyphNextRow:					; advance to the next glyph row or finish the character
 	plx
 	inx
 	inx
-	cpx.b $3A
+	cpx.b p0+2
 	bcs .1
 	jmp.w DrawGlyphRow
 .1:									; A = $0E, A / 2, if carry clear go to .2, A = X, ...
@@ -145,7 +145,7 @@ DrawGlyphNextRow:					; advance to the next glyph row or finish the character
 	adc.w #$000F
 	tax
 	adc.w #$0010
-	sta.b $3A
+	sta.b p0+2
 	tya
 	adc.w #$01F0
 	tay
@@ -177,7 +177,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	tax
 	lda.l PixelBitMasks,x
 	and.w #$00FF
-	sta.b $36
+	sta.b r2+2
 	lda.b $10
 	clc
 	adc.b $0C
@@ -194,7 +194,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .1
 	lda.w $0000,y
 	ora.w $0001,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .1:									; A = $C00002,x, A or $C00003,x, A * 2, if carry clear go to .2, ...
 	lda.l $C00002,x
@@ -203,7 +203,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .2
 	lda.w $0002,y
 	ora.w $0003,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .2:									; A = $C00004,x, A or $C00005,x, A * 2, if carry clear go to .3, ...
 	lda.l $C00004,x
@@ -212,7 +212,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .3
 	lda.w $0004,y
 	ora.w $0005,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .3:									; A = $C00006,x, A or $C00007,x, A * 2, if carry clear go to .4, ...
 	lda.l $C00006,x
@@ -221,7 +221,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .4
 	lda.w $0006,y
 	ora.w $0007,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .4:									; A = $C00008,x, A or $C00009,x, A * 2, if carry clear go to .5, ...
 	lda.l $C00008,x
@@ -230,7 +230,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .5
 	lda.w $0008,y
 	ora.w $0009,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .5:									; A = $C0000A,x, A or $C0000B,x, A * 2, if carry clear go to .6, ...
 	lda.l $C0000A,x
@@ -239,7 +239,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .6
 	lda.w $000A,y
 	ora.w $000B,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .6:									; A = $C0000C,x, A or $C0000D,x, A * 2, if carry clear go to .8, ...
 	lda.l $C0000C,x
@@ -248,7 +248,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .8
 	lda.w $000C,y
 	ora.w $000D,y
-	bit.b $36
+	bit.b r2+2
 	beq .8
 .7:									; A 16-bit, return
 	rep #$20
@@ -260,7 +260,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .9
 	lda.w $000E,y
 	ora.w $000F,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .9:									; A = $0E, A / 2, if carry set go to .10, A 16-bit, ...
 	lda.b $0E
@@ -275,7 +275,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .11
 	lda.w $0200,y
 	ora.w $0201,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .11:								; A = $C00022,x, A or $C00023,x, A * 2, if carry clear go to .12, ...
 	lda.l $C00022,x
@@ -284,7 +284,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .12
 	lda.w $0202,y
 	ora.w $0203,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .12:								; A = $C00024,x, A or $C00025,x, A * 2, if carry clear go to .13, ...
 	lda.l $C00024,x
@@ -293,7 +293,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .13
 	lda.w $0204,y
 	ora.w $0205,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .13:								; A = $C00026,x, A or $C00027,x, A * 2, if carry clear go to .14, ...
 	lda.l $C00026,x
@@ -302,7 +302,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .14
 	lda.w $0206,y
 	ora.w $0207,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .14:								; A = $C00028,x, A or $C00029,x, A * 2, if carry clear go to .15, ...
 	lda.l $C00028,x
@@ -311,7 +311,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .15
 	lda.w $0208,y
 	ora.w $0209,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .15:								; A = $C0002A,x, A or $C0002B,x, A * 2, if carry clear go to .16, ...
 	lda.l $C0002A,x
@@ -320,7 +320,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .16
 	lda.w $020A,y
 	ora.w $020B,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .16:								; A = $C0002C,x, A or $C0002D,x, A * 2, if carry clear go to .17, ...
 	lda.l $C0002C,x
@@ -329,7 +329,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .17
 	lda.w $020C,y
 	ora.w $020D,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .17:								; A = $C0002E,x, A or $C0002F,x, A * 2, if carry clear go to .18, ...
 	lda.l $C0002E,x
@@ -338,7 +338,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .18
 	lda.w $020E,y
 	ora.w $020F,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 	clc
 .18:								; A 16-bit, return
@@ -1860,7 +1860,7 @@ WaitTransfers:						; lets the NMI run the queued transfers (TransfersReady + 1)
 TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and closed once with no
 									; record; nothing calls it
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	dec.b QueueBusy
 	lda.b VRAMQueueSP
 	tsx

@@ -35,9 +35,9 @@ UpdateTeamPenaltyTimes:				; start the penalty clock update for team a2
 	lda.b a2
 	beq .1
 	lda.w #$001A
-.1:									; a0 = A, $69 = 0, a1 = mesarea, d1 = $0002, ...
+.1:									; a0 = A, a1+2 = 0, a1 = mesarea, d1 = $0002, ...
 	sta.b a0
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0002
@@ -188,7 +188,7 @@ releasepl:							; return the released penalty player to an available on-ice slo
 	tsb.w tmflags
 	tsb.w tmflags+2
 	lda.w #priolist>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w tmgoalie,y
@@ -206,35 +206,35 @@ releasepl:							; return the released penalty player to an available on-ice slo
 	ora.w #$1000
 	sta.w pflags,x
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -445,31 +445,31 @@ ShowInjuryBox:						; the injury box: a frame, its two texts (a third one when T
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -529,17 +529,17 @@ checkob:							; called from other segments
 	lda.w refwindow
 	bne .6
 	jsl.l ClearTextMapTop
-.6:									; pull A, $65 = A, pull A, a0 = A, ...
+.6:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 .rtl:								; return
@@ -1398,9 +1398,9 @@ assgoalie:							; assignment (asstab entry 7): the goalie
 	bcs .7
 	cmp.w #$00D9
 	bcs GoalieUpdateStateJump
-.7:									; $65 = rtss>>16, a0 = rtss, Y = $0004, if Xpos,x >= 0 go to .8, ...
+.7:									; a0+2 = rtss>>16, a0 = rtss, Y = $0004, if Xpos,x >= 0 go to .8, ...
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss
 	sta.b a0
 	ldy.w #$0004
@@ -1432,7 +1432,7 @@ GoalieUpdateStateJump:				; continue into the goalie animation and decision upda
 	jmp.w GoalieUpdateState
 GoalieReturnToCrease:				; skate the goalie back toward the crease
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss
 	sta.b a0
 	ldy.w #$0004
@@ -1718,10 +1718,10 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.w #$001E
 	sta.b crowdhold
 	rtl
-.28:								; if pfgoal,x is not 0 go to .29, $65 = 0, a0 = $07D8, d3 = $010A, ...
+.28:								; if pfgoal,x is not 0 go to .29, a0+2 = 0, a0 = $07D8, d3 = $010A, ...
 	lda.w pfgoal,x
 	bne .29
-	stz.b $65
+	stz.b a0+2
 	lda.w #$07D8
 	sta.b a0
 	lda.w #$010A
@@ -1976,13 +1976,13 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bit.w #$0020
 	beq .58
 	ora.w #$FFC0
-.58:								; A + puckx, A - Xpos,x, d0 = A, $2E = A, ...
+.58:								; A + puckx, A - Xpos,x, d0 = A, r0+2 = A, ...
 	clc
 	adc.w puckx
 	sec
 	sbc.w Xpos,x
 	sta.b d0
-	sta.b $2E
+	sta.b r0+2
 	bit.w #$8000
 	beq .59
 	eor.w #$FFFF
@@ -2044,14 +2044,14 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.w seed
 	and.w #$0001
 	bra .72
-.64:								; if $2E >= 0 go to .67
-	lda.b $2E
+.64:								; if r0+2 >= 0 go to .67
+	lda.b r0+2
 	bpl .67
 .65:								; A = $0007, go to .72
 	lda.w #$0007
 	bra .72
-.66:								; if $2E >= 0 go to .65
-	lda.b $2E
+.66:								; if r0+2 >= 0 go to .65
+	lda.b r0+2
 	bpl .65
 .67:								; A = $0001, go to .72
 	lda.w #$0001
@@ -2128,7 +2128,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 .75:								; d0 * 2, a1 = assgoalie_list, Y = d0, ...
 	asl.b d0
 	lda.w #assgoalie_list>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #assgoalie_list&$FFFF
 	sta.b a1
 	ldy.b d0

@@ -68,7 +68,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	phx
 	jsr.w setlccords
 	sta.b d0
-	sty.b $81
+	sty.b d0+2
 	jsl.l Framer
 	lda.b a2
 	jsr.w TeamSecondText
@@ -81,7 +81,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	txa
 	ldx.w #$007E
 	jsl.l QueueVRAMDMALen
-	lda.b $81
+	lda.b d0+2
 	dec a
 	asl a
 	asl a
@@ -92,8 +92,8 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	adc.b d0
 	sta.b d0
 	lda.w #$0002
-.loop:								; loop: $81 = A, call getlchoice, X = A, if the result < 0 go to .3, ...
-	sta.b $81
+.loop:								; loop: d0+2 = A, call getlchoice, X = A, if the result < 0 go to .3, ...
+	sta.b d0+2
 	jsr.w getlchoice
 	tax
 	bmi .3
@@ -101,7 +101,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	lda.w tmflags,y
 	bit.w #$0008
 	bne .1
-	lda.b $81
+	lda.b d0+2
 	cmp.w tmlcchoice,y
 	bne .2
 	ldx.w tmline,y
@@ -112,7 +112,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	tay
 	lda.w #$0005
 	sta.w $0000,y
-	lda.b $81
+	lda.b d0+2
 	asl a
 	tax
 	lda.l LineChangeButtons,x
@@ -136,8 +136,8 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	sec
 	sbc.w #$0020
 	sta.b d0
-.3:									; A = $81, A - 1, if the result >= 0 go to .loop, pull X, ...
-	lda.b $81
+.3:									; A = d0+2, A - 1, if the result >= 0 go to .loop, pull X, ...
+	lda.b d0+2
 	dec a
 	bpl .loop
 	plx
@@ -387,43 +387,43 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -437,22 +437,22 @@ SetPlList:							; from setpersonel and other segments
 	stz.w PlList+2
 	stz.w PlList+4
 	lda.w #priolist>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .1
 	lda.w #(priolist+$E)>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(priolist+$E)&$FFFF
 	sta.b a0
 	bra .3
-.1:									; if penshot = 0 go to .2, $65 = $00C0, a0 = $9B31, ...
+.1:									; if penshot = 0 go to .2, a0+2 = (priolist+$7)>>16, ...
 	lda.w penshot
 	beq .2
 	lda.w #(priolist+$7)>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(priolist+$7)&$FFFF
 	sta.b a0
 	lda.b a2
@@ -465,18 +465,18 @@ SetPlList:							; from setpersonel and other segments
 	lda.w tmgoalie,y
 	bpl .3
 	inc.b a0
-.3:									; call GetTeamLines, $69 = $71, a1 = a3, pull A, ...
+.3:									; call GetTeamLines, a1+2 = a3+2, a1 = a3, pull A, ...
 	pei ($71)
 	pei ($6F)
 	jsl.l GetTeamLines
-	lda.b $71
-	sta.b $69
+	lda.b a3+2
+	sta.b a1+2
 	lda.b a3
 	sta.b a1
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	ldy.b a2
 	lda.w tmline,y
 	asl a
@@ -571,18 +571,18 @@ SetPlList:							; from setpersonel and other segments
 	lda.w tmpdst,y
 	bmi .13
 	beq .13
-.12:								; call GetTeamLines, $69 = $71, a1 = a3, pull A, ...
+.12:								; call GetTeamLines, a1+2 = a3+2, a1 = a3, pull A, ...
 	pei ($71)
 	pei ($6F)
 	jsl.l GetTeamLines
-	lda.b $71
-	sta.b $69
+	lda.b a3+2
+	sta.b a1+2
 	lda.b a3
 	sta.b a1
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	lda.b d4
 	clc
 	adc.w #$0006
@@ -592,7 +592,7 @@ SetPlList:							; from setpersonel and other segments
 	asl a
 	sta.b d0
 	lda.w #sublist>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #sublist&$FFFF
 	sta.b a0
 	ldy.b d0
@@ -888,7 +888,7 @@ assbench:							; asstab entry 12: an assignment routine
 	lda.w temp4,x
 	sta.b d1
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
@@ -1000,19 +1000,19 @@ CompLine:							; from chk4lc and other segments
 	sta.w tmline,y
 CompLineReturn:						; restores the saved scratch registers and returns after choosing a line
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1032,7 +1032,7 @@ CompLineEvenStrength:				; chooses an even strength line by team, control mode, 
 	lda.w #$0002
 	sta.b d1
 	lda.w #EvenStrengthLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvenStrengthLines&$FFFF
 	sta.b a0
 	lda.w gsp
@@ -1044,13 +1044,13 @@ CompLineEvenStrength:				; chooses an even strength line by team, control mode, 
 	beq .3
 	php
 	lda.w #EvenStrengthLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(EvenStrengthLines+14)&$FFFF
 	sta.b a0
 	plp
 	bpl .3
 	lda.w #EvenStrengthLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(EvenStrengthLines+28)&$FFFF
 	sta.b a0
 .3:									; Y = a1, A = tmline,y, A * 2, d1 = A, ...
@@ -1079,7 +1079,7 @@ CompLineEnergySearch:				; scans the score-dependent line order for sufficient e
 	lda.w #$0002
 	sta.b d1
 	lda.w #EnergySearchLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EnergySearchLines&$FFFF
 	sta.b a0
 	lda.w gsp
@@ -1092,13 +1092,13 @@ CompLineEnergySearch:				; scans the score-dependent line order for sufficient e
 	beq .loop
 	php
 	lda.w #EnergySearchLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(EnergySearchLines+6)&$FFFF
 	sta.b a0
 	plp
 	bpl .loop
 	lda.w #EnergySearchLines>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #(EnergySearchLines+12)&$FFFF
 	sta.b a0
 .loop:								; loop: A = [a0], a0 + 1, a0 + 1, call getlinee, ...
@@ -1268,7 +1268,7 @@ makepde:							; called from other segments
 	pla
 	ldx.b d0
 	jsl.l Mul16S
-	lda.b $36
+	lda.b r2+2
 	asl.b r2
 	rol a
 	asl.b r2
@@ -1332,21 +1332,21 @@ AvgCline:							; from chk4lc and other segments
 	lda.b r0
 	sta.b d0
 	plx
-.3:									; pull A, $65 = A, pull A, a0 = A, ...
+.3:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	rtl
@@ -1540,8 +1540,8 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	beq .4
 	lda.w #$0C00
 	tsb.w printa
-.4:									; $69 = 0, a1 = mesarea, A = printx, A - $000B, ...
-	stz.b $69
+.4:									; a1+2 = 0, a1 = mesarea, A = printx, A - $000B, ...
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w printx
@@ -1550,7 +1550,7 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	sta.w printx
 	lda.w #$4000
 	tsb.w printa
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	sep #$20
@@ -1565,23 +1565,23 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	lda.w #$4000
 	trb.w printa
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1639,11 +1639,11 @@ linebar:							; queues an energy bar for line A at the line change row
 	cmp.w #$0FFF
 	bcc .2
 	lda.w #$0FFF
-.2:									; $85 = A, A * 2, A + $85, $85 = A, ...
-	sta.b $85
+.2:									; d1+2 = A, A * 2, A + d1+2, d1+2 = A, ...
+	sta.b d1+2
 	asl a
-	adc.b $85
-	sta.b $85
+	adc.b d1+2
+	sta.b d1+2
 	xba
 	and.w #$00F0
 	lsr a
@@ -1667,7 +1667,7 @@ LineBarHigh:						; fills two energy bar tiles and selects the third tile remain
 	sta.w $0000,y
 	lda.w #$0080
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 	sec
 	sbc.w #$2000
 	iny
@@ -1678,7 +1678,7 @@ LineBarMiddle:						; fills the first energy bar tile and selects the second til
 	sta.w $0000,y
 	lda.w #$0089
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 	sec
 	sbc.w #$1000
 	iny
@@ -1686,7 +1686,7 @@ LineBarMiddle:						; fills the first energy bar tile and selects the second til
 LineBarLow:							; selects the first energy bar tile from the scaled energy
 	lda.w #$0092
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (the energy
 									; left / $200 + d1), then the three tiles queued to VRAM at d0 + 6
 	and.w #$FE00
@@ -1803,7 +1803,7 @@ Create_HotCold_Table:				; called from other segments
 	rtl
 GetTeamLines:						; from SetPlList and other segments
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	lda.b a2
 	beq .1
 	lda.w #$1813

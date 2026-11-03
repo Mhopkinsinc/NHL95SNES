@@ -405,7 +405,7 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	sbc.b a3
 	clc
 	adc.b a0
-	sta.b $65
+	sta.b a0+2
 	tax
 	lda.w #$0010
 	sta.b $CF
@@ -413,14 +413,14 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	sta.b $D1
 	lda.l $C30000,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	stz.b a2
 	lda.w #$00B8
 	sta.b $CF
 	lda.w #$00F8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
@@ -431,7 +431,7 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	sta.b $CF
 	lda.w #$0038
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
@@ -928,14 +928,14 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	asl a
 	tay
 	lda.w ScratchBuf,y
-	sta.b $65
+	sta.b a0+2
 	lda.w #HomeRoster
 	ldx.b a2
 	beq .1
 	lda.w #VisRoster
-.1:									; push A, A = $65, A * 2, A * 2, ...
+.1:									; push A, A = a0+2, A * 2, A * 2, ...
 	pha
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -947,27 +947,27 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	tax
 	lda.w #$000E
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.b a2
 	beq .2
-	lda.b $65
+	lda.b a0+2
 	clc
 	adc.w #$001A
-	sta.b $65
-.2:									; $CF = $0078, $D1 = $0090, X = $65, A = tmgoals,x, ...
+	sta.b a0+2
+.2:									; $CF = $0078, $D1 = $0090, X = a0+2, A = tmgoals,x, ...
 	lda.w #$0078
 	sta.b $CF
 	lda.w #$0090
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	ldx.w #$0000
 	jsr.w PrintStatCell
 	lda.w #$00A8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.b $7D
 	cmp.w #$FFFF
 	beq PrintGoalieShotsPct
@@ -977,7 +977,7 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	jsr.w PrintStatCell
 	lda.w #$00C0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	pha
@@ -990,14 +990,14 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	jsr.w PrintStatCell
 	lda.w #$00D8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmpshots,x
 	and.w #$00FF
 	ldx.w #$0006
 	jsr.w PrintStatCell
 	lda.w #$00F0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w ppenmin,x
 	and.w #$00FF
 	ldx.w #$0008
@@ -1016,9 +1016,9 @@ PrintStatCell:						; prints value A (100 as 100) centred on row $6D, highlighte
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
-.3:									; call BCDText, Y = $6D, X = mesarea, call PrintBoldCentredStr, ...
+.3:									; call BCDText, Y = a2+2, X = mesarea, call PrintBoldCentredStr, ...
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
@@ -1034,13 +1034,13 @@ PrintGoalieShotsPct:				; prints a goalie row's shots against and save percentag
 	jsr.w PrintStatCell
 	lda.w #$00E0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	ldx.w #$0064
 	jsl.l Mul8U
 	sta.b r2
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmpshots,x
 	and.w #$00FF
 	sta.b r1
@@ -1073,7 +1073,7 @@ PrintPlayerStatHeads:				; prints the player stats headings (the sort column's n
 	ldy.w #$0020
 	jsl.l ClearRAM7E
 	ldy.w #$000B
-	sty.b $6D
+	sty.b a2+2
 	ldx.b $7D
 	cpx.w #$FFFF
 	bne .1
@@ -1123,8 +1123,8 @@ PrintStatHead:						; prints column title X centred on row $6D, highlighted ($24
 	bne .1
 	lda.w #$2400
 	sta.b $D5
-.1:									; Y = $6D, call PrintBoldCentred, $D5 = $2000, $CF = $D1, ...
-	ldy.b $6D
+.1:									; Y = a2+2, call PrintBoldCentred, $D5 = $2000, $CF = $D1, ...
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.w #$2000
 	sta.b $D5
@@ -1270,7 +1270,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	jsl.l Div16x8U
 	asl a
 	asl a
-	sta.b $65
+	sta.b a0+2
 	tax
 	lda.l RDMPYL
 	beq .2
@@ -1291,7 +1291,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	inc a
 	ldx.w #$00C3
 	jsl.l CopyFlipString2
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRightStr
 	rts
 .2:									; $D5 = $2400, $CF = $0010, $D1 = $0030, A = PenSum+1,x, ...
@@ -1311,24 +1311,24 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	tax
 	lda.l PerLabels,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0060
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum,x
 	and.w #$0FFF
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0080
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+2,x
 	and.w #$0080
 	beq .3
@@ -1336,15 +1336,15 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	bra .4
 .3:									; continue
 	pea.w HomeRoster
-.4:									; call TeamSecondText, Y = $6D, call PrintBoldCentred, $CF = $D1, ...
+.4:									; call TeamSecondText, Y = a2+2, call PrintBoldCentred, $CF = $D1, ...
 	jsr.w TeamSecondText
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00E0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+2,x
 	and.w #$007F
 	asl a
@@ -1358,13 +1358,13 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	tax
 	lda.w #$000C
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+3,x
 	and.w #$00FF
 	tax
@@ -1374,7 +1374,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	and.w #$00FF
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
 	sta.b $D5
@@ -1402,7 +1402,7 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	ldx.w #BlankPauseItems&$FFFF
 	jsr.w PrintPauseItems
 	lda.w #$00C3
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$5A08
 	sta.b r0
 	lda.w #$0318
@@ -1422,7 +1422,7 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	tax
 	jsl.l UnpackText
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	stx.b r0
 	sep #$20
 	ldy.w #$0000
@@ -1595,10 +1595,10 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	sta.b r1
 	jsl.l Div16x8U
 	asl a
-	sta.b $65
+	sta.b a0+2
 	asl a
-	adc.b $65
-	sta.b $65
+	adc.b a0+2
+	sta.b a0+2
 	tax
 	lda.w ScoreSum+2,x
 	and.w #$0080
@@ -1634,7 +1634,7 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	tax
 	lda.w #$000C
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 .5:									; pull X, return
 	plx
@@ -1656,32 +1656,32 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	tax
 	lda.l PerLabels,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0050
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203A,x
 	and.w #$0FFF
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0068
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203C,x
 	and.w #$0080
 	jsr.w TeamSecondText
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.w #$0072
 	sta.b $CF
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203D,x
 	and.w #$007F
 	asl a
@@ -1695,11 +1695,11 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	tax
 	lda.w #$000D
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$00E0
 	sta.b $CF
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203C,x
 	and.w #$0007
 	cmp.w #$0005
@@ -1712,7 +1712,7 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	cmp.w #$FFFF
 	beq .8
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 .8:									; $D5 = $2000, return
 	lda.w #$2000

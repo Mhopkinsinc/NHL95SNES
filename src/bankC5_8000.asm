@@ -16,7 +16,7 @@ PrintSaveRecordRow:					; save record A on row $6D: the holder's name, then the 
 	stx.b $D1
 	adc.w #ScratchBuf+$12
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsr.w PrintRecordCell
 	lda.w #$00F0
 	sta.b $D1
@@ -61,7 +61,7 @@ PrintSaveRecordRow:					; save record A on row $6D: the holder's name, then the 
 	lda.w #$0000
 	sta.w mesarea,y
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 PrintRecordCell:					; PrintBoldCentredStr, then the next column ($D1) becomes the current one
 									; ($CF)
 	jsl.l PrintBoldCentredStr
@@ -217,11 +217,11 @@ DecompressUnpackbuf:				; Decompress X:A into unpackbuf
 	ldy.w #unpackbuf
 	sty.b r0
 	ldy.w #unpackbuf>>16
-	sty.b $2E
+	sty.b r0+2
 Decompress:							; unpack the set at X:A (size word, format word, stream) to [$2C]
 	phb
 	sta.b r1
-	stx.b $32
+	stx.b r1+2
 	sep #$30
 	lda.b #$54
 	sta.b tmp0
@@ -229,7 +229,7 @@ Decompress:							; unpack the set at X:A (size word, format word, stream) to [$
 	lda.b #$6B
 	sta.b $A2
 	sta.b $A6
-	lda.b $2E
+	lda.b r0+2
 	sta.b $A4
 	sta.b tmp3
 	sta.b $A0
@@ -244,7 +244,7 @@ Decompress:							; unpack the set at X:A (size word, format word, stream) to [$
 	adc.w #$0003
 	sta.b r1
 	bcc .1
-	inc.b $32
+	inc.b r1+2
 	clc
 .1:									; jump through DecompressFormats,x
 	jmp (DecompressFormats,x)
@@ -397,7 +397,7 @@ UnpackFormat4:						; format 4: literal runs and copies from up to 11 bits back
 UnpackFormat6:						; format 6: a flag byte per 8 runs or copies, up to 11 bits back
 	inc.b r1
 	bne .1
-	inc.b $32
+	inc.b r1+2
 .1:									; A = [r1], A / 2, $0E = A, call UnpackFormat6Step, ...
 	lda.b [r1]
 	lsr a
@@ -477,7 +477,7 @@ UnpackFormat6Step:					; one token of unpack format 6 by the flag bit in carry: 
 UnpackFormat8:						; format 8: a flag byte per 8 runs or copies, up to 12 bits back
 	inc.b r1
 	bne .1
-	inc.b $32
+	inc.b r1+2
 .1:									; A = [r1], A / 2, $0E = A, call UnpackFormat8Step, ...
 	lda.b [r1]
 	lsr a
@@ -583,7 +583,7 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	clc
 	adc.w #$0002
 	bcc .1
-	inc.b $2E
+	inc.b r0+2
 .1:									; r0 = A, $42 = 0, Y = $0FEE
 	sta.b r0
 	stz.b $42
@@ -596,7 +596,7 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	lda.b [r0]
 	inc.b r0
 	bne .2
-	inc.b $2E
+	inc.b r0+2
 .2:									; A or $FF00, $42 = A
 	ora.w #$FF00
 	sta.b $42
@@ -607,7 +607,7 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	lda.b [r0]
 	inc.b r0
 	bne .4
-	inc.b $2E
+	inc.b r0+2
 .4:									; A 8-bit, WMDATA = A, ScratchBuf,y = A, A 16-bit, ...
 	sep #$20
 	sta.l WMDATA
@@ -625,13 +625,13 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	and.w #$00FF
 	inc.b r0
 	bne .6
-	inc.b $2E
-.6:									; $3E = A, A = [r0], r0 + 1, if the result is not 0 go to .7, ...
-	sta.b $3E
+	inc.b r0+2
+.6:									; p1+2 = A, A = [r0], r0 + 1, if the result is not 0 go to .7, ...
+	sta.b p1+2
 	lda.b [r0]
 	inc.b r0
 	bne .7
-	inc.b $2E
+	inc.b r0+2
 .7:									; X = A, A and $00F0, A * 2, A * 2, ...
 	tax
 	and.w #$00F0
@@ -639,13 +639,13 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	asl a
 	asl a
 	asl a
-	tsb.b $3E
+	tsb.b p1+2
 	txa
 	and.w #$000F
 	adc.w #$0003
 	sta.b r3
-.loop3:								; loop: A = $3E, A and $0FFF, X = A, A 8-bit, ...
-	lda.b $3E
+.loop3:								; loop: A = p1+2, A and $0FFF, X = A, A 8-bit, ...
+	lda.b p1+2
 	and.w #$0FFF
 	tax
 	sep #$20
@@ -659,7 +659,7 @@ DecompressLZSSHere:					; DecompressLZSS's decoder without setting the WRAM addr
 	tay
 	dec.b p1
 	beq .rts
-	inc.b $3E
+	inc.b p1+2
 	dec.b r3
 	bne .loop3
 	jmp.w .loop2
@@ -672,7 +672,7 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 									; to VRAM at tmp0 with tmp1 added to each word, then the tile and colour
 									; chunks
 	sta.b r1
-	stx.b $32
+	stx.b r1+2
 	sty.b tmp2
 	sep #$20
 	lda.b #$80
@@ -681,9 +681,9 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	lda.b r1
 	adc.w #$0005
 	sta.b r0
-	lda.b $32
+	lda.b r1+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	pea.w $0000
 	ldy.w #$0004
 	lda.b [r1],y
@@ -715,7 +715,7 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	pla
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 .4:									; Y = $0005, A = [r1],y, A / 2, X = A, ...
 	ldy.w #$0005
 	lda.b [r1],y
@@ -808,9 +808,9 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	tay
 	adc.b r1
 	sta.b r0
-	lda.b $32
+	lda.b r1+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	lda.b [r1],y
 	sta.b tmp3
 	sta.b $0A
@@ -823,7 +823,7 @@ MapSetToVRAMBody:					; the work of MapSetToVRAM: the map chunk (packed or not, 
 	pla
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	lda.b tmp2
 	sta.l VMADDL
 	ldy.w #$0000
@@ -871,13 +871,13 @@ NextMapSetChunk:					; r1 (bank $32) to the next chunk of the map set: + its len
 	lda.b [r1]
 	adc.b r1
 	bcc .1
-	inc.b $32
+	inc.b r1+2
 	clc
-.1:									; A + $0002, r1 = A, if carry clear go to .rts, $32 + 1
+.1:									; A + $0002, r1 = A, if carry clear go to .rts, r1+2 + 1
 	adc.w #$0002
 	sta.b r1
 	bcc .rts
-	inc.b $32
+	inc.b r1+2
 .rts:								; return
 	rts
 MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VRAM bytes, then
@@ -891,9 +891,9 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	tay
 	adc.b r1
 	sta.b r0
-	lda.b $32
+	lda.b r1+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	lda.b [r1],y
 	pha
 	jsl.l AllocWorkBuf
@@ -903,7 +903,7 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	pla
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	stz.b tmp2
 	lda.w #$0000
 	sta.l VMADDL
@@ -967,21 +967,21 @@ MapSetMode7ToVRAM:					; unpacks the mode 7 map and tiles to the low and high VR
 	tay
 	adc.b r1
 	sta.b r0
-	lda.b $32
+	lda.b r1+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	lda.b [r1],y
 	sta.b tmp3
 	pha
 	jsl.l AllocWorkBuf
 	pha
 	ldx.w #$007E
-	stx.b $2E
+	stx.b r0+2
 	jsr.w DecompressLZSS
 	pla
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$0000
 	sta.l VMADDL
 	sep #$20
@@ -1034,39 +1034,39 @@ MapSetToUnpackbuf:					; MapSetToWRAM with the buffer unpackbuf
 	ldy.w #unpackbuf
 	sty.b r1
 	ldy.w #unpackbuf>>16
-	sty.b $32
+	sty.b r1+2
 MapSetToWRAM:						; unpacks the map set at X:A into the WRAM buffer at r1 (bank in $32): the
 									; map, the tiles and the colours
 	sta.b r2
-	stx.b $36
+	stx.b r2+2
 	clc
 	lda.b r2
 	adc.w #$0005
 	sta.b r0
 	bcc .1
 	inx
-.1:									; $2E = X, A = r1, X = $32, call DecompressLZSS, ...
-	stx.b $2E
+.1:									; r0+2 = X, A = r1, X = r1+2, call DecompressLZSS, ...
+	stx.b r0+2
 	lda.b r1
-	ldx.b $32
+	ldx.b r1+2
 	jsr.w DecompressLZSS
 	jsr.w NextMapSetChunkWRAM
 	clc
 	lda.b r2
 	adc.w #$0008
 	sta.b r0
-	lda.b $36
+	lda.b r2+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	jsr.w DecompressLZSSHere
 	jsr.w NextMapSetChunkWRAM
 	clc
 	lda.b r2
 	adc.w #$0007
 	sta.b r0
-	lda.b $36
+	lda.b r2+2
 	adc.w #$0000
-	sta.b $2E
+	sta.b r0+2
 	sec
 	lda.b [r2]
 	sbc.w #$0005
@@ -1086,15 +1086,15 @@ NextMapSetChunkWRAM:				; r2 (bank $36) to the next chunk of the map set: + its 
 	lda.b [r2]
 	adc.b r2
 	sta.b r2
-	lda.b $36
+	lda.b r2+2
 	adc.w #$0000
-	sta.b $36
+	sta.b r2+2
 	clc
 	lda.b r2
 	adc.w #$0002
 	sta.b r2
 	bcc .rts
-	inc.b $36
+	inc.b r2+2
 .rts:								; return
 	rts
 Mul16x8XS24:						; X (16 bits, signed) * A (low byte, unsigned) into $14 (3 bytes) by the
@@ -1145,55 +1145,55 @@ Mul16x8XS24:						; X (16 bits, signed) * A (low byte, unsigned) into $14 (3 byt
 	rts
 Div32x16U:							; X:A (32 bits) / Y (16 bits) into X:A, the remainder in Y, unsigned
 									; (shift and subtract); no caller found
-	stx.b $2E
+	stx.b r0+2
 	sta.b r0
 	stz.b r1
-	sty.b $32
+	sty.b r1+2
 	stz.b r2
-	stz.b $36
+	stz.b r2+2
 	ldy.w #$0010
-	lda.b $32
-.loop:								; loop: A * 2, Y + 1, if carry clear go to .loop, $32 = A
+	lda.b r1+2
+.loop:								; loop: A * 2, Y + 1, if carry clear go to .loop, r1+2 = A
 	asl a
 	iny
 	bcc .loop
 	ror a
-	sta.b $32
-.loop2:								; loop: r2 * 2, if $2E < $32 go to .3, if not zero go to .1, ...
+	sta.b r1+2
+.loop2:								; loop: r2 * 2, if r0+2 < r1+2 go to .3, if not zero go to .1, ...
 	asl.b r2
-	rol.b $36
-	lda.b $2E
-	cmp.b $32
+	rol.b r2+2
+	lda.b r0+2
+	cmp.b r1+2
 	bcc .3
 	bne .1
 	lda.b r0
 	cmp.b r1
 	bcs .2
-	lsr.b $32
+	lsr.b r1+2
 	ror.b r1
 	dey
 	bne .loop2
 	lda.b r2
-	ldx.b $36
+	ldx.b r2+2
 	ldy.b r0
 	rts
 .1:									; A = r0
 	lda.b r0
-.2:									; A - r1, r0 = A, A = $2E, A - $32, ...
+.2:									; A - r1, r0 = A, A = r0+2, A - r1+2, ...
 	sbc.b r1
 	sta.b r0
-	lda.b $2E
-	sbc.b $32
-	sta.b $2E
+	lda.b r0+2
+	sbc.b r1+2
+	sta.b r0+2
 	lda.w #$0001
 	tsb.b r2
-.3:									; $32 / 2, Y - 1, if the result is not 0 go to .loop2, A = r2, ...
-	lsr.b $32
+.3:									; r1+2 / 2, Y - 1, if the result is not 0 go to .loop2, A = r2, ...
+	lsr.b r1+2
 	ror.b r1
 	dey
 	bne .loop2
 	lda.b r2
-	ldx.b $36
+	ldx.b r2+2
 	ldy.b r0
 	rts
 TextMapFill:						; the blank text map entry (tile $DF, attribute byte $22): ClearTextMap's
@@ -1346,7 +1346,7 @@ DecompressToVRAM:					; Decompress A:X into a $1000 byte heap block and queue it
 	pha
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	tya
 	jsl.l Decompress
 	ply
@@ -1512,7 +1512,7 @@ CopyFlipString2:					; copies the length-led string at X:A into a new second wor
 									; (AllocWorkBuf2), bit 7 of each byte flipped and a zero after; X = the
 									; copy
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	lda.b [r0]
 	and.w #$00FF
 	sta.b tmp0
@@ -1715,7 +1715,7 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	bne .loop2
 	jsl.l ReadMenuPads
 	inc.b $26
-	ldx.b $99
+	ldx.b d6+2
 	jsr (SetupScreenStates,x)
 	jsl.l AnimateSprites
 	lda.w #OAMBuf+$1FF
@@ -1724,7 +1724,7 @@ GameSetUp:							; the game setup screen (setoptions builds it): up / down pick 
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
-	lda.b $99
+	lda.b d6+2
 	bne .loop
 	lda.w repeatdelayframes
 	beq .2
@@ -1835,7 +1835,7 @@ SetupScrollUp:						; a frame of the setup list's scroll after SetupLineUp ($99 
 	sta.w BandScroll+$10
 	lda.w BandScroll+$6
 	sta.w BandScroll+$8
-	stz.b $99
+	stz.b d6+2
 	rts
 .2:									; BG3ScrollHDMA+$12 = A, A 16-bit, return
 	sta.w BG3ScrollHDMA+$12
@@ -1891,7 +1891,7 @@ SetupScrollDown:					; a frame of the setup list's scroll after SetupLineDown ($
 	inc a
 	sta.w BandScroll+$6
 	sta.w BandScroll+$8
-	stz.b $99
+	stz.b d6+2
 	rts
 SetupLineUp:						; setup screen up: the line above (d6 - 1); at the top row the list
 									; scrolls (SetupScrollUp) and the new line is drawn, else the cursor moves
@@ -1926,7 +1926,7 @@ SetupLineUp:						; setup screen up: the line above (d6 - 1); at the top row the
 	ora.w #$0001
 	sta.b $22,x
 	lda.w #$0002
-	sta.b $99
+	sta.b d6+2
 	bra DrawSetupLine
 .3:									; $08,x = A, call SetupLinePalette0
 	sta.b $08,x
@@ -1938,13 +1938,13 @@ SetupLineDown:						; setup screen down: the line below (d6 + 1, below the line 
 									; drawn, else the cursor moves down a row
 	lda.b d6
 	inc a
-	cmp.b $69
+	cmp.b a1+2
 	bcc .1
 	jmp.w SetupLineDownReturn
-.1:									; d6 = A, A + 1, if A < $69 go to .2, if A < $0005 go to .2, ...
+.1:									; d6 = A, A + 1, if A < a1+2 go to .2, if A < $0005 go to .2, ...
 	sta.b d6
 	inc a
-	cmp.b $69
+	cmp.b a1+2
 	bcc .2
 	cmp.w #$0005
 	bcc .2
@@ -1973,7 +1973,7 @@ SetupLineDown:						; setup screen down: the line below (d6 + 1, below the line 
 	ora.w #$0001
 	sta.b $22,x
 	lda.w #$0004
-	sta.b $99
+	sta.b d6+2
 DrawSetupLine:						; draws setup line d6 on its text row (SetupLineRow): the title at the
 									; left and the setting centred (right aligned in play mode 7), then
 									; SendTextMap

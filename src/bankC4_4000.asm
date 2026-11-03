@@ -476,12 +476,12 @@ wallcoll:							; from WallPlayerResponse, checkgoalp, checkgoal, ...
 	asl a
 	pla
 	ror a
-	sta.b $81
+	sta.b d0+2
 	lda.b d3
 	sec
 	sbc.b d0
 	sec
-	sbc.b $81
+	sbc.b d0+2
 	sta.b d3
 	bra .13
 .9:									; go to .14
@@ -502,7 +502,7 @@ wallcoll:							; from WallPlayerResponse, checkgoalp, checkgoal, ...
 	lda.w Xvel,x
 	sta.b p0
 	lda.w Yvel,x
-	sta.b $3A
+	sta.b p0+2
 	lda.w #$0003
 	jsl.l StartSound
 .11:								; A = d2, A / 2, A / 2, if $2000 bits clear go to .12, ...
@@ -646,7 +646,7 @@ checkgoal:							; from checkwallcoll and other segments
 	sta.b d1
 	lda.w Ypos,x
 	sbc.w OldYpos,x
-	sta.b $85
+	sta.b d1+2
 	lda.b $84
 	sta.b d1
 	cmp.w #$0000
@@ -676,7 +676,7 @@ checkgoal:							; from checkwallcoll and other segments
 	sta.b d3
 	lda.w Xpos,x
 	sbc.w OldXpos,x
-	sta.b $8D
+	sta.b d3+2
 	lda.b $8C
 	sta.b d3
 	ldx.b r2
@@ -687,9 +687,9 @@ checkgoal:							; from checkwallcoll and other segments
 	beq .7
 	eor.w #$FFFF
 	inc a
-.7:									; r1 = A, A = $36, if $8000 bits clear go to .8, A xor $FFFF, ...
+.7:									; r1 = A, A = r2+2, if $8000 bits clear go to .8, A xor $FFFF, ...
 	sta.b r1
-	lda.b $36
+	lda.b r2+2
 	bit.w #$8000
 	beq .8
 	eor.w #$FFFF
@@ -892,11 +892,11 @@ checkgoalp:							; from checkgoal
 	bcs .5
 	sta.b d2
 	lda.b d3
-	sta.b $32
+	sta.b r1+2
 	tax
 	jsl.l Mul8S
 	asl a
-	sta.b $36
+	sta.b r2+2
 	ldx.b a3
 	clc
 	adc.b d2
@@ -911,7 +911,7 @@ checkgoalp:							; from checkgoal
 	pei ($8B)
 	pei ($87)
 	lda.b r1
-	ldy.b $32
+	ldy.b r1+2
 	jsl.l ApproxLength
 	inc a
 	sta.b d2
@@ -1150,14 +1150,14 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	ora.b d1
 	bne .2
 	jmp.w .16
-.2:									; A = d3, X = d1, call Mul16x8S, $85 = $36, ...
+.2:									; A = d3, X = d1, call Mul16x8S, d1+2 = r2+2, ...
 	pei ($83)
 	pei ($7F)
 	lda.b d3
 	ldx.b d1
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $85
+	lda.b r2+2
+	sta.b d1+2
 	lda.b r2
 	sta.b d1
 	lda.b d2
@@ -1168,9 +1168,9 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	clc
 	adc.b d1
 	sta.b d1
-	lda.b $36
-	adc.b $85
-	sta.b $85
+	lda.b r2+2
+	adc.b d1+2
+	sta.b d1+2
 	bpl .3
 	jmp.w .17
 .3:									; if SPA,x < SPAHold2&$FFFF go to .5, if SPA,x >= $2345 go to .5, ...
@@ -1288,12 +1288,12 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	lda.w collflag
 	bpl .15
 	jmp.w .16
-.15:								; A = d2, X = d1, call Mul16x8S, $85 = $36, ...
+.15:								; A = d2, X = d1, call Mul16x8S, d1+2 = r2+2, ...
 	lda.b d2
 	ldx.b d1
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $85
+	lda.b r2+2
+	sta.b d1+2
 	lda.b r2
 	sta.b d1
 	lda.b d3
@@ -1303,9 +1303,9 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sec
 	sbc.b d1
 	sta.b d1
-	lda.b $36
-	sbc.b $85
-	sta.b $85
+	lda.b r2+2
+	sbc.b d1+2
+	sta.b d1+2
 	lda.b $84
 	sta.b d5
 	ldx.b a3
@@ -1388,7 +1388,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
@@ -1585,31 +1585,31 @@ checkpuckcoll_ccx:					; puck collision with player Y: the stick (puckstick) whe
 	jsl.l puckbody
 PuckCollisionRestore:				; restore saved puck collision scratch words and return
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl

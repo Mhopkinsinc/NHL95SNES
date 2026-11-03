@@ -230,7 +230,7 @@ dopass:								; from passmode, chk4pass and other segments
 	adc.w #$9C06
 	sta.b a0
 	lda.w #$00C0
-	sta.b $65
+	sta.b a0+2
 	lda.b [a0]
 	cmp.w #$8000
 	ror a
@@ -381,7 +381,7 @@ dopass_count:						; from dopass and other segments
 	ldy.b a0
 	ldx.w Xvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d0
 	sta.b d2
@@ -392,7 +392,7 @@ dopass_count:						; from dopass and other segments
 	asl a
 	ldx.w Yvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d1
 	sta.b d3
@@ -429,7 +429,7 @@ dopass_count:						; from dopass and other segments
 	ldy.b a0
 	ldx.w Xvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d0
 	sta.b d2
@@ -440,7 +440,7 @@ dopass_count:						; from dopass and other segments
 	asl a
 	ldx.w Yvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d1
 	sta.b d3
@@ -851,8 +851,8 @@ puckbody:							; called from other segments
 	lda.b d2
 	tax
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $89
+	lda.b r2+2
+	sta.b d2+2
 	lda.b r2
 	sta.b d2
 	lda.b d3
@@ -863,9 +863,9 @@ puckbody:							; called from other segments
 	clc
 	adc.b d2
 	sta.b d2
-	lda.b $36
-	adc.b $89
-	sta.b $89
+	lda.b r2+2
+	adc.b d2+2
+	sta.b d2+2
 	cmp.w #$0900
 	bcc .5
 	lda.w puckz
@@ -1225,22 +1225,22 @@ ChkShotStat:						; from puckgoalie, Goal and other segments
 	sep #$20
 	inc.w tmpshots,x
 	rep #$20
-.13:								; pull X, pull A, $81 = A, pull A, ...
+.13:								; pull X, pull A, d0+2 = A, pull A, ...
 	plx
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	lda.w CwdExciteLvl
@@ -1410,9 +1410,9 @@ Goal:								; called from other segments
 	sec
 	sbc.w #$0006
 	sta.w ScoreSumbytes
-.20:								; $65 = $007E, A = ScoreSum, A + ScoreSumbytes, a0 = A, ...
+.20:								; a0+2 = $007E, A = ScoreSum, A + ScoreSumbytes, a0 = A, ...
 	lda.w #$007E
-	sta.b $65
+	sta.b a0+2
 	lda.w #ScoreSum
 	clc
 	adc.w ScoreSumbytes
@@ -1675,8 +1675,8 @@ puckstick:							; from puckbody and other segments
 	phx
 	tax
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $81
+	lda.b r2+2
+	sta.b d0+2
 	lda.b r2
 	sta.b d0
 	lda.w puckvy
@@ -1687,9 +1687,9 @@ puckstick:							; from puckbody and other segments
 	clc
 	adc.b d0
 	sta.b d0
-	lda.b $36
-	adc.b $81
-	sta.b $81
+	lda.b r2+2
+	adc.b d0+2
+	sta.b d0+2
 	stz.b d1
 	lda.w sflags
 	bit.w #$1000
@@ -1719,8 +1719,8 @@ puckstick:							; from puckbody and other segments
 	plx
 	lda.b r2
 	cmp.b d0
-	lda.b $36
-	sbc.b $81
+	lda.b r2+2
+	sbc.b d0+2
 	bcs .10
 	lda.w position,x
 	beq .9

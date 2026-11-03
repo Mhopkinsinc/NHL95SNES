@@ -89,7 +89,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	ldy.w #ScratchBuf+$188
 	mvn $7E,$7E
 	stz.b r0
-	stz.b $2E
+	stz.b r0+2
 	lda.w #$0005
 	sta.b tmp1
 	ldx.w #ScratchBuf+$188
@@ -164,7 +164,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	rts
 NoLineDefenceman:					; PickUnusedLineDefenceman's end of list: the used count ($2E) back to 0,
 									; X restored, carry set
-	stz.b $2E
+	stz.b r0+2
 	ldx.b $14
 	sec
 	rts
@@ -205,7 +205,7 @@ PickUnusedLineForward:				; selects the next ranked forward not in the used list
 IsLineDefencemanUsed:				; advances the candidate index and returns carry set if the defenceman is
 									; already used
 	inc.b tmp2
-	ldx.b $2E
+	ldx.b r0+2
 	dex
 	bmi LinePlayerNotUsed
 .loop:								; loop: if A = ScratchBuf+$200,x go to LinePlayerUsed, X - 1, ...
@@ -241,10 +241,10 @@ MarkLineForwardUsed:				; appends the forward index to the used list and increme
 	sty.b r0
 	rts
 MarkLineDefencemanUsed:				; appends the defenceman index to the used list and increments its count
-	ldy.b $2E
+	ldy.b r0+2
 	sta.w ScratchBuf+$200,y
 	iny
-	sty.b $2E
+	sty.b r0+2
 	rts
 InsertRankedLineForward:			; inserts a forward and his overall rating into the descending line
 									; selection lists

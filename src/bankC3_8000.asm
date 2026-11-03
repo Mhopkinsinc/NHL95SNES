@@ -178,28 +178,28 @@ ShowScoringLeaders:					; display the three leading scorers with their team and 
 	ldx.w ScoringLeaders+$4
 	bmi .5
 	jsr.w PrintScoringLeader
-.5:									; pull A, a2 = A, pull A, $6D = A, ...
+.5:									; pull A, a2 = A, pull A, a2+2 = A, ...
 	pla
 	sta.b a2
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a1
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a0
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b d0
 	pla
-	sta.b $81
+	sta.b d0+2
 	ply
 	plx
 	rtl
 PrintScoringLeader:					; queue the team and player name of one scoring leader
-	stx.b $65
+	stx.b a0+2
 	lda.w #$0000
 	cpx.w #$001A
 	bcc .1
@@ -212,7 +212,7 @@ PrintScoringLeader:					; queue the team and player name of one scoring leader
 	ldx.w #$007E
 	ldy.b a0
 	jsl.l QueueVRAMDMALen
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -606,15 +606,15 @@ SprSort:							; from defaultsprites_0 and other segments
 	lda.b d2
 	bne .loop2
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ply

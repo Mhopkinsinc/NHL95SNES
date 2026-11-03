@@ -172,9 +172,9 @@ assscore:							; assignment (asstab entry 8): celebrate a goal
 .4:									; temp4,x = Vpos
 	lda.b Vpos
 	sta.w temp4,x
-.5:									; $65 = $00C4, a0 = $883F, d0 = temp3,x, d1 = temp4,x, ...
+.5:									; a0+2 = rtss>>16, a0 = rtss&$FFFF, d0 = temp3,x, d1 = temp4,x, ...
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w temp3,x
@@ -268,13 +268,13 @@ checkfornewpen:						; from PenaltyManager and other segments
 	tay
 	bne .2
 	jmp.w .rtl
-.2:									; A = gmode, if a $0004 bit set go to .5, d0 = Y, $69 = $00C3, ...
+.2:									; A = gmode, if a $0004 bit set go to .5, d0 = Y, ...
 	lda.w gmode
 	bit.w #$0004
 	bne .5
 	sty.b d0
 	lda.w #Penaltylist>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
@@ -325,7 +325,7 @@ checkfornewpen:						; from PenaltyManager and other segments
 	sta.b d0
 	tay
 	lda.w #Penaltylist>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
@@ -505,7 +505,7 @@ chkprogress:						; from PenaltyManager and other segments
 	sta.b d0
 	tay
 	lda.w #Penaltylist>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	clc
@@ -615,7 +615,7 @@ chkprogress:						; from PenaltyManager and other segments
 	sta.b d0
 	tay
 	lda.w #Penaltylist>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
@@ -784,7 +784,7 @@ chkprogress:						; from PenaltyManager and other segments
 	pla
 	sta.b a0
 	pla
-	sta.b $65
+	sta.b a0+2
 	lda.w #$000D
 	sta.b d0
 	jsl.l assreplace
@@ -793,23 +793,23 @@ chkprogress:						; from PenaltyManager and other segments
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -846,25 +846,25 @@ chkprogress:						; from PenaltyManager and other segments
 	lda.w #$0002
 	sta.b a2
 	jsl.l InProgress_ap
-.25:								; pull A, $71 = A, pull A, a3 = A, ...
+.25:								; pull A, a3+2 = A, pull A, a3 = A, ...
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -1102,7 +1102,7 @@ AddPenalty2:						; from AddPenalty and other segments
 	ora.b d0
 	sta.b (a1)
 	lda.w #Penaltylist>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a0
 	ldy.b d0
@@ -1121,17 +1121,17 @@ AddPenalty2:						; from AddPenalty and other segments
 	beq .6
 	lda.w #$0000
 	sta.b (a1)
-.6:									; pull A, $69 = A, pull A, a1 = A, ...
+.6:									; pull A, a1+2 = A, pull A, a1 = A, ...
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 .rtl:								; return
@@ -1161,10 +1161,10 @@ PenGoalStuff:						; called from other segments
 	cmp.w #$0000
 	bne .1
 	jmp.w .5
-.1:									; Y = A, $69 = $00C3, a1 = $4499, A = [a1],y, ...
+.1:									; Y = A, a1+2 = Penaltylist>>16, a1 = Penaltylist&$FFFF, A = [a1],y, ...
 	tay
 	lda.w #Penaltylist>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
@@ -1246,21 +1246,21 @@ PenGoalStuff:						; called from other segments
 	lda.w #$0001
 	tsb.w tmflags
 	tsb.w tmflags+2
-.8:									; pull A, $65 = A, pull A, a0 = A, ...
+.8:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1626,13 +1626,13 @@ asspenalty:							; called from other segments
 	jmp.w .8
 .rtl:								; return
 	rtl
-.3:									; d0 = temp3,x, d1 = temp4,x, $65 = $00C4, a0 = $883F, ...
+.3:									; d0 = temp3,x, d1 = temp4,x, a0+2 = rtss>>16, a0 = rtss&$FFFF, ...
 	lda.w temp3,x
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	jml.l skateto

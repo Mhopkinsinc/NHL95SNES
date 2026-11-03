@@ -273,8 +273,8 @@ PredictPuckGoalCrossing:			; predict puck crossing time and X at the goal line i
 	bit.w #$0800
 	beq .1
 	ora.w #$F000
-.1:									; $36 = A, r1 = puckvy, call Div32S, puckcross+2,y = r0, ...
-	sta.b $36
+.1:									; r2+2 = A, r1 = puckvy, call Div32S, puckcross+2,y = r0, ...
+	sta.b r2+2
 	lda.w puckvy
 	sta.b r1
 	jsl.l Div32S
@@ -621,8 +621,8 @@ CalcAngleOffset:					; from shotdiradj
 	sbc.w pucky
 	ldx.b d0
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $91
+	lda.b r2+2
+	sta.b d4+2
 	lda.b r2
 	sta.b d4
 	lda.b d1
@@ -632,9 +632,9 @@ CalcAngleOffset:					; from shotdiradj
 	sec
 	sbc.b r2
 	sta.b r2
-	lda.b $91
-	sbc.b $36
-	sta.b $36
+	lda.b d4+2
+	sbc.b r2+2
+	sta.b r2+2
 	lda.b d2
 	sta.b r1
 	jsl.l Div32S
@@ -810,7 +810,7 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	ldx.b r2
 	lda.w #$2570
 	jsl.l Mul16U
-	lda.b $36
+	lda.b r2+2
 	sta.w passspeed
 	lda.w breakaway
 	beq .4
@@ -839,7 +839,7 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	lda.w #doshot_shotsets&$FFFF
 	sta.b a0
 	lda.w #doshot_shotsets>>16
-	sta.b $65
+	sta.b a0+2
 	lda.b [a0],y
 	sec
 	sbc.w puckx
@@ -1071,9 +1071,9 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	sec
 	sbc.b d1
 	sta.b d1
-.4:									; $65 = BreakawayNoCallback>>16, a0 = BreakawayNoCallback, ...
+.4:									; a0+2 = BreakawayNoCallback>>16, a0 = BreakawayNoCallback, ...
 	lda.w #BreakawayNoCallback>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #BreakawayNoCallback
 	sta.b a0
 	lda.w temp2,x
@@ -1154,7 +1154,7 @@ AdvanceBreakawayPath:				; load the next breakaway waypoint and its advance thre
 	asl a
 	tay
 	lda.w #BreakawayPathPoints>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #BreakawayPathPoints
 	sta.b a0
 	lda.b [a0],y

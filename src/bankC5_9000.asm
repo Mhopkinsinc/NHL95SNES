@@ -91,8 +91,8 @@ UpdateTeamLogos:					; setup screen state 0 (SetupScreenStates): replaces the ho
 	jsl.l CreateSprite
 	stx.b d7
 	jsr.w QueueHomePalette
-.1:									; X = $9D, if VisTeam = $24,x go to .rts, $18 = $05,x, $1A = $08,x, ...
-	ldx.b $9D
+.1:									; X = d7+2, if VisTeam = $24,x go to .rts, $18 = $05,x, $1A = $08,x, ...
+	ldx.b d7+2
 	lda.w VisTeam
 	cmp.b $24,x
 	beq .rts
@@ -103,7 +103,7 @@ UpdateTeamLogos:					; setup screen state 0 (SetupScreenStates): replaces the ho
 	jsl.l DeleteSprite
 	lda.w VisTeam
 	jsl.l CreateSprite
-	stx.b $9D
+	stx.b d7+2
 	lda.w #$0001
 	sta.b $38,x
 	jsr.w QueueVisPalette
@@ -160,7 +160,7 @@ setoptions:							; builds the game setup screen: its graphics and HDMA, then th
 	jsl.l ResetTransferQueues
 	jsl.l ResetWorkBuf
 	lda.w #$007F
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$D80A
 	sta.b r0
 	lda.w #TeamPalettes&$FFFF
@@ -395,11 +395,11 @@ DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lin
 	lda.w #$2C00
 	sta.b $D5
 	lda.l $C30000,x
-	sta.b $69
+	sta.b a1+2
 	dec a
 	sta.b tmp0
 	stz.b d6
-	stz.b $99
+	stz.b d6+2
 	lda.w #$0003
 	cmp.b tmp0
 	bcs .1
@@ -456,7 +456,7 @@ DrawOptionList:						; draws the option list at A in bank $C3 (a count, then lin
 	ldx.b $75
 	lda.b $22,x
 	and.w #$FFFE
-	ldy.b $69
+	ldy.b a1+2
 	cpy.w #$0005
 	bcc .5
 	ora.w #$0001
@@ -477,18 +477,18 @@ StartPractice:						; play mode Practice (PlayModeStarts): line changes and pena
 	sta.b d0
 	lda.w awaypracplayers
 	inc a
-	sta.b $81
+	sta.b d0+2
 	bra SetContTeams
 StartExhibition:					; play mode Exhibition (PlayModeStarts): SetContTeams with up to 5 pads a
 									; team; the demo (StartDemo) and a user's season game (FinishSeasonDay)
 									; start here too
 	lda.w #$0005
 	sta.b d0
-	sta.b $81
+	sta.b d0+2
 SetContTeams:						; the controller setup: each pad's icon is moved to a team; on start /
 									; select its place sets cont1team (0 none, 1, 2)
 	stz.b d1
-	stz.b $85
+	stz.b d1+2
 	jsr.w ControllerSetupScreen
 .loop:								; loop: call ReadPads, call WaitTransfers, $26 + 1, ...
 	jsl.l ReadPads
@@ -625,8 +625,8 @@ MovePadIcon:						; moves pad icon X one place right ($0100 in A) or left ($0200
 	bcs .rts
 	lda.b $05,x
 	bra .2
-.1:									; $85 - 1
-	dec.b $85
+.1:									; d1+2 - 1
+	dec.b d1+2
 .2:									; A + $0040, if A is not $00C0 go to .3, d1 + 1
 	adc.w #$0040
 	cmp.w #$00C0
@@ -646,17 +646,17 @@ MovePadIcon:						; moves pad icon X one place right ($0100 in A) or left ($0200
 	bcc .6
 	dec.b d1
 	bra .7
-.6:									; if $85 >= $81 go to .rts, A = $05,x
-	lda.b $85
-	cmp.b $81
+.6:									; if d1+2 >= d0+2 go to .rts, A = $05,x
+	lda.b d1+2
+	cmp.b d0+2
 	bcs .rts
 	lda.b $05,x
 	sec
-.7:									; A - $0040, if A is not $0040 go to .8, $85 + 1
+.7:									; A - $0040, if A is not $0040 go to .8, d1+2 + 1
 	sbc.w #$0040
 	cmp.w #$0040
 	bne .8
-	inc.b $85
+	inc.b d1+2
 .8:									; if A >= $003F go to .4
 	cmp.w #$003F
 	bcs .4
@@ -770,7 +770,7 @@ StartSeason:						; play mode Season: with a season saved, WARNING A Season is i
 	jsr.w SetRowPalette3
 	jsl.l SendTextMap
 	lda.w #$000D
-	sta.b $99
+	sta.b d6+2
 	bra ScreenStateLoop
 EnterLeagueMenu:					; FadeOutWait, the League Menu (SeasonOptions), then the front end loop
 									; (ScreenStateLoop)
@@ -795,7 +795,7 @@ ScreenStateLoop:					; the front end loop: each frame the transfers, the pads an
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
-	lda.b $99
+	lda.b d6+2
 	asl a
 	tax
 	jsr (ScreenStateHandlers,x)
@@ -848,9 +848,9 @@ AnswerNameOk:						; start on Is the player name ok: No (d6 not 0) starts over
 	beq .1
 	pla
 	jmp.w CreatePlayer
-.1:									; call FadeOutWait, $99 + 1, A = CreateFirstName, A and $00FF, ...
+.1:									; call FadeOutWait, d6+2 + 1, A = CreateFirstName, A and $00FF, ...
 	jsl.l FadeOutWait
-	inc.b $99
+	inc.b d6+2
 	lda.w CreateFirstName
 	and.w #$00FF
 	dec a
@@ -878,11 +878,11 @@ AnswerNameOk:						; start on Is the player name ok: No (d6 not 0) starts over
 	jsl.l PrintTitleStr
 	jsl.l SendTextMap
 	stz.b d0
-	stz.b $85
+	stz.b d1+2
 	lda.w #$0032
 	sta.b d1
 	lda.w #$0008
-	sta.b $81
+	sta.b d0+2
 	stz.b d6
 	lda.w #$0078
 	sta.b $CF
@@ -967,10 +967,10 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	bcc .5
 	stz.b d6
 	bra .6
-.9:									; A, X / Y 8-bit, A = $3E, Y = $69, Y - 1, ...
+.9:									; A, X / Y 8-bit, A = $3E, Y = a1+2, Y - 1, ...
 	sep #$30
 	lda.b #$3E
-	ldy.b $69
+	ldy.b a1+2
 	dey
 	cpy.b a3
 	bne .10
@@ -991,16 +991,16 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	ldy.b a3
 	beq .13
 	lda.l LetterGridChars+$1B,x
-.13:								; mesarea,y = A, Y + 1, if Y >= $69 go to .14, a3 = Y
+.13:								; mesarea,y = A, Y + 1, if Y >= a1+2 go to .14, a3 = Y
 	sta.w mesarea,y
 	iny
-	cpy.b $69
+	cpy.b a1+2
 	bcs .14
 	sty.b a3
-.14:								; A, X / Y 16-bit, A = $000F, Y = $71, X = mesarea, ...
+.14:								; A, X / Y 16-bit, A = $000F, Y = a3+2, X = mesarea, ...
 	rep #$30
 	lda.w #$000F
-	ldy.b $71
+	ldy.b a3+2
 	ldx.w #mesarea
 	jsl.l PrintItalicFixedLeftStr
 	jsl.l WaitTransfers
@@ -1009,10 +1009,10 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	lda.b a3
 	bne .16
 	rts
-.16:								; if $99 is not 0 go to .17, $99 + 1, call ClearNameField, ...
-	lda.b $99
+.16:								; if d6+2 is not 0 go to .17, d6+2 + 1, call ClearNameField, ...
+	lda.b d6+2
 	bne .17
-	inc.b $99
+	inc.b d6+2
 	jsr.w ClearNameField
 	jsr.w EnteredNameLength
 	tyx
@@ -1022,7 +1022,7 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	ldx.w #mesarea
 	ldy.w #$4673
 	mvn $7E,$7E
-	ldy.b $71
+	ldy.b a3+2
 	ldx.w #$4673
 	jsl.l PrintItalicLeftStr
 	jsl.l SendTextMap
@@ -1034,9 +1034,9 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	sta.w mesarea+8
 	stz.w mesarea+10
 	lda.w #$0008
-	sta.b $71
+	sta.b a3+2
 	lda.w #$000A
-	sta.b $69
+	sta.b a1+2
 	stz.b a3
 	jsl.l WaitTransfers
 	rts
@@ -1050,7 +1050,7 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	ldx.w #mesarea
 	ldy.w #$467D
 	mvn $7E,$7E
-	ldy.b $71
+	ldy.b a3+2
 	ldx.w #$467D
 	jsl.l PrintItalicLeftStr
 	ldy.w #$0200
@@ -1061,11 +1061,11 @@ NameEntry:							; Create Player name entry, screen states 0 and 1 (first and la
 	jsl.l WaitTransfers
 	lda.w #NameOkPage&$FFFF
 	jsl.l PrintTextPage
-	inc.b $99
+	inc.b d6+2
 	jmp.w SelectNameYes
 ClearNameField:						; clears 17 tiles from column 15 of row $71 and the row below (the name
 									; being entered), then SendTextMap
-	lda.b $71
+	lda.b a3+2
 	xba
 	lsr a
 	lsr a
@@ -1513,7 +1513,7 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 	jsr.w RatingNibble
 	sta.b tmp2
 	jsr.w WriteSaveBits4
-	lda.b $81
+	lda.b d0+2
 	sta.b tmp2
 	jsr.w WriteSaveBits4
 	lda.w CreateRatings+$6
@@ -1532,7 +1532,7 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 	jsr.w RatingNibble
 	sta.b tmp2
 	jsr.w WriteSaveBits4
-	lda.b $85
+	lda.b d1+2
 	sta.b tmp2
 	jsr.w WriteSaveBit
 	lda.w CreateRatings+$16
@@ -1575,7 +1575,7 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 	jsr.w RatingNibble
 	sta.b tmp2
 	jsr.w WriteSaveBits4
-	lda.b $81
+	lda.b d0+2
 	sta.b tmp2
 	jsr.w WriteSaveBits4
 	stz.b tmp2
@@ -1592,7 +1592,7 @@ SaveCreatedPlayer:					; saves the created player in the first free one of 20 sa
 	jsr.w RatingNibble
 	sta.b tmp2
 	jsr.w WriteSaveBits4
-	lda.b $85
+	lda.b d1+2
 	sta.b tmp2
 	jsr.w WriteSaveBits4
 	stz.b tmp2
@@ -1792,7 +1792,7 @@ PlayerInfoInput:					; EditPlayerInfo's keys: up / down pick line d6 (position, 
 	lda.b $36,x
 	and.w #$BFFF
 	sta.b $36,x
-	inc.b $99
+	inc.b d6+2
 	stz.b d6
 	lda.w #$0145
 	sta.b d2
@@ -1870,15 +1870,15 @@ EditPosRight:						; position line, right: d0 one on (0 after 5), then FieldPos
 	lda.w #$0000
 	bra StorePosField
 EditWeightLeft:						; weight line, left: $81 one back (15 after 0), then FieldWeight
-	lda.b $81
+	lda.b d0+2
 	dec a
 	bpl StoreWeightField
 	lda.w #$000F
 StoreWeightField:					; $81 = the weight step (0-15), then FieldWeight
-	sta.b $81
+	sta.b d0+2
 	jmp.w FieldWeight
 EditWeightRight:					; weight line, right: $81 one on (0 after 15), then FieldWeight
-	lda.b $81
+	lda.b d0+2
 	inc a
 	cmp.w #$0010
 	bcc StoreWeightField
@@ -1901,13 +1901,13 @@ EditJerseyRight:					; number line, right: d1 one on (0 after 99), then FieldJer
 	bra StoreJerseyField
 EditHand:							; hand line, left or right: $85 toggled between 0 (Right) and 1 (Left),
 									; then FieldHand
-	lda.b $85
+	lda.b d1+2
 	bne .1
 	lda.w #$0001
-	sta.b $85
+	sta.b d1+2
 	jmp.w FieldHand
-.1:									; $85 = 0, go to FieldHand
-	stz.b $85
+.1:									; d1+2 = 0, go to FieldHand
+	stz.b d1+2
 	jmp.w FieldHand
 PlaceInfoCursor:					; the cursor sprite (a0) to line d6 of the position, weight, number and
 									; hand page: x $73, y d6 * 24 + $50

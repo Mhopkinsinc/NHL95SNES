@@ -583,10 +583,10 @@ assnearest:							; called from other segments
 	ldy.w pfgoal,x
 	bne .12
 	lda.w #$FFA4
-.12:								; d1 = A, $65 = $00C4, a0 = $883F, call skateto, ...
+.12:								; d1 = A, a0+2 = rtss>>16, a0 = rtss&$FFFF, call skateto, ...
 	sta.b d1
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
@@ -683,9 +683,9 @@ assnearest:							; called from other segments
 	bpl .20
 	lda.w #$FFB8
 	sta.b d1
-.20:								; $65 = $00C4, a0 = $883F, call skateto, go to check4check
+.20:								; a0+2 = rtss>>16, a0 = rtss&$FFFF, call skateto, go to check4check
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
@@ -709,32 +709,32 @@ burst:								; check button: a speed burst in the facing direction that costs e
 	bne .2
 	lda.w #$1000
 	sta.b d0
-.2:									; r2 = 0, $36 = 0, A = d0, A * 2, ...
+.2:									; r2 = 0, r2+2 = 0, A = d0, A * 2, ...
 	stz.b r2
-	stz.b $36
+	stz.b r2+2
 	lda.b d0
 	asl a
 	sta.b $35
-	stz.b $2E
+	stz.b r0+2
 	asl a
 	asl a
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	adc.b r2
 	sta.b r2
-	lda.b $2E
-	adc.b $36
+	lda.b r0+2
+	adc.b r2+2
 	sta.b $B1
 	lda.w facedir,x
 	asl a
 	asl a
 	tay
 	lda.w #dirtab>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #dirtab&$FFFF
 	sta.b a0
 	lda.b [a0],y
@@ -837,13 +837,13 @@ PuckCarrierThink:					; update the computer puck carrier decisions and skating t
 	cmp.w #$0011
 	bne .5
 	jsl.l chk4pass
-.5:									; A = $0006, A + temp3,x, d0 = A, $65 = $00C0, ...
+.5:									; A = $0006, A + temp3,x, d0 = A, a0+2 = asspuckc_postab>>16, ...
 	lda.w #$0006
 	clc
 	adc.w temp3,x
 	sta.b d0
 	lda.w #asspuckc_postab>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #asspuckc_postab&$FFFF
 	sta.b a0
 	lda.w sflags
@@ -872,10 +872,10 @@ PuckCarrierThink:					; update the computer puck carrier decisions and skating t
 	sec
 	sbc.b d1
 	sta.b d1
-.7:									; $65 = PuckCarrierAvoidThreats>>16, a0 = PuckCarrierAvoidThreats, go to
+.7:									; a0+2 = PuckCarrierAvoidThreats>>16, a0 = PuckCarrierAvoidThreats, ...
 									; skateto
 	lda.w #PuckCarrierAvoidThreats>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #PuckCarrierAvoidThreats
 	sta.b a0
 	jml.l skateto
@@ -1062,12 +1062,12 @@ asscentero:							; called from other segments
 	lda.w seed+2
 	cmp.w #$0200
 	bcs .10
-.9:									; temp5,x = d2, Y = A, $65 = CenterOSpots>>16, a0 = CenterOSpots, ...
+.9:									; temp5,x = d2, Y = A, a0+2 = CenterOSpots>>16, a0 = CenterOSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
 	lda.w #CenterOSpots>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #CenterOSpots
 	sta.b a0
 	iny
@@ -1099,9 +1099,9 @@ asscentero:							; called from other segments
 	sec
 	sbc.b d1
 	sta.b d1
-.11:								; $65 = $00C4, a0 = $342A, go to skateto
+.11:								; a0+2 = EvadePC>>16, a0 = EvadePC&$FFFF, go to skateto
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
@@ -1187,7 +1187,7 @@ CenterDefenceTopTarget:				; adjust the defensive center target toward the puck 
 	sta.b d1
 CenterDefenceSkate:					; skate the defensive center toward d0 and d1 with an empty callback
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss&$FFFF
 	sta.b a0
 	jmp.w skateto

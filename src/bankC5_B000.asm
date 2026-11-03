@@ -9,7 +9,7 @@ LeagueLeadersScreen:				; League Menu League Leaders: the players leading a stat
 	sta.b $08,x
 	stz.b $77
 	stz.b $79
-	stz.b $85
+	stz.b d1+2
 	pea.w $0000
 DrawLeagueLeaders:					; draws the League Leaders page for the current category and starts its
 									; scrolling list (DrawLeaderRow); screen state 8
@@ -25,7 +25,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	pla
 	jsr.w PrintPlayerCategory
 	ldx.w #$559D
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	bcc .1
 	ldx.w #TxtBSwitchToLinemen&$FFFF
@@ -46,7 +46,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	lda.w #$0010
 	jsl.l AllocClearWorkBuf
 	sta.b d0
-	sta.b $81
+	sta.b d0+2
 	tay
 	lda.b tmp0
 	jsr.w FillLeaderEntry
@@ -56,12 +56,12 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	dec.b tmp0
 	bpl .loop2
 	jsl.l MarkWorkBuf
-	lda.b $81
+	lda.b d0+2
 	ldy.w #$FFFE
 .loop3:								; loop: X = A, A = $0006,x, if the result is not 0 go to .2, Y + 1, ...
 	tax
 	lda.w $0006,x
-	eor.b $85
+	eor.b d1+2
 	bne .2
 	iny
 	iny
@@ -76,7 +76,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	lda.w #LeagueLeadersPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
-	stz.b $69
+	stz.b a1+2
 	lda.w #DrawLeaderRow
 	ldx.w #$000D
 	ldy.w #$0009
@@ -84,7 +84,7 @@ DrawLeagueLeaders:					; draws the League Leaders page for the current category 
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	lda.w #$0008
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 	rts
 SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (record, goals, save
@@ -123,7 +123,7 @@ SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (recor
 	sta.l TM
 	rep #$20
 	lda.w #$0009
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 	rts
 SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and points of a
@@ -161,7 +161,7 @@ SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and
 	lda.w HomeRoster
 	sbc.w HomeRoster+2
 	sta.b a1
-	stz.b $69
+	stz.b a1+2
 	lda.w #DrawSeasonPlayerRow
 	ldx.w #$000C
 	ldy.w #$000B
@@ -175,7 +175,7 @@ SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and
 	sta.l TM
 	rep #$20
 	lda.w #$000A
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 	rts
 StandingsScreen:					; League Menu NHL Standings: the teams of a division (pad up / down
@@ -202,7 +202,7 @@ DrawStandings:						; draws the standings page: the teams of division d1 sorted 
 									; division's name; screen state 11
 	jsr.w SortStandingsByStat
 	jsr.w KeepDivisionTeams
-	stz.b $69
+	stz.b a1+2
 	lda.w #DrawStandingsRow
 	ldx.w #$000D
 	ldy.w #$0009
@@ -228,7 +228,7 @@ DrawStandings:						; draws the standings page: the teams of division d1 sorted 
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	lda.w #$000B
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 	rts
 StandingsStatTitles:				; the packed text of each standings stat title: Wins / Losses / Ties,
@@ -286,7 +286,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	tax
 	lda.l SeasonSchedule,x
 	sta.b d1
-	stz.b $85
+	stz.b d1+2
 	tax
 	lda.l $C30000,x
 	and.w #$00FF
@@ -341,9 +341,9 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	adc.w #$00E0
 	and.w #$03FF
 	sta.b d3
-	inc.b $85
+	inc.b d1+2
 	jsr.w DrawGameMarks
-	dec.b $85
+	dec.b d1+2
 	pla
 	sta.b d3
 	pla
@@ -379,7 +379,7 @@ DrawDayGames:						; draws day d0's games on Games Today: d1 its schedule entry,
 	rts
 ClearGameSlot:						; clears the text rows of game slot $81 - 1 (- 2 with carry clear on
 									; entry, wrapping in 0-2), Y = its first row
-	lda.b $81
+	lda.b d0+2
 	sbc.w #$0001
 	bcs .1
 	adc.w #$0003
@@ -430,7 +430,7 @@ DrawGameMarks:						; draws game $85 on the BG2 map at d3: a 9 x 2 tile bar in e
 									; the game's bit at SRUserGames
 	jsl.l WaitTransfers
 	phd
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	ldx.w #$2801
 	bcc .1
@@ -623,7 +623,7 @@ FillLeaderEntry:					; fills the leader entry at Y for player A: number and team
 	phy
 	jsl.l Mul16x8U
 	ply
-	stz.b $32
+	stz.b r1+2
 	pla
 	clc
 	adc.b tmp0
@@ -708,7 +708,7 @@ InsertByGoals:						; AddLeaderEntry for category 0: links entry Y into the list
 	lda.w $0000,x
 	bne .loop
 LinkLeaderLast:						; links leader entry Y after X as the list's last ($81 = Y)
-	sty.b $81
+	sty.b d0+2
 	tya
 	sta.w $0000,x
 	txa
@@ -789,7 +789,7 @@ PrintPlayerCategory:				; prints the League Leaders category name: Goals, Assist
 	sta.b d1
 	asl a
 	tax
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	lda.l LeaderCategoryNames,x
 	bcc .1
@@ -853,7 +853,7 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	inc a
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	lda.w #$0022
@@ -949,9 +949,9 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	plx
 	inx
 	bra .loop2
-.11:								; pull X, $65 = Y, X = mesarea, A = $000C, ...
+.11:								; pull X, a0+2 = Y, X = mesarea, A = $000C, ...
 	plx
-	sty.b $65
+	sty.b a0+2
 	ldx.w #mesarea
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
@@ -966,8 +966,8 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	tax
 	lda.w #$000C
 	jsr.w UnpackFitName
-.13:								; Y = $6D, call PrintBoldLeftStr, pull X, push X, ...
-	ldy.b $6D
+.13:								; Y = a2+2, call PrintBoldLeftStr, pull X, push X, ...
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	plx
 	phx
@@ -975,7 +975,7 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	sta.b $CF
 	lda.w $000F,x
 	jsr.w BCDDigits4
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea+2
 	jsl.l PrintBoldLeftStr
 	plx
@@ -998,11 +998,11 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	lda.b $0A
 	beq .15
 	inx
-.15:								; call UnpackText, $CF = $00A8, Y = $6D, call PrintBoldLeftStr, ...
+.15:								; call UnpackText, $CF = $00A8, Y = a2+2, call PrintBoldLeftStr, ...
 	jsl.l UnpackText
 	lda.w #$00A8
 	sta.b $CF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$00F0
 	sta.b $D1
@@ -1012,7 +1012,7 @@ DrawLeaderRow:						; draws row a3 of the League Leaders list: a leader, his tea
 	tax
 	lda.w $0008,x
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldRightStr
 	plx
@@ -1249,7 +1249,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	plx
 	tay
 	stz.b r0
-	stz.b $2E
+	stz.b r0+2
 	lda.w #$0014
 	sta.b r1
 	phx
@@ -1258,27 +1258,27 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	lda.b #$30
 	pha
 	plb
-.loop:								; loop: $32 = SRTeamResults&$FFFF,y, A and $03, X = A, $2C,x + 1, ...
+.loop:								; loop: r1+2 = SRTeamResults&$FFFF,y, A and $03, X = A, $2C,x + 1, ...
 	lda.w SRTeamResults&$FFFF,y
-	sta.b $32
+	sta.b r1+2
 	and.b #$03
 	tax
 	inc.b $2C,x
-	lda.b $32
+	lda.b r1+2
 	lsr a
 	lsr a
-	sta.b $32
+	sta.b r1+2
 	and.b #$03
 	tax
 	inc.b $2C,x
-	lda.b $32
+	lda.b r1+2
 	lsr a
 	lsr a
-	sta.b $32
+	sta.b r1+2
 	and.b #$03
 	tax
 	inc.b $2C,x
-	lda.b $32
+	lda.b r1+2
 	lsr a
 	lsr a
 	tax
@@ -1293,7 +1293,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	lda.b $2D
 	and.w #$00FF
 	sta.w $0004,y
-	lda.b $2E
+	lda.b r0+2
 	and.w #$00FF
 	sta.w $0006,y
 	lda.b $2F
@@ -1314,7 +1314,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $002C,y
 	sta.b r1
 	beq .1
@@ -1329,7 +1329,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $002C,y
 	sta.b r1
 	beq .2
@@ -1347,7 +1347,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $002E,y
 	sta.b r1
 	beq .3
@@ -1363,7 +1363,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $0018,y
 	sta.b r1
 	beq .4
@@ -1378,7 +1378,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $002C,y
 	sta.b r1
 	beq .5
@@ -1393,7 +1393,7 @@ BuildTeamSeasonRecord:				; team A's season record in a new $32-byte work buffer
 	jsl.l Mul16x8U
 	ply
 	phy
-	stz.b $32
+	stz.b r1+2
 	lda.w $002C,y
 	sta.b r1
 	beq .6
@@ -1417,7 +1417,7 @@ ReadTeamStatBits:					; A = the next A bits of the team stats bit stream at SRTe
 	lda.l SRTeamStats,x
 	sta.b r0
 	lda.l SRTeamStats+2,x
-	sta.b $2E
+	sta.b r0+2
 	lda.b r2
 	and.w #$0007
 	asl a
@@ -1425,7 +1425,7 @@ ReadTeamStatBits:					; A = the next A bits of the team stats bit stream at SRTe
 	lda.b r1
 	adc.b r2
 	sta.b r2
-	lda.b $2E
+	lda.b r0+2
 	jmp (StatBitsShiftTable,x)
 StatBitsShiftTable:					; ReadTeamStatBits' entries by the stream's bit offset (0-7):
 									; StatBitsMask, then StatBitsShift1-7
@@ -1499,7 +1499,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 	tax
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	plx
 	lda.w HomeRoster+58,x
@@ -1509,7 +1509,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 	lda.w #$0072
 	sta.b $CF
 	ldx.w #mesarea+2
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$0093
 	sta.b $CF
@@ -1535,7 +1535,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 	tax
 	lda.w #$0064
 	jsl.l Mul16x8U
-	stz.b $32
+	stz.b r1+2
 	clc
 	lda.b $05,s
 	adc.b $01,s
@@ -1565,7 +1565,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 	tax
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	plx
 	lda.w HomeRoster+58,x
@@ -1575,7 +1575,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 	lda.w #$0072
 	sta.b $CF
 	ldx.w #mesarea+2
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$0093
 	sta.b $CF
@@ -1601,7 +1601,7 @@ DrawSeasonPlayerRow:				; draws row a3 of the Season Player Stats list: a player
 PrintRowBCD:						; BCDText of A printed bold at the list row $6D (x $CF)
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	rts
 DrawPlayerStatsTeam:				; DrawStatsTeam with the logo at x $DE, y $25 (Season Player Stats)
@@ -1848,7 +1848,7 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	inc a
 	jsr.w BinToBCD
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	lda.w #$0028
@@ -1865,7 +1865,7 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	tax
 	lda.l TeamCityNames,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	pla
 	cmp.w #$000D
@@ -1876,10 +1876,10 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	cmp.w #$000E
 	bne .3
 	ldx.w #$46A6
-.2:									; $CF = $006E, Y = $6D, call PrintBoldLeft
+.2:									; $CF = $006E, Y = a2+2, call PrintBoldLeft
 	lda.w #$006E
 	sta.b $CF
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 .3:									; pull Y, $D1 = $00E8, A = d0, A * 2, ...
 	ply
@@ -1889,7 +1889,7 @@ DrawStandingsRow:					; draws row a3 of the NHL Standings list: a team and its s
 	asl a
 	tax
 	jsr (StandingsColumnTexts,x)
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldRightStr
 	rts

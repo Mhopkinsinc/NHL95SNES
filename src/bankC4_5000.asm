@@ -398,16 +398,16 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.b d3
 	bpl .41
 	ldy.w #$FF16
-.41:								; $81 = X, $85 = Y, A = d2, A - $81, ...
-	stx.b $81
-	sty.b $85
+.41:								; d0+2 = X, d1+2 = Y, A = d2, A - d0+2, ...
+	stx.b d0+2
+	sty.b d1+2
 	lda.b d2
 	sec
-	sbc.b $81
+	sbc.b d0+2
 	sta.b d0
 	lda.b d3
 	sec
-	sbc.b $85
+	sbc.b d1+2
 	sta.b d1
 	ldy.b d0
 	jsl.l ApproxLength
@@ -434,8 +434,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	beq .44
 	eor.w #$FFFF
 	inc a
-.44:								; $89 = A, A = d1, X = A, A = d4, ...
-	sta.b $89
+.44:								; d2+2 = A, A = d1, X = A, A = d4, ...
+	sta.b d2+2
 	lda.b d1
 	xba
 	tax
@@ -453,10 +453,10 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	beq .46
 	eor.w #$FFFF
 	inc a
-.46:								; if A >= $89 go to .49, if $81 >= 0 go to .48, A = d5, A - 1, ...
-	cmp.b $89
+.46:								; if A >= d2+2 go to .49, if d0+2 >= 0 go to .48, A = d5, A - 1, ...
+	cmp.b d2+2
 	bcs .49
-	lda.b $81
+	lda.b d0+2
 	bpl .48
 	lda.b d5
 	dec a
@@ -466,11 +466,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	clc
 	adc.w #$0006
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -478,7 +478,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	jmp.w .13
 .47:								; go to .24
 	jmp.w .24
-.48:								; if d5 < $0005 go to .47, A = d0, A - $0006, A + $81, ...
+.48:								; if d5 < $0005 go to .47, A = d0, A - $0006, A + d0+2, ...
 	lda.b d5
 	cmp.w #$0005
 	bcc .47
@@ -486,18 +486,18 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sec
 	sbc.w #$0006
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
 	sta.w Yvel,y
 	jmp.w .10
-.49:								; if $85 >= 0 go to .50, A = d5, A + 1, A and $0007, ...
-	lda.b $85
+.49:								; if d1+2 >= 0 go to .50, A = d5, A + 1, A and $0007, ...
+	lda.b d1+2
 	bpl .50
 	lda.b d5
 	inc a
@@ -506,11 +506,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bcs .47
 	lda.b d0
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -525,11 +525,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bcc .47
 	lda.b d0
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -593,7 +593,7 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	asl a
 	tay
 	lda.w #CheckAnimByDir>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #CheckAnimByDir
 	sta.b a0
 	sta.w pf2aip,x
@@ -1025,11 +1025,11 @@ updateanim:							; from SetSPAUpdate and other segments
 	stz.w pf2aip,x
 	stz.w pfalock,x
 	rtl
-.1:									; push Y, a0 = A, $65 = $00C4, Y = $0010, ...
+.1:									; push Y, a0 = A, a0+2 = $00C4, Y = $0010, ...
 	phy
 	sta.b a0
 	lda.w #$00C4
-	sta.b $65
+	sta.b a0+2
 	ldy.w #$0010
 	lda.b [a0],y
 	sta.b d1
@@ -1133,7 +1133,7 @@ dostop:								; called from other segments
 	lda.w Xvel,x
 	sta.b p0
 	lda.w Yvel,x
-	sta.b $3A
+	sta.b p0+2
 	lda.w #$000F
 	jsl.l StartSound
 .2:									; A = SPAstop&$FFFF, pf2aip,x = 0
@@ -1207,13 +1207,13 @@ skateto:							; called from other segments
 	sta.w temp2,x
 	bmi .1
 	jmp.w .9
-.1:									; A + $000C, temp2,x = A, $81 = d0, $85 = d1, ...
+.1:									; A + $000C, temp2,x = A, d0+2 = d0, d1+2 = d1, ...
 	adc.w #$000C
 	sta.w temp2,x
 	lda.b d0
-	sta.b $81
+	sta.b d0+2
 	lda.b d1
-	sta.b $85
+	sta.b d1+2
 	jsl.l avdgoal
 	lda.w Xvel,x
 	xba
@@ -1259,13 +1259,13 @@ skateto:							; called from other segments
 	pha
 	lda.b r3
 	clc
-	adc.b $81
+	adc.b d0+2
 	sec
 	sbc.w Xpos,x
 	tay
 	lda.b $42
 	clc
-	adc.b $85
+	adc.b d1+2
 	sec
 	sbc.w Ypos,x
 	jsl.l ApproxLength
@@ -1444,7 +1444,7 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1453,15 +1453,15 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -1544,7 +1544,7 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1553,15 +1553,15 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -1623,12 +1623,12 @@ ScaleSkatingSpeed6:					; multiply the bounded skating speed factor in A by 6
 	adc.b r2
 	rts
 ScaleSkatingSpeed7:					; multiply the bounded skating speed factor in A by 7
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed8:					; multiply the bounded skating speed factor in A by 8
 	asl a
@@ -1650,13 +1650,13 @@ ScaleSkatingSpeed10:				; multiply the bounded skating speed factor in A by 10
 	adc.b r2
 	rts
 ScaleSkatingSpeed11:				; multiply the bounded skating speed factor in A by 11
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed12:				; multiply the bounded skating speed factor in A by 12
 	asl a
@@ -1666,22 +1666,22 @@ ScaleSkatingSpeed12:				; multiply the bounded skating speed factor in A by 12
 	adc.b r2
 	rts
 ScaleSkatingSpeed13:				; multiply the bounded skating speed factor in A by 13
-	sta.b $36
+	sta.b r2+2
 	asl a
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed14:				; multiply the bounded skating speed factor in A by 14
 	asl a
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed15:				; multiply the bounded skating speed factor in A by 15
 	sta.b r2
@@ -1759,7 +1759,7 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1768,15 +1768,15 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1879,7 +1879,7 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1888,15 +1888,15 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1980,7 +1980,7 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lda.l MaxSpeed,x
 	sta.b d2
 	lda.l MaxSpeed+2,x
-	sta.b $89
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1989,15 +1989,15 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5

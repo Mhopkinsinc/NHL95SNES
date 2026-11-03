@@ -75,7 +75,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	ldx.w #IntroMode7Hook>>16
 	jsl.l SetNMIHook
 	jsl.l InitTasks
-	stz.b $81
+	stz.b d0+2
 	lda.b PadRaw1
 	jsr.w CheckIntroMirrorButtons
 	lda.b PadRaw2
@@ -90,7 +90,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.w #$7FFF
 	jsl.l SetBackdropColour
 	lda.b $08
-	sta.b $65
+	sta.b a0+2
 	lda.w #$0021
 	jsl.l CreateSprite
 	stx.b a0
@@ -100,7 +100,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0022
 	jsl.l CreateSprite
 	stx.b a1
@@ -110,7 +110,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0023
 	jsl.l CreateSprite
 	stx.b a2
@@ -120,7 +120,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $71
+	sta.b a3+2
 	lda.w #$0024
 	jsl.l CreateSprite
 	stx.b a3
@@ -149,7 +149,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.w #$F254
 	sta.b d3
 	ldx.b a0
-	ldy.b $65
+	ldy.b a0+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.w #IntroStartALogo
 	ldx.w #IntroStartALogo>>16
@@ -175,7 +175,7 @@ CheckIntroMirrorButtons:			; sets the intro mirror flag when all masked controll
 	cmp.w #$F0C0
 	bne .rts
 	lda.w #$8000
-	tsb.b $81
+	tsb.b d0+2
 .rts:								; return
 	rts
 IntroStartALogo:					; waits for unit scale, then starts the A logo animation
@@ -183,9 +183,9 @@ IntroStartALogo:					; waits for unit scale, then starts the A logo animation
 	cmp.w #$0100
 	beq .1
 	jmp.w IntroEndDelayReturn
-.1:									; X = a1, Y = $69, call PrepareIntroMode7Sprite, A = a1, ...
+.1:									; X = a1, Y = a1+2, call PrepareIntroMode7Sprite, A = a1, ...
 	ldx.b a1
-	ldy.b $69
+	ldy.b a1+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a1
 	ldx.w #$0001
@@ -198,9 +198,9 @@ IntroStartSportsWord:				; waits for unit scale, then starts the Sports word ani
 	cmp.w #$0100
 	beq .1
 	jmp.w IntroEndDelayReturn
-.1:									; X = a2, Y = $6D, call PrepareIntroMode7Sprite, A = a2, ...
+.1:									; X = a2, Y = a2+2, call PrepareIntroMode7Sprite, A = a2, ...
 	ldx.b a2
-	ldy.b $6D
+	ldy.b a2+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a2
 	ldx.w #$0000
@@ -213,7 +213,7 @@ IntroStartElectronicWord:			; waits for unit scale, then starts the Electronic w
 	cmp.w #$0100
 	bne IntroEndDelayReturn
 	ldx.b a3
-	ldy.b $71
+	ldy.b a3+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a3
 	ldx.w #$0000
@@ -244,12 +244,12 @@ IntroEndDelay:						; ends the intro task sequence after its final hold
 	cmp.w #$0258
 	bne IntroEndDelayReturn
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 IntroEndDelayReturn:				; IntroEndDelay's rtl, shared by the intro task routines
 	rtl
 PositionIntroSprite:				; positions and hides an intro sprite, mirroring its horizontal position
 									; when enabled
-	bit.b $81
+	bit.b d0+2
 	bpl .1
 	sec
 	sbc.w #$0100
@@ -266,9 +266,9 @@ PositionIntroSprite:				; positions and hides an intro sprite, mirroring its hor
 StartIntroScaleTask:				; starts the intro scale animation for sprite A with flash flag X
 	sta.b d0
 	lda.w #$0001
-	trb.b $81
+	trb.b d0+2
 	txa
-	tsb.b $81
+	tsb.b d0+2
 	lda.w #$0011
 	sta.w introTM
 	lda.w #$4000
@@ -284,7 +284,7 @@ IntroScaleToFlash:					; reduces the intro scale and starts the colour flash at 
 	bcs IntroScaleToFlashReturn
 	lda.w #IntroScaleToSprite
 	sta.w $0002,x
-	lda.b $81
+	lda.b d0+2
 	lsr a
 	bcc IntroScaleToFlashReturn
 	lda.w #IntroColourFlashTask
@@ -326,7 +326,7 @@ ShowIntroSprite:					; reveals an intro sprite and applies horizontal flip when 
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
-	bit.b $81
+	bit.b d0+2
 	bpl .rts
 	lda.b $36,x
 	ora.w #$4000
@@ -618,7 +618,7 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	sbc.w introM7Y
 	eor.w #$FFFF
 	sta.w BG1VScroll
-	bit.b $81
+	bit.b d0+2
 	bpl .8
 	lda.w $0005,y
 	sec
@@ -827,7 +827,7 @@ InitTasks:							; empties the task list: 10 free task slots, the list head and 
 	sta.w TaskListEnd+6
 	stz.w TaskListEnd
 	lda.w #$8002
-	sta.b $85
+	sta.b d1+2
 	lda.w TasksDone
 	sta.w TasksDoneLast
 	stz.w TasksDone
@@ -851,7 +851,7 @@ StartTasks:							; a new task list (InitTasks) with TaskEndCheck, then AddTask 
 	plp
 	bcc .1
 	lda.w #$0002
-	trb.b $85
+	trb.b d1+2
 .1:									; pull Y, pull X, pull A
 	ply
 	plx
@@ -894,12 +894,12 @@ RemoveTask:							; takes the running task (d1) out of the task list and frees i
 	lda.w $0002,y
 	ldx.w $0004,y
 	sta.b d2
-	stx.b $89
+	stx.b d2+2
 	ldx.w #TaskListHead
-.loop:								; loop: if A is not $0002,x go to .1, if $89 = $0004,x go to .2, A = d2
+.loop:								; loop: if A is not $0002,x go to .1, if d2+2 = $0004,x go to .2, A = d2
 	cmp.w $0002,x
 	bne .1
-	lda.b $89
+	lda.b d2+2
 	cmp.w $0004,x
 	beq .2
 	lda.b d2
@@ -934,7 +934,7 @@ RunTasks:							; runs each task of the task list once, in order (its frame coun
 	rtl
 TaskEndCheck:						; a task: once task flag bit 15 is cleared, fades out and sets the done
 									; flag the task loops wait for
-	bit.b $85
+	bit.b d1+2
 	bmi .rtl
 	jsl.l FadeOutWait
 	lda.w TasksDoneLast
@@ -945,7 +945,7 @@ TaskEndCheck:						; a task: once task flag bit 15 is cleared, fades out and set
 	rtl
 TaskFrameEnd:						; the last task of the list: the sprites to OAM (when task flag bit 1 is
 									; set), then waits for the frame
-	lda.b $85
+	lda.b d1+2
 	bit.w #$0002
 	beq .1
 	lda.w #OAMBuf+$1FF
@@ -969,9 +969,9 @@ TaskStartKey:						; a task: start clears task flag bit 15 (so TaskEndCheck ends
 	bit.w #$1000
 	beq .rtl
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 	lda.w #$0001
-	tsb.b $85
+	tsb.b d1+2
 .rtl:								; return
 	rtl
 SetTasksDoneUnused:					; TasksDone = A and the stack at $1FFC, then rtl; nothing calls it
@@ -1158,15 +1158,15 @@ SetFadeTables:						; lays out the colour fade's six tables of A words from Y: r
 	tya
 	sta.b a0
 	adc.b $77
-	sta.b $65
+	sta.b a0+2
 	adc.b $77
 	sta.b a1
 	adc.b $77
-	sta.b $69
+	sta.b a1+2
 	adc.b $77
 	sta.b a2
 	adc.b $77
-	sta.b $6D
+	sta.b a2+2
 	rts
 FillWords7E:						; fills d3 words of bank $7E from A with Y
 	tax
@@ -1229,7 +1229,7 @@ DeveloperCredits:					; the developer credits: HIGH SCORE PRODUCTIONS AND / VISU
 	lda.w #$CBAE
 	sta.b a3
 	lda.w #$00C2
-	sta.b $71
+	sta.b a3+2
 	lda.b d6
 	ldx.w #$007E
 	ldy.b d7
@@ -1239,7 +1239,7 @@ DeveloperCredits:					; the developer credits: HIGH SCORE PRODUCTIONS AND / VISU
 	lda.b d4
 	sta.b a3
 	ldx.w #$007E
-	stx.b $71
+	stx.b a3+2
 	ldy.w #$0000
 	jsl.l FillWords7E
 	lda.w #(VisualConceptsPalette+$7)&$FFFF
@@ -1307,7 +1307,7 @@ CreditsEndDelay:					; ends the developer credits task sequence after the final 
 	cmp.w #$00B4
 	bne CreditsEndDelayReturn
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 CreditsEndDelayReturn:				; the rtl CreditsEndDelay ends with, shared by the other credits tasks
 	rtl
 TextPalettes:						; the 4 text palettes, 4 colours each, that InitTextMap queues to CGRAM
@@ -1879,7 +1879,7 @@ DrawNextTextCharacter:				; read the next character and prepare its glyph for dr
 	adc.b $0C
 	tax
 	adc.w #$0010
-	sta.b $3A
+	sta.b p0+2
 	lda.b $0A
 	and.w #$FFF8
 	asl a

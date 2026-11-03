@@ -121,7 +121,7 @@ BracketMarkSeries:					; toggles BracketSeriesMarks for the selected series when
 	rts
 BracketCursorUp:					; moves the bracket cursor up a row ($69) by its column's step
 									; (BracketUpByColumn)
-	lda.b $69
+	lda.b a1+2
 	beq BracketCursorUpReturn
 	lda.b a1
 	asl a
@@ -138,7 +138,7 @@ BracketRowUp:						; the bracket cursor one row up: BracketCursorCell / BracketW
 	sbc.w #$0007
 	sta.w BracketCursorCell
 	sta.w BracketWin2Cell
-	dec.b $69
+	dec.b a1+2
 	rts
 BracketRowUpToEdge:					; repeats upward row movement until the top edge
 	jsr.w BracketRowUp
@@ -147,7 +147,7 @@ BracketCursorUpReturn:				; the rts BracketCursorUp and BracketCursorDown share
 	rts
 BracketCursorDown:					; moves the bracket cursor down a row ($69, below 3) by its column's step
 									; (BracketDownByColumn)
-	lda.b $69
+	lda.b a1+2
 	cmp.w #$0003
 	bcs BracketCursorUpReturn
 	lda.b a1
@@ -160,7 +160,7 @@ BracketDownByColumn:				; per bracket column (a1 * 2): how down moves the cursor
 	dw BracketRowNoMove,BracketRowDownToEdge,BracketRowDown
 BracketRowDown:						; the bracket cursor one row down: BracketCursorCell / BracketWin2Cell +
 									; 7, $69 + 1
-	inc.b $69
+	inc.b a1+2
 	lda.w BracketCursorCell
 	adc.w #$0007
 	sta.w BracketCursorCell
@@ -467,7 +467,7 @@ ScrollBracketToCursor:				; moves the bracket's scroll position ($65) toward the
 	tax
 	sec
 	lda.l BracketColumnScroll,x
-	sbc.b $65
+	sbc.b a0+2
 	beq .4
 	sta.b tmp0
 	bpl .1
@@ -489,19 +489,19 @@ ScrollBracketToCursor:				; moves the bracket's scroll position ($65) toward the
 	bit.w #$1000
 	beq .3
 	ora.w #$E000
-.3:									; A + $65, $65 = A
+.3:									; A + a0+2, a0+2 = A
 	clc
-	adc.b $65
-	sta.b $65
-.4:									; if BG2HScroll is not $65 go to .5, return
+	adc.b a0+2
+	sta.b a0+2
+.4:									; if BG2HScroll is not a0+2 go to .5, return
 	lda.w BG2HScroll
-	cmp.b $65
+	cmp.b a0+2
 	bne .5
 	rts
-.5:									; A and $FFF8, tmp1 = A, A = $65, A and $FFF8, ...
+.5:									; A and $FFF8, tmp1 = A, A = a0+2, A and $FFF8, ...
 	and.w #$FFF8
 	sta.b tmp1
-	lda.b $65
+	lda.b a0+2
 	sec
 	and.w #$FFF8
 	sbc.b tmp1
@@ -533,8 +533,8 @@ ScrollBracketToCursor:				; moves the bracket's scroll position ($65) toward the
 	jsr.w QueueBracketColumn
 	dec.b tmp1
 	bne .loop2
-.7:									; BG2HScroll = $65, return
-	lda.b $65
+.7:									; BG2HScroll = a0+2, return
+	lda.b a0+2
 	sta.w BG2HScroll
 	rts
 SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and the team name bar
@@ -580,9 +580,9 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	dex
 	bpl .loop
 	stz.w BG2HScroll
-	stz.b $65
+	stz.b a0+2
 	stz.b a1
-	stz.b $69
+	stz.b a1+2
 	lda.w #$FFFF
 	sta.w BG2VScroll
 	dec.b QueueBusy
@@ -878,9 +878,9 @@ ShowAlert:							; prints the Alert page on the stack, waits for start / select,
 	ldx.b d7
 	jsl.l DeleteSprite
 	stz.b d7
-	ldx.b $9D
+	ldx.b d7+2
 	jsl.l DeleteSprite
-	stz.b $9D
+	stz.b d7+2
 	jsl.l DeleteArrowSpritesLong
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
@@ -1552,7 +1552,7 @@ SetSeasonGoalsAgainst:				; stores X as goalie A's season goals against (SRAssis
 	lsr a
 	sta.b $16
 	lda.w #$FE7F
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$FE00
 	sta.b r0
 	trb.b $14
@@ -1568,12 +1568,12 @@ SetSeasonGoalsAgainst:				; stores X as goalie A's season goals against (SRAssis
 	sec
 	rol.b r0
 	sec
-	rol.b $2E
+	rol.b r0+2
 	dey
 	bpl .loop
-.1:									; A = SRGoals,x, A and $2E, A or $16, SRGoals,x = A, ...
+.1:									; A = SRGoals,x, A and r0+2, A or $16, SRGoals,x = A, ...
 	lda.l SRGoals,x
-	and.b $2E
+	and.b r0+2
 	ora.b $16
 	sta.l SRGoals,x
 	lda.l SRAssists,x
@@ -1761,7 +1761,7 @@ SetupPlayoffs:						; starts the playoffs once the schedule has no more games: t
 	lda.w #$75A4
 	sta.b r0
 	lda.w #$0030
-	sta.b $2E
+	sta.b r0+2
 	jsr.w StorePlayoffSeeds
 	lda.w #$0001
 	sta.b tmp0
@@ -1823,7 +1823,7 @@ GetTopPlayoffSeedMask:				; returns the conference and division mask of the top 
 RankPlayoffConference:				; builds the ranked playoff seed list for teams matching the conference
 									; mask
 	jsr.w ClearPlayoffSeedList
-	ldy.b $81
+	ldy.b d0+2
 .loop:								; loop: X = $000C,y, A = TeamDivisionCodes,x, ...
 	ldx.w $000C,y
 	lda.l TeamDivisionCodes,x

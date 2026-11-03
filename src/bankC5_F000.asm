@@ -78,10 +78,10 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	txs
 	stz.b QueueBusy
 	rtl
-.3:									; $0E = X, $10 = X, $2E = Y, A = $05,x, ...
+.3:									; $0E = X, $10 = X, r0+2 = Y, A = $05,x, ...
 	stx.b $0E
 	stx.b $10
-	sty.b $2E
+	sty.b r0+2
 	lda.b $05,x
 	sec
 	sbc.b $22
@@ -417,8 +417,8 @@ BuildSpriteOAM:						; build the OAM entries of all sprite objects (frames, Spri
 	stx.b $0E
 	ldx.b $10
 	jmp.w .24
-.40:								; Y = $2E, Y - 1, Y - 1, if the result < 0 go to .41, ...
-	ldy.b $2E
+.40:								; Y = r0+2, Y - 1, Y - 1, if the result < 0 go to .41, ...
+	ldy.b r0+2
 	dey
 	dey
 	bmi .41
@@ -440,7 +440,7 @@ QueueFrameTiles:					; queues the tiles of player frame A for VRAM: its ROM addr
 	lda.l FrameTileSource,x
 	sta.b r0
 	lda.l FrameBankLayout,x
-	sta.b $2E
+	sta.b r0+2
 	xba
 	and.w #$00FF
 	asl a

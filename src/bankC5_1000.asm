@@ -31,14 +31,14 @@ printscores1_per:					; steps a1 by period through the length-prefixed entries a
 	bne .1
 	dec.w printx
 	inc.b d0
-.1:									; $65 = $00C0, a0 = $9B54
+.1:									; a0+2 = $00C0, a0 = $9B54
 	lda.w #$00C0
-	sta.b $65
+	sta.b a0+2
 	lda.w #$9B54
 	sta.b a0
-.loop:								; loop: $69 = $65, a1 = a0, A = [a0], A + a0, ...
-	lda.b $65
-	sta.b $69
+.loop:								; loop: a1+2 = a0+2, a1 = a0, A = [a0], A + a0, ...
+	lda.b a0+2
+	sta.b a1+2
 	lda.b a0
 	sta.b a1
 	lda.b [a0]
@@ -52,7 +52,7 @@ printscores1_per:					; steps a1 by period through the length-prefixed entries a
 	lda.w tmscore,y
 	sta.b d0
 	jsl.l Mod100
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0004
@@ -173,21 +173,21 @@ SetScore:							; the score of the other game a0 for the ticker: its period step
 	clc
 	adc.b d0
 	sta.w gss2,x
-.5:									; pull A, $69 = A, pull A, a1 = A, ...
+.5:									; pull A, a1+2 = A, pull A, a1 = A, ...
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 .6:									; pull X, return
@@ -204,7 +204,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 									; game, from both teams' weight rows (sctab by their ratings)
 	asl.b d0
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	stz.b a1
 	ldy.b d0
 	lda.b [a1],y
@@ -218,7 +218,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	adc.w #sctab&$FFFF
 	sta.b a1
 	lda.w #sctab>>16
-	sta.b $69
+	sta.b a1+2
 	lda.b [a1]
 	sta.w nibblebuffer
 	ldy.w #$0002
@@ -232,7 +232,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	sta.w nibblebuffer+6
 	asl.b d1
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	stz.b a1
 	ldy.b d1
 	lda.b [a1],y
@@ -248,7 +248,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	adc.w #sctab&$FFFF
 	sta.b a1
 	lda.w #sctab>>16
-	sta.b $69
+	sta.b a1+2
 	lda.b [a1]
 	adc.w nibblebuffer
 	sta.w nibblebuffer
@@ -270,7 +270,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	pei ($83)
 	pei ($69)
 	pei ($67)
-	stz.b $69
+	stz.b a1+2
 	lda.w #nibblebuffer
 	sta.b a1
 	stz.b d1
@@ -304,11 +304,11 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	pla
 	sta.b a1
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $85
+	sta.b d1+2
 	rtl
 showclockdma:						; puts the game clock (clockbcd as M:SS, no leading zero) in the
 									; scoreboard text and queues it to VRAM
@@ -386,51 +386,51 @@ USBoard:							; the penalty box lists of both teams (DispPen for team 0, then 2
 	sta.b a2
 	jsl.l DispPen
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -502,7 +502,7 @@ pplpen:								; from DispPen and other segments
 	and.w #$07FF
 	sta.b d2
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	ldy.b a2
 	lda.w tmdata,y
 	sta.b a1
@@ -626,51 +626,51 @@ Intermission:						; the intermission between periods: the teams set up
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	jsl.l FreePauseBuffers
@@ -923,7 +923,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	lda.w ScoreSumbytes
 	sec
 	sbc.w #$0006
-	sta.b $6D
+	sta.b a2+2
 	tax
 	ldy.w #$0004
 	lda.w ScoreSum+4,x
@@ -940,7 +940,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	lda.w #$584C
 	jsl.l Framer
 	ldy.w #$0000
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+2,x
 	bit.w #$0080
 	beq .2
@@ -979,11 +979,11 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	clc
 	adc.w #$0110
 	sta.b a2
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+3,x
 	and.w #$00FF
 	jsr.w GoalBoxPlayer
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+4,x
 	bit.w #$0080
 	bne .6
@@ -999,7 +999,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	pla
 	and.w #$00FF
 	jsr.w GoalBoxPlayer
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+5,x
 	bit.w #$0080
 	bne .6
@@ -1010,11 +1010,11 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	sta.b a3
 	tax
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a2
 	pla
-	sta.b $6D
+	sta.b a2+2
 	rtl
 GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2 (32 bytes a
 									; player), his name fitted to 13 letters, queued at a3; a3 to the next row
@@ -1024,7 +1024,7 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	asl a
 	asl a
 	adc.b a2
-	sta.b $71
+	sta.b a3+2
 	tax
 	lda.w $0000,x
 	and.w #$00FF
@@ -1036,7 +1036,7 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	sec
 	adc.w #mesarea
 	tay
-	lda.b $71
+	lda.b a3+2
 	clc
 	adc.w #$0008
 	tax
@@ -1796,7 +1796,7 @@ limitfo:							; keeps the face off spot away from the blue line for every calle
 	pei ($65)
 	pei ($67)
 	pei ($69)
-	stz.b $65
+	stz.b a0+2
 	lda.w #PenBuf
 	sta.b a0
 .loop:								; loop: A = [a0], call LimitPenaltyFaceoff, a0 + 1, a0 + 1, ...
@@ -1807,19 +1807,19 @@ limitfo:							; keeps the face off spot away from the blue line for every calle
 	lda.b [a0]
 	bne .loop
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl

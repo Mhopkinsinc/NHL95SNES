@@ -17,7 +17,7 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	jsl.l Mul16U
 	sec
 	lda.b $0A
-	sbc.b $36
+	sbc.b r2+2
 	sta.b $0A
 	pei ($36)
 	ldy.w #$0002
@@ -85,14 +85,14 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	bne .3
 	xba
 	bra .4
-.3:									; X = $00C0, call Mul16U, A = tmp3, A - $36, ...
+.3:									; X = $00C0, call Mul16U, A = tmp3, A - r2+2, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
 	lda.b tmp3
 	sec
-	sbc.b $36
+	sbc.b r2+2
 	sta.w SimGiveLater
-	lda.b $36
+	lda.b r2+2
 .4:									; SimGiveCount = A, call SimGiveGoals, ...
 	sta.w SimGiveCount
 	jsr.w SimGiveGoals
@@ -114,14 +114,14 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	bne .5
 	xba
 	bra .6
-.5:									; X = $00C0, call Mul16U, A = tmp3, A - $36, ...
+.5:									; X = $00C0, call Mul16U, A = tmp3, A - r2+2, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
 	lda.b tmp3
 	sec
-	sbc.b $36
+	sbc.b r2+2
 	sta.w SimGiveLater
-	lda.b $36
+	lda.b r2+2
 .6:									; SimGiveCount = A, SimPickFirst = SimGroupStart, ...
 	sta.w SimGiveCount
 	lda.w SimGroupStart
@@ -535,7 +535,7 @@ BuildAllTeamRecords:				; BuildTeamSeasonRecord for every team ($19 down to 0 th
 	sta.w HomeTeam
 	jsr.w BuildTeamSeasonRecord
 	stz.w $0000,x
-	stx.b $81
+	stx.b d0+2
 .loop:								; loop: push X, A = HomeTeam, A - 1, if the result < 0 go to .1, ...
 	phx
 	lda.w HomeTeam
@@ -1269,8 +1269,8 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	pea.w $007E
 	sty.b $42
 	ldy.b $07,x
-	sty.b $2E
-	sty.b $32
+	sty.b r0+2
+	sty.b r1+2
 	lda.b $05,x
 	phb
 	jsr.w UnpackStream0
@@ -1279,18 +1279,18 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	sty.b $08
 	ldy.b $42
 	bra .3
-.1:									; $2E = $07,x, $32 = A, A = $05,x, X = A, ...
+.1:									; r0+2 = $07,x, r1+2 = A, A = $05,x, X = A, ...
 	lda.b $07,x
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	tax
 	bra .3
-.2:									; A = $07,x, push A, $2E = A, $32 = A, ...
+.2:									; A = $07,x, push A, r0+2 = A, r1+2 = A, ...
 	lda.b $07,x
 	pha
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	pha
 	adc.b tmp2
@@ -1313,19 +1313,19 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	sta.b r0
 	clc
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	bra .7
-.5:									; $42 = Y, Y = $2E, A = X, call UnpackStream0, ...
+.5:									; $42 = Y, Y = r0+2, A = X, call UnpackStream0, ...
 	sty.b $42
-	ldy.b $2E
+	ldy.b r0+2
 	txa
 	phb
 	jsr.w UnpackStream0
 	plb
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $08
 	sta.b r0
 	sty.b $08
@@ -1454,7 +1454,7 @@ ReadSpriteAnim:						; read a frame byte or dispatch a command at the script pos
 	bit.w #$2000
 	beq .2
 	sty.b r2
-	stx.b $36
+	stx.b r2+2
 UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected frame
 	lda.b $12,x
 	cmp.b $10,x
@@ -1511,9 +1511,9 @@ UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected
 	adc.b $DB
 	tyx
 	sta.b $14,x
-.5:									; call UploadSpriteFrame, X = $36, $30,x + 1, Y = r2, ...
+.5:									; call UploadSpriteFrame, X = r2+2, $30,x + 1, Y = r2, ...
 	jsr.w UploadSpriteFrame
-	ldx.b $36
+	ldx.b r2+2
 	inc.b $30,x
 	ldy.b r2
 	clc
@@ -1526,7 +1526,7 @@ CopySpriteFrameUnused:				; sprite object A takes object X's frame words ($28, $
 	sta.b $28,x
 	lda.w $002A,y
 	sta.b $2A,x
-	stx.b $36
+	stx.b r2+2
 	jmp.w UploadSpriteAnimFrame
 ClearSpriteFrameUnused:				; sprite object X's frame words $28 / $2A = $FFFF, Y = r2, then
 									; AnimateNextSprite; nothing calls it
@@ -1608,7 +1608,7 @@ SpriteAnimSetFrames:				; read a count and frame bytes, upload the list and yiel
 	lda.b $01,x
 	and.w #$00FF
 	sta.b p0
-	sta.b $3A
+	sta.b p0+2
 	phy
 .loop:								; loop: A = $02,x, A and $00FF, $0028,y = A, Y + 1, ...
 	lda.b $02,x
@@ -1621,7 +1621,7 @@ SpriteAnimSetFrames:				; read a count and frame bytes, upload the list and yiel
 	bne .loop
 	ora.w #$FFFF
 	sta.w $0028,y
-	lda.b $3A
+	lda.b p0+2
 	sec
 	plx
 	adc.b $30,x
@@ -1892,8 +1892,8 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	pea.w $007E
 	sty.b $42
 	ldy.b $07,x
-	sty.b $2E
-	sty.b $32
+	sty.b r0+2
+	sty.b r1+2
 	lda.b $05,x
 	phb
 	jsr.w UnpackStream0
@@ -1902,18 +1902,18 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	sty.b $08
 	ldy.b $42
 	bra .4
-.2:									; $2E = $07,x, $32 = A, A = $05,x, X = A, ...
+.2:									; r0+2 = $07,x, r1+2 = A, A = $05,x, X = A, ...
 	lda.b $07,x
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	tax
 	bra .4
-.3:									; A = $07,x, push A, $2E = A, $32 = A, ...
+.3:									; A = $07,x, push A, r0+2 = A, r1+2 = A, ...
 	lda.b $07,x
 	pha
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	pha
 	adc.b tmp2
@@ -1936,19 +1936,19 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	sta.b r0
 	clc
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	bra .8
-.6:									; $42 = Y, Y = $2E, A = X, call UnpackStream0, ...
+.6:									; $42 = Y, Y = r0+2, A = X, call UnpackStream0, ...
 	sty.b $42
-	ldy.b $2E
+	ldy.b r0+2
 	txa
 	phb
 	jsr.w UnpackStream0
 	plb
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $08
 	sta.b r0
 	sty.b $08
