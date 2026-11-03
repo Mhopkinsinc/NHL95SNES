@@ -425,7 +425,7 @@ QueueTeamPalette:					; queues team A's 16 colours (TeamPalettes as unpacked at 
 	stz.b QueueBusy
 	lda.b tmp1
 	rts
-DrawGameMarks:						; draws game $85 on the BG2 map at d3: a 9 x 2 tile bar in each team's
+DrawGameMarks:						; draws game d1+2 on the BG2 map at d3: a 9 x 2 tile bar in each team's
 									; palette and a mark from WonCheckTiles picked by the day, SRDayPlayed and
 									; the game's bit at SRUserGames
 	jsl.l WaitTransfers
@@ -464,7 +464,7 @@ DrawGameMarks:						; draws game $85 on the BG2 map at d3: a 9 x 2 tile bar in e
 	tay
 	lda.w d4
 	clc
-	adc.w $0085
+	adc.w d1+2
 	pha
 	and.w #$0007
 	tax
@@ -504,9 +504,9 @@ DrawGameMarks:						; draws game $85 on the BG2 map at d3: a 9 x 2 tile bar in e
 	jsr.w WriteBlanks4
 	pld
 	rts
-.3:									; push X, X = $0085, A = SRDayPlayed
+.3:									; push X, X = d1+2, A = SRDayPlayed
 	phx
-	ldx.w $0085
+	ldx.w d1+2
 	lda.l SRDayPlayed
 .loop:								; loop: A / 2, X - 1, if the result >= 0 go to .loop, pull X, ...
 	lsr a

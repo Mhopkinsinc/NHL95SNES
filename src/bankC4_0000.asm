@@ -632,7 +632,7 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	pea.w $3980
 	pea.w $0000
 	pea.w $007E
-	pea.w $55BC
+	pea.w (unpackbuf+$4E0)&$FFFF	; the tiles, after the map
 	ldy.b VRAMQueueSP
 	tsx
 	stx.b VRAMQueueSP
@@ -642,13 +642,13 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	pea.w $0040
 	pea.w $0040
 	pea.w $007E
-	pea.w $8F3C
+	pea.w (unpackbuf+$3E60)&$FFFF	; the colours, after the tiles
 	ldx.w #$001E
-.loop3:								; loop: A = $8F3C,x, A / 2, A and $BDEF, $8F5C,x = A, ...
-	lda.w $8F3C,x
+.loop3:								; loop: the second 16 colours = the first 16 halved (darker)
+	lda.w (unpackbuf+$3E60)&$FFFF,x
 	lsr a
 	and.w #$BDEF
-	sta.w $8F5C,x
+	sta.w (unpackbuf+$3E80)&$FFFF,x
 	dex
 	dex
 	bpl .loop3

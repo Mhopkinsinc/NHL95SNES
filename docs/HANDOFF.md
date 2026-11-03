@@ -414,10 +414,10 @@
 - dp $A5 is tmp3: 95 keeps 94S's direct page register block (d0-d7, a0-a3, tmp0-tmp4) in order, $26 lower, and $A5
   is tmp3's slot, used as a scratch word. dp $00 / $02 / $04 are 95's transfer queue stack pointers (VRAMQueueSP,
   VRAMModeQueueSP, CGRAMQueueSP); 94S has no such queues.
-- RAM left unnamed: $0085 (absolute d1+2, but the season screens use dp $85 as a game
-  number); $7E8F3C / $8F5C (a palette inside the unpacked bracket
-  map set and its halved copy: the offset depends on the map set's size). hattrick's only use found in 95 is
-  puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
+- The work registers' high words are written REG+2 (a0+2, d1+2 ...), as 94S does; the absolute $0085 operands are d1+2
+  (DrawGameMarks reaches the registers absolutely with the direct page moved). The bracket's team bar colours are
+  unpackbuf+$3E60 (after TeamNameBarsMap's map and tiles), their darkened copy unpackbuf+$3E80. hattrick's only use found
+  in 95 is puckfaceoff2's clear; recsfxvol / recsfxvol2 are recorded and restored by the replay but nothing else sets them.
 - No DATA8_ labels are left (the data table pass: ../work/agent_runs/tools-claude-data/REPORT.md has banks $C4 / $C5):
   - Not tables: 20 runs of unreached rtl / rts / pla / jmp bytes after an exit are written as instructions with an
     "unreached" comment, their labels dropped; 94S has such bare rtls too. DATA8_C3803D was 94S projxy's off-screen
