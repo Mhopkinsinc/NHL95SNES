@@ -24,8 +24,8 @@ BG3ScrollHDMA1:						; indirect HDMA table for BG3VOFS (line count, RAM address 
 	db $10,$0A,$01					; 16 lines
 	db $01,$C6,$04					; 1 line
 	db $00							; end
-BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so it ends
-									; inside the short table after it
+BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so it ends inside
+									; BG2ScrollHDMA after it
 	db $40,$C6,$04					; 64 lines
 	db $38,$00,$01					; 56 lines
 	db $37,$02,$01					; 55 lines
@@ -34,7 +34,9 @@ BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so 
 	db $18,$08,$01					; 24 lines
 	db $01,$06,$01					; 1 line
 	db $00							; end
-	db $40,$C2,$04					; the short table: 64 lines
+BG2ScrollHDMA:						; indirect HDMA table for BG2VOFS (line count, RAM address of the value):
+									; 64 lines, then 1, from BG2VScroll
+	db $40,$C2,$04					; 64 lines
 	db $01,$C2,$04					; 1 line
 	db $00							; end
 MenuGradientHDMA:					; the menu screens' blue background: HDMA to CGADD / CGDATA, per group of

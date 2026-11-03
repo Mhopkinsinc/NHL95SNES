@@ -141,7 +141,10 @@ ClearCreatedPlayerTeams:			; sets team $1F (no team; free agents are $1A) in the
 TitleMapFill:						; the title screen's map fill entry (tile $4A, attribute byte $01): the
 									; fixed-source DMA reads its low byte for the tiles, the next for the
 									; attribute bytes
-	db $4A,$01,$78,$22,$38,$22,$01,$33,$00
+	db $4A,$01
+TitleBG34HDMA:						; HDMA table for BG34NBA (BG3 / BG4 tile data addresses): $22 for 176
+									; lines, then $33
+	db $78,$22,$38,$22,$01,$33,$00
 CreditsList:						; the title screen's credit pages: per page a count, then that many packed
 									; text addresses (bank $C3), a line each; a 0 count ends
 	db $03,$E4,$50,$F2,$50,$FE,$50,$03,$08,$51,$11,$51,$1B,$51,$03,$26
@@ -258,7 +261,9 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	rep #$20
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $00,$0C,$03,$D1,$C4,$7E		; inline parameters
+	db $00,$0C						; inline parameters: DMAP and BBAD
+	dl TitleBG34HDMA				; the HDMA table
+	db $7E							; the indirect bank
 	lda.w #$8000
 	sta.w DMAEnShadow
 	jsl.l BlackBackdrop

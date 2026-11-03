@@ -1620,7 +1620,9 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	db $42,$12,$8C,$46,$7E,$7E		; inline parameters
 	ldx.w #$0040
 	jsl.l SetupHDMA
-	db $42,$10,$14,$49,$C0,$00		; inline parameters
+	db $42,$10						; inline parameters: DMAP and BBAD
+	dl BG2ScrollHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0015
 	sta.w ScratchBuf
 	lda.w #$0011

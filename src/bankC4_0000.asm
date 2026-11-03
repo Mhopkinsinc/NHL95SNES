@@ -553,10 +553,14 @@ SetupPlayoffBracket:				; sets up the playoff bracket screen: the bracket and th
 	db $00							; the indirect bank
 	ldx.w #$0060
 	jsl.l SetupHDMA
-	db $44,$26,$EA,$0F,$C4,$7E		; inline parameters
+	db $44,$26						; inline parameters: DMAP and BBAD
+	dl BracketWindowHDMA1			; the HDMA table
+	db $7E							; the indirect bank
 	ldx.w #$0050
 	jsl.l SetupHDMA
-	db $44,$26,$F1,$0F,$C4,$7E		; inline parameters
+	db $44,$26						; inline parameters: DMAP and BBAD
+	dl BracketWindowHDMA2			; the HDMA table
+	db $7E							; the indirect bank
 	ldy.w #$5C00
 	jsl.l QueueClearVRAM
 	ldx.b a0
@@ -1917,15 +1921,19 @@ BracketWindowPath:					; per animation step (BracketWin1Phase / BracketWin2Phase
 	db $F0,$FE,$F1,$FD,$F2,$FD,$F3,$FD,$F4,$FD,$F5,$FD,$F6,$FD,$F7,$FD
 	db $F8,$FD,$F9,$FD,$FA,$FD,$FB,$FD,$FC,$FE,$FD,$FE,$FE,$FE,$FF,$FF
 BracketWindowShape:					; per line of the 43-line cursor window (X * 2, read from the last): its
-									; left and right edge from the window's x; then SetupPlayoffBracket's two
-									; indirect HDMA tables
+									; left and right edge from the window's x
 	db $12
 	db $1A,$0F,$1D,$0C,$20,$0B,$21,$09,$23,$08,$24,$07,$25,$06,$26,$05
 	db $27,$05,$27,$04,$28,$03,$29,$03,$29,$03,$29,$02,$2A,$02,$2A,$02
 	db $2A,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01,$2B,$01
 	db $2B,$01,$2B,$02,$2A,$02,$2A,$02,$2A,$03,$29,$03,$29,$03,$29,$04
 	db $28,$05,$27,$05,$27,$06,$26,$07,$25,$08,$24,$09,$23,$0B,$21,$0C
-	db $20,$0F,$1D,$12,$1A,$F0,$4E,$36,$F0,$0E,$38,$00,$F0,$CE,$39,$F0
+	db $20,$0F,$1D,$12,$1A
+BracketWindowHDMA1:					; indirect HDMA table for WH0-WH3 (the two windows' edges): two runs of
+									; 112 lines from ScratchBuf and ScratchBuf+$1C0
+	db $F0,$4E,$36,$F0,$0E,$38,$00
+BracketWindowHDMA2:					; the same for ScratchBuf+$380 and ScratchBuf+$540
+	db $F0,$CE,$39,$F0
 	db $8E,$3B,$00
 BracketColumnScroll:				; per bracket column (a1 * 2): the scroll position ($65)
 									; ScrollBracketToCursor moves the map toward

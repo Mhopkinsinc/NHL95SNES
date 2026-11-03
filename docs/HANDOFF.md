@@ -325,7 +325,7 @@
 - bankC0_8000: TileSetUnused and BluesPaletteUnused have no reader. TiledBackMap is named from
   its pattern (94S MenuBackMap may be the same job: not checked). TransfersReady, DMAEnShadow, QueueBusy are named from the
   NMI code only. Mul8S's A-positive / X-negative path multiplies A by -A (tya where 94S has txa): that is in the ROM.
-- bankC0_4000: WordListUnused has no reader; MenuGradientHDMA / BracketGradientHDMA follow the short table. LargeSlotTiles maps a 16 x 16 sprite slot to
+- bankC0_4000: WordListUnused has no reader; MenuGradientHDMA / BracketGradientHDMA follow BG2ScrollHDMA. LargeSlotTiles maps a 16 x 16 sprite slot to
   its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
   DigitFontTiles and LinePieceTiles are named from the rendered tiles; BG3ScrollHDMA1/2 from the HDMA set-up.
 - WonCheckTiles / WonCheckPalette: named from the rendered tiles; the screen is not traced.
@@ -363,9 +363,9 @@
   - Not tables: 20 runs of unreached rtl / rts / pla / jmp bytes after an exit are written as instructions with an
     "unreached" comment, their labels dropped; 94S has such bare rtls too. DATA8_C3803D was 94S projxy's off-screen
     exit (.t1x), now projxy's unreached .1.
-  - MenuGradientHDMA / BracketGradientHDMA followed the 0 that ends the short HDMA table (the old label's first
-    byte); SetupHDMA's inline parameters point at them. Those parameters now name their table (dl) where it has a
-    label; C40FEA, C40FF1, C4D103 and C04914 (the short table) have no label there yet, and the $7E ones are RAM.
+  - MenuGradientHDMA / BracketGradientHDMA followed the 0 that ends BG2ScrollHDMA (the old label's first byte);
+    SetupHDMA's inline parameters point at them. Every ROM table SetupHDMA is given is now named in its inline
+    parameters (dl): also BG2ScrollHDMA, BracketWindowHDMA1 / 2 and TitleBG34HDMA; the $7E ones are RAM.
   - Nothing reads: WordListUnused, TileSetUnused, BluesPaletteUnused, SpriteField4DataUnused (sprite record
     field +4 points into it but the code drops the field), TeamRecordUnused (licensed names), HighBitMasksUnused,
     SampleListTailUnused. Named from their form; what they were for is not known.

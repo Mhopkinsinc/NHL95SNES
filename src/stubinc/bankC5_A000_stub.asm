@@ -99,5 +99,6 @@ TxtLeftWing = $C349D7
 TxtRightDefense = $C349C7
 TxtRightWing = $C349E0
 MainScreenHDMA = $C04A35
+BG2ScrollHDMA = $C04914
 
 incsrc "../bankC5_A000.asm"
