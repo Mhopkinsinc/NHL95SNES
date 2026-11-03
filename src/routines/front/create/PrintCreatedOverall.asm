@@ -1,0 +1,94 @@
+PrintCreatedOverall:				; packs the created player's ratings (CreateRatings on; the skater or
+									; goalie layout by d0) as the nibbles of a player record in mesarea, then
+									; prints its overall rating (RecordOverall) and d2
+	stz.w mesarea
+	stz.w mesarea+2
+	stz.w mesarea+4
+	stz.w mesarea+6
+	lda.b d0
+	bne .1
+	lda.w #$0010
+	sta.w RatingMode
+	lda.w CreateRatings
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+2
+	lda.w CreateRatings+$2
+	jsr.w RatingNibble
+	tsb.w mesarea+1
+	lda.w CreateRatings+$4
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+3
+	lda.w CreateRatings+$6
+	jsr.w RatingNibble
+	tsb.w mesarea+3
+	lda.w CreateRatings+$8
+	jsr.w RatingNibble
+	tsb.w mesarea+6
+	lda.w CreateRatings+$A
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+6
+	lda.w CreateRatings+$C
+	jsr.w RatingNibble
+	tsb.w mesarea+7
+	lda.w CreateRatings+$E
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+7
+	jmp.w .2
+.1:									; RatingMode = 0, A = CreateRatings, call RatingNibbleHigh, ...
+	stz.w RatingMode
+	lda.w CreateRatings
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+2
+	lda.w CreateRatings+$2
+	jsr.w RatingNibble
+	tsb.w mesarea+1
+	lda.w CreateRatings+$4
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+6
+	lda.w CreateRatings+$6
+	jsr.w RatingNibble
+	tsb.w mesarea+2
+	lda.w CreateRatings+$8
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+3
+	lda.w CreateRatings+$A
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+5
+	lda.w CreateRatings+$C
+	jsr.w RatingNibble
+	tsb.w mesarea+3
+	lda.w CreateRatings+$E
+	jsr.w RatingNibble
+	tsb.w mesarea+5
+	lda.w CreateRatings+$10
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+7
+	lda.w CreateRatings+$12
+	jsr.w RatingNibble
+	tsb.w mesarea+7
+	lda.w CreateRatings+$14
+	jsr.w RatingNibbleHigh
+	tsb.w mesarea+4
+.2:									; call RecordOverall, call BinToBCD, call BCDText, Y = $0015, ...
+	jsr.w RecordOverall
+	jsr.w BinToBCD
+	jsr.w BCDText
+	ldy.w #$0015
+	jsr.w PrintPaddedValue
+	lda.b d2
+	jsr.w BinToBCD
+	jsr.w BCDText
+	ldy.w #$0016
+PrintPaddedValue:					; prints the BCDText digits in mesarea bold right-aligned at row Y with a
+									; space in front
+	lda.w mesarea+4
+	sta.w mesarea+6
+	lda.w mesarea+2
+	sta.w mesarea+4
+	lda.w mesarea
+	sta.w mesarea+2
+	lda.w #$2020
+	sta.w mesarea
+	ldx.w #mesarea+1
+	jsl.l PrintBoldRightStr
+	rts

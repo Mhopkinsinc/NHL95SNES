@@ -1,0 +1,14 @@
+ReadjoyA:							; from ReadPausePad and other segments
+	phx
+	asl a
+	tax
+	lda.b PadRaw1,x
+	sta.b d3
+	lda.w padchange,x
+	sta.b d2
+	lda.w padnew,x
+	sta.b d1
+	lda.w paddir,x
+	sta.b d0
+	plx
+	rtl

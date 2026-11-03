@@ -8,10 +8,12 @@
   reader, counts `95S~95G` and `95S~94S` at 0, 699 95S known pairs; `tools/gate.sh` PAIRING OK). 2 done: `tools/inventory95.py`
   wrote `docs/routines95s.csv` (4,470 labels, 1,348 routines, 2,809 data runs; rules: 95G 283, family 158, 94S 95,
   callers 724, plurality 68, span 16, follows 4, UNSURE 0).
-- Last check: `./build.sh` MATCH, report `tools/gate.sh` PAIRING OK (2026-11-03).
-- Now: checkpoint 1, the owner reviews the inventory summary (folders and the UNSURE list) before any move.
-- Next: phase 3a (segments into `src/banks/bCx_*.asm`), then 3b (routines into `src/routines/...` from the CSV, one 95G folder
-  per unit), 3c (data), 3d (drop the segment stubs).
+- Phase 3 done: `tools/move95.py` moved the 256 segments to `src/banks/` (16 bank files), `src/routines/` (1,348 routine
+  files, folders from `docs/routines95s.csv`) and `src/data/` (1,399 files). Same 10,228 labels at the same addresses
+  (symbol file compared before and after). `src/stubinc/` and `tools/verify_segment.sh` are gone; `tools/verify_all.sh`
+  is now extract + full build.
+- Last check: `tools/verify_all.sh` MATCH (2026-11-03).
+- Next: phase 4, naming (one 95G file per unit; `docs/RULES.md` "Names"), then phase 5 (RAM).
 - Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
   cannot link a 95S known pair to its new name.
 - Unsure: none placed by guess; the 68 `plurality` and 4 `follows` rows are the low-confidence placements for checkpoint 1.

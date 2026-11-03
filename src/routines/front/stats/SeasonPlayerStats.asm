@@ -1,0 +1,52 @@
+SeasonPlayerStats:					; League Menu Player Stats: the season goals, assists and points of a
+									; team's players (B switches to the goalies, the pad switches teams)
+	jsl.l FadeOutWait
+	stz.b d0
+	ldx.b a0
+	lda.w #$FC18
+	sta.b $05,x
+	sta.b $08,x
+	lda.w #$8000
+	sta.w DMAEnShadow
+	lda.w #$FFFA
+	sta.w BG2VScroll
+	ldy.w #$5C00
+	jsl.l ClearVRAM
+	jsl.l WaitTransfers
+	sep #$20
+	lda.b #$11
+	sta.l TM
+	rep #$20
+	jsl.l ResetWorkBuf
+	jsl.l InitTextMap
+	lda.w #SeasonPlayerStatsPage&$FFFF
+	jsl.l PrintTextPage
+	jsl.l WaitTransfers
+	ldy.w #$2801
+	ldx.w #$50A8
+	jsl.l MapTileBlock
+	lda.w #$0002
+	sta.w OptPlayMode
+	stz.w HomeTeam
+	jsr.w LoadGameRosters
+	sec
+	lda.w HomeRoster
+	sbc.w HomeRoster+2
+	sta.b a1
+	stz.b a1+2
+	lda.w #DrawSeasonPlayerRow
+	ldx.w #$000C
+	ldy.w #$000B
+	jsr.w StartScrollList
+	stz.b d7
+	jsr.w DrawPlayerStatsTeam
+	jsl.l SendTextMap
+	jsl.l WaitTransfers
+	sep #$20
+	lda.b #$17
+	sta.l TM
+	rep #$20
+	lda.w #$000A
+	sta.b d6+2
+	stz.w fadestep
+	rts

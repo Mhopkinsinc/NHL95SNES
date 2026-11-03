@@ -1,0 +1,644 @@
+Layout000:							; the layout record of LayoutPointers entry 0: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$09,$10,$00,$10,$10,$00,$00,$06,$30,$13,$20,$19,$2F,$1B
+	db $08,$10
+Layout001:							; the layout record of LayoutPointers entry 1: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$09,$18,$00,$18,$10,$28,$00,$06,$00,$13,$10,$19,$01,$1B
+	db $28,$10
+Layout002:							; the layout record of LayoutPointers entry 2: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$12,$00,$11,$10,$15,$20,$05,$20,$04,$0A,$08,$1D,$30,$00,$30
+Layout003:							; the layout record of LayoutPointers entry 3: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$03,$00,$04,$10,$00,$20,$10,$20,$04,$13,$08,$00,$30,$1D,$30
+Layout004:							; the layout record of LayoutPointers entry 4: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$05,$18,$15,$08,$00,$08,$10,$04,$00,$02,$28,$14,$28,$0C
+Layout005:							; the layout record of LayoutPointers entry 5: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$05,$08,$15,$18,$00,$18,$10,$04,$28,$02,$00,$14,$00,$0C
+Layout006:							; the layout record of LayoutPointers entry 6: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$30,$08,$20,$08,$10,$07,$00,$07,$06,$40,$10,$20,$00,$40,$08
+	db $28,$00
+Layout007:							; the layout record of LayoutPointers entry 7: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$08,$18,$08,$28,$07,$38,$07,$06,$00,$10,$20,$00,$00,$08
+	db $18,$00
+Layout008:							; the layout record of LayoutPointers entry 8: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$09,$18,$19,$08,$00,$08,$10,$06,$28,$0D,$28,$20,$30,$20
+	db $00,$05
+Layout009:							; the layout record of LayoutPointers entry 9: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$09,$10,$19,$20,$00,$20,$10,$06,$08,$0D,$08,$20,$00,$20
+	db $30,$05
+Layout010:							; the layout record of LayoutPointers entry 10: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$08,$10,$08,$20,$18,$10,$18,$04,$24,$00,$08,$08,$00,$07
+Layout011:							; the layout record of LayoutPointers entry 11: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$08,$10,$08,$00,$18,$10,$18,$04,$04,$00,$20,$08,$28,$07
+Layout012:							; the layout record of LayoutPointers entry 12: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$08,$10,$06,$10,$16,$00,$12,$06,$2B,$00,$20,$1B,$08,$0A
+	db $08,$22
+Layout013:							; the layout record of LayoutPointers entry 13: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$03,$08,$13,$06,$13,$16,$23,$12,$06,$00,$00,$0B,$1B,$23,$0A
+	db $23,$22
+Layout014:							; the layout record of LayoutPointers entry 14: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$30,$14,$20,$0B,$10,$09,$00,$00,$06,$28,$1B,$10,$01,$20,$1B
+	db $18,$19
+Layout015:							; the layout record of LayoutPointers entry 15: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$14,$10,$0B,$20,$09,$30,$00,$06,$10,$1B,$28,$01,$18,$1B
+	db $20,$19
+Layout016:							; the layout record of LayoutPointers entry 16: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$15,$08,$10,$18,$00,$18,$05,$08,$06,$25,$08,$2D,$08,$2D,$00
+	db $25,$00
+Layout017:							; the layout record of LayoutPointers entry 17: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$08,$15,$18,$25,$18,$20,$08,$06,$08,$08,$00,$08,$00,$00
+	db $08,$00
+Layout018:							; the layout record of LayoutPointers entry 18: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$00,$18,$03,$18,$13,$08,$13,$06,$28,$10,$10,$0B,$10,$23
+	db $00,$17
+Layout019:							; the layout record of LayoutPointers entry 19: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$00,$10,$03,$10,$13,$20,$13,$06,$08,$10,$20,$0B,$20,$23
+	db $30,$17
+Layout020:							; the layout record of LayoutPointers entry 20: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$08,$18,$08,$25,$18,$15,$18,$06,$27,$00,$08,$14,$10,$10
+	db $00,$16
+Layout021:							; the layout record of LayoutPointers entry 21: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$08,$10,$08,$03,$18,$13,$18,$06,$09,$00,$28,$14,$20,$10
+	db $30,$16
+Layout022:							; the layout record of LayoutPointers entry 22: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$08,$00,$08,$19,$18,$09,$18,$06,$00,$00,$1C,$28,$14,$28
+	db $0C,$28
+Layout023:							; the layout record of LayoutPointers entry 23: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$09,$08,$19,$08,$00,$18,$10,$18,$06,$21,$00,$05,$28,$0D,$28
+	db $15,$28
+Layout024:							; the layout record of LayoutPointers entry 24: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$30,$00,$18,$01,$18,$11,$08,$0E,$06,$28,$01,$28,$11,$28,$09
+	db $00,$1A
+Layout025:							; the layout record of LayoutPointers entry 25: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$00,$18,$01,$18,$11,$28,$0E,$06,$10,$01,$10,$11,$10,$09
+	db $38,$1A
+Layout026:							; the layout record of LayoutPointers entry 26: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$0D,$10,$00,$10,$10,$00,$16,$06,$34,$03,$30,$0B,$20,$05
+	db $10,$20
+Layout027:							; the layout record of LayoutPointers entry 27: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$0C,$0D,$1C,$00,$1C,$10,$2C,$16,$06,$00,$03,$04,$0B,$14,$05
+	db $24,$20
+Layout028:							; the layout record of LayoutPointers entry 28: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$0B,$08,$0B,$18,$1B,$08,$1B,$04,$15,$03,$00,$15,$0D,$00
+Layout029:							; the layout record of LayoutPointers entry 29: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$0B,$10,$0B,$00,$1B,$10,$1B,$04,$0B,$03,$20,$15,$13,$00
+Layout030:							; the layout record of LayoutPointers entry 30: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$08,$10,$08,$20,$08,$30,$08,$06,$08,$00,$10,$00,$18,$00
+	db $20,$00
+Layout031:							; the layout record of LayoutPointers entry 31: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$30,$08,$20,$08,$10,$08,$00,$08,$06,$30,$00,$28,$00,$20,$00
+	db $18,$00
+Layout032:							; the layout record of LayoutPointers entry 32: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$10,$10,$10,$20,$10,$20,$00,$06,$08,$08,$10,$08,$18,$08
+	db $18,$00
+Layout033:							; the layout record of LayoutPointers entry 33: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$10,$10,$10,$00,$10,$00,$00,$06,$20,$08,$18,$08,$10,$08
+	db $10,$00
+Layout034:							; the layout record of LayoutPointers entry 34: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$09,$18,$00,$18,$10,$00,$06,$06,$38,$10,$28,$01,$10,$0A
+	db $10,$12
+Layout035:							; the layout record of LayoutPointers entry 35: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$09,$18,$00,$18,$10,$30,$06,$06,$00,$10,$10,$01,$28,$0A
+	db $28,$12
+Layout036:							; the layout record of LayoutPointers entry 36: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$06,$18,$0A,$08,$1A,$08,$00,$28,$06,$10,$30,$10,$28,$12,$00
+	db $1A,$00
+Layout037:							; the layout record of LayoutPointers entry 37: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$14,$18,$10,$08,$00,$08,$1A,$28,$06,$12,$30,$12,$28,$10,$00
+	db $08,$00
+Layout038:							; the layout record of LayoutPointers entry 38: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$10,$10,$00,$0A,$00,$1A,$06,$20,$00,$09,$2A,$20,$18
+	db $08,$02
+Layout039:							; the layout record of LayoutPointers entry 39: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$00,$08,$10,$18,$0A,$18,$1A,$06,$00,$00,$17,$2A,$00,$18
+	db $18,$02
+Layout040:							; the layout record of LayoutPointers entries 40 and 41: 16 x 16 pieces (a
+									; byte for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $00,$00,$00,$08
+Layout042:							; the layout record of LayoutPointers entry 42: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $02,$10,$10,$00,$00,$08
+Layout043:							; the layout record of LayoutPointers entry 43: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $02,$00,$10,$10,$00,$08
+Layout044:							; the layout record of LayoutPointers entry 44: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$20,$00,$10,$10,$20,$00,$00,$06,$10,$18,$18,$10,$10,$10
+	db $18,$18
+Layout045:							; the layout record of LayoutPointers entry 45: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$20,$10,$10,$00,$20,$10,$00,$06,$08,$18,$00,$10,$08,$10
+	db $00,$18
+Layout046:							; the layout record of LayoutPointers entry 46: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$18,$18,$18,$08,$08,$18,$08,$06,$00,$17,$00,$1F,$18,$00
+	db $20,$00
+Layout047:							; the layout record of LayoutPointers entry 47: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$18,$00,$18,$10,$08,$00,$08,$06,$20,$17,$20,$1F,$08,$00
+	db $00,$00
+Layout048:							; the layout record of LayoutPointers entry 48: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$0B,$10,$08,$10,$18,$00,$18,$06,$18,$00,$10,$00,$08,$08
+	db $08,$10
+Layout049:							; the layout record of LayoutPointers entry 49: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$0B,$10,$08,$10,$18,$20,$18,$06,$10,$00,$18,$00,$20,$08
+	db $20,$10
+Layout050:							; the layout record of LayoutPointers entry 50: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$0A,$10,$14,$00,$10,$20,$00,$20,$06,$24,$08,$24,$00,$1A,$10
+	db $1A,$18
+Layout051:							; the layout record of LayoutPointers entry 51: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$12,$10,$08,$00,$0C,$20,$1C,$20,$06,$00,$08,$00,$00,$0A,$10
+	db $0A,$18
+Layout052:							; the layout record of LayoutPointers entry 52: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$10,$00,$10,$10,$00,$00,$00,$06,$20,$00,$20,$08,$28,$00
+	db $28,$08
+Layout053:							; the layout record of LayoutPointers entry 53: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$10,$20,$10,$10,$00,$20,$00,$06,$08,$00,$08,$08,$00,$00
+	db $00,$08
+Layout054:							; the layout record of LayoutPointers entry 54: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$06,$20,$18,$20,$10,$28,$18
+	db $28,$10
+Layout055:							; the layout record of LayoutPointers entry 55: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$20,$00,$10,$10,$20,$10,$06,$08,$18,$08,$10,$00,$18
+	db $00,$10
+Layout056:							; the layout record of LayoutPointers entry 56: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$16,$08,$19,$18,$09,$18,$06,$08,$04,$10,$00,$08,$00,$00,$00
+Layout057:							; the layout record of LayoutPointers entry 57: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$03,$08,$00,$18,$10,$18,$13,$08,$04,$11,$00,$19,$00,$21,$00
+Layout058:							; the layout record of LayoutPointers entry 58: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$20,$08,$20,$10,$10,$0C,$00,$06,$04,$01,$00,$24,$00,$18
+	db $08,$18
+Layout059:							; the layout record of LayoutPointers entry 59: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$20,$10,$20,$08,$10,$0C,$00,$06,$1C,$01,$20,$24,$20,$18
+	db $18,$18
+Layout060:							; the layout record of LayoutPointers entry 60: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$0E,$18,$1E,$08,$04,$08,$14,$06,$28,$1F,$00,$00,$00,$13
+	db $00,$1B
+Layout061:							; the layout record of LayoutPointers entry 61: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$0E,$08,$1E,$18,$04,$18,$14,$06,$00,$1F,$28,$00,$28,$13
+	db $28,$1B
+Layout062:							; the layout record of LayoutPointers entry 62: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$22,$10,$18,$10,$08,$00,$18,$04,$20,$1A,$18,$28,$0C,$00
+Layout063:							; the layout record of LayoutPointers entry 63: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$22,$10,$18,$10,$08,$20,$18,$04,$08,$1A,$10,$28,$1C,$00
+Layout064:							; the layout record of LayoutPointers entry 64: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$0A,$28,$0A,$18,$00,$18,$10,$06,$10,$02,$00,$12,$28,$02
+	db $00,$0A
+Layout065:							; the layout record of LayoutPointers entry 65: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$0A,$00,$0A,$10,$00,$10,$10,$06,$20,$02,$30,$12,$08,$02
+	db $30,$0A
+Layout066:							; the layout record of LayoutPointers entry 66: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$00,$18,$00,$08,$10,$18,$10,$04,$00,$18,$00,$20,$08,$20
+Layout067:							; the layout record of LayoutPointers entry 67: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$04,$20,$18,$20,$20,$18,$20
+Layout068:							; the layout record of LayoutPointers entry 68: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$16,$10,$17,$10,$07,$00,$00,$06,$20,$0C,$20,$14,$20,$1C
+	db $20,$24
+Layout069:							; the layout record of LayoutPointers entry 69: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$16,$18,$17,$18,$07,$28,$00,$06,$10,$0C,$10,$14,$10,$1C
+	db $10,$24
+Layout070:							; the layout record of LayoutPointers entry 70: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$20,$00,$00,$10,$04,$30,$08,$30,$10,$30,$18
+Layout071:							; the layout record of LayoutPointers entry 71: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$00,$28,$00,$08,$00,$28,$10,$04,$00,$08,$00,$10,$00,$18
+Layout072:							; the layout record of LayoutPointers entry 72: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$1B,$10,$00,$10,$10,$20,$10,$06,$20,$08,$30,$10,$30,$18
+	db $20,$00
+Layout073:							; the layout record of LayoutPointers entry 73: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$1B,$18,$00,$18,$10,$08,$10,$06,$10,$08,$00,$10,$00,$18
+	db $10,$00
+Layout074:							; the layout record of LayoutPointers entry 74: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$09,$18,$00,$18,$10,$08,$10,$06,$10,$08,$00,$10,$00,$18
+	db $10,$00
+Layout075:							; the layout record of LayoutPointers entry 75: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$09,$10,$00,$10,$10,$20,$10,$06,$20,$08,$30,$10,$30,$18
+	db $20,$00
+Layout076:							; the layout record of LayoutPointers entry 76: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$04,$20,$18,$28,$1C,$30,$1E
+Layout077:							; the layout record of LayoutPointers entry 77: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$00,$28,$00,$18,$10,$28,$10,$04,$10,$18,$08,$1C,$00,$1E
+Layout078:							; the layout record of LayoutPointers entry 78: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$04,$20,$1A,$24,$22,$27,$2A
+Layout079:							; the layout record of LayoutPointers entry 79: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$0F,$00,$1F,$00,$0F,$10,$1F,$10,$04,$07,$1A,$03,$22,$00,$2A
+Layout080:							; the layout record of LayoutPointers entry 80: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$02,$1B,$20,$23,$20
+Layout081:							; the layout record of LayoutPointers entry 81: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$0B,$00,$1B,$00,$0B,$10,$1B,$10,$02,$08,$20,$00,$20
+Layout082:							; the layout record of LayoutPointers entry 82: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$10,$10,$10,$20,$0A,$04,$08,$00,$08,$08,$30,$13
+Layout083:							; the layout record of LayoutPointers entry 83: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$00,$28,$10,$18,$10,$08,$0A,$04,$28,$00,$28,$08,$00,$13
+Layout084:							; the layout record of LayoutPointers entry 84: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$00,$18,$09,$08,$10,$08,$20,$06,$28,$0C,$00,$0B,$00,$13
+	db $00,$1B
+Layout085:							; the layout record of LayoutPointers entry 85: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$00,$08,$09,$18,$10,$18,$20,$06,$00,$0C,$28,$0B,$28,$13
+	db $28,$1B
+Layout086:							; the layout record of LayoutPointers entry 86: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$02,$10,$00,$10,$10,$00,$10,$00,$08,$08
+Layout087:							; the layout record of LayoutPointers entry 87: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$02,$10,$00,$10,$10,$20,$10,$00,$20,$08
+Layout088:							; the layout record of LayoutPointers entry 88: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$20,$10,$10,$10,$00,$0A,$06,$20,$00,$20,$08,$28,$08
+	db $28,$00
+Layout089:							; the layout record of LayoutPointers entry 89: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$10,$10,$10,$20,$0A,$06,$08,$00,$08,$08,$00,$08
+	db $00,$00
+Layout090:							; the layout record of LayoutPointers entry 90: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$20,$10,$10,$10,$00,$0A,$02,$20,$00,$20,$08
+Layout091:							; the layout record of LayoutPointers entry 91: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$10,$00,$00,$10,$10,$10,$20,$0A,$02,$08,$00,$08,$08
+Layout092:							; the layout record of LayoutPointers entry 92: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$20,$08,$10,$08,$20,$18,$10,$18,$06,$20,$00,$18,$00,$08,$0E
+	db $00,$0E
+Layout093:							; the layout record of LayoutPointers entry 93: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$08,$10,$08,$00,$18,$10,$18,$06,$08,$00,$10,$00,$20,$0E
+	db $28,$0E
+Layout094:							; the layout record of LayoutPointers entry 94: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$09,$18,$00,$18,$10,$08,$10,$06,$2F,$01,$10,$08,$00,$10
+	db $00,$18
+Layout095:							; the layout record of LayoutPointers entry 95: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$09,$10,$00,$10,$10,$20,$10,$06,$01,$01,$20,$08,$30,$10
+	db $30,$18
+Layout096:							; the layout record of LayoutPointers entry 96: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$28,$09,$18,$00,$18,$10,$08,$10,$04,$10,$08,$00,$10,$00,$18
+Layout097:							; the layout record of LayoutPointers entry 97: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$00,$09,$10,$00,$10,$10,$20,$10,$04,$20,$08,$30,$10,$30,$18
+Layout098:							; the layout record of LayoutPointers entry 98: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$18,$04,$18,$14,$08,$04,$08,$14,$06,$00,$13,$00,$1B,$28,$00
+	db $00,$0B
+Layout099:							; the layout record of LayoutPointers entry 99: 16 x 16 pieces (a byte for
+									; LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y pairs),
+									; then the 8 x 8 ones
+	db $06,$08,$04,$08,$14,$18,$04,$18,$14,$06,$28,$13,$28,$1B,$00,$00
+	db $28,$0B
+Layout100:							; the layout record of LayoutPointers entry 100: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$20,$10,$10,$10,$00,$00,$00,$04,$08,$10,$08,$18,$08,$20
+Layout101:							; the layout record of LayoutPointers entry 101: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$20,$00,$10,$00,$00,$10,$00,$04,$10,$10,$10,$18,$10,$20
+Layout102:							; the layout record of LayoutPointers entry 102: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$20,$10,$10,$10,$08,$00,$18,$00,$02,$30,$10,$00,$00
+Layout103:							; the layout record of LayoutPointers entry 103: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$08,$10,$18,$10,$20,$00,$10,$00,$02,$00,$10,$30,$00
+Layout104:							; the layout record of LayoutPointers entry 104: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$20,$00,$10,$10,$20,$00,$00,$00,$10,$18
+Layout105:							; the layout record of LayoutPointers entry 105: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$20,$10,$10,$00,$20,$10,$00,$00,$08,$18
+Layout106:							; the layout record of LayoutPointers entry 106: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$18,$18,$18,$08,$08,$18,$08,$08,$02,$00,$0D,$19,$00
+Layout107:							; the layout record of LayoutPointers entry 107: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$18,$00,$08,$10,$18,$10,$08,$02,$20,$0D,$07,$00
+Layout108:							; the layout record of LayoutPointers entry 108: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$10,$08,$00,$08,$10,$18,$06,$18,$28,$10,$28,$08,$18,$08,$00
+Layout109:							; the layout record of LayoutPointers entry 109: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$00,$08,$10,$08,$00,$18,$06,$00,$28,$08,$28,$10,$18,$10,$00
+Layout110:							; the layout record of LayoutPointers entry 110: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$00,$10,$00,$00,$10,$10,$10,$04,$00,$20,$08,$20,$10,$20
+Layout111:							; the layout record of LayoutPointers entry 111: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$04,$18,$20,$10,$20,$08,$20
+Layout112:							; the layout record of LayoutPointers entry 112: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$18,$00,$18,$10,$08,$00,$08,$10,$04,$00,$00,$00,$08,$00,$10
+Layout113:							; the layout record of LayoutPointers entry 113: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$00,$00,$10,$10,$00,$10,$10,$04,$20,$00,$20,$08,$20,$10
+Layout114:							; the layout record of LayoutPointers entry 114: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$08,$10,$08,$01,$18,$11,$18,$06,$16,$00,$0E,$00,$04,$28
+	db $11,$28
+Layout115:							; the layout record of LayoutPointers entry 115: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$11,$08,$01,$08,$10,$18,$00,$18,$06,$03,$00,$0B,$00,$15,$28
+	db $08,$28
+Layout116:							; the layout record of LayoutPointers entry 116: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$11,$10,$01,$10,$10,$20,$00,$20,$06,$18,$00,$18,$08,$15,$30
+	db $08,$30
+Layout117:							; the layout record of LayoutPointers entry 117: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$10,$10,$10,$01,$20,$11,$20,$06,$01,$00,$01,$08,$04,$30
+	db $11,$30
+Layout118:							; the layout record of LayoutPointers entry 118: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$20,$10,$10,$10,$00,$10,$09,$00,$02,$30,$17,$01,$08
+Layout119:							; the layout record of LayoutPointers entry 119: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$08,$10,$18,$10,$28,$10,$1F,$00,$02,$00,$17,$2F,$08
+Layout120:							; the layout record of LayoutPointers entry 120: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$00,$10,$00,$00,$10,$10,$10,$06,$0F,$20,$0F,$28,$07,$20
+	db $07,$28
+Layout121:							; the layout record of LayoutPointers entry 121: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$06,$09,$20,$09,$28,$11,$20
+	db $11,$28
+Layout122:							; the layout record of LayoutPointers entry 122: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $08,$00,$00,$00
+Layout123:							; the layout record of LayoutPointers entry 123: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $08,$00,$00,$00
+Layout124:							; the layout record of LayoutPointers entry 124: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$08
+Layout125:							; the layout record of LayoutPointers entry 125: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$00,$10,$00,$00,$10,$10,$10,$08
+Layout126:							; the layout record of LayoutPointers entry 126: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$00,$00,$00,$10,$10,$00,$10,$00,$20,$18
+Layout127:							; the layout record of LayoutPointers entry 127: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$08,$00,$18,$00,$08,$10,$18,$10,$00,$00,$18
+Layout128:							; the layout record of LayoutPointers entry 128: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$08,$00,$08,$13,$18,$03,$18,$06,$02,$00,$0A,$00,$12,$28
+	db $0A,$28
+Layout129:							; the layout record of LayoutPointers entry 129: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$03,$08,$13,$08,$00,$18,$10,$18,$06,$19,$00,$11,$00,$09,$28
+	db $11,$28
+Layout130:							; the layout record of LayoutPointers entry 130: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$13,$02,$03,$02,$10,$12,$00,$12,$06,$2B,$00,$23,$00,$2B,$08
+	db $23,$08
+Layout131:							; the layout record of LayoutPointers entry 131: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$02,$20,$02,$13,$12,$23,$12,$06,$00,$00,$08,$00,$00,$08
+	db $08,$08
+Layout132:							; the layout record of LayoutPointers entry 132: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$00,$00,$00,$10,$10,$06,$00,$10,$16
+Layout133:							; the layout record of LayoutPointers entry 133: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$10,$00,$10,$10,$00,$06,$00,$08,$16
+Layout134:							; the layout record of LayoutPointers entry 134: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$00,$00,$10,$10,$06,$10,$16,$08
+Layout135:							; the layout record of LayoutPointers entry 135: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$10,$00,$10,$10,$00,$06,$00,$16,$08
+Layout136:							; the layout record of LayoutPointers entry 136: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$30,$14,$18,$17,$18,$07,$08,$00,$06,$28,$0C,$28,$14,$28,$1C
+	db $00,$01
+Layout137:							; the layout record of LayoutPointers entry 137: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$14,$18,$17,$18,$07,$28,$00,$06,$10,$0C,$10,$14,$10,$1C
+	db $38,$01
+Layout138:							; the layout record of LayoutPointers entry 138: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$40,$0A,$30,$0A,$20,$00,$20,$10,$06,$00,$07,$10,$07,$08,$07
+	db $18,$07
+Layout139:							; the layout record of LayoutPointers entry 139: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $06,$00,$0A,$10,$0A,$20,$00,$20,$10,$06,$48,$07,$38,$07,$40,$07
+	db $30,$07
+Layout140:							; the layout record of LayoutPointers entry 140: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$10,$00,$10,$10,$00,$06,$08
+Layout141:							; the layout record of LayoutPointers entry 141: 16 x 16 pieces (a byte
+									; for LayoutBigPieces, 0-6 for 1-4 pieces or 8 for none, then x / y
+									; pairs), then the 8 x 8 ones
+	db $04,$00,$00,$00,$10,$10,$06,$08

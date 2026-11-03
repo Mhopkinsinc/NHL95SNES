@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# extract.py: cut the ROM into the 4 KB segment files that the incbin segments include.
+# extract.py: cut the ROM into the 4 KB slices (Extracted/segments/) that the data files incbin.
 # Usage: python3 tools/extract.py lst/nhl95snes.sfc   (tools/prebuild.py runs it when needed)
 # Writes Extracted/segments/bankXX_YYYY.bin, then Extracted/.extract-complete.json last.
 import hashlib, json, os, shutil, sys

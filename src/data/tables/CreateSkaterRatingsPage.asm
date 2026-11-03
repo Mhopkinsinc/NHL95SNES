@@ -1,0 +1,20 @@
+CreateSkaterRatingsPage:			; Create Player's skater ratings text page
+	dw $0018,$00A0,0,$0000
+	dw TxtSpeed&$FFFF,$8007
+	dw TxtAgility&$FFFF,$8008
+	dw TxtEndurance&$FFFF,$8009
+	dw TxtOffAwareness&$FFFF,$800A
+	dw TxtDefAwareness&$FFFF,$800B
+	dw TxtStickhandling&$FFFF,$800C
+	dw TxtShotPower&$FFFF,$800D
+	dw TxtShotAccuracy&$FFFF,$800E
+	dw TxtPassAccuracy&$FFFF,$800F
+	dw TxtAggression&$FFFF,$8010
+	dw TxtChecking&$FFFF,$8011
+	dw TxtOverallRating&$FFFF,$A015
+	dw TxtUnusedPoints&$FFFF,$A016
+	dw TxtPadSelect&$FFFF,$8018
+	dw TxtStartDone&$FFFF,$8019
+	dw $FFFF,$00A8
+	dw TxtXCancel&$FFFF,$8019
+	dw 0

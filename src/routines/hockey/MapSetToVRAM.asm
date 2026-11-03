@@ -1,0 +1,3 @@
+MapSetToVRAM:						; the map set at X:A to VRAM at $9F (map words + $A1), ...
+	jsr.w MapSetToVRAMBody
+	rtl

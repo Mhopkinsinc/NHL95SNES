@@ -1,0 +1,40 @@
+LayoutPointers:						; per layout a pointer in this bank: entries 0-141 a layout record (its
+									; first byte picks the handler in LayoutBigPieces), 142-145 code the frame
+									; code jumps to
+	dw Layout000&$FFFF,Layout001&$FFFF,Layout002&$FFFF,Layout003&$FFFF
+	dw Layout004&$FFFF,Layout005&$FFFF,Layout006&$FFFF,Layout007&$FFFF
+	dw Layout008&$FFFF,Layout009&$FFFF,Layout010&$FFFF,Layout011&$FFFF
+	dw Layout012&$FFFF,Layout013&$FFFF,Layout014&$FFFF,Layout015&$FFFF
+	dw Layout016&$FFFF,Layout017&$FFFF,Layout018&$FFFF,Layout019&$FFFF
+	dw Layout020&$FFFF,Layout021&$FFFF,Layout022&$FFFF,Layout023&$FFFF
+	dw Layout024&$FFFF,Layout025&$FFFF,Layout026&$FFFF,Layout027&$FFFF
+	dw Layout028&$FFFF,Layout029&$FFFF,Layout030&$FFFF,Layout031&$FFFF
+	dw Layout032&$FFFF,Layout033&$FFFF,Layout034&$FFFF,Layout035&$FFFF
+	dw Layout036&$FFFF,Layout037&$FFFF,Layout038&$FFFF,Layout039&$FFFF
+	dw Layout040&$FFFF,Layout040&$FFFF,Layout042&$FFFF,Layout043&$FFFF
+	dw Layout044&$FFFF,Layout045&$FFFF,Layout046&$FFFF,Layout047&$FFFF
+	dw Layout048&$FFFF,Layout049&$FFFF,Layout050&$FFFF,Layout051&$FFFF
+	dw Layout052&$FFFF,Layout053&$FFFF,Layout054&$FFFF,Layout055&$FFFF
+	dw Layout056&$FFFF,Layout057&$FFFF,Layout058&$FFFF,Layout059&$FFFF
+	dw Layout060&$FFFF,Layout061&$FFFF,Layout062&$FFFF,Layout063&$FFFF
+	dw Layout064&$FFFF,Layout065&$FFFF,Layout066&$FFFF,Layout067&$FFFF
+	dw Layout068&$FFFF,Layout069&$FFFF,Layout070&$FFFF,Layout071&$FFFF
+	dw Layout072&$FFFF,Layout073&$FFFF,Layout074&$FFFF,Layout075&$FFFF
+	dw Layout076&$FFFF,Layout077&$FFFF,Layout078&$FFFF,Layout079&$FFFF
+	dw Layout080&$FFFF,Layout081&$FFFF,Layout082&$FFFF,Layout083&$FFFF
+	dw Layout084&$FFFF,Layout085&$FFFF,Layout086&$FFFF,Layout087&$FFFF
+	dw Layout088&$FFFF,Layout089&$FFFF,Layout090&$FFFF,Layout091&$FFFF
+	dw Layout092&$FFFF,Layout093&$FFFF,Layout094&$FFFF,Layout095&$FFFF
+	dw Layout096&$FFFF,Layout097&$FFFF,Layout098&$FFFF,Layout099&$FFFF
+	dw Layout100&$FFFF,Layout101&$FFFF,Layout102&$FFFF,Layout103&$FFFF
+	dw Layout104&$FFFF,Layout105&$FFFF,Layout106&$FFFF,Layout107&$FFFF
+	dw Layout108&$FFFF,Layout109&$FFFF,Layout110&$FFFF,Layout111&$FFFF
+	dw Layout112&$FFFF,Layout113&$FFFF,Layout114&$FFFF,Layout115&$FFFF
+	dw Layout116&$FFFF,Layout117&$FFFF,Layout118&$FFFF,Layout119&$FFFF
+	dw Layout120&$FFFF,Layout121&$FFFF,Layout122&$FFFF,Layout123&$FFFF
+	dw Layout124&$FFFF,Layout125&$FFFF,Layout126&$FFFF,Layout127&$FFFF
+	dw Layout128&$FFFF,Layout129&$FFFF,Layout130&$FFFF,Layout131&$FFFF
+	dw Layout132&$FFFF,Layout133&$FFFF,Layout134&$FFFF,Layout135&$FFFF
+	dw Layout136&$FFFF,Layout137&$FFFF,Layout138&$FFFF,Layout139&$FFFF
+	dw Layout140&$FFFF,Layout141&$FFFF,GoalFrameLayout&$FFFF,GoalFrameLayout&$FFFF
+	dw PuckFrameLayout&$FFFF,PuckFrameLayout&$FFFF

@@ -1,0 +1,54 @@
+SetAllStarPhotoPointers:			; sets the scouting photo pointers for an all-star roster
+	cmp.w #$001A
+	beq .1
+	lda.w #$CBDA
+	sta.w $00AC,y
+	lda.w #$05CE
+	sta.w $00DE,y
+	lda.w #$BA13
+	sta.w $00D4,y
+	lda.w #$00CD
+	sta.w $0106,y
+	lda.w #$9411
+	sta.w $00D2,y
+	lda.w #$01CD
+	sta.w $0104,y
+	lda.w #$BA13
+	sta.w $00BA,y
+	lda.w #$02CD
+	sta.w $00EC,y
+	lda.w #$5DAC
+	sta.w $00B2,y
+	lda.w #$03C0
+	sta.w $00E4,y
+	lda.w #$6E6D
+	sta.w $00C2,y
+	lda.w #$04C0
+	sta.w $00F4,y
+	rts
+.1:									; $00AC,y = $6D00, $00DE,y = $05CE, $00D4,y = $5E35, ...
+	lda.w #$6D00
+	sta.w $00AC,y
+	lda.w #$05CE
+	sta.w $00DE,y
+	lda.w #$5E35
+	sta.w $00D4,y
+	lda.w #$01CD
+	sta.w $0106,y
+	lda.w #$6D00
+	sta.w $00CE,y
+	lda.w #$00CE
+	sta.w $0100,y
+	lda.w #$B8A0
+	sta.w $00B8,y
+	lda.w #$03CE
+	sta.w $00EA,y
+	lda.w #$6D00
+	sta.w $00B2,y
+	lda.w #$03CE
+	sta.w $00E4,y
+	lda.w #$6FF6
+	sta.w $00CC,y
+	lda.w #$04CD
+	sta.w $00FE,y
+	rts
