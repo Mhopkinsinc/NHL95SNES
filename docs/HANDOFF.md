@@ -313,12 +313,20 @@
   saved-index/stack preconditions. CODE_C5ECA5 is an uncalled script setter variant without the SetSpriteAnim
   flag update; CODE_C5EE3C is an uncalled palette-release fragment. Their intended entry contracts are unverified.
   Other CODE_ entries outside the interpreter and upload helper were not renamed without a separate purpose trace.
-- PadButtonsMap: a map set of a pad's four buttons with tape-deck symbols (rewind, fast forward, play); it may be the
-  replay controls, but its loader ($C373C7, bank $C3) is not traced, so the name only says what it shows.
-- TeamNameBarsMap: the city name bars of the 26 teams (12 x 2 tiles each) are unpacked right after the playoff bracket
-  (from bank $C4), so they probably fill the bracket's slots (94S colours its slots with TeamBlockPalettes); not traced.
-- CenterIceTiles: named as 94S's centre ice logos (the home team's logo on ice blue goes to VRAM in the game screen setup,
-  with its colours to palette 3); where the map puts it on the rink is not traced.
+- PadButtonsMap: confirmed instant replay controller legend. ReplayMode unpacks it with MapSetToWRAM,
+  adjusts entries by $3E4B, then queues tiles to $44B0, map to $5821 and colours to CGRAM $70.
+  Genesis ReplayMap is a replay banner; that is not evidence for renaming this four-button legend.
+
+- TeamNameBarsMap: confirmed playoff bracket slot labels. SetupPlayoffBracket loads it; RebuildBracketTeams
+  calls PopulateBracketTeams, which uses TeamBarRoundCells and CopyBracketTeamBar to copy team*48 bytes
+  as two rows of 12 tiles into rinkmapbuf. QueueBracketColumn uploads the composed columns.
+
+- CenterIceTiles: setupice and RestoreGameScreen upload HomeTeam*768 bytes to VRAM $2080. Decoded
+  IceRinkMap references tiles $208-$21F as a 6 x 4 block at columns 21-26, rows 42-45 (zero-based storage
+  coordinates). Entries $1A08-$1A1F select palette 6, matching CGRAM $60; the former palette 3 claim was wrong.
+  setupice copies the map to rinkmapbuf and updatescroll_rows sends visible rows. The complete screen-space
+  interpretation of the split rink map remains open; the existing 94S centre ice name is retained.
+
 - Team database (bank $C3): PlayerList's bits 14-15 (0, $4000, $8000) group like goalies, defence and forwards (63, 218,
   406 players) but the code that reads them is not traced; a player record is taken to hold a packed name and the ratings
   (not decoded); TeamRecordUnused has the form of a team record but TeamList does not point at it.

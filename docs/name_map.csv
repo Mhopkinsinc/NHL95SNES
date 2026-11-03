@@ -558,13 +558,13 @@ $C1CF9B,PauseScreenPalette,,render,"map set chunk 3: 2 palettes of 16 colours",s
 $C1CFE2,FaceOffMap,,render+94S,"map set chunk 1 (32 x 40 word map, LZSS, $0A00 bytes): the faceoff box, 4 frames of 12 x 10 tiles of the referee dropping the puck (the 12 x 10 box of 94S FaceOffMap); $C43CA2 and $C5583E load the set through $C5881C",src/bankC1_C000.asm
 $C1D1BD,FaceOffTiles,,render+94S,"map set chunk 2: 78 4bpp tiles, LZSS ($09C0 bytes)",src/bankC1_C000.asm
 $C1D751,FaceOffPalette,,render,"map set chunk 3: 1 palette of 16 colours",src/bankC1_C000.asm
-$C1D778,PadButtonsMap,,render,"map set chunk 1 (32 x 7 word map, LZSS, $01C0 bytes): a pad's four buttons (Y, B, X, A) with tape-deck symbols; $C373C7 loads the set through $C5881C; what it is shown for is not traced (Unsure)",src/bankC1_D000.asm
+$C1D778,PadButtonsMap,,render,"instant replay controller legend; ReplayMode unpacks the set and queues its map, tiles and palette",src/bankC1_D000.asm
 $C1D81B,PadButtonsTiles,,render,"map set chunk 2: 53 4bpp tiles, LZSS ($06A0 bytes)",src/bankC1_D000.asm
 $C1DC54,PadButtonsPalette,,render,"map set chunk 3: 1 palette of 16 colours",src/bankC1_D000.asm
 $C1DC7B,PlayoffBracketMap,,render+94S,"map set chunk 1 (100 x 28 word map, LZSS, $15E0 bytes): the playoff bracket with the Stanley Cup in the middle (94S PlayoffBracketMap, the bracket graphics); $C40494 unpacks the set to unpackbuf through $C58812",src/bankC1_D000.asm
 $C1E05B,PlayoffBracketTiles,,render,"map set chunk 2: 106 4bpp tiles, LZSS ($0D40 bytes): the bracket lines and the cup",src/bankC1_D000.asm
 $C1E98B,PlayoffBracketPalette,,render,"map set chunk 3: 1 palette of 16 colours",src/bankC1_D000.asm
-$C1E9B2,TeamNameBarsMap,,render,"map set chunk 1 (12 x 52 word map, LZSS, $04E0 bytes): the city names of the 26 teams on bars in team colours, 12 x 2 tiles each; $C404F5 unpacks the set to unpackbuf through $C58812 just after the playoff bracket (probably the bracket slots, as 94S colours them with TeamBlockPalettes; not traced)",src/bankC1_E000.asm
+$C1E9B2,TeamNameBarsMap,,render,playoff bracket team name bars; PopulateBracketTeams copies each two-row bar into rinkmapbuf through CopyBracketTeamBar,src/bankC1_E000.asm
 $C1EE6B,TeamNameBarsTiles,,render,"map set chunk 2: 460 4bpp tiles, LZSS ($3980 bytes); the stream runs on into bank $C2 up to TeamNameBarsPalette",src/bankC1_F000.asm
 $C20AB8,TitlePlayersMap,,render+code,"map set chunk 1 (32 x 20 word map, LZSS, $0500 bytes): three players, the title screen's BG1 (the setup at $C4D213 loads it with TitleGoalieMap on BG2 and TitleLogoMap on BG3, mode 1); $C4D2F2 and $C4D452 load it too",src/bankC2_0000.asm
 $C20DE6,TitlePlayersTiles,,render,"map set chunk 2: 316 4bpp tiles, LZSS ($2780 bytes)",src/bankC2_1000.asm
@@ -572,8 +572,8 @@ $C22C8B,TitlePlayersPalette,,render,"map set chunk 3: 1 palette of 16 colours",s
 $C2334F,TitleGoalieTiles,,render,"map set chunk 2: 677 4bpp tiles, LZSS ($54A0 bytes); the stream runs on to TitleGoaliePalette in bankC2_7000",src/bankC2_3000.asm
 $C27487,TitleLogoTiles,,render+94S,"map set chunk 2: 176 2bpp tiles, LZSS ($0B00 bytes); 94S TitleLogoTiles: the title logo pieces with the (R) mark",src/bankC2_7000.asm
 $C2790C,TitleLogoPalette,,render,"map set chunk 3: 3 palettes of 4 colours",src/bankC2_7000.asm
-$C2792B,CenterIceTiles,,render+94S+code,"672 4bpp tiles, packed format 4 ($5400 bytes): the centre ice logos of the 28 teams in team order (WSH before WPG, then the Eastern and Western all-stars), 6 x 4 tiles each on ice blue; $C52135 unpacks them and queues team $17C9's (home) $300 bytes to VRAM $2080 with its colours from $C2ADCA to CGRAM palette 3, as 94S CenterIceTiles<team> (the home team's logo); also $C557C4",src/bankC2_8000.asm
-$C2ADCA,CenterIcePalettes,,code+render,"28 x 16 colours in team order for CenterIceTiles; $C5216F queues team $17C9's (home) 32 bytes to CGRAM palette 3",src/bankC2_A000.asm
+$C2792B,CenterIceTiles,,render+94S+code,home team logo tiles loaded by setupice and RestoreGameScreen; IceRinkMap selects a six by four block with palette 6,src/bankC2_8000.asm
+$C2ADCA,CenterIcePalettes,,code+render,"centre ice logo colours, one palette per team; setupice and RestoreGameScreen send the home selection to palette 6",src/bankC2_A000.asm
 $C2B14A,VisualConceptsMap,,render,"map set chunk 1 (32 x 12 word map, LZSS, $0300 bytes): the developer credit VISUAL CONCEPTS ... PRESENT; the screen setup at $C4B98E loads it (BG map $5900) and HighScoreMap (BG map $5000)",src/bankC2_A000.asm
 $C2B27C,VisualConceptsTiles,,render,"map set chunk 2: 101 4bpp tiles, LZSS ($0CA0 bytes)",src/bankC2_A000.asm
 $C2BB22,VisualConceptsPalette,,render,"map set chunk 3: 2 palettes of 16 colours",src/bankC2_A000.asm
