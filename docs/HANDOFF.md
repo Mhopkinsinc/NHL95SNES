@@ -5,7 +5,7 @@
 - Plan: the 95S alignment plan (`alignment-plan/95s_alignment_plan.md` in the Code Cleanup project files). Rules: `docs/RULES.md`.
 - Branch: `claude/project-thread-ggw7zu`
 - Phase: 0 done (kit). 1 done (95S in the report on nhl-disasm-report's `claude/project-thread-ggw7zu`: segment-layout
-  reader, counts `95S~95G` and `95S~94S` at 0, 699 95S known pairs; `tools/gate.sh` PAIRING OK). 2 done: `tools/inventory95.py`
+  reader, counts `95S~95G` and `95S~94S` at 0, 699 95S known pairs then, 752 now; `tools/gate.sh` PAIRING OK). 2 done: `tools/inventory95.py`
   wrote `docs/routines95s.csv` (4,470 labels, 1,348 routines, 2,809 data runs; rules: 95G 283, family 158, 94S 95,
   callers 724, plurality 68, span 16, follows 4, UNSURE 0).
 - Phase 3 done: `tools/move95.py` moved the 256 segments to `src/banks/` (16 bank files), `src/routines/` (1,348 routine
@@ -16,7 +16,6 @@
   jobs); `tools/rename95.py` applied the 32 renames marked sure (old names in name_map.csv `old_name`), and 67 routine
   files moved to the folder the inventory now gives them. 26 unsure matches were left alone (list: the Code Cleanup project
   file `95s-inventory/naming_pass.md`). Report pairing gate OK (752 known pairs).
-- Last check: `tools/verify_all.sh` MATCH (2026-11-03).
 - Phase 5 done: `ram95s.asm` renames padlast / padnew / tmpassatt to the 94S (93S, 94G) padlast1 / padnew1 / tmpasses,
   then the merged order (94S's order, 95G-only names after the 95G name before them, 95S-only names after the name
   before them). Matched names out of order: 1 against 94S (penshot), 0 against 95G. A wider RAM naming pass by reading
@@ -29,10 +28,13 @@
   transfer queues, the bit-packed save RAM) with no partner. DemoMode and RandomState are not demoflag and seed: 95S
   has those too, at other addresses.
 - Last check: `tools/verify_all.sh` MATCH (2026-11-03).
-- Next: phase 6 (advisor review, pairing baseline, plan marked done).
-- Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
-  cannot link a 95S known pair to its new name.
-- Unsure: none placed by guess; the 68 `plurality` and 4 `follows` rows are the low-confidence placements for checkpoint 1.
+- Phase 6 done: advisor review (opus): layout, folders and 10 renames checked against their partners, verdict done
+  after its fixes (DrawPeriodStats moved from 94S's `period/` to `front/stats/`; RULES "This repo" and Learned brought
+  up to date). Pairing baseline: every 95S count is 0, the floor. The all-games plan marks Stage E done.
+- Next: nothing in the plan. Open, optional: the 14 kept names (reasons in the naming notes); about 38 source comments
+  that name 94S to say what 95S lacks or shares (allowed by RULES, not checked by a tool); 94S `waitxsr` to `waitx` (in
+  the 94S repo).
+- Unsure: none.
 
 ## Segment work: state (2026-10-31, finished)
 

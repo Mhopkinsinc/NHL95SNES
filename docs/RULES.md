@@ -28,12 +28,15 @@ rule in the same commit as the fix that confirmed it, newest last: `- YYYY-MM-DD
   `hockey`, `control`, `display`, `graphics`, `schedule`, `sram`, `teamdata`, `frames`, `credits`). Decided 2026-11-03 for
   now; the owner may revisit it after comparing 94G/94S with 95G, so moves stay scripted from `docs/routines95s.csv`.
 - Placement, in order: the 95G file of the routine's 95G partner; for an SNES-only engine job (NMI/IRQ, DMA and HDMA queues,
-  the unpacker, SPC upload, map-set loaders) the 94S folder for that job (`video`, `sound`, `decompress`, `middle`, `main`);
-  else the folder most of its callers are in; else Unsure, placed by the owner.
+  the unpacker, SPC upload, map-set loaders) the 94S folder for that job: `sound/`, `decompress/` and `main/` sit directly
+  under `src/routines/`, while `video` and `middle` are 95G keys under `engine/`; else the folder most of its callers are in; else Unsure, placed by the owner.
 - Names: the pipeline names every routine, and alignment with the related repos overrides the names already in 95S, including
   earlier contributors' (owner, 2026-11-03). A routine with a 95G partner takes the 95G name; an SNES job with no 95G partner
   takes the 94S name when the job matches; else the current 95S name stays if it says what the code does; unsure keeps its
-  current name and goes under Unsure. Every rename is a `docs/name_map.csv` row with the old name and the evidence.
+  current name and goes under Unsure. Every rename is a `docs/name_map.csv` row with the old name and the evidence. When 95G
+  and 94S use one name for different code, the SNES-only job keeps 94S's (VBlank).
+- Comments: a source comment may name another game only to say what 95S lacks or shares (a stub where 94S prints, a
+  table as 94S's); name history stays in `docs/name_map.csv`. `check_comments.py` checks layout only, not this.
 - Data and banks follow 94S: one asset per file under `src/data/{tables,gfx,sound,text}/`, `src/banks/bCx_<content>.asm` in
   ROM order.
 
@@ -41,3 +44,7 @@ rule in the same commit as the fix that confirmed it, newest last: `- YYYY-MM-DD
 - 2026-11-03 branch: all work goes onto `claude/project-thread-ggw7zu` and nothing merges to `main` yet; push there without asking once the checks pass, and stop only at the plan's review checkpoints. (owner)
 - 2026-11-03 placement: a `#Label` operand (task and hook pointers) is a reference; without it 64 routines looked unreferenced. Engine services (interrupts, transfers, fades, sprites, print, work buffers, math, pads, tasks) are placed as whole families by job, not by callers, which scatter them over the screens that use them. (inventory95.py, 97 UNSURE to 0)
 - 2026-11-03 names: 95S is mostly its own design; of about 1,000 routines without a 95G name, readers found 32 sure partners. Screens built differently (season, records, create, setup UI, sprite and task systems) keep their 95S names; a loop in 95G that 95S does one row at a time is not the same routine. (phase 4 namer pass)
+- 2026-11-03 names: every rename writes `old_name` in `docs/name_map.csv` and repoints the report's known pair, or the pairing gate loses the pair. (phase 4)
+- 2026-11-03 RAM: a RAM equate may differ from a code label only in case (fadein and FadeIn, as in 94S); asar names are case-sensitive and an equate has no file. (deep dive, rename95.py)
+- 2026-11-03 placement: a 94S name gives a 95S routine its name, not its folder, unless the job is SNES-only; DrawPeriodStats had taken 94S's `period/` folder. (phase 6 review)
+- 2026-11-03 names: a shared name that differs from the earliest game's (94S waitxsr where 94G has waitx) is fixed in the earliest repo that differs, then down the lineage; 95S already uses waitx. (phase 6 review)

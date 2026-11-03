@@ -2784,7 +2784,7 @@ $C56262,49,code,StringToBoxTiles,StringToBoxTiles,3,code,engine/goal,callers,2 o
 $C56293,125,code,StatsReport,StatsReport,0,94S+purpose+align,front/stats,95G,StatsReport in 95G front/stats
 $C56310,88,code,DrawGameStatRow,DrawGameStatRow,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C56368,104,code,PeriodStatsScreen,PeriodStatsScreen,0,94S+purpose+align,front/stats,95G,PeriodStatsScreen in 95G front/stats
-$C563D0,131,code,DrawPeriodStats,DrawPeriodStats,1,94S+purpose,period,94S,DrawPeriodStats in 94S routines/period
+$C563D0,131,code,DrawPeriodStats,DrawPeriodStats,1,94S+purpose,front/stats,callers,"only caller PeriodStatsScreen (front/stats); the 94S name gives the name, not the folder"
 $C56453,76,code,PeriodStatsTeam,PeriodStatsTeam,1,code+align,front/stats,95G,PeriodStatsTeam in 95G front/stats
 $C5649F,363,code,PlayerStatsScreen,PlayerStatsScreen,0,94S+purpose+align,front/stats,95G,PlayerStatsScreen in 95G front/stats
 $C5660A,48,code,ClearPlayerStatsList,ClearPlayerStatsList,1,code,front/stats,callers,1 of 1 placed callers in front/stats
