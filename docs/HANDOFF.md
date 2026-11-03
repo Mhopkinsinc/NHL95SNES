@@ -12,8 +12,12 @@
   files, folders from `docs/routines95s.csv`) and `src/data/` (1,399 files). Same 10,228 labels at the same addresses
   (symbol file compared before and after). `src/stubinc/` and `tools/verify_segment.sh` are gone; `tools/verify_all.sh`
   is now extract + full build.
+- Phase 4 done (first pass): namer agents read every 95S folder against its 95G file (and the 94S folder for SNES
+  jobs); `tools/rename95.py` applied the 32 renames marked sure (old names in name_map.csv `old_name`), and 67 routine
+  files moved to the folder the inventory now gives them. 26 unsure matches were left alone (list: the Code Cleanup project
+  file `95s-inventory/naming_pass.md`). Report pairing gate OK (752 known pairs).
 - Last check: `tools/verify_all.sh` MATCH (2026-11-03).
-- Next: phase 4, naming (one 95G file per unit; `docs/RULES.md` "Names"), then phase 5 (RAM).
+- Next: phase 5, RAM (`ram95s.asm` names by the same rules, then the merged order).
 - Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
   cannot link a 95S known pair to its new name.
 - Unsure: none placed by guess; the 68 `plurality` and 4 `follows` rows are the low-confidence placements for checkpoint 1.
