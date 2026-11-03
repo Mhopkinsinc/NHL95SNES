@@ -27,7 +27,9 @@ Cleanup project files).
   `docs/RULES.md`, in the same commit.
 * **Handoff:** before stopping, update the Now block in `docs/HANDOFF.md` and push. Never leave uncommitted work: an unfinished
   unit is pushed and marked WIP. Nothing lives only in one tool's chat or memory.
-* **Branch:** alignment work collects on `claude/project-thread-ggw7zu`. `main` gets it when the owner merges.
+* **Branch:** all alignment work goes onto `claude/project-thread-ggw7zu`; nothing merges to `main` yet. Pushing to that branch
+  needs no approval: commit and push each unit once its checks pass. Only the owner merges to `main`, later. Work stops for the
+  owner only at the plan's review checkpoints.
 * Which model does which job is set in `.cursor/rules/main.mdc` and `.claude/agents/`, not here.
 
 ## For AI agents: derivative work and credit

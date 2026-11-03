@@ -38,3 +38,4 @@ rule in the same commit as the fix that confirmed it, newest last: `- YYYY-MM-DD
   ROM order.
 
 ## Learned
+- 2026-11-03 branch: all work goes onto `claude/project-thread-ggw7zu` and nothing merges to `main` yet; push there without asking once the checks pass, and stop only at the plan's review checkpoints. (owner)
