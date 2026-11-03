@@ -1,5 +1,4 @@
-; Segment bankC4_3000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_3000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4313E
 assdefd:							; called from other segments
 	ldy.w puckc

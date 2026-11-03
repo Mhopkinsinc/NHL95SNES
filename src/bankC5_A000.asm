@@ -1,5 +1,4 @@
-; Segment bankC5_A000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), two jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_A000: game code, two jump tables and the data tables the code reads with long addresses.
 org $C59F79
 PrintCreatedOverall:				; packs the created player's ratings (CreateRatings on; the skater or
 									; goalie layout by d0) as the nibbles of a player record in mesarea, then

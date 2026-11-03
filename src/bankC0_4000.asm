@@ -1,6 +1,5 @@
 ; Segment bankC0_4000: two packed tile sets, HDMA tables and the colour hooks of one screen, small tables,
-; then the player photos of Tampa Bay (their palettes, then the photos packed). Items not traced to a use
-; keep an auto name.
+; then the player photos of Tampa Bay (their palettes, then the photos packed).
 org $C04642
 DigitFontTiles:						; 4bpp tiles, packed: the digits and the position letters D, L, C, R, X;
 									; unpacked and sent to VRAM

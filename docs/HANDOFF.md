@@ -11,7 +11,7 @@
   ($C05DAC-$C06E6C: the Toronto photos), bankC0_6000 ($C06E6D-$C07ECA: the Vancouver photos),
   bankC0_7000 ($C07ECB-$C07FFF: TeamSongs, DefaultSongs, a sound list, fill), bankC0_8000 ($C08000-$C09004: data, then the
   engine start: NMI, IRQ, hooks, waits, RandomWord, screen routines, multiplies), bankC0_9000 ($C09005-$C09A23: the rest of
-  the math, then game code with CODE_ names), bankC0_A000 ($C09A24-$C0B5BE: asstab, asspuckc_postab, tables, Sample19-21),
+  the math, then game code), bankC0_A000 ($C09A24-$C0B5BE: asstab, asspuckc_postab, tables, Sample19-21),
   the sound samples after it to bankC0_F000 (Sample15, the vector entry points, the headers, the vectors): bank $C0 is all source.
   Bank $C6: frame source and placement tables, raw frame tiles and VezinaPic. Banks $C7-$CB: raw frame tiles, each followed
   by an award picture (SelkePic, ConnSmythePic, JenningsPic, ArtRossPic, NorrisPic). Bank $CC: raw frame tiles, then the
@@ -26,7 +26,7 @@
   bars, the title screen sets, CenterIceTiles / CenterIcePalettes, the two developer credits, the ref windows, Sample09-12. Bank
   $C3: the team database (TeamList, PlayerList, the player and team records as labels and ROM cuts, since the names are
   licensed), data tables and text, PhotoPaletteTable, game code ($C36B83-$C38EFD), then samples 03, 04, 05, 28, 07, 08, 24, 25,
-  30, 29 and a zero fill. Banks $C4 / $C5: game code (CODE_ names; the seed rules are in the notes below). Bank $CF:
+  30, 29 and a zero fill. Banks $C4 / $C5: game code (the seed rules are in the notes below). Bank $CF:
   the sound code and data, the frame code and its layout data. Onboarding: McMarkis.
 - Sound samples: the sample list at $CF05DD (33 entries of 4 bytes: a long pointer, then a zero) gives their starts; each is a
   12-byte header, then 9-byte BRR blocks up to the one with the end flag (bit 0 of the block header). In bank $C0 (list index,
@@ -107,7 +107,7 @@
 - Stanley Cup: StanleyCupMap / Tiles / Palette ($CEF3E9-$CEFE76, 8 x 14 tiles, 87 tiles, one palette) after
   PresidentsPic; rendered as the Stanley Cup and named as 94S StanleyCupMap / Tiles / Palette. StanleyCupScreen loads it
   (through MapSetToWRAM). Zeros fill bank $CE after it.
-- Bank $CF: the sound code ($CF0000-$CF04E2; SPCUpload as 94S, the rest CODE_ names), SoundSequenceTable (40 sounds: a long
+- Bank $CF: the sound code ($CF0000-$CF04E2; SPCUpload as 94S, the rest named from the code), SoundSequenceTable (40 sounds: a long
   pointer and a flag byte), SampleVolumeOverrideLists (four lists of sample records), SongLists, SampleList (33 long pointers as dd;
   entries 26 and 27 share Sample26), SampleListTailUnused / TeamSongSoundList, then the sounds back to back ($CF0679-$CF95A3 and
   $CFC262-$CFC560; each a length word and its data; LoadSequence sends the samples listed from +3), Sample26, Sample31,
@@ -308,11 +308,10 @@
   header), $C5F0D1 (OAM), AnimateSprites (scripts, dispatched through SpriteAnimCommands).
   The command bytes $80-$9D are documented in sprite_objects.md; no record script uses $89 or $8E, whose handlers
   (SpriteAnimIncWordUnused / SpriteAnimCallUnused) treat UploadSpriteFrames code bytes as pointers.
-  SpriteAnimDelete ($88) calls the RTL-returning DeleteSprite via JSR; no record script uses it. Unreached
-  CODE_C5EA91 / CODE_C5EAA2 / CODE_C5EB88 keep auto names: they enter animation continuations with unproven
-  saved-index/stack preconditions. CODE_C5ECA5 is an uncalled script setter variant without the SetSpriteAnim
-  flag update; CODE_C5EE3C is an uncalled palette-release fragment. Their intended entry contracts are unverified.
-  Other CODE_ entries outside the interpreter and upload helper were not renamed without a separate purpose trace.
+  SpriteAnimDelete ($88) calls the RTL-returning DeleteSprite via JSR; no record script uses it. The unreached
+  helpers are named from what they do with the Unused suffix (CopySpriteFrameUnused, ClearSpriteFrameUnused,
+  CopySpriteFramesUnused, StartSpriteAnimUnused, FreeSpritePaletteUnused); their intended entry contracts are
+  unverified.
 - PadButtonsMap: confirmed instant replay controller legend. ReplayMode unpacks it with MapSetToWRAM,
   adjusts entries by $3E4B, then queues tiles to $44B0, map to $5821 and colours to CGRAM $70.
   Genesis ReplayMap is a replay banner; that is not evidence for renaming this four-button legend.

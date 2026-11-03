@@ -1,5 +1,4 @@
-; Segment bankC4_9000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_9000: game code, jump tables and the data tables the code reads with long addresses.
 org $C492F8
 ClampGoalieTargetY:					; clamp the goalie target between goal lines and make its Y relative to d3
 	lda.w Ypos,x

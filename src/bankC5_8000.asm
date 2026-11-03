@@ -1,6 +1,5 @@
-; Segment bankC5_8000: the rest of the reset, Decompress and its formats, the LZSS and map set unpackers,
-; the transfer queue helpers, HDMA set-up, then game code. Routines not traced to a job keep their address as
-; a name.
+; Segment bankC5_8000: the rest of the reset, Decompress and its formats, the LZSS and map set unpackers, the
+; transfer queue helpers, HDMA set-up, then game code.
 org $C5800C
 PrintSaveRecordRow:					; save record A on row $6D: the holder's name, then the saves 'by' the
 									; team 'vs' the other team, through PrintRecordCell

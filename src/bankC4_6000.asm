@@ -1,5 +1,4 @@
-; Segment bankC4_6000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_6000: game code, jump tables and the data tables the code reads with long addresses.
 org $C45FAC
 PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twice
 									; (PlayerAccFrames)

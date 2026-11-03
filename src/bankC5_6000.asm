@@ -1,5 +1,4 @@
-; Segment bankC5_6000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_6000: game code, jump tables and the data tables the code reads with long addresses.
 org $C56005
 ConcatStringsLong:					; ConcatStrings for long calls
 	jsr.w ConcatStrings

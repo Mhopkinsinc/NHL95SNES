@@ -1,5 +1,4 @@
-; Segment bankC4_2000: data tables (not traced yet), then game code (routines keep their address as a name,
-; with their callers).
+; Segment bankC4_2000: data tables, then game code.
 org $C42030
 SPAcrosscheck:						; per direction (facedir & 7, * 2): the cross check animation: (frame,
 									; time) pairs, the last time negative

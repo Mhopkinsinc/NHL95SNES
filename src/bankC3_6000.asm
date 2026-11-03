@@ -1,5 +1,4 @@
-; Segment bankC3_6000: data tables (not traced; labelled where code reads them), then game code (routines keep
-; their address as a name, with their callers).
+; Segment bankC3_6000: data tables, then game code.
 org $C36000
 ; the rest of SeasonDates (from bankC3_5000), to its closing 0
 	db $1B,$0B,$3C,$0B,$5D,$0B,$7E,$0B,$9F,$0B,$A1,$00,$C2,$00,$03,$00

@@ -1,5 +1,4 @@
-; Segment bankC4_0000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_0000: game code, jump tables and the data tables the code reads with long addresses.
 org $C40000
 PlayoffBracketScreen:				; the playoff bracket screen (GamesToday in play mode 3): the pad moves
 									; the cursor over the series, the face buttons and L / R mark one, start

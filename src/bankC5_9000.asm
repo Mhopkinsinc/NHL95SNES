@@ -1,5 +1,4 @@
-; Segment bankC5_9000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and a few data tables between routines.
+; Segment bankC5_9000: game code, jump tables and a few data tables between routines.
 org $C58FD8
 PrevOptionValue:					; setup screen left: the variable of line d6 one value back (the last
 									; below 0), then the line's check routine (the word before its routine

@@ -1,5 +1,4 @@
-; Segment bankC5_B000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_B000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5AFB6
 LeagueLeadersScreen:				; League Menu League Leaders: the players leading a stat category (the pad
 									; changes the stat); DrawLeagueLeaders redraws it

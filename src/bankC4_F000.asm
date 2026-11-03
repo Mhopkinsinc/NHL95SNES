@@ -1,5 +1,4 @@
-; Segment bankC4_F000: game code (routines keep their address as a name, with their callers), then sound
-; sample 2 and zeros to the end of the bank.
+; Segment bankC4_F000: game code, then sound sample 2 and zeros to the end of the bank.
 org $C4F01E
 BuildTeamLines:						; builds the line data of roster table Y from its players: each player's
 									; value (RecordOverallLong), then the line slots filled position by

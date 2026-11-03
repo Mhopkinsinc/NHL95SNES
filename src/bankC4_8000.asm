@@ -1,5 +1,4 @@
-; Segment bankC4_8000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_8000: game code, jump tables and the data tables the code reads with long addresses.
 org $C47FB5
 updatepentime:						; called from other segments
 	lda.w #$0020

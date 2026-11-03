@@ -1,5 +1,5 @@
-; Segment bankC3_8000: the rest of bank $C3's game code (routines keep their address as a name, with their
-; callers) and the data tables it reads; the sound samples start after it.
+; Segment bankC3_8000: the rest of bank $C3's game code and the data tables it reads; the sound samples start
+; after it.
 org $C37FE2
 GetFrameHot:						; return the current frame hot spot in d0 and d1
 	phx

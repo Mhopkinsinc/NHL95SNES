@@ -1,5 +1,4 @@
-; Segment bankC5_7000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_7000: game code, jump tables and the data tables the code reads with long addresses.
 org $C56F5C
 ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the goalies) and
 									; the title of stat column $7D, then a row per player of the line: its

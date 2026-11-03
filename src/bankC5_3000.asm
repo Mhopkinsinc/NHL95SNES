@@ -1,5 +1,4 @@
-; Segment bankC5_3000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_3000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5308D
 FixLineDefence:						; A = line slot player A if he is a defenceman (roster index $0C up to
 									; $A5, after the forwards), else the first defenceman from $0C not in the

@@ -1,5 +1,4 @@
-; Segment bankC5_D000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_D000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5D00D
 TradeValue:							; one side of a trade: the value of its chosen players (from their
 									; ratings, RecordOverall) into (tmp1), and how many goalies (d0), forwards

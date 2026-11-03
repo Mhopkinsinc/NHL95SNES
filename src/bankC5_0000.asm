@@ -1,5 +1,4 @@
-; Segment bankC5_0000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_0000: game code, jump tables and the data tables the code reads with long addresses.
 org $C50000
 Opening:							; the cold start that Reset_Fast jumps to (94S Opening)
 	pea.w $7E7E

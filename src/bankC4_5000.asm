@@ -1,5 +1,4 @@
-; Segment bankC4_5000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_5000: game code, jump tables and the data tables the code reads with long addresses.
 org $C44F20
 FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement + 15, then
 									; the fall or stumble animation by the hit

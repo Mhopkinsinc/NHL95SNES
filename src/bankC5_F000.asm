@@ -1,5 +1,4 @@
-; Segment bankC5_F000: UnpackStream0 and BuildSpriteOAM (docs/sprite_objects.md), then game code; untraced
-; routines keep their address as a name, with their callers.
+; Segment bankC5_F000: UnpackStream0 and BuildSpriteOAM (docs/sprite_objects.md), then game code.
 org $C5F071
 UnpackStream0:						; unpack a format 0 stream that has no header, into bank $7E
 	sta.l A1T1L						; the stream address

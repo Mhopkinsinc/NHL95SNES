@@ -1,6 +1,5 @@
 ; Segment bankC0_9000: the rest of the engine's math as in 94S (the Mul16x8Hi signed forms, Mul16, the
-; divides), then game code (menus and lists) that keeps its address as a name until it is traced, with the
-; cross references on each label.
+; divides), then game code (menus and lists).
 org $C09005
 Mul16x8HiXS:						; X * A (low byte) / 256 into r2+1, X signed
 	phy

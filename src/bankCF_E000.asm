@@ -1,5 +1,4 @@
-; Segment bankCF_E000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankCF_E000: game code, jump tables and the data tables the code reads with long addresses.
 org $CFEE1D
 NextSortedGameObjectJump:			; jumps to NextSortedGameObject: DrawSortedGameObject's continuation (in
 									; $A5) for the frame code

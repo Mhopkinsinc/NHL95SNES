@@ -1,5 +1,4 @@
-; Segment bankC5_1000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_1000: game code, jump tables and the data tables the code reads with long addresses.
 org $C510F6
 GetPeriodTime:						; d0 = the period length in seconds for the period length option
 									; (Optperlen), tmp0 the same as BCD minutes and seconds

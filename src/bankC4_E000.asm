@@ -1,5 +1,4 @@
-; Segment bankC4_E000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_E000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4DFD6
 StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A wins the
 									; stanley cup, defeating team X in the final game of the playoffs, team
