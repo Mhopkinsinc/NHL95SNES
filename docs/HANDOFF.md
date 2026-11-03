@@ -288,8 +288,9 @@
 - ArrowFontTiles and MeterFontTiles are named from their rendered tiles; the screens that load them (VRAM $4A00 from $C5521E,
   VRAM $4800 from $C521EB / $C55826) are not traced, so neither is matched to a 94S font (SmallFontTiles, BigFontTiles) yet.
 - GradientBarTiles: rendered bars; where they are drawn (VRAM $0640 from $C4D864, $0010 from $C59119) is not traced.
-- Home / away: $17C9 = home, $17CB = away is read from the jersey colours they get (white for $17C9, as 94S home), not from
-  the setup code. The last pair of uniform palettes (after the all-star teams) is not traced. The team order is 94S's (the
+- Home / away: the setup code confirms $17C9 = home, $17CB = away: ExhibitionOptions' "Home Team" line sets HomeTeam
+  and its "Visiting Team" line VisTeam; the jerseys agree (white for HomeTeam, as 94S home). The last pair of uniform
+  palettes (after the all-star teams) is not traced. The team order is 94S's (the
   sprite logos render WSH before WPG).
 - Sprite objects (`docs/sprite_objects.md`): SpriteObjects in bankC0_8000 is source (header, SpriteRecordList, 41 records
   <Name>Sprite, frame lists, frame headers <Name>Frame[NN], animation scripts), pointing at bank $C1: SpritePalettes, the frame
