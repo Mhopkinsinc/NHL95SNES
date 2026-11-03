@@ -4,11 +4,17 @@
 
 - Plan: the 95S alignment plan (`alignment-plan/95s_alignment_plan.md` in the Code Cleanup project files). Rules: `docs/RULES.md`.
 - Branch: `claude/project-thread-ggw7zu`
-- Phase: 0 done (kit: AGENTS.md working rules, docs/RULES.md, `.cursor/rules/main.mdc`, `.claude/agents/`, `tools/check_scope.py`).
-- Last check: `tools/verify_all.sh` MATCH (2026-11-03).
-- Next: phase 1, add 95S to the report in nhl-disasm-report (segment-layout reader, 95S rows in `known_pairs.csv`, a 95S
-  baseline) so the pairing gate covers 95S before anything moves. Then phase 2, the inventory script (`docs/routines95s.csv`).
-- Unsure: none yet.
+- Phase: 0 done (kit). 1 done (95S in the report on nhl-disasm-report's `claude/project-thread-ggw7zu`: segment-layout
+  reader, counts `95S~95G` and `95S~94S` at 0, 699 95S known pairs; `tools/gate.sh` PAIRING OK). 2 done: `tools/inventory95.py`
+  wrote `docs/routines95s.csv` (4,470 labels, 1,348 routines, 2,809 data runs; rules: 95G 283, 94S 134, callers 834,
+  UNSURE 97).
+- Last check: `./build.sh` MATCH, report `tools/gate.sh` PAIRING OK (2026-11-03).
+- Now: checkpoint 1, the owner reviews the inventory summary (folders and the UNSURE list) before any move.
+- Next: phase 3a (segments into `src/banks/bCx_*.asm`), then 3b (routines into `src/routines/...` from the CSV, one 95G folder
+  per unit), 3c (data), 3d (drop the segment stubs).
+- Phase 4 note: a rename must add the old name to `docs/name_map.csv` in an `old_name` column, or the report's pairing gate
+  cannot link a 95S known pair to its new name.
+- Unsure: the 97 UNSURE routines in `docs/routines95s.csv` (rule UNSURE).
 
 ## Segment work: state (2026-10-31, finished)
 
