@@ -327,9 +327,30 @@
   setupice copies the map to rinkmapbuf and updatescroll_rows sends visible rows. The complete screen-space
   interpretation of the split rink map remains open; the existing 94S centre ice name is retained.
 
-- Team database (bank $C3): PlayerList's bits 14-15 (0, $4000, $8000) group like goalies, defence and forwards (63, 218,
-  406 players) but the code that reads them is not traced; a player record is taken to hold a packed name and the ratings
-  (not decoded); TeamRecordUnused has the form of a team record but TeamList does not point at it.
+- Team database (bank $C3), traced through LoadSeasonRoster, roster columns and free agents:
+  PlayerList low 14 bits are a byte address within bank $C3, not a word index. Bits 14-15 are
+  0 goalie, $4000 defence, $8000 forward. LoadSeasonRoster counts/sorts goalies at roster +2,
+  forwards at +4 and the remaining defence at +6; MarkFreeAgentLimits maps them to position
+  groups 0/1/3. No individual LD/RD/LW/C/RW position byte is established in the ROM record.
+  The working roster loader copies eight bytes into roster +$110 + player*32 and unpacks +8:
+  - +0: binary sweater number (converted through BCDTable for display)
+  - +1 high/low: weight / agility; displayed weight = 140 + 8 * weight
+  - +2 high/low: speed / offensive awareness
+  - +3 high/low: defensive awareness / shot power (goalie puck control)
+  - +4 high: checking; bit 0: hand (0 right, 1 left); bits 1-3: fighting
+  - +5 high/low: stickhandling / shot accuracy
+  - +6 high/low: endurance / spodds; for goalies stick right / stick left
+  - +7 high/low: pass accuracy / aggression; for goalies glove right / glove left
+  - +8 onward: packed text, five-bit symbols with three-bit extensions, terminator $1A
+  CalcRosterAttrib selects high nibble for even mask bit n, low for odd, at byte floor(n/2).
+  Gameplay normally masks rating levels to three bits; display/overall readers take four.
+  RatingNibble converts create-player values 0-15 to stored levels 0-6, not packed-name data.
+  GetPlayerRecord and PlayerShortName retain a legacy length/plain-name contract: the former
+  doubles the already byte-addressed entry and dereferences again. They do not establish the
+  actual packed record layout. NHL94SNES GetPlayerRecord instead walks length+8 records via
+  Playerdata (team offset 0); its CalcAttrib reads the trailing eight attributes. Do not apply
+  that name-first layout to 95's attribute-first records. TeamRecordUnused still has no TeamList
+  reference. No separate use for otherwise masked upper rating bits is established here.
 - bankC0_A000: the sample header (12 bytes: a pitch-like word, two volume-like bytes, ...) is not decoded; the samples are
   named by their index in the sample list. MaxSpeed also gets a long pointer from PrintShooterRows the way InitShooters does.
 - bankC0_9000: there is a brk at $C09419 (in the ROM, not reached by the traced code).

@@ -400,7 +400,9 @@ GetPlayerNumInitial:				; formats TempPlOffset through PlayerShortName while pre
 	pla
 	sta.b d0
 	rtl
-PlayerShortName:					; from GetPlayerNumInitial and other segments
+PlayerShortName:					; legacy number, initial and surname formatter using GetPlayerRecord;
+									; expects a length word, plain name at +2 and number at record + length
+									; this is not the packed bank record format
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
@@ -744,9 +746,9 @@ BenchTeamRoster:					; team a2: tmap 6 and every roster entry on the bench (tmpd
 	dec.b d0
 	bpl .loop
 	rtl
-GetPlayerRecord:					; a0 = the roster record of player d0 of team a2 (bank $C3): the team
-									; record's first word (low 11 bits) points at an offset table, entry d0
-									; (low 14 bits) * 2 at the record's address
+GetPlayerRecord:					; legacy a0 lookup for player d0 of team a2: team word low 11 bits selects
+									; the offset table; doubles its low-14-bit entry, then reads another word
+									; this does not address the packed records used by LoadSeasonRoster
 	ldy.b a2
 	lda.w #$00C3
 	sta.b $65
