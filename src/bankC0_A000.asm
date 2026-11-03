@@ -69,15 +69,9 @@ BitMaskTable2:						; single-bit masks, bit 0 up (the same words as BitMaskTable
 	dw $0100,$0200,$0400,$0800,$1000,$2000,$4000,$8000
 jdtab8F:							; 16 bytes, the same as 94S jdtab8F; no reader found
 	db $08,$00,$04,$08,$06,$07,$05,$08,$02,$01,$03,$08,$08,$08,$08,$08
-									; sample header: +0 word default DSP pitch, +2/+3 left/right volume bytes
-									; +4 note transpose before octave/semitone lookup; +5 signed fine tune
-									; +6 ADSR1, +7 ADSR2 when +6 bit 7 is set, otherwise GAIN
 Sample19:							; sound sample 19 of the sample list: header, then BRR blocks
 	incbin "../Extracted/segments/bankC0_9000.bin":$C54..$1000
 	incbin "../Extracted/segments/bankC0_A000.bin":$0..$2AB
-									; header +8 word BRR loop offset, added to allocation base unless zero
-									; +10 word BRR upload byte count; +12 starts the BRR data
-									; LoadSample copies fields; LoadSampleEnvelopeAndData sets the directory
 Sample20:							; sound sample 20 of the sample list: header, then BRR blocks
 	incbin "../Extracted/segments/bankC0_A000.bin":$2AB..$965
 Sample21:							; sound sample 21 of the sample list: header, then BRR blocks

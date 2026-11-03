@@ -10,9 +10,9 @@ TeamList:							; a word per team (team number = index) to its team record, as 9
 	dw Philadelphia,Pittsburgh,Quebec,SanJose
 	dw StLouis,TampaBay,Toronto,Vancouver
 	dw Washington,Winnipeg,AllStarsEast,AllStarsWest
-PlayerList:							; a word per player: low 14 bits are the bank-relative record address;
-									; bits 14-15: 0 goalie, $4000 defence, $8000 forward (LoadSeasonRoster)
-									; record +0..+7 attributes, +8 packed name; position is not a record byte
+PlayerList:							; a word per player: the low 14 bits its record's address in this bank,
+									; bits 14-15 its group (0 goalie, $4000 defence, $8000 forward); a record:
+									; the sweater number, 7 bytes of rating nibbles, the packed name
 	dw Player000,Player001,Player002+$8000,Player003+$8000
 	dw Player004+$8000,Player005+$8000,Player006+$8000,Player007+$8000
 	dw Player008+$8000,Player009+$8000,Player010+$8000,Player011+$8000
@@ -185,19 +185,10 @@ PlayerList:							; a word per player: low 14 bits are the bank-relative record 
 	dw Player676+$8000,Player677+$8000,Player678+$8000,Player679+$4000
 	dw Player680+$4000,Player681+$4000,Player682+$4000,Player683+$4000
 	dw Player684+$4000,Player685+$4000,Player686+$4000
-									; record bytes: +0 binary sweater number; +1 high weight, low agility
-									; +2 high speed, low offensive awareness; +3 high defensive awareness,
-									; low shot power (goalie puck control)
 Player619:							; player 619 of PlayerList: a packed name and the ratings
 	incbin "../Extracted/segments/bankC3_0000.bin":$596..$5A8
-									; record +4 high checking; bit 0 hand (0 right, 1 left), bits 1-3 fighting
-									; +5 high stickhandling, low shot accuracy; +6 high endurance, low spodds
-									; +7 high pass accuracy, low aggression; +8 packed name, ended by code $1A
 Player620:							; player 620 of PlayerList: a packed name and the ratings
 	incbin "../Extracted/segments/bankC3_0000.bin":$5A8..$5BA
-									; goalie +6 high/low stick right/left; +7 high/low glove right/left
-									; weight displays as high nibble of +1 * 8 + 140; ratings use nibble masks
-									; gameplay usually masks rating levels to three bits
 Player621:							; player 621 of PlayerList: a packed name and the ratings
 	incbin "../Extracted/segments/bankC3_0000.bin":$5BA..$5CE
 Player622:							; player 622 of PlayerList: a packed name and the ratings

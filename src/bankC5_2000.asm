@@ -2055,8 +2055,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	asl a
 	adc.b tmp1
 	tay
-									; copy binary number and seven attribute bytes; packed name follows at +8
-	lda.l $C30000,x
+	lda.l $C30000,x					; the record's number and 7 rating bytes; its packed name follows
 	sta.w $0110,y
 	lda.l $C30002,x
 	sta.w $0112,y

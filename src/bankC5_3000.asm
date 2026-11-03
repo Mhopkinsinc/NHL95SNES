@@ -376,7 +376,8 @@ LoadTeamLines:						; copies team a2's lines into RAM through GetTeamLines; OptL
 	pla
 	sta.b a3
 	rtl
-GetPlayerNumInitial:				; formats TempPlOffset through PlayerShortName while preserving d0 and a2
+GetPlayerNumInitial:				; formats TempPlOffset's player through PlayerShortName, d0 and a2 kept;
+									; 94S code that nothing reaches in 95 (no caller)
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
@@ -400,9 +401,9 @@ GetPlayerNumInitial:				; formats TempPlOffset through PlayerShortName while pre
 	pla
 	sta.b d0
 	rtl
-PlayerShortName:					; legacy number, initial and surname formatter using GetPlayerRecord;
-									; expects a length word, plain name at +2 and number at record + length
-									; this is not the packed bank record format
+PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2, reached only
+									; from GetPlayerNumInitial (no caller); it expects 94S's records (a length
+									; word, the name, the number)
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
@@ -746,9 +747,9 @@ BenchTeamRoster:					; team a2: tmap 6 and every roster entry on the bench (tmpd
 	dec.b d0
 	bpl .loop
 	rtl
-GetPlayerRecord:					; legacy a0 lookup for player d0 of team a2: team word low 11 bits selects
-									; the offset table; doubles its low-14-bit entry, then reads another word
-									; this does not address the packed records used by LoadSeasonRoster
+GetPlayerRecord:					; 94S's a0 lookup of player d0 of team a2, reached only from
+									; PlayerShortName (never run): the team's offset table entry d0, doubled
+									; and read again; it does not fit 95's packed records
 	ldy.b a2
 	lda.w #$00C3
 	sta.b $65

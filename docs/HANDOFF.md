@@ -345,7 +345,8 @@
   CalcRosterAttrib selects high nibble for even mask bit n, low for odd, at byte floor(n/2).
   Gameplay normally masks rating levels to three bits; display/overall readers take four.
   RatingNibble converts create-player values 0-15 to stored levels 0-6, not packed-name data.
-  GetPlayerRecord and PlayerShortName retain a legacy length/plain-name contract: the former
+  GetPlayerRecord and PlayerShortName are 94S code nothing reaches (GetPlayerNumInitial, their only caller, has no
+  caller); they keep 94S's length/plain-name contract: the former
   doubles the already byte-addressed entry and dereferences again. They do not establish the
   actual packed record layout. NHL94SNES GetPlayerRecord instead walks length+8 records via
   Playerdata (team offset 0); its CalcAttrib reads the trailing eight attributes. Do not apply

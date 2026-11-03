@@ -279,8 +279,7 @@ LoadSample:							; assigns sample A a driver slot, copies its header parameters
 	sta.b r1
 	lda.w SampleSlotSources+2,x
 	sta.b r1+2
-									; header +0 pitch word; +2 left and +3 right volume, sent to the driver
-	lda.b [r1]
+	lda.b [r1]						; header +0: the pitch; +2 / +3 the left / right volume
 	sta.w SampleParams,x
 	ldy.w #$0002
 	lda.b [r1],y
@@ -288,14 +287,12 @@ LoadSample:							; assigns sample A a driver slot, copies its header parameters
 	txa
 	lsr a
 	tax
-									; header +4 note transpose, +5 signed fine tune, used by sequence notes
-	ldy.w #$0004
+	ldy.w #$0004					; header +4: the note transpose; +5 the signed fine tune
 	lda.b [r1],y
 	sta.w SampleNoteParams,x
 	ldy.w #$0006
-LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or allocates and uploads
-									; it
-									; header +6 ADSR1; +7 ADSR2 if ADSR1 bit 7 is set, otherwise GAIN
+LoadSampleEnvelopeAndData:			; stores the envelope (header +6 ADSR1, +7 ADSR2 or, with ADSR1 bit 7
+									; clear, GAIN), reuses matching BRR data or allocates and uploads it
 	lda.b [r1],y
 	sta.w SampleEnvelopes,x
 	txa
@@ -326,8 +323,7 @@ LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or 
 	lda.b r1+2
 	sta.w LoadedSampleSources+2,x
 	clc
-									; header +8 loop offset: zero stays zero; nonzero adds BRR allocation base
-	ldy.w #$0008
+	ldy.w #$0008					; header +8: the loop offset (0 stays 0, else + the BRR base)
 	lda.b [r1],y
 	beq .3
 	adc.b tmp0
@@ -336,8 +332,7 @@ LoadSampleEnvelopeAndData:			; stores the envelope, reuses matching BRR data or 
 	lda.b tmp0
 	sta.w SampleDirectory,x
 	lda.b r1
-									; header +10 upload length word, followed at +12 by the BRR payload
-	adc.w #$000A
+	adc.w #$000A					; header +10: the BRR length; the BRR data from +12
 	sta.b r1
 AppendSoundData:					; allocates space for the length-prefixed block at r1 and sends it to the
 									; sound CPU
@@ -721,8 +716,9 @@ SampleVolumeOverrides3:				; list 3 of SampleVolumeOverrideLists: sample stereo 
 SongLists:							; the song lists LoadSounds takes, each ending in $FF: $A3 $A4 (title,
 									; menus), then $A5, $A6, $A7 at +3, +5, +7
 	db $A3,$A4,$FF,$A5,$FF,$A6,$FF,$A7,$FF
-SampleList:							; the 33 sound samples: a long pointer each (dd: then a zero);
-									; LoadSample sends sample A to the sound CPU
+SampleList:							; the 33 sound samples: a long pointer each (dd: then a zero); a sample is
+									; a 12-byte header (pitch, volumes, transpose, fine tune, envelope, loop
+									; offset, length), then BRR data
 	dd Sample00						; sample 0
 	dd Sample01						; sample 1
 	dd Sample02						; sample 2
