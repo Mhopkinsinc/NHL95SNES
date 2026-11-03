@@ -6,9 +6,9 @@ InitSoundSystem:					; uploads the sound driver and initializes the CPU sound st
 	stz.w SoundAllocWraps
 	jsl.l UploadSoundDriver
 	lda.w #$8001
-	sta.w $4ABC
+	sta.w SoundInitUnused
 	lda.w #$FFFF
-	sta.w $4ABE
+	sta.w SoundInitUnused2
 	lda.w #$007F
 	sta.w SoundVolume
 	rtl
@@ -28,7 +28,7 @@ UploadSoundDriver:					; uploads SoundRAMClear and SoundDriver, acknowledges dri
 	sta.l APUIO0
 	rep #$20
 	lda.w #$FFFF
-	sta.w $4BC0
+	sta.w SoundUploadUnused
 	stz.w SoundQueueHead
 	stz.w SoundQueueTail
 	rtl
@@ -448,8 +448,8 @@ LoadSequence:						; uploads sequence A and its referenced samples, recording th
 	iny
 	dex
 	bne .loop
-	lda.b r2
-	bmi .1
+	lda.b r2						; the address's low word, not the flag byte (r2+2):
+	bmi .1							; the index is address bits 8-14, past the 4 lists
 	xba
 	and.w #$007F
 	asl a
@@ -699,18 +699,23 @@ SoundSequenceTable:					; sequence pointers read by LoadSequence, each followed 
 	dd Sequence37|$81000000			; sound 37
 	dd Sequence38|$82000000			; sound 38
 	dd Sequence39|$83000000			; sound 39
-SampleVolumeOverrideLists:			; lists of sample IDs and stereo volume words applied by LoadSequence; a
-									; byte at least $21 ends each list
+SampleVolumeOverrideLists:			; the 4 lists of sample IDs and stereo volume words (a byte of $21 or more
+									; ends one) that the flag bytes $80-$83 of sequences 35-39 select;
+									; LoadSequence tests the address instead, so none is ever read
 	dw SampleVolumeOverrides0&$FFFF,SampleVolumeOverrides1&$FFFF,SampleVolumeOverrides2&$FFFF,SampleVolumeOverrides3&$FFFF
-SampleVolumeOverrides0:				; list 0 of SampleVolumeOverrideLists: sample stereo volume overrides
+SampleVolumeOverrides0:				; list 0 of SampleVolumeOverrideLists, for the flag $80 of sequences 35
+									; and 36: sample stereo volume overrides
 	db $1C,$26,$26,$17,$2C,$2C,$1F,$3A,$3A,$1D,$20,$20,$1E,$29,$29,$19
 	db $32,$32,$21
-SampleVolumeOverrides1:				; list 1 of SampleVolumeOverrideLists: sample stereo volume overrides
+SampleVolumeOverrides1:				; list 1 of SampleVolumeOverrideLists, for the flag $81 of sequence 37:
+									; sample stereo volume overrides
 	db $1C,$32,$32,$1F,$34,$34,$17,$29,$29,$1D,$1E,$1E,$19,$37,$37,$1E
 	db $37,$37,$21
-SampleVolumeOverrides2:				; list 2 of SampleVolumeOverrideLists: sample stereo volume overrides
+SampleVolumeOverrides2:				; list 2 of SampleVolumeOverrideLists, for the flag $82 of sequence 38:
+									; sample stereo volume overrides
 	db $1C,$32,$32,$17,$29,$29,$1F,$32,$32,$1E,$2D,$2D,$19,$37,$37,$21
-SampleVolumeOverrides3:				; list 3 of SampleVolumeOverrideLists: sample stereo volume overrides
+SampleVolumeOverrides3:				; list 3 of SampleVolumeOverrideLists, for the flag $83 of sequence 39:
+									; sample stereo volume overrides
 	db $1C,$28,$28,$17,$2D,$2D,$1E,$32,$32,$1D,$28,$28,$1F,$2A,$2A,$19
 	db $37,$37,$21
 SongLists:							; the song lists LoadSounds takes, each ending in $FF: $A3 $A4 (title,

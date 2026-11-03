@@ -9396,3 +9396,6 @@ $0000,VRAMQueueSP,,code,"RAM: ResetTransferQueues sets $03FF; the queue routines
 $0002,VRAMModeQueueSP,,code,"RAM: ResetTransferQueues sets $01FF; ClearTextMap, QueueClearVRAM and others push through it; ProcessQueuedTransfers reads the records with D = $0100",src/ram95s.asm
 $0004,CGRAMQueueSP,,code,"RAM: ResetTransferQueues sets $048F; QueueHomePalette and the colour queue routines push through it; ProcessQueuedTransfers sends the records to CGDATA with D = $0400",src/ram95s.asm
 $00A5,tmp3,,94S+purpose,"RAM: 95 keeps 94S's direct page register block (d0-d7, a0-a3, tmp0-tmp4) in the same order and sizes, $26 lower; $A5 is tmp3's slot between tmp2 ($A3) and tmp4 ($A7), used as a scratch word (178 uses: sta / lda / adc / cmp, the frame code's continuation address)",src/ram95s.asm
+$4ABC,SoundInitUnused,,code,"RAM: written once by InitSoundSystem, just before SoundCmdQueue; the queue indexes stay $00-$FF (and $00FF), so no read reaches it",src/ram95s.asm
+$4ABE,SoundInitUnused2,,code,"RAM: written once by InitSoundSystem, just before SoundCmdQueue; no read reaches it",src/ram95s.asm
+$4BC0,SoundUploadUnused,,code,"RAM: written once by UploadSoundDriver, right after SoundCmdQueue's $100 bytes; the queue indexes stay below $100, so no read reaches it",src/ram95s.asm

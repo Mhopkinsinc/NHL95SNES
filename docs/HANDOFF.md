@@ -399,9 +399,12 @@
   QueueSoundCmdReturn, LoadSampleEnvelopeAndData, StartSelectedTeamSong); they are not separate entry points.
   StartCrowdSound starts sound 2 (the crowd) unless CrowdSoundOn is set; puckfaceoff2 and Pausemode call it; StartMenuMusic
   reloads and starts sequence $A4 when MenuMusicPending (TitleScreen's song task has not started it yet) or
-  MenuMusicVisited (set by its first call) is set. $4ABC / $4ABE / $4BC0 are only written at sound setup: not named.
-  SampleListTailUnused has no reader. SampleVolumeOverrideLists writes sample stereo-volume overrides, but LoadSequence indexes
-  it from r2 (the sequence pointer), not the flag byte in SoundSequenceTable; the intended selection is unresolved.
+  MenuMusicVisited (set by its first call) is set. $4ABC / $4ABE / $4BC0 are only written at sound setup (SoundInitUnused, SoundInitUnused2, SoundUploadUnused).
+  SampleListTailUnused has no reader. SampleVolumeOverrideLists: its four lists match the flag bytes of
+  sequences 35-39 ($80, $80, $81, $82, $83; the others 0), so the flag was meant to select one. LoadSequence
+  tests r2 (the address's low word) instead of r2+2: below $8000 it takes address bits 8-14 as the index, past the
+  4 entries. No sequence reads one of the four lists; 8 sequences (1, 12, 13, 14, 21, 25, 32, 38) read stray bytes
+  as overrides (by a simulation of the code: samples 5, 7, 8, $17, $18, $19, $1E). That is in the ROM.
 - Scoreboard: DrawScoreBox (team abbreviations, scores) and DrawPeriodBox (showclockdma, the period text, a power play
   frame) together do 94S printscores1's job, split differently, so they have code names.
 - GetPlayerRecord takes 94S's name by purpose: PlayerShortName reads its a0 as 94S's does, but 95 finds the record
