@@ -1,4 +1,4 @@
-PlayerStatsPage:					; the Player Stats text page (ShowPlayerStats)
+PlayerStatsPage:					; the Player Stats text page (PlayerStatsScreen)
 	dw $0010,$00F0,TxtPlayerStats&$FFFF,$0002
 	dw $FFFF,$0020
 	dw TxtYSwitchTeams&$FFFF,$801A

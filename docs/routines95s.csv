@@ -23,7 +23,7 @@ $C049A8,141,data,BracketGradientHDMA,BracketGradientHDMA,0,code,data,data,
 $C04A35,16,data,MainScreenHDMA,MainScreenHDMA,0,code,data,data,
 $C04A45,16,data,BlueColours,BlueColours,0,code,data,data,
 $C04A55,16,data,DarkBlueColours,DarkBlueColours,0,code,data,data,
-$C04A65,34,code,BlueColoursHook,BlueColoursHook,0,code,engine/setup,plurality,1 of 6 placed refs in engine/setup
+$C04A65,34,code,BlueColoursHook,BlueColoursHook,0,code,engine/setup,plurality,1 of 6 placed refs in front/awards; kept in engine/setup (plurality changed)
 $C04A87,34,code,DarkBlueColoursHook,DarkBlueColoursHook,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C04AA9,512,data,LargeSlotTiles,LargeSlotTiles,0,code,data,data,
 $C04CA9,2,data,BackdropColour,BackdropColour,0,code,data,data,
@@ -292,7 +292,7 @@ $C08E38,16,data,JoyDirTable,JoyDirTable,0,94S,data,data,
 $C08E48,44,code,RandomWord,RandomWord,15,94S,engine/middle,94S,RandomWord in 94S routines/middle
 $C08E74,31,code,BlankScreen,BlankScreen,1,94S,engine/video,94S,BlankScreen in 94S routines/video
 $C08E93,6,code,forceblack,forceblack,8,94S,engine/video,95G,forceblack in 95G engine/video
-$C08E99,4,code,ScreenOn,ScreenOn,4,94S,engine/video,94S,ScreenOn in 94S routines/video
+$C08E99,4,code,FadeIn,FadeIn,4,94S+align,engine/video,family,fades family
 $C08E9D,60,code,ResetPPURegs,ResetPPURegs,1,94S,engine/video,94S,ResetPPURegs in 94S routines/video
 $C08ED9,19,code,Mul8U,Mul8U,10,94S,engine/middle,family,math family
 $C08EEC,29,code,Mul8XS,Mul8XS,2,94S,engine/middle,family,math family
@@ -1626,7 +1626,7 @@ $C35E9F,12,data,RosterStatusTexts,RosterStatusTexts,0,code,data,data,
 $C35EAB,181,data,PhotoPaletteTable,PhotoPaletteTable,0,new,data,data,
 $C35F60,372,data,SeasonDates,SeasonDates,0,code,data,data,
 $C360D4,2735,data,SeasonSchedule,SeasonSchedule,0,genesis+purpose,data,data,
-$C36B83,169,code,LoadSavedGameOptions,LoadSavedGameOptions,2,code,engine/setup,plurality,1 of 2 placed callers in engine/setup
+$C36B83,169,code,LoadSavedGameOptions,LoadSavedGameOptions,2,code,engine/setup,plurality,1 of 2 placed callers in hockey; kept in engine/setup (plurality changed)
 $C36C2C,1,code,CheckPAL,CheckPAL,1,code,main,94S,CheckPAL in 94S routines/main
 $C36C2D,28,code,ReadMenuPads,ReadMenuPads,25,code,control,family,pads family
 $C36C49,118,code,ReadActiveMenuPad,ReadActiveMenuPad,1,code,control,family,pads family
@@ -1643,7 +1643,7 @@ $C37091,20,code,ReadJoy2,ReadJoy2,0,code,engine/video,95G,ReadJoy2 in 95G engine
 $C370A5,7,code,ReadPausePad,ReadPausePad,4,94S+code,control,family,pads family
 $C370AC,6,code,GetMenuPadButtons,GetMenuPadButtons,1,code,hockey,callers,1 of 1 placed callers in hockey
 $C370B2,31,code,ProcessInputWithRepeat,ProcessInputWithRepeat,2,94S+code,engine/video,95G,ProcessInputWithRepeat in 95G engine/video
-$C370D1,120,code,RemapTiles,RemapTiles,0,94S+code,engine/video,follows,unreferenced; after ProcessInputWithRepeat
+$C370D1,120,code,remap,remap,0,94S+code+align,engine/video,95G,remap in 95G engine/video
 $C37149,12,code,WaitPausePadRelease,WaitPausePadRelease,0,code,control,family,pads family
 $C37155,24,code,WaitPadsRelease,WaitPadsRelease,0,94S+purpose,control,family,pads family
 $C3716D,4,code,UpdateMenuSpritesTwice,UpdateMenuSpritesTwice,3,code,display,family,sprites family
@@ -1695,7 +1695,7 @@ $C3856E,234,code,defaultsprites_0,defaultsprites_0,1,94S+purpose,display,95G,def
 $C38658,288,data,SortObjInitTable,SortObjInitTable,0,94S+purpose,data,data,
 $C38778,33,code,ApproxLength,ApproxLength,14,94S+code,engine/middle,94S,ApproxLength in 94S routines/middle
 $C38799,63,code,CalcPuckDistances,CalcPuckDistances,1,94S+purpose,engine/logic,94S,CalcPuckDistances in 94S routines/logic
-$C387D8,26,code,MapTileBlock,MapTileBlock,17,code,front/stats,plurality,2 of 4 placed callers in front/stats
+$C387D8,26,code,MapTileBlock,MapTileBlock,17,code,front/stats,plurality,4 of 8 placed callers in front/stats
 $C387F2,13,code,MapTileBlock,WriteNineMapTiles,,code,front/stats,,
 $C387FF,37,code,BackupPauseBuffers,BackupPauseBuffers,1,code,engine/pause,callers,1 of 1 placed callers in engine/pause
 $C38824,38,code,FillPlayerAssignments,FillPlayerAssignments,1,code,front/shootout,callers,1 of 1 placed callers in front/shootout
@@ -1737,8 +1737,8 @@ $C40152,1,code,BracketRowNoMove,BracketRowNoMove,0,code,front/season,callers,2 o
 $C40153,146,code,ExitPlayoffBracket,ExitPlayoffBracket,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C401E5,155,code,BuildPlayoffDay,BuildPlayoffDay,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C40280,22,code,PlayoffTeamAtRound,PlayoffTeamAtRound,1,code,front/season,callers,1 of 1 placed callers in front/season
-$C40296,111,code,RecordPlayoffDay,RecordPlayoffDay,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
-$C40305,29,code,AdvancePlayoffTeam,AdvancePlayoffTeam,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
+$C40296,111,code,RecordPlayoffDay,RecordPlayoffDay,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
+$C40305,29,code,AdvancePlayoffTeam,AdvancePlayoffTeam,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C40322,160,code,DrawBracketSeriesSummary,DrawBracketSeriesSummary,2,code,front/season,callers,1 of 1 placed callers in front/season
 $C403C2,130,code,ScrollBracketToCursor,ScrollBracketToCursor,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C40444,486,code,SetupPlayoffBracket,SetupPlayoffBracket,1,code,front/season,callers,1 of 1 placed callers in front/season
@@ -1767,8 +1767,8 @@ $C40B81,53,code,SetSeasonAssists,SetSeasonAssists,1,code,front/stats,callers,1 o
 $C40BB6,85,code,SetSeasonGoalieGames,SetSeasonGoalieGames,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C40C0B,87,code,SetSeasonGoalsAgainst,SetSeasonGoalsAgainst,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C40C62,81,code,SetSeasonSaves,SetSeasonSaves,1,code,front/stats,callers,1 of 1 placed callers in front/stats
-$C40CB3,48,code,AddPlayoffDayPlayerStats,AddPlayoffDayPlayerStats,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C40CE3,147,code,AddPlayoffTeamPlayerStats,AddPlayoffTeamPlayerStats,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
+$C40CB3,48,code,AddPlayoffDayPlayerStats,AddPlayoffDayPlayerStats,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C40CE3,147,code,AddPlayoffTeamPlayerStats,AddPlayoffTeamPlayerStats,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C40D76,32,data,PlayoffStatBitOffsets,PlayoffStatBitOffsets,0,code,data,data,
 $C40D96,101,code,SetupPlayoffs,SetupPlayoffs,2,genesis+purpose,front/awards,95G,SetupPlayoffs in 95G front/awards
 $C40DFB,25,code,StorePlayoffSeeds,StorePlayoffSeeds,1,code,front/awards,callers,1 of 1 placed callers in front/awards
@@ -1906,9 +1906,9 @@ $C44279,60,code,wallcollb,wallcollb_out,,94S+code,engine/collide,,
 $C442B5,400,code,wallcoll,wallcoll,3,94S+code,engine/collide,95G,wallcoll in 95G engine/collide
 $C44445,586,code,checkgoal,checkgoal,1,94S+code,engine/collide,95G,checkgoal in 95G engine/collide
 $C4468F,230,code,checkgoalp,checkgoalp,1,94S+code,engine/collide,95G,checkgoalp in 95G engine/collide
-$C44775,162,code,CheckDislodgeGoal,CheckDislodgeGoal,1,code,engine/collide,callers,1 of 1 placed callers in engine/collide
+$C44775,162,code,CheckBump,CheckBump,1,code+align,engine/collide,95G,CheckBump in 95G engine/collide
 $C44817,164,code,checkplcoll,checkplcoll,1,94S+code,engine/collide,95G,checkplcoll in 95G engine/collide
-$C448BB,596,code,CollidePlayers,CollidePlayers,1,code,engine/collide,callers,1 of 1 placed callers in engine/collide
+$C448BB,596,code,checkcx,checkcx,1,code+align,engine/collide,95G,checkcx in 95G engine/collide
 $C44B0F,85,code,checkpuckcoll,checkpuckcoll,1,94S+code,engine/collide,95G,checkpuckcoll in 95G engine/collide
 $C44B64,290,code,checkpuckcoll_ccx,checkpuckcoll_ccx,1,94S+code,engine/collide,94S,checkpuckcoll_ccx in 94S routines/collide
 $C44C86,43,code,checkpuckcoll_ccx,PuckCollisionRestore,,code,engine/collide,,
@@ -1921,7 +1921,7 @@ $C44F20,1185,code,FallDown,FallDown,4,94S+code,engine/collide,95G,FallDown in 95
 $C453C1,33,code,checkcheck,checkcheck,1,94S+code,engine/collide,95G,checkcheck in 95G engine/collide
 $C453E2,1,code,checkcheck,CheckContactReturn,,code,engine/collide,,
 $C453E3,3,code,CheckContactHold,CheckContactHold,0,code,engine/collide,callers,1 of 1 placed refs in engine/collide
-$C453E6,307,code,CheckPlayerContact,CheckPlayerContact,1,code,engine/collide,callers,1 of 1 placed callers in engine/collide
+$C453E6,307,code,CCStart,CCStart,1,code+align,engine/collide,95G,CCStart in 95G engine/collide
 $C45519,16,data,CheckAnimByDir,CheckAnimByDir,0,code,data,data,
 $C45529,221,code,check4check,check4check,2,94S+code,engine/logic,95G,check4check in 95G engine/logic
 $C45606,10,code,Sweepcheck,Sweepcheck,2,94S+code,engine/collide,95G,Sweepcheck in 95G engine/collide
@@ -2031,7 +2031,7 @@ $C471E2,11,code,assscore,ResetCelebrationTimer,,code,engine/logic,,
 $C471ED,3,code,CelebrationSkate,CelebrationSkate,0,code,engine/logic,callers,1 of 1 placed refs in engine/logic
 $C471F0,16,code,PenaltyManager,PenaltyManager,1,94S+code,engine/penalty,95G,PenaltyManager in 95G engine/penalty
 $C47200,49,code,chkatop,chkatop,1,94S+code,engine/lines,95G,chkatop in 95G engine/lines
-$C47231,28,code,CountPowerPlayTime,CountPowerPlayTime,1,94S+code,engine/penalty,callers,1 of 1 placed callers in engine/penalty
+$C47231,28,code,updatePPTeamTime,updatePPTeamTime,1,94S+code+align,engine/lines,95G,updatePPTeamTime in 95G engine/lines
 $C4724D,214,code,checkfornewpen,checkfornewpen,1,94S+code,engine/penalty,95G,checkfornewpen in 95G engine/penalty
 $C47323,234,code,Stop4Pen,Stop4Pen,3,94S+code,engine/penalty,95G,Stop4Pen in 95G engine/penalty
 $C4740D,828,code,chkprogress,chkprogress,1,94S+code,engine/penalty,95G,chkprogress in 95G engine/penalty
@@ -2087,7 +2087,7 @@ $C48852,32,code,ReturnGoalies,ReturnTeamGoalie,,code,engine/logic,,
 $C48872,73,code,CPgoalie,CPgoalie,2,94S+code,engine/logic,95G,CPgoalie in 95G engine/logic
 $C488BB,234,code,assgoalietopuck,assgoalietopuck,0,94S+code,engine/logic,95G,assgoalietopuck in 95G engine/logic
 $C489A5,156,code,GoalieChasePuck,GoalieChasePuck,1,code,engine/logic,callers,1 of 1 placed callers in engine/logic
-$C48A41,34,code,GoalieCount,GoalieCount,3,94S+purpose,front/shootout,callers,3 of 3 placed callers in front/shootout
+$C48A41,34,code,GetGoalieCount,GetGoalieCount,3,94S+purpose+align,engine/middle,95G,GetGoalieCount in 95G engine/middle
 $C48A63,14,code,AdvanceStringPtr,AdvanceStringPtr,0,94S+code,engine/middle,95G,AdvanceStringPtr in 95G engine/middle
 $C48A71,215,code,assgoalie,assgoalie,1,94S+code,engine/logic,94S,assgoalie in 94S routines/logic
 $C48B48,22,code,GoalieCheckManualState,GoalieCheckManualState,0,code,engine/logic,callers,1 of 1 placed refs in engine/logic
@@ -2108,7 +2108,7 @@ $C49501,3,code,PuckCrossingInvalidJump,PuckCrossingInvalidJump,0,code,engine/log
 $C49504,103,code,PredictPuckGoalCrossing,PredictPuckGoalCrossing,1,code,engine/logic,callers,1 of 1 placed callers in engine/logic
 $C4956B,7,code,InvalidatePuckGoalCrossing,InvalidatePuckGoalCrossing,1,code,engine/logic,callers,1 of 1 placed refs in engine/logic
 $C49572,35,code,puckflip,puckflip,6,94S+code,engine/logic,95G,puckflip in 95G engine/logic
-$C49595,38,code,pucknothing,pucknothing,1,94S+code,engine/logic,callers,1 of 1 placed callers in engine/logic
+$C49595,38,code,puckunflip,puckunflip,1,94S+code+align,engine/logic,95G,puckunflip in 95G engine/logic
 $C495BB,45,code,skatetopuckinit,skatetopuckinit,2,94S+code,engine/logic,95G,skatetopuckinit in 95G engine/logic
 $C495E8,290,code,chk4shot,chk4shot,1,94S+code,engine/logic,95G,chk4shot in 95G engine/logic
 $C4970A,213,code,shotdiradj,shotdiradj,1,94S+code,engine/input,95G,shotdiradj in 95G engine/input
@@ -2138,9 +2138,9 @@ $C49FBD,260,code,chk4pass,chk4pass,2,94S+code,engine/logic,95G,chk4pass in 95G e
 $C4A0C1,28,code,passmode,passmode,1,94S+code,engine/input,95G,passmode in 95G engine/input
 $C4A0DD,277,code,dopass,dopass,2,94S+code,engine/input,95G,dopass in 95G engine/input
 $C4A1F2,98,code,dopass,dopass_swing,,94S+code,engine/input,,
-$C4A254,456,code,dopass_count,dopass_count,1,94S+code,engine/input,callers,1 of 1 placed callers in engine/input
+$C4A254,456,code,passtoa0,passtoa0,1,94S+code+align,engine/input,95G,passtoa0 in 95G engine/input
 $C4A41C,143,code,DumpInTarget,DumpInTarget,1,94S+code,engine/logic,94S,DumpInTarget in 94S routines/logic
-$C4A4AB,8,code,AssignDumpIn,AssignDumpIn,1,code,engine/logic,callers,1 of 1 placed callers in engine/logic
+$C4A4AB,8,code,StartDumpIn,StartDumpIn,1,code+align,engine/logic,94S,StartDumpIn in 94S routines/logic
 $C4A4B3,119,code,assdumpin,assdumpin,0,94S+code,engine/logic,94S,assdumpin in 94S routines/logic
 $C4A52A,211,code,LaunchDumpIn,LaunchDumpIn,1,code,engine/logic,callers,1 of 1 placed callers in engine/logic
 $C4A5FD,24,data,DumpInSpreadX,DumpInSpreadX,0,code,data,data,
@@ -2152,8 +2152,8 @@ $C4A6B1,209,code,puckbody,puckbody,1,94S+code,engine/collide,95G,puckbody in 95G
 $C4A782,485,code,puckgoalie,puckgoalie,1,94S+code,engine/collide,95G,puckgoalie in 95G engine/collide
 $C4A967,254,code,ChkShotStat,ChkShotStat,4,94S+code,engine/lines,95G,ChkShotStat in 95G engine/lines
 $C4AA65,671,code,Goal,Goal,1,94S+code,engine/goal,95G,Goal in 95G engine/goal
-$C4AD04,33,code,AssignTeamSkaters,AssignTeamSkaters,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C4AD25,1,code,AssignTeamSkaters,GoalReturn,,code,engine/goal,,
+$C4AD04,33,code,AssignTeam,AssignTeam,1,code+align,engine/goal,95G,AssignTeam in 95G engine/goal
+$C4AD25,1,code,AssignTeam,rtsgoal,,code+align,engine/goal,,
 $C4AD26,327,code,puckstick,puckstick,3,94S+code,engine/collide,95G,puckstick in 95G engine/collide
 $C4AE6D,47,code,deflect,deflect,1,94S+code,engine/collide,95G,deflect in 95G engine/collide
 $C4AE9C,57,code,PuckIChk,PuckIChk,1,94S+code,engine/penalty,95G,PuckIChk in 95G engine/penalty
@@ -2279,11 +2279,11 @@ $C4BD75,21,code,RenderItalicCentredROMStr,DrawItalicCentredBuffer,,code,engine/m
 $C4BD8A,6,code,RenderItalicRightStr,RenderItalicRightStr,1,code,engine/middle,callers,1 of 1 placed callers in engine/middle
 $C4BD90,4,code,RenderItalicRight,RenderItalicRight,1,code,engine/middle,callers,1 of 1 placed callers in engine/middle
 $C4BD94,26,code,RenderItalicRight,DrawItalicRightBuffer,,code,engine/middle,,
-$C4BDAE,28,code,PrintTitle,PrintTitle,3,code,front/scout,plurality,1 of 2 placed callers in front/scout
+$C4BDAE,28,code,PrintTitle,PrintTitle,3,code,front/scout,plurality,1 of 2 placed callers in engine/middle; kept in front/scout (plurality changed)
 $C4BDCA,28,code,PrintTitleStr,PrintTitleStr,1,code,front/create,callers,1 of 1 placed refs in front/create
-$C4BDE6,72,code,PrintTitleBar,PrintTitleBar,6,code,front/scout,plurality,1 of 4 placed callers in front/scout
-$C4BE2E,6,code,AppendTitleBarByte,AppendTitleBarByte,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C4BE34,31,code,DrawText,DrawText,12,code,engine/middle,callers,8 of 10 placed callers in engine/middle
+$C4BDE6,72,code,PrintTitleBar,PrintTitleBar,6,code,front/scout,plurality,1 of 4 placed callers in engine/middle; kept in front/scout (plurality changed)
+$C4BE2E,6,code,AppendTitleBarByte,AppendTitleBarByte,1,code,engine/middle,callers,1 of 1 placed callers in engine/middle
+$C4BE34,31,code,DrawText,DrawText,12,code,engine/middle,callers,9 of 10 placed callers in engine/middle
 $C4BE53,199,code,DrawText,DrawNextTextCharacter,,code,engine/middle,,
 $C4BF1A,45,code,DrawText,DrawGlyphRow,,code,engine/middle,,
 $C4BF47,29,code,DrawGlyphPixel0,DrawGlyphPixel0,1,code,engine/middle,callers,1 of 1 placed refs in engine/middle
@@ -2341,8 +2341,8 @@ $C4CF8F,3,code,SetTeamGoalieIndexes,SetTeamGoalieIndexes,1,code,sram,callers,1 o
 $C4CF92,44,code,SetTeamGoalieIndexes,NextTeamGoalieIndexes,,code,sram,,
 $C4CFBE,55,code,SetTeamGoalieIndexes,SetGoalieIndexRun,,code,sram,,
 $C4CFF5,102,code,ClearSeasonData,ClearSeasonData,1,code,front/season,95G,ClearSeasonData in 95G front/season
-$C4D05B,122,code,InitPlayerTeams,InitPlayerTeams,2,code,front/season,plurality,1 of 2 placed callers in front/season
-$C4D0D5,44,code,ClearCreatedPlayerTeams,ClearCreatedPlayerTeams,2,code,front/season,plurality,1 of 2 placed callers in front/season
+$C4D05B,122,code,InitPlayerTeams,InitPlayerTeams,2,code,front/season,plurality,1 of 2 placed callers in sram; kept in front/season (plurality changed)
+$C4D0D5,44,code,ClearCreatedPlayerTeams,ClearCreatedPlayerTeams,2,code,front/season,plurality,1 of 2 placed callers in sram; kept in front/season (plurality changed)
 $C4D101,2,data,TitleMapFill,TitleMapFill,0,code,data,data,
 $C4D103,7,data,TitleBG34HDMA,TitleBG34HDMA,0,code,data,data,
 $C4D10A,137,data,CreditsList,CreditsList,0,genesis+purpose,data,data,
@@ -2410,13 +2410,13 @@ $C4EB6C,21,code,AppendScoutText,AppendScoutString,,code,front/scout,,
 $C4EB81,71,code,AppendScoutHotColdParagraph,AppendScoutHotColdParagraph,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4EBC8,144,code,PrintNextScoutWord,PrintNextScoutWord,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4EC58,48,code,NextScoutTextLine,NextScoutTextLine,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C4EC88,533,code,UnpackPlayerPhoto,UnpackPlayerPhoto,2,code,front/awards,plurality,1 of 2 placed callers in front/awards
+$C4EC88,533,code,UnpackPlayerPhoto,UnpackPlayerPhoto,2,code,front/awards,plurality,1 of 2 placed callers in front/scout; kept in front/awards (plurality changed)
 $C4EE9D,35,code,MapPhotoTiles,MapPhotoTiles,3,code,front/awards,callers,2 of 3 placed callers in front/awards
 $C4EEC0,13,code,MapPhotoTiles,MapPhotoTileRow,,code,front/awards,,
 $C4EECD,58,code,ScoutUseVisTeamLogo,ScoutUseVisTeamLogo,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4EF07,58,code,ScoutUseHomeTeamLogo,ScoutUseHomeTeamLogo,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C4EF41,151,code,SetAllStarPhotoPointers,SetAllStarPhotoPointers,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C4EFD8,70,code,BuildTeamLinesPreserveTemps,BuildTeamLinesPreserveTemps,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
+$C4EFD8,70,code,BuildTeamLinesPreserveTemps,BuildTeamLinesPreserveTemps,1,code,front/season,callers,1 of 1 placed callers in front/season
 $C4F01E,371,code,BuildTeamLines,BuildTeamLines,2,code,front/scout,plurality,1 of 2 placed callers in front/scout
 $C4F191,6,code,NoLineDefenceman,NoLineDefenceman,0,code,front/scout,callers,1 of 1 placed refs in front/scout
 $C4F197,23,code,PickUnusedLineDefenceman,PickUnusedLineDefenceman,1,code,front/scout,callers,1 of 1 placed callers in front/scout
@@ -2446,11 +2446,11 @@ $C50A00,20,data,FrictionFactors,FrictionFactors,0,code,data,data,
 $C50A14,201,code,clockcont_0,clockcont_0,2,94S+code,engine/goal,95G,clockcont_0 in 95G engine/goal
 $C50ADD,271,code,PeriodOver,PeriodOver,1,94S+code,engine/goal,95G,PeriodOver in 95G engine/goal
 $C50BEC,279,code,SeasonGameOver,SeasonGameOver,1,genesis+purpose,front/season,95G,SeasonGameOver in 95G front/season
-$C50D03,9,code,ExtendTextDirtyLo,ExtendTextDirtyLo,0,code,engine/middle,family,print family
-$C50D0C,9,code,ExtendTextDirtyHi,ExtendTextDirtyHi,0,code,engine/middle,family,print family
+$C50D03,9,code,marktextlo,marktextlo,0,code+align,engine/middle,94S,marktextlo in 94S routines/middle
+$C50D0C,9,code,marktexthi,marktexthi,0,code+align,engine/middle,94S,marktexthi in 94S routines/middle
 $C50D15,3,code,startpause1,startpause1,2,94S+code,engine/pause,95G,startpause1 in 95G engine/pause
 $C50D18,12,code,startpause1,startpause,,94S+code,engine/pause,,
-$C50D24,5,code,PauseFromPad,PauseFromPad,2,94S+code,engine/pause,span,between startpause1 and Pausemode (engine/pause); callers said front/season
+$C50D24,5,code,PauseFromPad,PauseFromPad,2,94S+code,engine/pause,span,between startpause1 and Pausemode (engine/pause); callers said engine/input
 $C50D29,253,code,Pausemode,Pausemode,1,94S+purpose,engine/pause,95G,Pausemode in 95G engine/pause
 $C50E26,103,code,demoread,demoread,1,94S+code,front/season,95G,demoread in 95G front/season
 $C50E8D,7,code,FadeStep5Unused,FadeStep5Unused,0,code,engine/video,family,fades family
@@ -2486,7 +2486,7 @@ $C516AA,24,code,NewTicker2_next,NewTicker2_next,1,94S+code,engine/penalty,94S,Ne
 $C516C2,135,code,PushTime,PushTime,3,94S+code,engine/middle,95G,PushTime in 95G engine/middle
 $C51749,9,code,NewTicker,NewTicker,0,94S+code,engine/penalty,94S,NewTicker in 94S routines/penalty
 $C51752,114,code,NewTicker2,NewTicker2,2,94S+code,engine/penalty,94S,NewTicker2 in 94S routines/penalty
-$C517C4,61,code,waitxsr,waitxsr,0,94S+code,engine/middle,94S,waitxsr in 94S routines/middle
+$C517C4,61,code,waitx,waitx,0,94S+code+align,engine/middle,95G,waitx in 95G engine/middle
 $C51801,16,code,clockcont,clockcont,1,94S+code,engine/goal,95G,clockcont in 95G engine/goal
 $C51811,1,code,DoHiLights,DoHiLights,1,94S+code,engine/penalty,94S,DoHiLights in 94S routines/penalty
 $C51812,19,code,EraseBoxUnused,EraseBoxUnused,0,code,engine/penalty,follows,unreferenced; after DoHiLights
@@ -2566,24 +2566,24 @@ $C52CD0,957,code,LoadGameRosters,LoadTeamRoster,,code,front/scout,,
 $C5308D,19,code,FixLineDefence,FixLineDefence,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C530A0,19,code,FixLineForward,FixLineForward,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C530B3,27,code,PlayerInLine,PlayerInLine,2,code,front/scout,callers,2 of 2 placed callers in front/scout
-$C530CE,29,code,SwapRosterPlayers,SwapRosterPlayers,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C530EB,27,code,AddRosterPlayer,AddRosterPlayer,1,code,front/scout,callers,1 of 1 placed callers in front/scout
+$C530CE,29,code,SwapRosterPlayers,SwapRosterPlayers,1,code,front/awards,callers,1 of 1 placed callers in front/awards
+$C530EB,27,code,AddRosterPlayer,AddRosterPlayer,1,code,front/awards,callers,1 of 1 placed callers in front/awards
 $C53106,25,code,TeamGoalieRange,TeamGoalieRange,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C5311F,23,code,RecordGoalieCount,RecordGoalieCount,2,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C53136,49,code,TeamForwardRange,TeamForwardRange,0,code,front/scout,follows,unreferenced; after RecordGoalieCount
 $C53167,85,code,UnpackTeamBonuses,UnpackTeamBonuses,2,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C531BC,11,code,LoadSeasonHomeRoster,LoadSeasonHomeRoster,7,code,front/awards,callers,7 of 7 placed callers in front/awards
-$C531C7,238,code,LoadSeasonRoster,LoadSeasonRoster,2,code,front/scout,plurality,1 of 2 placed callers in front/scout
+$C531C7,238,code,LoadSeasonRoster,LoadSeasonRoster,2,code,front/scout,plurality,1 of 2 placed callers in front/awards; kept in front/scout (plurality changed)
 $C532B5,16,code,GetForwardCount,GetForwardCount,0,94S+purpose,engine/middle,95G,GetForwardCount in 95G engine/middle
 $C532C5,90,code,LoadTeamLines,LoadTeamLines,1,94S+code,front/stats,95G,LoadTeamLines in 95G front/stats
 $C5331F,43,code,GetPlayerNumInitial,GetPlayerNumInitial,0,94S+purpose,engine/middle,95G,GetPlayerNumInitial in 95G engine/middle
 $C5334A,151,code,PlayerShortName,PlayerShortName,1,94S+code,engine/middle,callers,1 of 1 placed callers in engine/middle
-$C533E1,14,code,RosterPlayerShortName,RosterPlayerShortName,3,code,engine/middle,span,between GetPlayerNumInitial and PushNumber (engine/middle); callers said engine/penalty
+$C533E1,14,code,RosterPlayerShortName,RosterPlayerShortName,3,code,engine/middle,span,between GetPlayerNumInitial and ConvertByteToDigits (engine/middle); callers said engine/penalty
 $C533EF,134,code,RosterPlayerShortName,FormatRosterShortName,,code,engine/middle,,
-$C53475,19,code,EraseScoutName,EraseScoutName,0,94S+code,engine/middle,span,between GetPlayerNumInitial and PushNumber (engine/middle)
-$C53488,45,code,PutDigits2,PutDigits2,1,94S+code,engine/middle,callers,1 of 1 placed callers in engine/middle
+$C53475,19,code,EraseScoutName,EraseScoutName,0,94S+code,engine/middle,span,between GetPlayerNumInitial and ConvertByteToDigits (engine/middle)
+$C53488,45,code,ConvertByteToDigits,ConvertByteToDigits,1,94S+code+align,engine/middle,95G,ConvertByteToDigits in 95G engine/middle
 $C534B5,51,code,PushNumber,PushNumber,0,94S+code,engine/middle,95G,PushNumber in 95G engine/middle
-$C534E8,77,code,PushNumberWrap,PushNumberWrap,1,94S+purpose,engine/middle,94S,PushNumberWrap in 94S routines/middle
+$C534E8,77,code,PushNumberWidth,PushNumberWidth,1,94S+purpose+align,engine/middle,95G,PushNumberWidth in 95G engine/middle
 $C53535,63,code,ResetClock,ResetClock,2,94S+code,engine/middle,95G,ResetClock in 95G engine/middle
 $C53574,75,code,clearTeamStats,clearTeamStats,1,94S+code,control,95G,clearTeamStats in 95G control
 $C535BF,11,code,restoreteams,restoreteams,1,94S+code,engine/players,95G,restoreteams in 95G engine/players
@@ -2608,14 +2608,14 @@ $C53903,30,code,PadTakeRightDefense,PadTakeRightDefense,1,94S+code,engine/logic,
 $C53921,28,code,PadTakeLeftDefense,PadTakeLeftDefense,2,94S+code,engine/logic,94S,PadTakeLeftDefense in 94S routines/logic
 $C5393D,67,code,PadTakeLeftDefense,PadTakePosition,,94S+code,engine/logic,,
 $C53980,4,code,InitGameSpritesLong,InitGameSpritesLong,1,code,front/shootout,callers,1 of 1 placed callers in front/shootout
-$C53984,83,code,InitGameSprites,InitGameSprites,2,code,front/shootout,plurality,1 of 2 placed callers in front/shootout
-$C539D7,82,code,DrawScoreBox,DrawScoreBox,5,code,engine/lines,plurality,1 of 5 placed callers in engine/lines
+$C53984,83,code,InitGameSprites,InitGameSprites,2,code,front/shootout,plurality,1 of 2 placed callers in hockey; kept in front/shootout (plurality changed)
+$C539D7,82,code,DrawScoreBox,DrawScoreBox,5,code,engine/lines,plurality,1 of 5 placed callers in engine/faceoff; kept in engine/lines (plurality changed)
 $C53A29,56,code,DrawPeriodBox,DrawPeriodBox,6,code,engine/faceoff,plurality,2 of 6 placed callers in engine/faceoff
 $C53A61,16,data,PeriodLabels,PeriodLabels,0,code,data,data,
 $C53A71,4,code,PackTeamSecondTextLong,PackTeamSecondTextLong,1,code,front/injury,callers,1 of 1 placed callers in front/injury
-$C53A75,27,code,PackTeamSecondText,PackTeamSecondText,2,code,engine/lines,plurality,1 of 2 placed callers in engine/lines
+$C53A75,27,code,PackTeamSecondText,PackTeamSecondText,2,code,engine/lines,plurality,1 of 2 placed callers in engine/faceoff; kept in engine/lines (plurality changed)
 $C53A90,44,code,PackTeamSecondText,PackShortText,,code,engine/lines,,
-$C53ABC,36,code,GetPadTeam,GetPadTeam,9,94S+purpose,front/shootout,callers,1 of 1 placed callers in front/shootout
+$C53ABC,36,code,seta2,seta2,9,94S+purpose+align,engine/pause,95G,seta2 in 95G engine/pause
 $C53AE0,24,code,ResetBench,ResetBench,2,94S+code,engine/players,95G,ResetBench in 95G engine/players
 $C53AF8,89,code,ResetBench,ResetTeamBench,,code,engine/players,,
 $C53B51,207,code,forcepldata,forcepldata,1,94S+code,engine/players,95G,forcepldata in 95G engine/players
@@ -2676,8 +2676,8 @@ $C54F38,64,code,RunPauseItem,RunPauseItem,0,code,hockey,callers,1 of 1 placed re
 $C54F78,9,code,PauseItemUp,PauseItemUp,0,code,hockey,callers,1 of 1 placed refs in hockey
 $C54F81,5,code,PauseItemUp,RedrawPauseTab,,code,hockey,,
 $C54F86,14,code,PauseItemDown,PauseItemDown,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C54F94,21,code,SetPauseTab,SetPauseTab,4,code,hockey,callers,1 of 1 placed callers in hockey
-$C54FA9,89,code,SetPauseTab,DrawPauseTab,,code,hockey,,
+$C54F94,21,code,SetPauseTab,SetPauseTab,4,code,engine/pause,callers,2 of 3 placed callers in engine/pause
+$C54FA9,89,code,SetPauseTab,DrawPauseTab,,code,engine/pause,,
 $C55002,8,data,PauseTabLists,PauseTabLists,0,code,data,data,
 $C5500A,8,data,PracticePauseTabLists,PracticePauseTabLists,0,code,data,data,
 $C55012,6,data,PracticeInfoJumps,PracticeInfoJumps,0,code,data,data,
@@ -2690,20 +2690,20 @@ $C5503C,166,code,InitPauseScreen,InitPauseScreen,2,code,engine/pause,95G,PauseSc
 $C550E2,332,code,InitPauseScreen,PauseScreenDraw,,genesis+purpose,engine/pause,,
 $C5522E,23,code,FillPauseMapTileRun,FillPauseMapTileRun,1,code,engine/pause,callers,1 of 1 placed callers in engine/pause
 $C55245,6,data,PauseSpriteX,PauseSpriteX,0,code,data,data,
-$C5524B,11,code,DeselectPauseTab,DeselectPauseTab,1,code,hockey,callers,1 of 1 placed callers in hockey
+$C5524B,11,code,DeselectPauseTab,DeselectPauseTab,1,code,engine/pause,callers,1 of 1 placed callers in engine/pause
 $C55256,9,code,SelectPauseTab,SelectPauseTab,1,code,engine/pause,95G,SelectPauseTab in 95G engine/pause
 $C5525F,25,code,SelectPauseTab,CopyPauseTabTiles,,code,engine/pause,,
 $C55278,20,code,SelectPauseTab,CopyPauseTabTileRow,,code,engine/pause,,
 $C5528C,8,data,PauseTabPlaces,PauseTabPlaces,0,code,data,data,
 $C55294,8,data,PauseTabSelected,PauseTabSelected,0,code,data,data,
 $C5529C,8,data,PauseTabPlain,PauseTabPlain,0,code,data,data,
-$C552A4,8,code,DrawPauseItems,DrawPauseItems,5,code,hockey,callers,1 of 1 placed callers in hockey
-$C552AC,17,code,DrawPauseItems,PrintPauseItems,,code,hockey,,
-$C552BD,17,code,DrawPauseItems,PrintPauseItemsRow,,code,hockey,,
-$C552CE,58,code,DrawPauseItems,PrintPauseItemText,,code,hockey,,
-$C55308,24,code,GoalieModeItemText,GoalieModeItemText,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55320,38,code,TimeoutItemText,TimeoutItemText,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55346,33,code,OtherScoresItemText,OtherScoresItemText,0,code,hockey,callers,1 of 1 placed refs in hockey
+$C552A4,8,code,DrawPauseItems,DrawPauseItems,5,code,engine/pause,callers,2 of 2 placed callers in engine/pause
+$C552AC,17,code,DrawPauseItems,PrintPauseItems,,code,engine/pause,,
+$C552BD,17,code,DrawPauseItems,PrintPauseItemsRow,,code,engine/pause,,
+$C552CE,58,code,DrawPauseItems,PrintPauseItemText,,code,engine/pause,,
+$C55308,24,code,GoalieModeItemText,GoalieModeItemText,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
+$C55320,38,code,TimeoutItemText,TimeoutItemText,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
+$C55346,33,code,OtherScoresItemText,OtherScoresItemText,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
 $C55367,37,code,ShowPenaltyBoxes,ShowPenaltyBoxes,2,genesis+purpose,engine/pause,95G,ShowPenaltyBoxes in 95G engine/pause
 $C5538C,64,code,ShowPenaltyBox,ShowPenaltyBox,1,genesis+purpose,engine/pause,95G,ShowPenaltyBox in 95G engine/pause
 $C553CC,9,code,ShowPenaltyBoxPlayer,ShowPenaltyBoxPlayer,1,genesis+purpose,engine/pause,95G,ShowPenaltyBoxPlayer in 95G engine/pause
@@ -2717,44 +2717,44 @@ $C5589E,46,code,QueueSavedTextMap,QueueSavedTextMap,2,code,hockey,plurality,1 of
 $C558CC,11,code,FreePauseBuffers,FreePauseBuffers,4,code,hockey,callers,2 of 3 placed callers in hockey
 $C558D7,122,code,FreePauseBuffers,RestorePauseBuffers,,code,hockey,,
 $C55951,184,code,SetupScreen,SetupScreen,9,94S+purpose,front/records,95G,SetupScreen in 95G front/records
-$C55A09,55,code,ExitToPauseMenu,ExitToPauseMenu,10,code,front/records,callers,1 of 1 placed callers in front/records
-$C55A40,120,code,SetupStatsPage,SetupStatsPage,4,code,hockey,callers,4 of 4 placed refs in hockey
+$C55A09,55,code,ExitToPauseMenu,ExitToPauseMenu,10,code,front/records,plurality,4 of 9 placed callers in front/stats; kept in front/records (plurality changed)
+$C55A40,120,code,SetupStatsPage,SetupStatsPage,4,code,hockey,plurality,2 of 4 placed callers in front/stats; kept in hockey (plurality changed)
 $C55AB8,4,code,StartScrollListLong,StartScrollListLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C55ABC,268,code,StartScrollList,StartScrollList,13,code,front/stats,callers,3 of 5 placed callers in front/stats
+$C55ABC,268,code,StartScrollList,StartScrollList,13,code,front/stats,callers,5 of 9 placed callers in front/stats
 $C55BC8,9,code,StartScrollList,StartScrollRowNext,,code,front/stats,,
-$C55BD1,23,code,StartScrollRowDrawn,StartScrollRowDrawn,12,code,front/create,plurality,2 of 4 placed callers in front/create
+$C55BD1,23,code,StartScrollRowDrawn,StartScrollRowDrawn,12,code,front/create,plurality,3 of 8 placed callers in front/stats; kept in front/create (plurality changed)
 $C55BE8,42,code,StartScrollRowDrawn,ScrollListArrows,,code,front/create,,
-$C55C12,19,code,RedrawScrollList,RedrawScrollList,4,code,front/create,callers,2 of 3 placed callers in front/create
+$C55C12,19,code,RedrawScrollList,RedrawScrollList,4,code,front/create,plurality,2 of 4 placed callers in front/stats; kept in front/create (plurality changed)
 $C55C25,32,code,RedrawScrollList,RedrawScrollRowNext,,code,front/create,,
-$C55C45,13,code,RedrawScrollRowDrawn,RedrawScrollRowDrawn,0,code,front/create,callers,1 of 1 placed refs in front/create
-$C55C52,2,code,RedrawScrollListDone,RedrawScrollListDone,0,code,front/create,callers,1 of 1 placed refs in front/create
+$C55C45,13,code,RedrawScrollRowDrawn,RedrawScrollRowDrawn,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55C52,2,code,RedrawScrollListDone,RedrawScrollListDone,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C55C54,4,code,ScrollListDownLong,ScrollListDownLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C55C58,46,code,ScrollListDown,ScrollListDown,11,code,front/create,plurality,2 of 4 placed callers in front/create
-$C55C86,6,code,ScrollDownRowDrawn,ScrollDownRowDrawn,0,code,front/create,callers,1 of 1 placed refs in front/create
-$C55C8C,6,code,ScrollListDownDone,ScrollListDownDone,0,code,front/create,callers,1 of 1 placed refs in front/create
-$C55C92,1,code,ScrollListDownDone,ScrollListDownReturn,,code,front/create,,
-$C55C93,83,code,ScrollListDownAnim,ScrollListDownAnim,0,code,front/create,callers,2 of 2 placed refs in front/create
-$C55CE6,42,code,ScrollListUp,ScrollListUp,10,code,front/create,callers,2 of 3 placed callers in front/create
-$C55D10,4,code,ScrollUpRowDrawn,ScrollUpRowDrawn,0,code,front/create,callers,1 of 1 placed refs in front/create
-$C55D14,86,code,ScrollUpRowDrawn,ScrollListUpAnim,,code,front/create,,
-$C55D6A,1,code,ScrollUpRowDrawn,ScrollListUpReturn,,code,front/create,,
+$C55C58,46,code,ScrollListDown,ScrollListDown,11,code,front/create,plurality,3 of 8 placed callers in front/stats; kept in front/create (plurality changed)
+$C55C86,6,code,ScrollDownRowDrawn,ScrollDownRowDrawn,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55C8C,6,code,ScrollListDownDone,ScrollListDownDone,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55C92,1,code,ScrollListDownDone,ScrollListDownReturn,,code,front/stats,,
+$C55C93,83,code,ScrollListDownAnim,ScrollListDownAnim,0,code,front/stats,callers,2 of 2 placed refs in front/stats
+$C55CE6,42,code,ScrollListUp,ScrollListUp,10,code,front/create,plurality,3 of 7 placed callers in front/stats; kept in front/create (plurality changed)
+$C55D10,4,code,ScrollUpRowDrawn,ScrollUpRowDrawn,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55D14,86,code,ScrollUpRowDrawn,ScrollListUpAnim,,code,front/stats,,
+$C55D6A,1,code,ScrollUpRowDrawn,ScrollListUpReturn,,code,front/stats,,
 $C55D6B,8,data,GameStatFormats,GameStatFormats,0,code,data,data,
-$C55D73,23,code,ClearTextRow,ClearTextRow,9,code,front/create,callers,3 of 5 placed callers in front/create
-$C55D8A,34,code,DrawTeamStatNumber,DrawTeamStatNumber,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55DAC,67,code,DrawTeamStatPair,DrawTeamStatPair,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55DEF,78,code,DrawTeamStatPercent,DrawTeamStatPercent,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55E3D,26,code,DrawTeamStatTime,DrawTeamStatTime,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C55E57,108,code,TeamLogoSprite,TeamLogoSprite,4,code,hockey,callers,4 of 4 placed refs in hockey
+$C55D73,23,code,ClearTextRow,ClearTextRow,9,code,front/stats,callers,4 of 5 placed callers in front/stats
+$C55D8A,34,code,DrawTeamStatNumber,DrawTeamStatNumber,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55DAC,67,code,DrawTeamStatPair,DrawTeamStatPair,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55DEF,78,code,DrawTeamStatPercent,DrawTeamStatPercent,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55E3D,26,code,DrawTeamStatTime,DrawTeamStatTime,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C55E57,108,code,TeamLogoSprite,TeamLogoSprite,4,code,hockey,plurality,2 of 4 placed callers in front/stats; kept in hockey (plurality changed)
 $C55EC3,4,code,BCDTextLong,BCDTextLong,2,code,front/season,plurality,1 of 2 placed callers in front/season
-$C55EC7,3,code,BCDText,BCDText,41,code,engine/lines,plurality,1 of 4 placed callers in engine/lines
+$C55EC7,3,code,BCDText,BCDText,41,code,engine/lines,plurality,2 of 6 placed callers in engine/setup; kept in engine/lines (plurality changed)
 $C55ECA,85,code,BCDText,BCDTextAt,,code,engine/lines,,
 $C55F1F,3,code,FitNameToMesarea,FitNameToMesarea,5,code,engine/middle,plurality,1 of 3 placed callers in engine/middle
 $C55F22,104,code,FitNameToMesarea,FitName,,code,engine/middle,,
 $C55F8A,14,code,FitNameToWorkBuf,FitNameToWorkBuf,8,code,engine/middle,family,work buffers family
 $C55F98,109,code,UnpackFitName,UnpackFitName,1,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C56005,4,code,ConcatStringsLong,ConcatStringsLong,1,code,front/title,callers,1 of 1 placed callers in front/title
-$C56009,84,code,ConcatStrings,ConcatStrings,2,code,front/title,plurality,1 of 2 placed callers in front/title
-$C5605D,75,code,TimeTextMSS,TimeTextMSS,4,code,front/summary,callers,1 of 1 placed callers in front/summary
+$C56009,84,code,ConcatStrings,ConcatStrings,2,code,front/title,plurality,1 of 2 placed callers in front/stats; kept in front/title (plurality changed)
+$C5605D,75,code,TimeTextMSS,TimeTextMSS,4,code,front/summary,plurality,1 of 2 placed callers in front/summary
 $C560A8,4,code,SkipPackedTextLong,SkipPackedTextLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C560AC,84,code,TimeTextMMSS,TimeTextMMSS,1,code,engine/pause,callers,1 of 1 placed refs in engine/pause
 $C56100,4,code,TeamSecondTextLong,TeamSecondTextLong,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
@@ -2781,13 +2781,13 @@ $C5624C,9,data,MonthNovember,MonthNovember,0,new,data,data,
 $C56255,9,data,MonthDecember,MonthDecember,0,new,data,data,
 $C5625E,4,code,StringToBoxTilesLong,StringToBoxTilesLong,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
 $C56262,49,code,StringToBoxTiles,StringToBoxTiles,3,code,engine/goal,callers,2 of 3 placed callers in engine/goal
-$C56293,125,code,ShowGameStats,ShowGameStats,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
-$C56310,88,code,DrawGameStatRow,DrawGameStatRow,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C56368,104,code,ShowPeriodStats,ShowPeriodStats,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
+$C56293,125,code,StatsReport,StatsReport,0,94S+purpose+align,front/stats,95G,StatsReport in 95G front/stats
+$C56310,88,code,DrawGameStatRow,DrawGameStatRow,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C56368,104,code,PeriodStatsScreen,PeriodStatsScreen,0,94S+purpose+align,front/stats,95G,PeriodStatsScreen in 95G front/stats
 $C563D0,131,code,DrawPeriodStats,DrawPeriodStats,1,94S+purpose,period,94S,DrawPeriodStats in 94S routines/period
-$C56453,76,code,PrintPeriodRow,PrintPeriodRow,1,code,period,callers,1 of 1 placed callers in period
-$C5649F,363,code,ShowPlayerStats,ShowPlayerStats,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
-$C5660A,48,code,ClearPlayerStatsList,ClearPlayerStatsList,1,code,hockey,callers,1 of 1 placed refs in hockey
+$C56453,76,code,PeriodStatsTeam,PeriodStatsTeam,1,code+align,front/stats,95G,PeriodStatsTeam in 95G front/stats
+$C5649F,363,code,PlayerStatsScreen,PlayerStatsScreen,0,94S+purpose+align,front/stats,95G,PlayerStatsScreen in 95G front/stats
+$C5660A,48,code,ClearPlayerStatsList,ClearPlayerStatsList,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C5663A,103,code,SortPlayerStats,SortPlayerStats,1,94S+purpose,front/stats,94S,SortPlayerStats in 94S routines/stats
 $C566A1,10,code,PlayerStatColumn,PlayerStatColumn,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C566AB,8,code,StatColGoals,StatColGoals,0,code,front/stats,callers,1 of 1 placed refs in front/stats
@@ -2796,28 +2796,28 @@ $C566BB,19,code,StatColPoints,StatColPoints,0,code,front/stats,callers,1 of 1 pl
 $C566CE,8,code,StatColShots,StatColShots,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C566D6,8,code,StatColPenMin,StatColPenMin,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C566DE,10,data,PlayerStatColumns,PlayerStatColumns,0,code,data,data,
-$C566E8,113,code,SortGoalieStats,SortGoalieStats,1,code,hockey,callers,1 of 1 placed refs in hockey
-$C56759,178,code,DrawPlayerStatRow,DrawPlayerStatRow,1,code,hockey,callers,1 of 1 placed refs in hockey
-$C5680B,49,code,DrawPlayerStatRow,PrintStatCell,,code,hockey,,
-$C5683C,68,code,PrintGoalieShotsPct,PrintGoalieShotsPct,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C56880,159,code,PrintPlayerStatHeads,PrintPlayerStatHeads,2,code,hockey,callers,1 of 1 placed refs in hockey
-$C5691F,25,code,PrintPlayerStatHeads,PrintStatHead,,code,hockey,,
-$C56938,81,code,PrintGoalieStatHeads,PrintGoalieStatHeads,1,code,hockey,callers,1 of 1 placed refs in hockey
+$C566E8,113,code,SortGoalieStats,SortGoalieStats,1,code,front/stats,callers,1 of 1 placed callers in front/stats
+$C56759,178,code,DrawPlayerStatRow,DrawPlayerStatRow,1,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C5680B,49,code,DrawPlayerStatRow,PrintStatCell,,code,front/stats,,
+$C5683C,68,code,PrintGoalieShotsPct,PrintGoalieShotsPct,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C56880,159,code,PrintPlayerStatHeads,PrintPlayerStatHeads,2,code,front/stats,callers,1 of 1 placed callers in front/stats
+$C5691F,25,code,PrintPlayerStatHeads,PrintStatHead,,code,front/stats,,
+$C56938,81,code,PrintGoalieStatHeads,PrintGoalieStatHeads,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C56989,10,data,StatColumnNames,StatColumnNames,0,code,data,data,
-$C56993,216,code,ShowPenaltySummary,ShowPenaltySummary,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
-$C56A6B,12,code,PrintPenaltyHead,PrintPenaltyHead,1,code,hockey,callers,1 of 1 placed refs in hockey
-$C56A77,260,code,DrawPenaltyRow,DrawPenaltyRow,0,code,hockey,callers,1 of 1 placed refs in hockey
+$C56993,216,code,PenaltySummaryScreen,PenaltySummaryScreen,0,94S+purpose+align,front/summary,95G,PenaltySummaryScreen in 95G front/summary
+$C56A6B,12,code,PrintPenaltyHead,PrintPenaltyHead,1,code,front/summary,callers,1 of 1 placed callers in front/summary
+$C56A77,260,code,DrawPenaltyRow,DrawPenaltyRow,0,code,front/summary,callers,1 of 1 placed refs in front/summary
 $C56B7B,5,code,ResumeFromQuit,ResumeFromQuit,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C56B80,3,code,ShowQuitPrompt,ShowQuitPrompt,0,code,hockey,callers,3 of 3 placed refs in hockey
+$C56B80,3,code,ShowQuitPrompt,ShowQuitPrompt,0,code,hockey,callers,3 of 4 placed refs in hockey
 $C56B83,9,code,ShowQuitPrompt,ShowPauseTab,,code,hockey,,
 $C56B8C,4,code,QuitGameJump,QuitGameJump,0,code,hockey,callers,1 of 1 placed refs in hockey
-$C56B90,188,code,PauseTimeout,PauseTimeout,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
-$C56C4C,30,code,PutPauseText,PutPauseText,1,code,hockey,callers,1 of 1 placed refs in hockey
-$C56C6A,205,code,ShowScoringSummary,ShowScoringSummary,0,94S+purpose,hockey,callers,2 of 2 placed refs in hockey
-$C56D37,8,code,PrintScoringHead,PrintScoringHead,1,code,hockey,callers,1 of 1 placed refs in hockey
+$C56B90,188,code,TimeoutMenu,TimeoutMenu,0,94S+purpose+align,engine/pause,95G,TimeoutMenu in 95G engine/pause
+$C56C4C,30,code,PutPauseText,PutPauseText,1,code,engine/pause,callers,1 of 1 placed callers in engine/pause
+$C56C6A,205,code,ScoringSummaryScreen,ScoringSummaryScreen,0,94S+purpose+align,front/summary,95G,ScoringSummaryScreen in 95G front/summary
+$C56D37,8,code,PrintScoringHead,PrintScoringHead,1,code,front/summary,callers,1 of 1 placed callers in front/summary
 $C56D3F,278,code,DrawScoringRow,DrawScoringRow,0,code,front/summary,95G,DrawScoringRow in 95G front/summary
-$C56E55,21,code,PauseGoalieMode,PauseGoalieMode,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
-$C56E6A,242,code,TeamRoster,TeamRoster,0,94S+purpose,hockey,callers,2 of 2 placed refs in hockey
+$C56E55,21,code,ManualGoalieMenu,ManualGoalieMenu,0,94S+purpose+align,engine/pause,95G,ManualGoalieMenu in 95G engine/pause
+$C56E6A,242,code,TeamRosterScreen,TeamRosterScreen,0,94S+purpose+align,engine/setup,95G,TeamRosterScreen in 95G engine/setup
 $C56F5C,153,code,ShowRosterLine,ShowRosterLine,1,94S+purpose,front/stats,94S,ShowRosterLine in 94S routines/stats
 $C56FF5,88,code,ShowRosterLine,RosterGoalieRowNext,,code,front/stats,,
 $C5704D,15,code,RosterGoalieRowDone,RosterGoalieRowDone,0,code,front/stats,callers,1 of 1 placed refs in front/stats
@@ -2825,16 +2825,16 @@ $C5705C,2,code,ShowRosterLineSlots,ShowRosterLineSlots,1,code,front/stats,caller
 $C5705E,110,code,ShowRosterLineSlots,RosterSlotRowNext,,code,front/stats,,
 $C570CC,28,code,RosterSlotRowDone,RosterSlotRowDone,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C570E8,12,data,RosterColumnTable,RosterColumnTable,0,code,data,data,
-$C570F4,85,code,RosterColStatus,RosterColStatus,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C570F4,85,code,AttribStatus,AttribStatus,0,code+align,engine/setup,95G,AttribStatus in 95G engine/setup
 $C57149,62,code,AttribEnergy,AttribEnergy,0,94S+purpose,engine/setup,95G,AttribEnergy in 95G engine/setup
-$C57187,20,code,RosterColHand,RosterColHand,0,code,front/stats,callers,1 of 1 placed refs in front/stats
-$C5719B,25,code,RosterColWeight,RosterColWeight,0,code,front/stats,callers,1 of 1 placed refs in front/stats
-$C571B4,19,code,RosterColRating,RosterColRating,0,code,front/stats,callers,1 of 1 placed refs in front/stats
+$C57187,20,code,AttribHanded,AttribHanded,0,code+align,engine/setup,95G,AttribHanded in 95G engine/setup
+$C5719B,25,code,AttribWeight,AttribWeight,0,code+align,engine/setup,95G,AttribWeight in 95G engine/setup
+$C571B4,19,code,RosterColRating,RosterColRating,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
 $C571C7,4,code,CalcRosterAttribLong,CalcRosterAttribLong,2,code,front/scout,callers,2 of 2 placed callers in front/scout
-$C571CB,318,code,CalcRosterAttrib,CalcRosterAttrib,4,code,front/scout,callers,1 of 1 placed callers in front/scout
+$C571CB,318,code,CalcRosterAttrib,CalcRosterAttrib,4,code,engine/setup,callers,2 of 3 placed callers in engine/setup
 $C57309,32,data,RosterAttribWeights,RosterAttribWeights,0,code,data,data,
 $C57329,56,code,PauseReplay,PauseReplay,0,94S+purpose,hockey,94S,PauseReplay in 94S routines/hockey
-$C57361,323,code,EditLinesScreen,EditLinesScreen,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
+$C57361,323,code,LineEditor,LineEditor,0,94S+purpose+align,front/stats,95G,LineEditor in 95G front/stats
 $C574A4,101,code,PrintLineNames,PrintLineNames,1,94S+purpose,front/stats,94S,PrintLineNames in 94S routines/stats
 $C57509,83,code,PrintLineSlot,PrintLineSlot,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C5755C,28,code,RecolourTextRow,RecolourTextRow,2,code,front/stats,callers,1 of 1 placed callers in front/stats
@@ -2851,7 +2851,7 @@ $C5782F,21,code,SetLineSlotRD,SetLineSlotRD,0,code,front/stats,callers,1 of 1 pl
 $C57844,36,code,SetLineSlotLW,SetLineSlotLW,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C57868,36,code,SetLineSlotC,SetLineSlotC,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C5788C,36,code,SetLineSlotRW,SetLineSlotRW,0,code,front/stats,callers,1 of 1 placed refs in front/stats
-$C578B0,231,code,PauseGoalie,PauseGoalie,0,94S+purpose,hockey,callers,1 of 1 placed refs in hockey
+$C578B0,231,code,Pausemode_go,Pausemode_go,0,94S+purpose+align,engine/pause,95G,Pausemode_go in 95G engine/pause
 $C57997,93,code,Pausemode_gnum,Pausemode_gnum,1,genesis+purpose,engine/pause,95G,Pausemode_gnum in 95G engine/pause
 $C579F4,89,code,Pausemode_gnum,GoalieListRowNext,,code,engine/pause,,
 $C57A4D,48,code,GoalieListRowDone,GoalieListRowDone,0,code,engine/pause,callers,1 of 1 placed refs in engine/pause
@@ -2892,9 +2892,9 @@ $C583F3,101,code,UnpackFormat8Step,UnpackFormat8Step,1,code,decompress,callers,1
 $C58458,15,code,DecompressLZSS,DecompressLZSS,4,code,engine/pause,callers,1 of 1 placed callers in engine/pause
 $C58467,192,code,DecompressLZSS,DecompressLZSSHere,,code,engine/pause,,
 $C58527,4,code,MapSetToVRAM,MapSetToVRAM,5,code,hockey,plurality,2 of 5 placed callers in hockey
-$C5852B,395,code,MapSetToVRAMBody,MapSetToVRAMBody,3,code,engine/setup,plurality,1 of 3 placed callers in engine/setup
-$C586B6,20,code,NextMapSetChunk,NextMapSetChunk,2,code,engine/setup,callers,1 of 1 placed callers in engine/setup
-$C586CA,328,code,MapSetMode7ToVRAM,MapSetMode7ToVRAM,1,code,engine/setup,callers,1 of 1 placed callers in engine/setup
+$C5852B,395,code,MapSetToVRAMBody,MapSetToVRAMBody,3,code,engine/setup,plurality,1 of 3 placed callers in front/records; kept in engine/setup (plurality changed)
+$C586B6,20,code,NextMapSetChunk,NextMapSetChunk,2,code,front/records,callers,1 of 1 placed callers in front/records
+$C586CA,328,code,MapSetMode7ToVRAM,MapSetMode7ToVRAM,1,code,front/records,callers,1 of 1 placed callers in front/records
 $C58812,10,code,MapSetToUnpackbuf,MapSetToUnpackbuf,8,code,engine/pause,plurality,2 of 8 placed callers in engine/pause
 $C5881C,88,code,MapSetToUnpackbuf,MapSetToWRAM,,code,engine/pause,,
 $C58874,27,code,NextMapSetChunkWRAM,NextMapSetChunkWRAM,1,code,engine/pause,callers,1 of 1 placed callers in engine/pause
@@ -2917,7 +2917,7 @@ $C58B11,26,code,ClearRAM7E,ClearRAM7E,45,code,engine/video,span,between ClearTex
 $C58B2B,3,code,BlackBackdrop,BlackBackdrop,3,code,engine/video,family,fades family
 $C58B2E,26,code,BlackBackdrop,SetBackdropColour,,code,engine/video,,
 $C58B48,113,code,SetupMode7Screen,SetupMode7Screen,1,code,engine/setup,callers,1 of 1 placed callers in engine/setup
-$C58BB9,43,code,CopyFlipString2,CopyFlipString2,1,code,hockey,callers,1 of 1 placed refs in hockey
+$C58BB9,43,code,CopyFlipString2,CopyFlipString2,1,code,front/summary,callers,1 of 1 placed refs in front/summary
 $C58BE4,82,code,SetupMode1Screen,SetupMode1Screen,1,code,hockey,callers,1 of 1 placed callers in hockey
 $C58C36,151,code,Framer,Framer,10,94S+purpose,engine/video,95G,Framer in 95G engine/video
 $C58CCD,56,code,RandomBelowA,RandomBelowA,6,code,sound,plurality,1 of 2 placed callers in sound
@@ -2961,7 +2961,7 @@ $C59483,67,code,MovePadIcons,MovePadIcons,1,code,engine/goal,callers,1 of 1 plac
 $C594C6,85,code,MovePadIcon,MovePadIcon,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
 $C5951B,109,code,ControllerSetupScreen,ControllerSetupScreen,1,genesis+purpose,engine/goal,95G,ControllerSetupScreen in 95G engine/goal
 $C59588,178,code,StartSeason,StartSeason,0,code,engine/setup,callers,1 of 1 placed refs in engine/setup
-$C5963A,9,code,EnterLeagueMenu,EnterLeagueMenu,4,code,engine/goal,callers,1 of 1 placed callers in engine/goal
+$C5963A,9,code,EnterLeagueMenu,EnterLeagueMenu,4,code,front/season,callers,1 of 1 placed callers in front/season
 $C59643,14,code,CreatePlayer,CreatePlayer,1,genesis+purpose,front/create,95G,CreatePlayer in 95G front/create
 $C59651,41,code,CreatePlayer,ScreenStateLoop,,code,front/create,,
 $C5967A,28,data,ScreenStateHandlers,ScreenStateHandlers,0,code,data,data,
@@ -3052,9 +3052,9 @@ $C5A48C,3,code,PrintHomeTeamName,PrintSetupTeamName,,code,engine/setup,,
 $C5A48F,22,code,PrintHomeTeamName,PrintTeamNameBody,,code,engine/setup,,
 $C5A4A5,16,code,PrintTeamNameLeft,PrintTeamNameLeft,2,code,front/trade,callers,2 of 2 placed callers in front/trade
 $C5A4B5,4,code,QueueHomePaletteLong,QueueHomePaletteLong,3,code,front/awards,callers,2 of 3 placed callers in front/awards
-$C5A4B9,37,code,QueueHomePalette,QueueHomePalette,5,code,front/records,plurality,1 of 2 placed callers in front/records
+$C5A4B9,37,code,QueueHomePalette,QueueHomePalette,5,code,front/records,plurality,1 of 2 placed callers in front/awards; kept in front/records (plurality changed)
 $C5A4DE,4,code,QueueVisPaletteLong,QueueVisPaletteLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C5A4E2,37,code,QueueVisPalette,QueueVisPalette,4,code,front/scout,plurality,1 of 2 placed callers in front/scout
+$C5A4E2,37,code,QueueVisPalette,QueueVisPalette,4,code,front/scout,plurality,1 of 2 placed callers in front/records; kept in front/scout (plurality changed)
 $C5A507,4,code,DeleteArrowSpritesLong,DeleteArrowSpritesLong,1,code,front/create,callers,1 of 1 placed callers in front/create
 $C5A50B,17,code,DeleteArrowSprites,DeleteArrowSprites,3,code,front/create,plurality,1 of 2 placed callers in front/create
 $C5A51C,125,code,SeasonOptions,SeasonOptions,9,genesis+purpose,front/season,95G,SeasonOptions in 95G front/season
@@ -3086,9 +3086,9 @@ $C5AC7F,5,code,LeagueItemPalette3,LeagueItemPalette3,1,code,front/create,callers
 $C5AC84,31,code,LeagueItemPalette3,LeagueItemPalette,,code,front/create,,
 $C5ACA3,7,code,LeagueItemPalette0,LeagueItemPalette0,1,code,front/create,callers,1 of 1 placed refs in front/create
 $C5ACAA,302,code,GamesToday,GamesToday,0,genesis+purpose,front/season,95G,GamesToday in 95G front/season
-$C5ADD8,4,code,CheckGameSelectedUnused,CheckGameSelectedUnused,3,code,engine/goal,callers,2 of 3 placed callers in engine/goal
-$C5ADDC,7,code,CheckGameSelectedUnused,ReturnToLeagueMenu,,code,engine/goal,,
-$C5ADE3,93,code,NoGameSelected,NoGameSelected,0,code,engine/goal,callers,1 of 1 placed refs in engine/goal
+$C5ADD8,4,code,CheckGameSelectedUnused,CheckGameSelectedUnused,3,code,front/season,callers,2 of 3 placed callers in front/season
+$C5ADDC,7,code,CheckGameSelectedUnused,ReturnToLeagueMenu,,code,front/season,,
+$C5ADE3,93,code,NoGameSelected,NoGameSelected,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C5AE40,8,data,HighBitMasksUnused,HighBitMasksUnused,0,code,data,data,
 $C5AE48,191,code,MenuPlayGames,MenuPlayGames,2,genesis+purpose,front/season,95G,MenuPlayGames in 95G front/season
 $C5AF07,175,code,MenuPlayGames,FinishSeasonDay,,code,front/season,,
@@ -3129,7 +3129,7 @@ $C5B631,57,code,PrintPlayerCategory,PrintPlayerCategory,1,genesis+purpose,front/
 $C5B66A,6,data,LeaderCategoryNames,LeaderCategoryNames,0,code,data,data,
 $C5B670,6,data,GoalieCategoryNames,GoalieCategoryNames,0,code,data,data,
 $C5B676,4,code,BinToBCDLong,BinToBCDLong,1,code,front/scout,callers,1 of 1 placed callers in front/scout
-$C5B67A,39,code,BinToBCD,BinToBCD,39,code,front/create,plurality,2 of 10 placed callers in front/create
+$C5B67A,39,code,BinToBCD,BinToBCD,39,code,front/create,plurality,2 of 11 placed callers in front/create
 $C5B6A1,336,code,DrawLeaderRow,DrawLeaderRow,0,code,front/stats,callers,1 of 1 placed refs in front/stats
 $C5B7F1,361,code,DrawSeasonTeamStats,DrawSeasonTeamStats,2,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C5B95A,19,code,DrawSeasonTeamStats,DrawSeasonTeamStatsFinish,,code,front/stats,,
@@ -3148,7 +3148,7 @@ $C5BB8E,3,code,StatBitsShift7,StatBitsShift1,,code,front/stats,,
 $C5BB91,11,code,StatBitsShift7,StatBitsMask,,code,front/stats,,
 $C5BB9C,32,data,LowBitMasks,LowBitMasks,0,code,data,data,
 $C5BBBC,4,code,RefreshSpritesLong,RefreshSpritesLong,4,code,front/awards,plurality,2 of 4 placed callers in front/awards
-$C5BBC0,29,code,RefreshSprites,RefreshSprites,6,code,front/stats,plurality,1 of 3 placed callers in front/stats
+$C5BBC0,29,code,RefreshSprites,RefreshSprites,6,code,front/stats,plurality,1 of 3 placed callers in engine/goal; kept in front/stats (plurality changed)
 $C5BBDD,239,code,DrawSeasonPlayerRow,DrawSeasonPlayerRow,0,code,front/create,plurality,1 of 2 placed refs in front/create
 $C5BCCC,13,code,DrawSeasonPlayerRow,PrintRowBCD,,code,front/create,,
 $C5BCD9,10,code,DrawPlayerStatsTeam,DrawPlayerStatsTeam,3,code,front/stats,callers,2 of 2 placed callers in front/stats
@@ -3190,7 +3190,7 @@ $C5C090,10,code,SortByShootPct,SortByShootPct,0,code,front/season,callers,1 of 1
 $C5C09A,10,code,SortByShotsAvg,SortByShotsAvg,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C5C0A4,10,code,SortByShotsAllowed,SortByShotsAllowed,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C5C0AE,16,data,StandingsSortCompares,StandingsSortCompares,0,code,data,data,
-$C5C0BE,75,code,DrawSetupTeams,DrawSetupTeams,2,code,engine/setup,plurality,1 of 2 placed callers in engine/setup
+$C5C0BE,75,code,DrawSetupTeams,DrawSetupTeams,2,code,engine/setup,plurality,1 of 2 placed callers in front/season; kept in engine/setup (plurality changed)
 $C5C109,237,code,SignFreeAgents,SignFreeAgents,0,genesis+purpose,front/create,95G,SignFreeAgents in 95G front/create
 $C5C1F6,30,code,SetupFreeAgentsScreen,SetupFreeAgentsScreen,1,code,front/create,callers,1 of 1 placed callers in front/create
 $C5C214,312,code,SetupFreeAgentsScreen,DrawFreeAgentsPage,,code,front/create,,
@@ -3242,8 +3242,8 @@ $C5D77F,21,code,ClearUserRecord,ClearUserRecord,1,code,front/records,callers,1 o
 $C5D794,57,code,FindFreeAgent,FindFreeAgent,3,code,front/create,callers,2 of 2 placed callers in front/create
 $C5D7CD,28,code,CreatedPlayerBits,CreatedPlayerBits,8,code,front/stats,plurality,2 of 6 placed callers in front/stats
 $C5D7E9,27,code,NextSaveBits3,NextSaveBits3,8,code,front/stats,plurality,2 of 5 placed callers in front/stats
-$C5D804,29,code,NextSaveBits5,NextSaveBits5,4,code,front/scout,plurality,1 of 2 placed callers in front/scout
-$C5D821,30,code,NextSaveBits7,NextSaveBits7,3,code,front/scout,plurality,1 of 2 placed callers in front/scout
+$C5D804,29,code,NextSaveBits5,NextSaveBits5,4,code,front/scout,plurality,1 of 2 placed callers in front/stats; kept in front/scout (plurality changed)
+$C5D821,30,code,NextSaveBits7,NextSaveBits7,3,code,front/scout,plurality,1 of 2 placed callers in front/create; kept in front/scout (plurality changed)
 $C5D83F,30,code,NextSaveBits8,NextSaveBits8,2,code,front/scout,callers,1 of 1 placed callers in front/scout
 $C5D85D,138,code,PrintPositionCounts,PrintPositionCounts,4,code,front/create,callers,4 of 4 placed callers in front/create
 $C5D8E7,290,code,SetupTradeLists,SetupTradeLists,2,code,front/trade,callers,2 of 2 placed callers in front/trade
@@ -3264,23 +3264,23 @@ $C5DBE8,108,code,ScrollTradeListDown,ScrollTradeListDown,0,code,front/trade,call
 $C5DC54,83,code,TradeListScrollEntries,TradeListScrollEntries,3,code,front/trade,callers,1 of 1 placed callers in front/trade
 $C5DCA7,71,code,TradeScrollStepDown,TradeScrollStepDown,1,code,front/trade,callers,1 of 1 placed refs in front/trade
 $C5DCEE,89,code,TradeScrollStepUp,TradeScrollStepUp,1,code,front/trade,callers,1 of 1 placed refs in front/trade
-$C5DD47,121,code,SimDayScores,SimDayScores,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
-$C5DDC0,48,code,SimGoalLimit,SimGoalLimit,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C5DDF0,37,code,RecordDayResults,RecordDayResults,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
+$C5DD47,121,code,SimDayScores,SimDayScores,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
+$C5DDC0,48,code,SimGoalLimit,SimGoalLimit,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C5DDF0,37,code,RecordDayResults,RecordDayResults,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
 $C5DE15,5,code,RecordTeamLoss,RecordTeamLoss,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C5DE1A,5,code,RecordTeamTie,RecordTeamTie,0,code,front/season,callers,1 of 1 placed refs in front/season
 $C5DE1F,25,code,RecordGameResult,RecordGameResult,2,genesis+purpose,front/season,95G,RecordGameResult in 95G front/season
 $C5DE38,7,code,RecordGameResult,RecordTeamResult,,genesis+purpose,front/season,,
 $C5DE3F,92,code,RecordGameResult,StoreTeamResult,,code,front/season,,
-$C5DE9B,196,code,SimDayGameStats,SimDayGameStats,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
-$C5DF5F,292,code,SimPlayerStats,SimPlayerStats,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C5E083,45,code,SimPlayerStats,SimGiveAssists,,code,engine/goal,,
-$C5E0B0,1,code,SimPlayerStats,SimPlayerStatsReturn,,code,engine/goal,,
-$C5E0B1,46,code,SimGiveGoals,SimGiveGoals,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C5E0DF,68,code,BuildSimPickTable,BuildSimPickTable,2,code,engine/goal,callers,2 of 2 placed callers in engine/goal
-$C5E123,79,code,SimTeamTotals,SimTeamTotals,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C5E172,10,code,RandomBelowA7E,RandomBelowA7E,3,code,engine/goal,callers,3 of 3 placed callers in engine/goal
-$C5E17C,143,code,SaveDayGameStats,SaveDayGameStats,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
+$C5DE9B,196,code,SimDayGameStats,SimDayGameStats,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
+$C5DF5F,292,code,SimPlayerStats,SimPlayerStats,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C5E083,45,code,SimPlayerStats,SimGiveAssists,,code,front/season,,
+$C5E0B0,1,code,SimPlayerStats,SimPlayerStatsReturn,,code,front/season,,
+$C5E0B1,46,code,SimGiveGoals,SimGiveGoals,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C5E0DF,68,code,BuildSimPickTable,BuildSimPickTable,2,code,front/season,callers,2 of 2 placed callers in front/season
+$C5E123,79,code,SimTeamTotals,SimTeamTotals,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C5E172,10,code,RandomBelowA7E,RandomBelowA7E,3,code,front/season,callers,3 of 3 placed callers in front/season
+$C5E17C,143,code,SaveDayGameStats,SaveDayGameStats,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
 $C5E20B,145,code,AddTeamSeasonStats,AddTeamSeasonStats,2,genesis+purpose,front/stats,95G,AddTeamSeasonStats in 95G front/stats
 $C5E29C,10,code,PutTeamStat14,PutTeamStat14,1,code,front/stats,callers,1 of 1 placed callers in front/stats
 $C5E2A6,10,code,PutTeamStat13,PutTeamStat13,1,code,front/stats,callers,1 of 1 placed callers in front/stats
@@ -3292,7 +3292,7 @@ $C5E2CA,3,code,WriteTeamStatBits14,WriteTeamStatBits12,,code,front/stats,,
 $C5E2CD,30,code,WriteTeamStatBits14,WriteTeamStatBits11,,code,front/stats,,
 $C5E2EB,75,code,WriteTeamStatBits14,WriteTeamStatBit,,code,front/stats,,
 $C5E336,72,code,RestoreDayScores,RestoreDayScores,1,code,front/season,callers,1 of 1 placed callers in front/season
-$C5E37E,48,code,BuildAllTeamRecords,BuildAllTeamRecords,2,code,front/season,plurality,1 of 2 placed callers in front/season
+$C5E37E,48,code,BuildAllTeamRecords,BuildAllTeamRecords,2,code,front/season,plurality,1 of 2 placed callers in front/awards; kept in front/season (plurality changed)
 $C5E3AE,24,code,BuildAllTeamRecords,SaveOptPlayoffs,,code,front/season,,
 $C5E3C6,14,code,BuildAllTeamRecords,SaveOptLine,,code,front/season,,
 $C5E3D4,14,code,BuildAllTeamRecords,SaveOptPen,,code,front/season,,
@@ -3304,11 +3304,11 @@ $C5E41C,1,code,BuildAllTeamRecords,ClampRosterTeamsReturn,,code,front/season,,
 $C5E41D,42,code,ClampRosterTeams,ClampRosterTeams,1,code,engine/setup,callers,1 of 1 placed callers in engine/setup
 $C5E447,45,code,ClearPlayerGoals,ClearPlayerGoals,2,code,front/create,callers,1 of 1 placed callers in front/create
 $C5E474,38,code,ClearCreatedGoals,ClearCreatedGoals,1,code,front/season,callers,1 of 1 placed callers in front/season
-$C5E49A,56,code,ShowPleaseWait,ShowPleaseWait,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
+$C5E49A,56,code,ShowPleaseWait,ShowPleaseWait,2,code,engine/goal,plurality,1 of 2 placed callers in front/season; kept in engine/goal (plurality changed)
 $C5E4D2,60,code,UpdateDayPlayed,UpdateDayPlayed,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
-$C5E50E,14,code,ResetSprites,ResetSprites,14,code,engine/setup,plurality,2 of 13 placed callers in engine/setup
-$C5E51C,122,code,ResetSpritesAt,ResetSpritesAt,1,code,engine/setup,callers,1 of 1 placed callers in engine/setup
-$C5E596,148,code,DeleteSprite,DeleteSprite,26,code,front/create,plurality,5 of 20 placed callers in front/create
+$C5E50E,14,code,ResetSprites,ResetSprites,14,code,engine/setup,plurality,3 of 13 placed callers in front/season; kept in engine/setup (plurality changed)
+$C5E51C,122,code,ResetSpritesAt,ResetSpritesAt,1,code,front/season,callers,1 of 1 placed callers in front/season
+$C5E596,148,code,DeleteSprite,DeleteSprite,26,code,front/create,plurality,5 of 22 placed callers in front/create
 $C5E62A,6,code,RemoveSpriteSlot0,RemoveSpriteSlot0,0,code,display,family,sprites family
 $C5E630,6,code,RemoveSpriteSlot0,RemoveSpriteSlot1,,code,display,,
 $C5E636,6,code,RemoveSpriteSlot0,RemoveSpriteSlot2,,code,display,,
@@ -3318,11 +3318,11 @@ $C5E648,6,code,RemoveSpriteSlot0,RemoveSpriteSlot5,,code,display,,
 $C5E64E,6,code,RemoveSpriteSlot0,RemoveSpriteSlot6,,code,display,,
 $C5E654,1,code,RemoveSpriteSlot0,RemoveSpriteSlot7,,code,display,,
 $C5E655,16,data,RemoveSpriteSlotTable,RemoveSpriteSlotTable,0,code,data,data,
-$C5E665,492,code,CreateSprite,CreateSprite,24,trace,engine/setup,plurality,4 of 20 placed callers in engine/setup
-$C5E851,30,code,AllocSpriteTiles,AllocSpriteTiles,2,code,engine/setup,callers,1 of 1 placed callers in engine/setup
-$C5E86F,54,code,AllocLargeSpriteTiles,AllocLargeSpriteTiles,2,code,engine/setup,callers,1 of 1 placed callers in engine/setup
-$C5E8A5,290,code,UploadSpriteFrame,UploadSpriteFrame,2,trace,display,plurality,1 of 2 placed callers in display
-$C5E9C7,14,code,AnimateSprites,AnimateSprites,37,trace,display,plurality,8 of 28 placed callers in display
+$C5E665,492,code,CreateSprite,CreateSprite,24,trace,engine/setup,plurality,4 of 22 placed callers in front/stats; kept in engine/setup (plurality changed)
+$C5E851,30,code,AllocSpriteTiles,AllocSpriteTiles,2,code,front/stats,callers,1 of 1 placed callers in front/stats
+$C5E86F,54,code,AllocLargeSpriteTiles,AllocLargeSpriteTiles,2,code,front/stats,callers,1 of 1 placed callers in front/stats
+$C5E8A5,290,code,UploadSpriteFrame,UploadSpriteFrame,2,trace,display,plurality,1 of 2 placed callers in hockey; kept in display (plurality changed)
+$C5E9C7,14,code,AnimateSprites,AnimateSprites,37,trace,display,plurality,8 of 37 placed callers in display
 $C5E9D5,21,code,AnimateSprites,AnimateSpriteObject,,code,display,,
 $C5E9EA,5,code,AnimateSprites,AnimateNextSprite,,code,display,,
 $C5E9EF,7,code,BeginSpriteAnimStep,BeginSpriteAnimStep,20,code,display,family,sprites family
@@ -3366,13 +3366,13 @@ $C5EE3C,48,code,FreeSpritePaletteUnused,FreeSpritePaletteUnused,0,code,display,f
 $C5EE6C,47,code,UseSpritePalette,UseSpritePalette,4,code,display,family,sprites family
 $C5EE9B,75,code,UseSpritePalette,QueueSpritePalette,,code,display,,
 $C5EEE6,13,code,ReuseSpritePalette,ReuseSpritePalette,0,code,display,family,sprites family
-$C5EEF3,382,code,CreateSpriteSharePal,CreateSpriteSharePal,3,trace,engine/goal,plurality,1 of 3 placed callers in engine/goal
-$C5F071,38,code,UnpackStream0,UnpackStream0,2,trace,display,callers,2 of 2 placed callers in display
-$C5F097,2,code,UnpackStream0Next,UnpackStream0Next,1,code,display,callers,1 of 1 placed callers in display
-$C5F099,56,code,UnpackStream0Next,UnpackStream0Loop,,code,display,,
-$C5F0D1,663,code,BuildSpriteOAM,BuildSpriteOAM,32,trace,front/create,plurality,3 of 22 placed callers in front/create
-$C5F368,115,code,QueueFrameTiles,QueueFrameTiles,5,code,engine/pause,plurality,1 of 5 placed callers in engine/pause
-$C5F3DB,3109,code,PackOAMHigh,PackOAMHigh,33,code,front/create,plurality,3 of 23 placed callers in front/create
+$C5EEF3,382,code,CreateSpriteSharePal,CreateSpriteSharePal,3,trace,engine/goal,plurality,1 of 3 placed callers in engine/faceoff; kept in engine/goal (plurality changed)
+$C5F071,38,code,UnpackStream0,UnpackStream0,2,trace,display,plurality,1 of 2 placed callers in hockey; kept in display (plurality changed)
+$C5F097,2,code,UnpackStream0Next,UnpackStream0Next,1,code,hockey,callers,1 of 1 placed callers in hockey
+$C5F099,56,code,UnpackStream0Next,UnpackStream0Loop,,code,hockey,,
+$C5F0D1,663,code,BuildSpriteOAM,BuildSpriteOAM,32,trace,front/create,plurality,6 of 31 placed callers in front/stats; kept in front/create (plurality changed)
+$C5F368,115,code,QueueFrameTiles,QueueFrameTiles,5,code,engine/pause,plurality,1 of 5 placed callers in engine/replay; kept in engine/pause (plurality changed)
+$C5F3DB,3109,code,PackOAMHigh,PackOAMHigh,33,code,front/create,plurality,6 of 32 placed callers in front/stats; kept in front/create (plurality changed)
 $C60000,2120,data,FrameTileSource,FrameTileSource,0,code,data,data,
 $C60848,2120,data,FrameBankLayout,FrameBankLayout,0,code,data,data,
 $C61090,2120,data,FrameOffsetX,FrameOffsetX,0,code,data,data,
@@ -4237,17 +4237,17 @@ $CF028B,26,code,LoadSample,AppendSoundData,,code,hockey,,
 $CF02A5,110,code,LoadSample,UploadSoundData,,code,hockey,,
 $CF0313,123,code,LoadSequence,LoadSequence,1,code,hockey,callers,1 of 1 placed callers in hockey
 $CF038E,16,code,StartCrowdSound,StartCrowdSound,2,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/faceoff
-$CF039E,50,code,SoundVolumeDown,SoundVolumeDown,6,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/pause
+$CF039E,50,code,SoundVolumeDown,SoundVolumeDown,6,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/goal
 $CF03D0,50,code,SoundVolumeUp,SoundVolumeUp,7,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said hockey
-$CF0402,9,code,WaitSoundQueueEmpty,WaitSoundQueueEmpty,2,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/pause
+$CF0402,9,code,WaitSoundQueueEmpty,WaitSoundQueueEmpty,2,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/goal
 $CF040B,13,code,StartSound,StartSound,29,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/collide
 $CF0418,15,code,StartSoundVolume,StartSoundVolume,4,code,engine/collide,callers,3 of 4 placed callers in engine/collide
-$CF0427,94,code,LoadTeamSongs,LoadTeamSongs,2,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said engine/pause
+$CF0427,94,code,LoadTeamSongs,LoadTeamSongs,2,code,sound,span,between SPCUpload and PlayTeamSong (sound); callers said hockey
 $CF0485,5,code,PlayTeamSongNow,PlayTeamSongNow,1,code,engine/goal,callers,1 of 1 placed callers in engine/goal
 $CF048A,30,code,PlayTeamSong,PlayTeamSong,2,94S+purpose,sound,94S,PlayTeamSong in 94S routines/sound
 $CF04A8,12,code,PlayTeamSong,StartSelectedTeamSong,,code,sound,,
 $CF04B4,2,code,PlayTeamSong,PlayTeamSongReturn,,code,sound,,
-$CF04B6,45,code,StartMenuMusic,StartMenuMusic,2,code,engine/goal,plurality,1 of 2 placed callers in engine/goal
+$CF04B6,45,code,StartMenuMusic,StartMenuMusic,2,code,engine/goal,plurality,1 of 2 placed callers in hockey; kept in engine/goal (plurality changed)
 $CF04E3,160,data,SoundSequenceTable,SoundSequenceTable,0,code,data,data,
 $CF0583,8,data,SampleVolumeOverrideLists,SampleVolumeOverrideLists,0,code,data,data,
 $CF058B,19,data,SampleVolumeOverrides0,SampleVolumeOverrides0,0,code,data,data,
@@ -4305,7 +4305,7 @@ $CFD29C,7041,data,Sample06,Sample06,0,new,data,data,
 $CFEE1D,4,code,NextSortedGameObjectJump,NextSortedGameObjectJump,0,code,display,callers,1 of 1 placed refs in display
 $CFEE21,4,code,PadTagFrameDoneJump,PadTagFrameDoneJump,0,code,engine/replay,callers,1 of 1 placed refs in engine/replay
 $CFEE25,71,code,DrawFrameLayoutFlip,DrawFrameLayoutFlip,1,code,display,callers,1 of 1 placed callers in display
-$CFEE6C,66,code,DrawFrameLayout,DrawFrameLayout,2,code,display,plurality,1 of 2 placed callers in display
+$CFEE6C,66,code,DrawFrameLayout,DrawFrameLayout,2,code,display,plurality,1 of 2 placed callers in engine/replay; kept in display (plurality changed)
 $CFEEAE,10,data,LayoutBigPieces,LayoutBigPieces,0,code,data,data,
 $CFEEB8,23,code,BigPieces1,BigPieces1,0,code,display,callers,1 of 1 placed refs in display
 $CFEECF,47,code,BigPieces2,BigPieces2,0,code,display,callers,1 of 1 placed refs in display

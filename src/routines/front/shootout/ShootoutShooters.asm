@@ -1,6 +1,6 @@
 ShootoutShooters:					; pick the shootout shooters of a pad's team: up / down move the row, A /
 									; B pick (PickShooterRow), start sets the goalie; no code reaches it
-	jsl.l GetPadTeam
+	jsl.l seta2
 	lda.w #$0001
 	sta.b d0
 	lda.b a2
@@ -30,7 +30,7 @@ ShootoutShooters:					; pick the shootout shooters of a pad's team: up / down mo
 	jsl.l PrintShooterNames
 	lda.w #$0005
 	ldx.w #$0050
-	jsl.l ScreenOn
+	jsl.l FadeIn
 .loop:								; loop: call WaitFrame, call ReadPads, call ReadPausePad, ...
 	jsl.l WaitFrame
 	jsl.l ReadPads

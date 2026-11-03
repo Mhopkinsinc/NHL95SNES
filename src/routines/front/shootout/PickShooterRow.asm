@@ -1,9 +1,9 @@
 PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goalie
-									; (GoalieCount), a shooter row opens the shooter list (the code after its
-									; rtl, 94S ShooterSelectList)
+									; (GetGoalieCount), a shooter row opens the shooter list (the code after
+									; its rtl, 94S ShooterSelectList)
 	lda.w curitem
 	bne .3
-	jsl.l GoalieCount
+	jsl.l GetGoalieCount
 	lda.w #$0000
 	sta.b a1+2
 	lda.w #homeshooters
@@ -46,7 +46,7 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	jsl.l GetPlayerCount
 	lda.b d0
 	sta.w listcount
-	jsl.l GoalieCount
+	jsl.l GetGoalieCount
 	lda.w listcount
 	sec
 	sbc.b d0

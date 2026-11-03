@@ -208,5 +208,5 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	ldx.w #ArrowFontTiles>>16
 	jsl.l DecompressToVRAM
 	jsl.l WaitTransfers
-	jsl.l ScreenOn
+	jsl.l FadeIn
 	rts

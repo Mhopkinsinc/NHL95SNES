@@ -6,5 +6,5 @@ asstab:								; the assignment routines, by assignment number (as 94S asstab; t
 	dd assbench,asspenalty,assdopen,assgoalietopuck
 	dd assbreakaway,asspuckc,assnearest,assshoot
 	dd assdumpin,asspassrec,assfaceoff,assfaceoffpl
-	dd pucknorm,puckshadow,pucknothing,puckfaceoff
+	dd pucknorm,puckshadow,puckunflip,puckfaceoff
 	dd puckfaceoff2

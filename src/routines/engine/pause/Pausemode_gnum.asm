@@ -1,4 +1,4 @@
-Pausemode_gnum:						; PauseGoalie's goalie list: 'Player' and the title of stat column $7D
+Pausemode_gnum:						; Pausemode_go's goalie list: 'Player' and the title of stat column $7D
 									; over title bars, a row per goalie with its stat, then 'None'; the cursor
 									; row ($69) in palette 1
 	lda.w #$0300

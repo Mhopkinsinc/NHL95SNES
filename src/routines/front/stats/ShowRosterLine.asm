@@ -1,5 +1,5 @@
-ShowRosterLine:						; TeamRoster's page of team a2: the line title ($79, 0 the goalies) and
-									; the title of stat column $7D, then a row per player of the line: its
+ShowRosterLine:						; TeamRosterScreen's page of team a2: the line title ($79, 0 the goalies)
+									; and the title of stat column $7D, then a row per player of the line: its
 									; position, name and stat (RosterColumnTable)
 	lda.w #$02C0
 	clc

@@ -49,11 +49,11 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	jsr.w PrintPeriodRow
+	jsr.w PeriodStatsTeam
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$0070
 	sta.b $D1
 	inc.b a0
 	inc.b a0
-	jmp.w PrintPeriodRow
+	jmp.w PeriodStatsTeam

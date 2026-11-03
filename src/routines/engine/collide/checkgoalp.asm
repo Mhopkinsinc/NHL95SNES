@@ -72,7 +72,7 @@ checkgoalp:							; from checkgoal
 	sta.b d2
 	pla
 	sta.b d3
-	jsr.w CheckDislodgeGoal
+	jsr.w CheckBump
 	pei ($8B)
 	pei ($87)
 	lda.b r1

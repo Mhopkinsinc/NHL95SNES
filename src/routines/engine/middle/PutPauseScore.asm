@@ -1,4 +1,4 @@
-PutPauseScore:						; the three big digits PushNumberWrap left (width 3) to pause map tile Y
+PutPauseScore:						; the three big digits PushNumberWidth left (width 3) to pause map tile Y
 									; on, two tiles apart (PutClockDigit)
 	lda.w PushWidthBuf+2
 	jsr.w PutClockDigit

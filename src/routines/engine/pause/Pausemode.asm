@@ -112,7 +112,7 @@ Pausemode:							; the game loop's pause (the sflags pause bit): the game state 
 	trb.w sflags
 	lda.w pregamepause
 	bne .2
-	jsl.l ScreenOn
+	jsl.l FadeIn
 .2:									; pregamepause = 0, A = $0006, call StartSound, call StartCrowdSound, ...
 	stz.w pregamepause
 	lda.w #$0006

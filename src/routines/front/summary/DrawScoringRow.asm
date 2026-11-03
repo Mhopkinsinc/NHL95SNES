@@ -1,4 +1,4 @@
-DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a goal (period,
+DrawScoringRow:						; draws row a3 of ScoringSummaryScreen's scrolling list: a goal (period,
 									; time, team, scorer and assists)
 	lda.b a3
 	sta.b r2

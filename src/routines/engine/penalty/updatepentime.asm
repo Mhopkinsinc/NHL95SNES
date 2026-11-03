@@ -24,7 +24,7 @@ updatepentime:						; called from other segments
 	lda.w #$0020
 	tsb.w sflags3
 	jsl.l chkatop
-	jsl.l CountPowerPlayTime
+	jsl.l updatePPTeamTime
 	stz.b a2
 	jsl.l UpdateTeamPenaltyTimes
 	lda.w #$0002

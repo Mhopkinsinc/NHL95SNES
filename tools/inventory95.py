@@ -92,10 +92,18 @@ def snes94_routines(d):
 
 
 def source_files():
+    """The source files in ROM order: the segments (before the move) or the files the bank files list (after it)."""
     out = []
     for l in open(os.path.join(SRC, 'nhl95snes.asm'), encoding='latin-1'):
         m = INCSRC.match(l)
-        if m and not m.group(1).startswith('inc/') and not m.group(1).startswith('ram'):
+        if not m or m.group(1).startswith('inc/') or m.group(1).startswith('ram') or m.group(1).startswith('frames'):
+            continue
+        if m.group(1).startswith('banks/'):
+            for bl in open(os.path.join(SRC, m.group(1)), encoding='latin-1'):
+                mm = INCSRC.match(bl)
+                if mm:
+                    out.append(os.path.normpath(os.path.join('banks', mm.group(1))).replace(os.sep, '/'))
+        else:
             out.append(m.group(1))
     return out
 

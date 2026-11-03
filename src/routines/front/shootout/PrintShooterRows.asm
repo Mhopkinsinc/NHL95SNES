@@ -44,7 +44,7 @@ PrintShooterRows:					; the shooter list's rows from picktop + 1, the row at cur
 	sta.b d0
 	sta.b r1
 	stz.b r2
-	jsl.l GoalieCount
+	jsl.l GetGoalieCount
 	lda.b r1
 	cmp.b d0
 	bpl .4

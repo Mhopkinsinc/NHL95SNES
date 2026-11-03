@@ -7,7 +7,7 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	lda.w blankchar
 	sta.b d2
 	jsl.l eraser
-	jsl.l GoalieCount
+	jsl.l GetGoalieCount
 	lda.b d0
 	dec a
 	sta.b d1

@@ -20,7 +20,7 @@ chk4shot:							; called from other segments
 	lda.w seed
 	and.w #$0003
 	bne .2
-	jmp.w AssignDumpIn
+	jmp.w StartDumpIn
 .2:									; A = $0020, A - spodds,x, A * 2, A * 2, ...
 	lda.w #$0020
 	sec

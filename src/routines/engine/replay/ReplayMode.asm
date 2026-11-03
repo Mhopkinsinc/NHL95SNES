@@ -147,7 +147,7 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	sta.w replayVpos
 	lda.w #$000A
 	sta.w fadestep
-	jsl.l ScreenOn
+	jsl.l FadeIn
 	jsl.l SprSort
 	lda.w #$0001
 	sta.b d7

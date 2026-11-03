@@ -22,9 +22,9 @@ Goal:								; called from other segments
 .3:									; if BA_Team = 0 go to .6
 	lda.w BA_Team
 	beq .6
-.4:									; call EndPenaltyShot, go to GoalReturn
+.4:									; call EndPenaltyShot, go to rtsgoal
 	jsl.l EndPenaltyShot
-	jmp.w GoalReturn
+	jmp.w rtsgoal
 .5:									; if BA_Team = 0 go to .4
 	lda.w BA_Team
 	beq .4
@@ -260,7 +260,7 @@ Goal:								; called from other segments
 	ldx.b a3
 	lda.w #$0008
 	sta.b d0
-	jsl.l AssignTeamSkaters
+	jsl.l AssignTeam
 	lda.b a2
 	bne .29
 	lda.w tmscore+2

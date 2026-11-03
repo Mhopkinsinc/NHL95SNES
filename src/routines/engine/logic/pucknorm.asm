@@ -124,6 +124,6 @@ pucknorm_move:						; from pucknorm and other segments
 	ora.w puckz
 	beq .14
 	jmp.w checkpuckcoll
-.14:								; call pucknothing, go to checkpuckcoll
-	jsl.l pucknothing
+.14:								; call puckunflip, go to checkpuckcoll
+	jsl.l puckunflip
 	jmp.w checkpuckcoll

@@ -1,4 +1,4 @@
-TeamRosterPage:						; the Team Roster text page (TeamRoster)
+TeamRosterPage:						; the Team Roster text page (TeamRosterScreen)
 	dw $0010,$00F0,TxtTeamRoster&$FFFF,$0002
 	dw TxtPadUDChangeLine&$FFFF,$8017
 	dw TxtPadLRChangeStat&$FFFF,$8018

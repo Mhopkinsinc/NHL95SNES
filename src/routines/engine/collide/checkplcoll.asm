@@ -37,7 +37,7 @@ checkplcoll:						; from checkcoll and other segments
 	bne .2
 	cpy.w #$0018
 	bcs .2
-	jsl.l CollidePlayers
+	jsl.l checkcx
 .2:									; d1 + 1, go to .loop
 	inc.b d1
 	bra .loop
@@ -71,7 +71,7 @@ checkplcoll:						; from checkcoll and other segments
 	bne .4
 	cpy.w #$0018
 	bcs .4
-	jsl.l CollidePlayers
+	jsl.l checkcx
 .4:									; d1 - 1, if the result is not 0 go to .loop2
 	dec.b d1
 	bne .loop2

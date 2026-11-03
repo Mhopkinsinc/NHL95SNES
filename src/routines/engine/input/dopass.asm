@@ -75,11 +75,11 @@ dopass:								; from passmode, chk4pass and other segments
 	dec.b d3
 	bmi .6
 	jmp.w .loop
-.6:									; X = a3, if d4 < 0 go to .7, call dopass_count, A = $000B, ...
+.6:									; X = a3, if d4 < 0 go to .7, call passtoa0, A = $000B, ...
 	ldx.b a3
 	lda.b d4
 	bmi .7
-	jsl.l dopass_count
+	jsl.l passtoa0
 	lda.w #$000B
 	jsl.l StartSound
 	jmp.w dopass_swing

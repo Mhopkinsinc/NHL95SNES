@@ -24,7 +24,7 @@ PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2
 	lda.b [a0]
 	and.w #$00FF
 	sta.b d0
-	jsl.l PutDigits2
+	jsl.l ConvertByteToDigits
 	lda.w #$0020
 	sta.b [a1]
 	inc.b a1

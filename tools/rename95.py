@@ -13,6 +13,23 @@ import csv, glob, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'src')
 NAME = re.compile(r'^[A-Za-z_]\w*$')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from check_comments import vis, split, COL  # noqa: E402  (the comment column rules)
+
+
+def realign(line):
+    """Put a trailing comment back at column 36 (or one tab past longer code) after a name changed length."""
+    code, cm = split(line)
+    if cm is None or not code.strip():
+        return line
+    code = code.rstrip()
+    w = vis(code)
+    if w >= COL:
+        return code + '\t' + cm
+    pad = ''
+    while vis(code + pad) < COL:
+        pad += '\t'
+    return code + pad + cm if vis(code + pad) == COL else line
 
 
 def main(argv):
@@ -61,7 +78,7 @@ def main(argv):
         rx = re.compile(r'(?<![\w.$])' + re.escape(old) + r'(?!\w)')
         for f in list(text):
             if rx.search(text[f]):
-                text[f] = rx.sub(new, text[f])
+                text[f] = '\n'.join(realign(rx.sub(new, x)) if rx.search(x) else x for x in text[f].split('\n'))
         for f in list(text):
             if os.path.basename(f) == old + '.asm':
                 nf = os.path.join(os.path.dirname(f), new + '.asm')
