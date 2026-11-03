@@ -32,8 +32,8 @@
   after its fixes (DrawPeriodStats moved from 94S's `period/` to `front/stats/`; RULES "This repo" and Learned brought
   up to date). Pairing baseline: every 95S count is 0, the floor. The all-games plan marks Stage E done.
 - Next: nothing in the plan. Open, optional: the 14 kept names (reasons in the naming notes); about 38 source comments
-  that name 94S to say what 95S lacks or shares (allowed by RULES, not checked by a tool); 94S `waitxsr` to `waitx` (in
-  the 94S repo).
+  that name 94S to say what 95S lacks or shares (allowed by RULES, not checked by a tool). 93S and 94S `waitxsr` became
+  `waitx` in their repos (2026-11-03). `docs/name_map.csv` file column repaired by address (3,949 rows, mostly local labels).
 - Unsure: none.
 
 ## Segment work: state (2026-10-31, finished)
