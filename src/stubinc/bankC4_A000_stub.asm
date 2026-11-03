@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 QueueSoundCmd = $CF00E3
@@ -40,10 +41,10 @@ freezewindow = $C52284
 loadTeamStruct = $C53616
 AssignPadIfFree = $C5376A
 findpc = $C537C4
-CODE_C539D7 = $C539D7
+DrawScoreBox = $C539D7
 makepde = $C54A47
 QueueFrameTiles = $C5F368
-DATA8_C41E48 = $C41E48
+SPAonetimerf = $C41E48
 Div32S = $C09145
 DivX8U = $C0927A
 Mul16S = $C09035
@@ -53,5 +54,10 @@ Mul16x8U = $C08F5E
 Mul16x8XS = $C08F95
 Mul8XS = $C08EEC
 RandomWord = $C08E48
+SPAcatch = $C426B6
+SPAgswing = $C4144E
+SPApassb = $C41BB2
+SPApassf = $C41B40
+SPAsiren = $C4253E
 
 incsrc "../bankC4_A000.asm"

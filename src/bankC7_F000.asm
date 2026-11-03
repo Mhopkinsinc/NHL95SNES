@@ -1,17 +1,23 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C7F09E
-DATA8_C7F09E:						; raw frame tiles for transfer index $0FB; pose not traced
+FrameTiles0FB:						; the raw tiles of frame $0FB (FrameTileSource / FrameBankLayout entry
+									; $0FB); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$9E..$31E
-DATA8_C7F31E:						; raw frame tiles for transfer index $0FC; pose not traced
+FrameTiles0FC:						; the raw tiles of frame $0FC (FrameTileSource / FrameBankLayout entry
+									; $0FC); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$31E..$57E
-DATA8_C7F57E:						; raw frame tiles for transfer index $0FD; pose not traced
+FrameTiles0FD:						; the raw tiles of frame $0FD (FrameTileSource / FrameBankLayout entry
+									; $0FD); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$57E..$77E
-DATA8_C7F77E:						; raw frame tiles for transfer index $0FE; pose not traced
+FrameTiles0FE:						; the raw tiles of frame $0FE (FrameTileSource / FrameBankLayout entry
+									; $0FE); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$77E..$9DE
-DATA8_C7F9DE:						; raw frame tiles for transfer index $0FF; pose not traced
+FrameTiles0FF:						; the raw tiles of frame $0FF (FrameTileSource / FrameBankLayout entry
+									; $0FF); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$9DE..$C5E
-DATA8_C7FC5E:						; raw frame tiles for transfer index $100; pose not traced
+FrameTiles100:						; the raw tiles of frame $100 (FrameTileSource / FrameBankLayout entry
+									; $100); pose not traced
 	incbin "../Extracted/segments/bankC7_F000.bin":$C5E..$E7E
 SelkePicMap:						; the picture of award 1 (AwardPictures): Frank J. Selke Trophy
 	dw SelkePicTiles-SelkePicMap-2	; map chunk length

@@ -1,18 +1,25 @@
 ; Raw planar frame tiles sent directly to VRAM by QueueFrameTiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $CBB235
-DATA8_CBB235:						; raw frame tiles for transfer index $356; pose not traced
+FrameTiles356:						; the raw tiles of frame $356 (FrameTileSource / FrameBankLayout entry
+									; $356); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$235..$435
-DATA8_CBB435:						; raw frame tiles for transfer index $357; pose not traced
+FrameTiles357:						; the raw tiles of frame $357 (FrameTileSource / FrameBankLayout entry
+									; $357); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$435..$635
-DATA8_CBB635:						; raw frame tiles for transfer index $358; pose not traced
+FrameTiles358:						; the raw tiles of frame $358 (FrameTileSource / FrameBankLayout entry
+									; $358); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$635..$835
-DATA8_CBB835:						; raw frame tiles for transfer index $359; pose not traced
+FrameTiles359:						; the raw tiles of frame $359 (FrameTileSource / FrameBankLayout entry
+									; $359); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$835..$A35
-DATA8_CBBA35:						; raw frame tiles for transfer index $35A; pose not traced
+FrameTiles35A:						; the raw tiles of frame $35A (FrameTileSource / FrameBankLayout entry
+									; $35A); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$A35..$C35
-DATA8_CBBC35:						; raw frame tiles for transfer index $35B; pose not traced
+FrameTiles35B:						; the raw tiles of frame $35B (FrameTileSource / FrameBankLayout entry
+									; $35B); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$C35..$E35
-DATA8_CBBE35:						; raw frame tiles for transfer index $35C; pose not traced
+FrameTiles35C:						; the raw tiles of frame $35C (FrameTileSource / FrameBankLayout entry
+									; $35C); pose not traced
 	incbin "../Extracted/segments/bankCB_B000.bin":$E35..$1000
 	incbin "../Extracted/segments/bankCB_C000.bin":$0..$35

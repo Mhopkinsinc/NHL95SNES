@@ -1,7 +1,7 @@
 ; Frame placement tables and raw planar frame tiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C62120
-DATA8_C62120:						; placement words read by the mirrored frame path; axis not traced
+FrameOffsetXFlip:					; per frame (1060 words): the x offset for an x-flipped object
 	dw $FFF5,$FFE8,$FFE1,$FFE3,$FFEB,$FFE9,$FFEC,$FFEF
 	dw $FFEB,$FFE7,$FFEB,$FFE6,$FFE1,$FFE7,$FFEA,$FFE7
 	dw $FFE4,$FFF0,$FFE9,$FFEF,$FFF0,$FFE3,$FFD8,$FFD7
@@ -135,10 +135,13 @@ DATA8_C62120:						; placement words read by the mirrored frame path; axis not t
 	dw $001D,$0006,$000A,$000D,$001B,$001C,$0008,$0001
 	dw $FFFC,$FFFB,$FFF7,$FFEA,$FFE7,$FFE6,$FFE4,$FFF6
 	dw $FFF4,$FFE9,$FFE3,$FFDF
-DATA8_C62968:						; raw frame tiles for transfer index $002; pose not traced
+FrameTiles002:						; the raw tiles of frame $002 (FrameTileSource / FrameBankLayout entry
+									; $002); pose not traced
 	incbin "../Extracted/segments/bankC6_2000.bin":$968..$BE8
-DATA8_C62BE8:						; raw frame tiles for transfer index $003; pose not traced
+FrameTiles003:						; the raw tiles of frame $003 (FrameTileSource / FrameBankLayout entry
+									; $003); pose not traced
 	incbin "../Extracted/segments/bankC6_2000.bin":$BE8..$E28
-DATA8_C62E28:						; raw frame tiles for transfer index $006; pose not traced
+FrameTiles006:						; the raw tiles of frame $006 (FrameTileSource / FrameBankLayout entry
+									; $006); pose not traced
 	incbin "../Extracted/segments/bankC6_2000.bin":$E28..$1000
 	incbin "../Extracted/segments/bankC6_3000.bin":$0..$A8

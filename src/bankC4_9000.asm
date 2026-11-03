@@ -1,5 +1,4 @@
-; Segment bankC4_9000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_9000: game code, jump tables and the data tables the code reads with long addresses.
 org $C492F8
 ClampGoalieTargetY:					; clamp the goalie target between goal lines and make its Y relative to d3
 	lda.w Ypos,x
@@ -29,7 +28,9 @@ ClampGoalieTargetY:					; clamp the goalie target between goal lines and make it
 	sta.b d1
 GoalieTargetReturn:					; return from goalie targeting
 	rtl
-DATA8_C4932C:						; not traced: data between routines
+assgoalie_list:						; per save type (d0 * 2): the goalie's save animation (SPA), in 94S's
+									; order: glove, stack and stick saves right / left, the sprawls, the
+									; butterfly
 	db $02,$13,$34,$13,$CA,$13,$0C,$14,$66,$13,$98,$13,$2C,$18,$9A,$17
 	db $08,$17
 AdjustFacingDirection:				; called from other segments
@@ -75,7 +76,7 @@ GoaliePuckVector:					; called from other segments
 	sbc.w Ypos,x
 	sta.b d1
 	bra AdjustGoalieVectorAtNet
-CODE_C49390:						; no caller found (not traced); it runs on into the next routine
+.1:									; no caller found: d0 = puckx, d1 = pucky - d4, then the next routine
 	lda.w puckx
 	sta.b d0
 	lda.w pucky
@@ -272,8 +273,8 @@ PredictPuckGoalCrossing:			; predict puck crossing time and X at the goal line i
 	bit.w #$0800
 	beq .1
 	ora.w #$F000
-.1:									; $36 = A, r1 = puckvy, call Div32S, puckcross+2,y = r0, ...
-	sta.b $36
+.1:									; r2+2 = A, r1 = puckvy, call Div32S, puckcross+2,y = r0, ...
+	sta.b r2+2
 	lda.w puckvy
 	sta.b r1
 	jsl.l Div32S
@@ -317,7 +318,7 @@ puckflip:							; called from other segments
 	sta.w SPAcnt+28
 	phx
 	ldx.w #$001C
-	lda.w #$191A
+	lda.w #SPApflip&$FFFF
 	jsl.l SetSPAFromA
 	plx
 	rtl
@@ -620,8 +621,8 @@ CalcAngleOffset:					; from shotdiradj
 	sbc.w pucky
 	ldx.b d0
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $91
+	lda.b r2+2
+	sta.b d4+2
 	lda.b r2
 	sta.b d4
 	lda.b d1
@@ -631,9 +632,9 @@ CalcAngleOffset:					; from shotdiradj
 	sec
 	sbc.b r2
 	sta.b r2
-	lda.b $91
-	sbc.b $36
-	sta.b $36
+	lda.b d4+2
+	sbc.b r2+2
+	sta.b r2+2
 	lda.b d2
 	sta.b r1
 	jsl.l Div32S
@@ -695,10 +696,10 @@ SetShotMode:						; from assshoot and other segments
 	jsl.l vtoa
 	lda.w #$000F
 	sta.w passspeed
-	ldy.w #$1C24
+	ldy.w #SPAshotf&$FFFF
 	jsl.l Findhittype
 	beq .2
-	ldy.w #$1D36
+	ldy.w #SPAshotb&$FFFF
 .2:									; d1 = Y, go to SetSPA
 	sty.b d1
 	jml.l SetSPA
@@ -730,7 +731,7 @@ ShotMode:							; shot input for the puck carrier: doshot at animation frame $18
 	cpx.w puckc
 	bne .2
 	lda.w SPA,x
-	cmp.w #$1C24
+	cmp.w #SPAshotf&$FFFF
 	bcc .2
 	cmp.w #$1EFB
 	bcs .2
@@ -781,13 +782,13 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	cpx.w puckc
 	beq .1
 	jmp.w .15
-.1:									; $01,s = $000E, A = $1000, if SPA,x is not $1D36 go to .2, $01,s = $000E
+.1:									; $01,s = $000E, A = $1000, if SPA,x is not SPAshotb&$FFFF go to .2, ...
 	lda.w #$000E
 	sta.b $01,s
 	lda.w #$1000
 	tsb.w sflags
 	lda.w SPA,x
-	cmp.w #$1D36
+	cmp.w #SPAshotb&$FFFF
 	bne .2
 	lda.w #$000E
 	sta.b $01,s
@@ -809,7 +810,7 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	ldx.b r2
 	lda.w #$2570
 	jsl.l Mul16U
-	lda.b $36
+	lda.b r2+2
 	sta.w passspeed
 	lda.w breakaway
 	beq .4
@@ -835,10 +836,10 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	asl a
 	asl a
 	tay
-	lda.w #$9B35
+	lda.w #doshot_shotsets&$FFFF
 	sta.b a0
-	lda.w #$00C4
-	sta.b $65
+	lda.w #doshot_shotsets>>16
+	sta.b a0+2
 	lda.b [a0],y
 	sec
 	sbc.w puckx
@@ -1005,7 +1006,8 @@ doshot:								; from ShotMode, PassReceiverOneTimer, ...
 	jsl.l assreplace
 .rtl:								; return
 	rtl
-DATA8_C49B35:						; not traced: data between routines
+doshot_shotsets:					; x offset and height for each passdir (shot sets), read by doshot through
+									; a0
 	db $00,$00,$0C,$00,$0F,$00,$0C,$00,$0F,$00,$06,$00,$0F,$00,$00,$00
 	db $00,$00,$00,$00,$F1,$FF,$00,$00,$F1,$FF,$06,$00,$F1,$FF,$0C,$00
 	db $00,$00,$06,$00
@@ -1017,8 +1019,7 @@ assbreakaway:						; assignment (asstab entry 16): the puck carrier on a breakaw
 	bmi BreakawayFollowPath
 .1:									; go to assexit
 	jmp.w assexit
-DATA8_C49B66:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 BreakawayGlideStopped:				; glide and suspend puck pickup while breakaway play is stopped
 	jsl.l GlideBack
 	lda.w #$003C
@@ -1070,10 +1071,10 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	sec
 	sbc.b d1
 	sta.b d1
-.4:									; $65 = DATA8_C49C87>>16, a0 = DATA8_C49C87, A = temp2,x, ...
-	lda.w #DATA8_C49C87>>16
-	sta.b $65
-	lda.w #DATA8_C49C87
+.4:									; a0+2 = BreakawayNoCallback>>16, a0 = BreakawayNoCallback, ...
+	lda.w #BreakawayNoCallback>>16
+	sta.b a0+2
+	lda.w #BreakawayNoCallback
 	sta.b a0
 	lda.w temp2,x
 	sec
@@ -1130,31 +1131,31 @@ BreakawayFollowPath:				; follow the computer breakaway path and choose when to 
 	sec
 	sbc.w Ypos,x
 	sta.b d1
-.10:								; call vtoa, call Findhittype, if zero go to .11, A = $1EFA, ...
+.10:								; call vtoa, call Findhittype, if zero go to .11, ...
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .11
-	lda.w #$1EFA
+	lda.w #SPAonetimerb&$FFFF
 	bra .12
-.11:								; A = $1E48
-	lda.w #$1E48
+.11:								; A = SPAonetimerf
+	lda.w #SPAonetimerf&$FFFF
 .12:								; call SetSPAFromA, call updateanim, SPAcnt,x = $0002, go to doshot
 	jsl.l SetSPAFromA
 	jsl.l updateanim
 	lda.w #$0002
 	sta.w SPAcnt,x
 	jml.l doshot
-DATA8_C49C87:						; not traced: a table read by BreakawayFollowPath
-	db $6B
+BreakawayNoCallback:				; the skateto callback of BreakawayFollowPath: an rtl, nothing to avoid
+	rtl
 AdvanceBreakawayPath:				; load the next breakaway waypoint and its advance threshold
 	lda.w sopathpoint
 	asl a
 	adc.w sopathpoint
 	asl a
 	tay
-	lda.w #DATA8_C49CC3>>16
-	sta.b $65
-	lda.w #DATA8_C49CC3
+	lda.w #BreakawayPathPoints>>16
+	sta.b a0+2
+	lda.w #BreakawayPathPoints
 	sta.b a0
 	lda.b [a0],y
 	sta.b d0
@@ -1177,7 +1178,8 @@ AdvanceBreakawayPath:				; load the next breakaway waypoint and its advance thre
 	sta.w sopathnext
 	inc.w sopathpoint
 	rts
-DATA8_C49CC3:						; not traced: a table read by AdvanceBreakawayPath
+BreakawayPathPoints:				; the computer breakaway path: per point (sopathpoint * 6) its x (mirrored
+									; by sopathside), its y and the y where the next starts (-1 ends it)
 	db $28,$00,$78,$00,$50,$00,$EA,$FF,$97,$00,$8C,$00,$EA,$FF,$E6,$00
 	db $B7,$00,$2C,$00,$E9,$00,$FF,$FF
 InitBreakawayPath:					; choose the starting side and waypoint of the breakaway path
@@ -1276,20 +1278,21 @@ Findhittype:						; from SetShotMode, dopass_swing, PassReceiverOneTimer, ...
 	beq .1
 	phx
 	ldx.b d0
-	lda.l DATA8_C49DBC,x
+	lda.l HitTypes,x
 	plx
 	and.w #$00FF
 	rtl
-.1:									; push X, X = d0, A = DATA8_C49DBF,x, pull X, ...
+.1:									; push X, X = d0, A = HitTypes+3,x, pull X, ...
 	phx
 	ldx.b d0
-	lda.l DATA8_C49DBF,x
+	lda.l HitTypes+3,x
 	plx
 	and.w #$00FF
 	rtl
-DATA8_C49DBC:						; not traced: a table read by Findhittype
+HitTypes:							; per direction of the target against the player's facing (facedir - d0, &
+									; 7): 1 a backhand swing, 0 a forehand; read from HitTypes+3, from
+									; HitTypes when x flipped
 	db $00,$00,$00
-DATA8_C49DBF:						; not traced: a table read by Findhittype
 	db $00,$01,$01,$01,$01,$00,$00,$00
 setpassmode:						; called from other segments
 	lda.w position,x
@@ -1341,10 +1344,9 @@ asspassrec:							; called from other segments
 	beq PassReceiverTryOneTimer
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	bra PassReceiverOneTimer
-DATA8_C49E41:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 PassReceiverTryOneTimer:			; let a computer pass receiver request a one-timer in the attacking zone
 	ldy.b a2
 	lda.w teampads,y
@@ -1360,7 +1362,7 @@ PassReceiverTryOneTimer:			; let a computer pass receiver request a one-timer in
 	bne .3
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	jmp.w PassReceiverOneTimer
 .2:									; if Ypos,x - $005C >= 0 go to .1
 	lda.w Ypos,x
@@ -1382,9 +1384,9 @@ PassReceiverReturn:					; return from the pass receiver update
 	rtl
 PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	lda.w SPA,x
-	cmp.w #$1E48
+	cmp.w #SPAonetimerf&$FFFF
 	beq .7
-	cmp.w #$1EFA
+	cmp.w #SPAonetimerb&$FFFF
 	beq .7
 	phy
 	ldy.w #$0000
@@ -1412,14 +1414,14 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	sec
 	sbc.w passtargety
 	sta.b d1
-.3:									; call vtoa, call Findhittype, if zero go to .4, A = $1EFA, ...
+.3:									; call vtoa, call Findhittype, if zero go to .4, ...
 	jsl.l vtoa
 	jsl.l Findhittype
 	beq .4
-	lda.w #$1EFA
+	lda.w #SPAonetimerb&$FFFF
 	bra .5
-.4:									; A = $1E48
-	lda.w #$1E48
+.4:									; A = SPAonetimerf
+	lda.w #SPAonetimerf&$FFFF
 .5:									; call SetSPAFromA, go to PassReceiverReturn
 	jsl.l SetSPAFromA
 	jmp.w PassReceiverReturn
@@ -1431,7 +1433,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	lda.w SPAnum,x
 	cmp.w #$0010
 	bcs .6
-	bit.w $0674
+	bit.w OneTimerDist
 	bmi .6
 	txa
 	jsl.l GetFrameHot
@@ -1447,8 +1449,8 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	sec
 	sbc.w pucky
 	jsl.l ApproxLength
-	cmp.w $0674
-	sta.w $0674
+	cmp.w OneTimerDist
+	sta.w OneTimerDist
 	bcs .8
 	jmp.w .14
 .8:									; A = Xpos,x, A - puckx, Y = A, A = Ypos,x, ...
@@ -1463,7 +1465,7 @@ PassReceiverOneTimer:				; animate and time the pass receiver one-timer attempt
 	cmp.w #$001C
 	bcs .14
 	lda.w #$FFFF
-	sta.w $0674
+	sta.w OneTimerDist
 	stz.w puckvx
 	stz.w puckvy
 	stz.w SPAcnt,x

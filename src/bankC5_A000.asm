@@ -1,5 +1,4 @@
-; Segment bankC5_A000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), two jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_A000: game code, two jump tables and the data tables the code reads with long addresses.
 org $C59F79
 PrintCreatedOverall:				; packs the created player's ratings (CreateRatings on; the skater or
 									; goalie layout by d0) as the nibbles of a player record in mesarea, then
@@ -97,7 +96,7 @@ PrintPaddedValue:					; prints the BCDText digits in mesarea bold right-aligned 
 	rts
 RatingNibble:						; A = the 0-6 rating of value A (0-15), from the table after it
 	tax
-	lda.l DATA8_C5A08B,x
+	lda.l RatingLevels,x
 	and.w #$00FF
 	rts
 RatingNibbleHigh:					; RatingNibble * 16 (for the high nibble of a record byte)
@@ -107,7 +106,7 @@ RatingNibbleHigh:					; RatingNibble * 16 (for the high nibble of a record byte)
 	asl a
 	asl a
 	rts
-DATA8_C5A08B:						; not traced: a table read by RatingNibble
+RatingLevels:						; per rating value (0-15): the 0-6 level RatingNibble returns
 	db $00,$00,$01,$01,$02,$02,$03,$03,$03,$03,$04,$04,$04,$05,$05,$06
 DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the letter grid and
 									; its keys; the screen state goes to 0 (NameEntry)
@@ -121,7 +120,7 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	jsl.l ClearVRAM
 	ldx.b d7
 	jsl.l DeleteSprite
-	ldx.b $9D
+	ldx.b d7+2
 	jsl.l DeleteSprite
 	ldx.b a4
 	jsl.l DeleteSprite
@@ -129,7 +128,7 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	jsl.l DeleteSprite
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$5714
+	lda.w #CreatePlayerPage&$FFFF
 	jsl.l PrintTextPage
 	sec
 	lda.b $CF
@@ -139,15 +138,15 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	sta.b $D5
 	lda.w #$001A
 	ldy.w #$000C
-	ldx.w #$490D
+	ldx.w #TxtAbcdefghi&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$000F
-	ldx.w #$4914
+	ldx.w #TxtJklmnopqr&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0012
-	ldx.w #$491B
+	ldx.w #TxtStuvwxyz&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$2000
 	sta.b $D5
@@ -171,10 +170,10 @@ DrawNameEntry:						; draws the Create Player page: First Name, Last Name, the l
 	jsl.l PrintItalicFixedLeftStr
 	jsl.l SendTextMap
 	lda.w #$0006
-	sta.b $71
+	sta.b a3+2
 	lda.w #$0008
-	sta.b $69
-	stz.b $99
+	sta.b a1+2
+	stz.b d6+2
 	stz.b a3
 	stz.b d6
 	jsr.w MoveCreateGridCursor
@@ -194,12 +193,12 @@ PlaceYesNoCursor:					; the cursor sprite (a0) to x $6A on the Yes (d6 = 0, y $8
 	sta.b $08,x
 	rts
 LetterCellPalette3:					; palette 3 on the 2 x 2 tiles of Create Player letter grid cell d6
-									; (DATA8_C5A1D7)
+									; (LetterGridCells)
 	lda.b d6
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	tay
 	jsr.w SetTilePalette3
 	iny
@@ -218,12 +217,12 @@ SetTilePalette3:					; palette 3 on the text map tile at Y
 	sta.w $0000,y
 	rts
 LetterCellPalette0:					; palette 0 on the 2 x 2 tiles of Create Player letter grid cell d6
-									; (DATA8_C5A1D7), then SendTextMap
+									; (LetterGridCells), then SendTextMap
 	lda.b d6
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	tay
 	jsr.w SetTilePalette0
 	iny
@@ -244,53 +243,58 @@ SetTilePalette0:					; palette 0 on the text map tile at Y
 	ora.w #$0000
 	sta.w $0000,y
 	rts
-DATA8_C5A1D7:						; not traced: a table read by LetterCellPalette3, LetterCellPalette0
+LetterGridCells:					; per letter grid cell (* 2, 9 a row): its text map offset ($0306 on, 3
+									; tiles apart); SetGridCellPalette adds $C0 (the user name grid, 3 rows
+									; lower)
 	db $06,$03,$0C,$03,$12,$03,$18,$03,$1E,$03,$24,$03,$2A,$03,$30,$03
 	db $36,$03,$C6,$03,$CC,$03,$D2,$03,$D8,$03,$DE,$03,$E4,$03,$EA,$03
 	db $F0,$03,$F6,$03,$86,$04,$8C,$04,$92,$04,$98,$04,$9E,$04,$A4,$04
 	db $AA,$04,$B0,$04,$B6,$04
 MoveCreateGridCursor:				; palette 0 on Create Player letter grid cell d6 and the cursor sprite
-									; (a0) onto it (x and y from DATA8_C5A225 / DATA8_C5A25B)
+									; (a0) onto it (x and y from LetterGridX / LetterGridY)
 	jsr.w LetterCellPalette0
 	ldy.b a0
 	lda.b d6
 	asl a
 	tax
-	lda.l DATA8_C5A25B,x
+	lda.l LetterGridY,x
 	sta.w $0008,y
-	lda.l DATA8_C5A225,x
+	lda.l LetterGridX,x
 	sta.w $0005,y
 	rts
-DATA8_C5A225:						; not traced: a table read by MoveCreateGridCursor
+LetterGridX:						; per letter grid cell (* 2): the cursor sprite's x ($14 + 24 a column)
 	db $14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00,$A4,$00,$BC,$00
 	db $D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00,$A4,$00
 	db $BC,$00,$D4,$00,$14,$00,$2C,$00,$44,$00,$5C,$00,$74,$00,$8C,$00
 	db $A4,$00,$BC,$00,$D4,$00
-DATA8_C5A25B:						; not traced: a table read by MoveCreateGridCursor
+LetterGridY:						; per letter grid cell (* 2): the cursor sprite's y ($70, $88, $A0 by
+									; row); MoveGridCursor adds $18 (the user name grid)
 	db $70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00,$70,$00
 	db $70,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00,$88,$00
 	db $88,$00,$88,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00,$A0,$00
 	db $A0,$00,$A0,$00,$A0,$00
 FieldPos:							; prints the created player's position (d0: Goalie, Left Defense, Right
-									; Defense, Left Wing, Center, Right Wing; DATA8_C5A2A8) on row 8, its
+									; Defense, Left Wing, Center, Right Wing; CreatedPosNames) on row 8, its
 									; field cleared first
 	lda.w #$0008
 	jsr.w ClearFieldValue
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C5A2A8,x
+	lda.l CreatedPosNames,x
 	tax
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	rts
-DATA8_C5A2A8:						; not traced: a table read by FieldPos
-	db $B8,$49,$BD,$49,$C7,$49,$D7,$49,$D2,$49,$E0,$49
+CreatedPosNames:					; per created player position (d0 * 2): its name, packed text: Goalie,
+									; then the five of PositionLongNames
+	dw TxtGoalie&$FFFF,TxtLeftDefense&$FFFF,TxtRightDefense&$FFFF,TxtLeftWing&$FFFF,TxtCenter&$FFFF
+	dw TxtRightWing&$FFFF
 FieldWeight:						; prints the created player's weight, $81 * 8 + 140, on row $B, its field
 									; cleared first
 	lda.w #$000B
 	jsr.w ClearFieldValue
-	lda.b $81
+	lda.b d0+2
 	asl a
 	asl a
 	asl a
@@ -317,9 +321,9 @@ FieldHand:							; prints the created player's hand (Left when $85 is set, else 
 	lda.w #$0011
 	jsr.w ClearFieldValue
 	ldx.w #$49ED
-	lda.b $85
+	lda.b d1+2
 	beq .1
-	ldx.w #$49E9
+	ldx.w #TxtLeft&$FFFF
 .1:									; Y = $0011, call PrintItalicLeft, return
 	ldy.w #$0011
 	jsl.l PrintItalicLeft
@@ -368,7 +372,8 @@ BCDDigits4:							; mesarea = the 4 BCD digits of A as text, leading zeros kept
 	adc.w #$0030
 	sta.w mesarea+3
 	rts
-DATA8_C5A354:						; the check routine of the option line routine after it: LimitTradeTeam2
+TradeTeam2Check:					; the check routine of the Trades screen's Team 2 line (LimitTradeTeam2):
+									; the word before the line's routine, TradeTeam2Hook
 	dw LimitTradeTeam2
 TradeTeam2Hook:						; the routine of the Trades screen's Team 2 line (the word before it is
 									; its check, LimitTradeTeam2): PrintVisTeamName
@@ -429,7 +434,8 @@ LimitVisTeam:						; the Visiting Team line's check: with OptRosters set or a pl
 	bra .2
 .rts:								; return
 	rts
-DATA8_C5A3BF:						; the check routine of the option line routine after it: LimitVisTeam
+VisTeamCheck:						; the check routine of the Visiting Team line (LimitVisTeam): the word
+									; before the line's routine, PrintVisTeamName
 	dw LimitVisTeam
 PrintVisTeamName:					; saves VisTeam (SRVisTeam) and prints its name, thin and centred between
 									; x $20 and $68 on row $D; the Visiting Team lines' routine
@@ -445,7 +451,7 @@ PrintVisTeamName:					; saves VisTeam (SRVisTeam) and prints its name, thin and 
 	lda.w #$0068
 	sta.b $D1
 	lda.w VisTeam
-	jmp.w CODE_C5A48C
+	jmp.w PrintSetupTeamName
 ClearTeamNameBox:					; clears 16 tiles at text map offset A and on the row below (a team name)
 	clc
 	adc.b $D3
@@ -459,7 +465,8 @@ ClearTeamNameBox:					; clears 16 tiles at text map offset A and on the row belo
 	adc.w #$0040
 	jsl.l ClearRAM7E
 	rts
-DATA8_C5A3FD:						; the check routine of the option line routine after it: LimitTradeTeam1
+TradeTeam1Check:					; the check routine of the Trades screen's Team 1 line (LimitTradeTeam1):
+									; the word before the line's routine, TradeTeam1Hook
 	dw LimitTradeTeam1
 TradeTeam1Hook:						; the routine of the Trades screen's Team 1 line (the word before it is
 									; its check, LimitTradeTeam1): PrintHomeTeamName
@@ -520,7 +527,8 @@ LimitHomeTeam:						; the Home Team line's check: with OptRosters set or a play 
 	bra .2
 .rts:								; return
 	rts
-DATA8_C5A468:						; the check routine of the option line routine after it: LimitHomeTeam
+HomeTeamCheck:						; the check routine of the Home Team line (LimitHomeTeam): the word before
+									; the line's routine, PrintHomeTeamName
 	dw LimitHomeTeam
 PrintHomeTeamName:					; saves HomeTeam (SRHomeTeam) and prints its name, thin and centred
 									; between x $A0 and $E8 on row $D; the Home Team lines' routine
@@ -536,12 +544,13 @@ PrintHomeTeamName:					; saves HomeTeam (SRHomeTeam) and prints its name, thin a
 	lda.w #$00E8
 	sta.b $D1
 	lda.w HomeTeam
-CODE_C5A48C:						; from PrintVisTeamName
+PrintSetupTeamName:					; selects row thirteen for the home or visiting team name
 	ldy.w #$000D
-CODE_C5A48F:						; from PrintTeamNameLeft
+PrintTeamNameBody:					; prints team A centred on row Y, sends the map and restores the saved
+									; margins
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l PrintThinCentred
 	jsl.l SendTextMap
@@ -558,17 +567,17 @@ PrintTeamNameLeft:					; prints the name of team A on row Y, thin and centred be
 	stx.b $CF
 	ldx.w #$0068
 	stx.b $D1
-	bra CODE_C5A48F
+	bra PrintTeamNameBody
 QueueHomePaletteLong:				; QueueHomePalette for long calls
 	jsr.w QueueHomePalette
 	rtl
 QueueHomePalette:					; queues HomeTeam's 16 colours (TeamPalettes as unpacked at $7F:D80A) for
 									; CGRAM $20
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0020
 	pea.w $007F
@@ -579,10 +588,10 @@ QueueHomePalette:					; queues HomeTeam's 16 colours (TeamPalettes as unpacked a
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rts
 QueueVisPaletteLong:				; QueueVisPalette for long calls
@@ -591,10 +600,10 @@ QueueVisPaletteLong:				; QueueVisPalette for long calls
 QueueVisPalette:					; queues VisTeam's 16 colours (TeamPalettes as unpacked at $7F:D80A) for
 									; CGRAM $30
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007F
@@ -605,10 +614,10 @@ QueueVisPalette:					; queues VisTeam's 16 colours (TeamPalettes as unpacked at 
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rts
 DeleteArrowSpritesLong:				; DeleteArrowSprites for long calls
@@ -640,19 +649,19 @@ SeasonOptions:						; the League Menu (season mode): draws its page (Play Games,
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	bne .1
 	jsl.l SetupPlayoffs
 	inc.w OptPlayMode
-.1:									; X = d7, call DeleteSprite, X = $9D, call DeleteSprite, ...
+.1:									; X = d7, call DeleteSprite, X = d7+2, call DeleteSprite, ...
 	ldx.b d7
 	jsl.l DeleteSprite
-	ldx.b $9D
+	ldx.b d7+2
 	jsl.l DeleteSprite
 	jsr.w DeleteArrowSprites
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$56A4
+	lda.w #LeagueMenuPage&$FFFF
 	jsl.l PrintTextPage
 	clc
 	lda.b $D3
@@ -670,7 +679,7 @@ SeasonOptions:						; the League Menu (season mode): draws its page (Play Games,
 	bpl .loop
 	stz.b d6
 	lda.w #$0006
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 PlaceLeagueCursor:					; the cursor sprite (a0) to League Menu item d6: x $30, y d6 * 24 + $3E
 	ldx.b a0
@@ -738,11 +747,11 @@ LeagueLeadersInput:					; the League Leaders screen each frame (screen state 8):
 .7:									; push A, go to DrawLeagueLeaders
 	pha
 	jmp.w DrawLeagueLeaders
-.8:									; A = $85, A xor $0001, $85 = A, go to DrawLeagueLeaders
+.8:									; A = d1+2, A xor $0001, d1+2 = A, go to DrawLeagueLeaders
 	pei ($83)
-	lda.b $85
+	lda.b d1+2
 	eor.w #$0001
-	sta.b $85
+	sta.b d1+2
 	jmp.w DrawLeagueLeaders
 SeasonTeamStatsInput:				; the Season Team Stats screen each frame (screen state 9): left / right
 									; switch the team, start / select back to the League Menu
@@ -863,8 +872,8 @@ SeasonPlayerStatsInput:				; the Season Player Stats screen each frame (screen s
 	lda.w HomeRoster
 	sbc.w HomeRoster+2
 	sta.b a1
-.12:								; $69 = 0, A = DrawSeasonPlayerRow, X = $000C, Y = $000B, ...
-	stz.b $69
+.12:								; a1+2 = 0, A = DrawSeasonPlayerRow, X = $000C, Y = $000B, ...
+	stz.b a1+2
 	lda.w #DrawSeasonPlayerRow
 	ldx.w #$000C
 	ldy.w #$000B
@@ -964,9 +973,9 @@ StandingsInput:						; the NHL Standings screen each frame (screen state 11): up
 	lda.w #$0000
 .8:									; d0 = A
 	sta.b d0
-.9:									; Y = $0270, call CODE_C5A80B
+.9:									; Y = $0270, call ClearStandingsRows
 	ldy.w #$0270
-	jsr.w CODE_C5A80B
+	jsr.w ClearStandingsRows
 .10:								; X = $77, call DeleteSprite, X = $79, call DeleteSprite, ...
 	ldx.b $77
 	jsl.l DeleteSprite
@@ -975,7 +984,7 @@ StandingsInput:						; the NHL Standings screen each frame (screen state 11): up
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
 	jmp.w DrawStandings
-CODE_C5A80B:						; from StandingsInput
+ClearStandingsRows:					; clears Y bytes of the text map from the standings rows
 	lda.w #$01D0
 ClearTextMapAt:						; clears Y bytes of the text map from offset A
 	clc
@@ -983,10 +992,11 @@ ClearTextMapAt:						; clears Y bytes of the text map from offset A
 	jsl.l ClearRAM7E
 	rts
 GamesTodayInput:					; the Games Today screen each frame (screen state 7): its current step's
-									; routine from DATA8_C5A81B
-	ldx.b $89
-	jmp (DATA8_C5A81B,x)
-DATA8_C5A81B:						; jump table: the routine for each index
+									; routine from GamesTodaySteps
+	ldx.b d2+2
+	jmp (GamesTodaySteps,x)
+GamesTodaySteps:					; per Games Today step ($89): its routine each frame: the keys, or a
+									; scroll of the games up / down
 	dw GamesTodayKeys,ScrollGamesUp,ScrollGamesDown
 GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / down the game
 									; $85 (a scroll at the list's ends), B flips the game between user and
@@ -1023,23 +1033,23 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	cmp.b d0
 	beq .4
 	bcs .rts
-.4:									; if not zero go to .5, X = $85, A = SRDayPlayed
+.4:									; if not zero go to .5, X = d1+2, A = SRDayPlayed
 	bne .5
-	ldx.b $85
+	ldx.b d1+2
 	lda.l SRDayPlayed
 .loop:								; loop: A / 2, X - 1, if the result >= 0 go to .loop, ...
 	lsr a
 	dex
 	bpl .loop
 	bcs .rts
-.5:									; A = d4, A + $85, push A, A and $0007, ...
+.5:									; A = d4, A + d1+2, push A, A and $0007, ...
 	lda.b d4
 	clc
-	adc.b $85
+	adc.b d1+2
 	pha
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.b tmp0
 	pla
@@ -1059,20 +1069,20 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	dec.b d0
 	jsr.w DrawDayGames
 	jmp.w PrintGamesTodayDate
-.7:									; A = d0, A * 2, X = A, if DATA8_C35F62,x = 0 go to .rts, ...
+.7:									; A = d0, A * 2, X = A, if SeasonDates+2,x = 0 go to .rts, ...
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C35F62,x
+	lda.l SeasonDates+2,x
 	beq .rts
 	inc.b d0
 	jsr.w DrawDayGames
 	jmp.w PrintGamesTodayDate
-.8:									; if $85 = 0 go to .rts, A - 1, $85 = A, if not zero go to .9, ...
-	lda.b $85
+.8:									; if d1+2 = 0 go to .rts, A - 1, d1+2 = A, if not zero go to .9, ...
+	lda.b d1+2
 	beq .rts
 	dec a
-	sta.b $85
+	sta.b d1+2
 	bne .9
 	ldx.b a4
 	lda.b $22,x
@@ -1097,22 +1107,22 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	ora.w #$0001
 	sta.b $22,x
 	jsr.w DrawGameInSlot
-	lda.b $81
+	lda.b d0+2
 	dec a
 	bpl .11
 	lda.w #$0002
-.11:								; $81 = A, $89 = $0002
-	sta.b $81
+.11:								; d0+2 = A, d2+2 = $0002
+	sta.b d0+2
 	lda.w #$0002
-	sta.b $89
+	sta.b d2+2
 .rts2:								; return
 	rts
-.12:								; A = $85, A + 1, if A >= d2 go to .rts2, $85 = A, ...
-	lda.b $85
+.12:								; A = d1+2, A + 1, if A >= d2 go to .rts2, d1+2 = A, ...
+	lda.b d1+2
 	inc a
 	cmp.b d2
 	bcs .rts2
-	sta.b $85
+	sta.b d1+2
 	inc a
 	cmp.b d2
 	bcc .13
@@ -1139,15 +1149,15 @@ GamesTodayKeys:						; Games Today step 0: left / right change the day d0, up / 
 	ora.w #$0001
 	sta.b $22,x
 	jsr.w DrawGameInSlot
-	lda.b $81
+	lda.b d0+2
 	inc a
 	cmp.w #$0003
 	bcc .15
 	lda.w #$0000
-.15:								; $81 = A, $89 = $0004, return
-	sta.b $81
+.15:								; d0+2 = A, d2+2 = $0004, return
+	sta.b d0+2
 	lda.w #$0004
-	sta.b $89
+	sta.b d2+2
 	rts
 ScrollGamesUp:						; Games Today step 1: ScrollGamesUpLine twice a frame
 	jsr.w ScrollGamesUpLine
@@ -1185,21 +1195,21 @@ ScrollGamesUpLine:					; one line of the scroll to the game above: BG2 scroll - 
 	cmp.w #$0028
 	bne .3
 	pha
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	ldx.w #$0020
 	bcc .2
 	ldx.w #$0040
-.2:									; A = $8D, A and $00FF, call QueueTeamPalette, pull A
-	lda.b $8D
+.2:									; A = d3+2, A and $00FF, call QueueTeamPalette, pull A
+	lda.b d3+2
 	and.w #$00FF
 	jsr.w QueueTeamPalette
 	pla
-.3:									; if A is not $0010 go to .5, push A, A = $85, A / 2, ...
+.3:									; if A is not $0010 go to .5, push A, A = d1+2, A / 2, ...
 	cmp.w #$0010
 	bne .5
 	pha
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	ldx.w #$0030
 	bcc .4
@@ -1223,7 +1233,7 @@ ScrollGamesUpLine:					; one line of the scroll to the game above: BG2 scroll - 
 	sta.w BandScroll+$10
 	lda.w BandScroll+$2
 	sta.w BandScroll+$4
-	stz.b $89
+	stz.b d2+2
 	rts
 .6:									; BG3ScrollHDMA+$9 = A, A 16-bit, return
 	sta.w BG3ScrollHDMA+$9
@@ -1243,22 +1253,22 @@ ScrollGamesDownLine:				; one line of the scroll to the game below: BG2 scroll +
 	cmp.b #$28
 	bne .2
 	rep #$20
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	ldx.w #$0020
 	bcc .1
 	ldx.w #$0040
-.1:									; A = $8D, A and $00FF, call QueueTeamPalette, A 8-bit, ...
-	lda.b $8D
+.1:									; A = d3+2, A and $00FF, call QueueTeamPalette, A 8-bit, ...
+	lda.b d3+2
 	and.w #$00FF
 	jsr.w QueueTeamPalette
 	sep #$20
 	bra .4
-.2:									; if A is not $10 go to .4, A 16-bit, A = $85, A / 2, ...
+.2:									; if A is not $10 go to .4, A 16-bit, A = d1+2, A / 2, ...
 	cmp.b #$10
 	bne .4
 	rep #$20
-	lda.b $85
+	lda.b d1+2
 	lsr a
 	ldx.w #$0030
 	bcc .3
@@ -1304,7 +1314,7 @@ ScrollGamesDownLine:				; one line of the scroll to the game below: BG2 scroll +
 	inc a
 	sta.w BandScroll+$2
 	sta.w BandScroll+$4
-	stz.b $89
+	stz.b d2+2
 	rts
 DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $8D / $8E its
 									; two teams, the text of slot $81 cleared and both names printed
@@ -1313,28 +1323,28 @@ DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $
 	stx.b $CF
 	ldx.w #$00A0
 	stx.b $D1
-	lda.b $85
+	lda.b d1+2
 	asl a
 	adc.b d1
 	tax
 	lda.l $C30001,x
-	sta.b $8D
-	lda.b $81
+	sta.b d3+2
+	lda.b d0+2
 	asl a
 	tax
 	phx
-	lda.l DATA8_C5B35D,x
+	lda.l GameSlotOffsets,x
 	adc.b $D3
 	ldy.w #$01C0
 	jsl.l ClearRAM7E
 	plx
-	lda.l DATA8_C5B363,x
+	lda.l GameSlotRows,x
 	tay
-	lda.b $8D
+	lda.b d3+2
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	phy
 	jsl.l PrintThinCentred
@@ -1342,7 +1352,7 @@ DrawGameInSlot:						; draws game $85 for a scroll: its marks (DrawGameMarks), $
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	pla
 	adc.w #$0003
@@ -1575,39 +1585,43 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	ldy.w #$5C00
 	jsl.l QueueClearVRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0600
 	pea.w $0130
 	pea.w $007E
 	pea.w $50DC
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
-	pea.w $00C0
-	pea.w $3EE2
-	lda.b $04
+	pea.w WonCheckPalette>>16
+	pea.w WonCheckPalette&$FFFF
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldx.w #$0060
 	jsl.l SetupHDMA
-	db $40,$2C,$35,$4A,$C0,$7E		; inline parameters
+	db $40,$2C						; inline parameters: DMAP and BBAD
+	dl MainScreenHDMA				; the HDMA table
+	db $7E							; the indirect bank
 	ldx.w #$0050
 	jsl.l SetupHDMA
 	db $42,$12,$8C,$46,$7E,$7E		; inline parameters
 	ldx.w #$0040
 	jsl.l SetupHDMA
-	db $42,$10,$14,$49,$C0,$00		; inline parameters
+	db $42,$10						; inline parameters: DMAP and BBAD
+	dl BG2ScrollHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0015
 	sta.w ScratchBuf
 	lda.w #$0011
@@ -1652,22 +1666,23 @@ GamesToday:							; League Menu Games Today: the day's games (B marks a game, th
 	sta.b $05,x
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$568E
+	lda.w #GamesTodayPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	lda.l SeasonDay
 	and.w #$00FF
 	sta.b d0
 	lda.w #$0002
-	sta.b $81
-	stz.b $89
+	sta.b d0+2
+	stz.b d2+2
 	jsr.w DrawDayGames
 	jsr.w PrintGamesTodayDate
 	lda.w #$0007
-	sta.b $99
+	sta.b d6+2
 	stz.w fadestep
 	rts
-CODE_C5ADD8:						; called from other segments
+CheckGameSelectedUnused:			; if tmp0 bit 7 is clear, NoGameSelected, else on into ReturnToLeagueMenu;
+									; nothing calls it
 	bit.b tmp0
 	bpl NoGameSelected
 ReturnToLeagueMenu:					; drops a return address, rebuilds the setup screen (setoptions), then
@@ -1687,18 +1702,18 @@ NoGameSelected:						; the warning A game must be selected. / Okay (screen state
 	sta.b $D5
 	lda.w #$0032
 	sta.b $CF
-	ldx.w #$47A1
+	ldx.w #TxtAGameMustBe&$FFFF
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	ldy.w #$000A
-	ldx.w #$47AB
+	ldx.w #TxtSelected&$FFFF
 	jsl.l PrintItalicLeft
 	lda.w #$2000
 	sta.b $D5
 	lda.w #$006E
 	sta.b $CF
 	ldy.w #$000E
-	ldx.w #$47B3
+	ldx.w #TxtOkay&$FFFF
 	jsl.l PrintItalicLeft
 	jsl.l SendTextMap
 	ldx.b a0
@@ -1707,9 +1722,10 @@ NoGameSelected:						; the warning A game must be selected. / Okay (screen state
 	lda.w #$007E
 	sta.b $08,x
 	lda.w #$000C
-	sta.b $99
+	sta.b d6+2
 	rts
-DATA8_C5AE40:						; not traced: data between routines
+HighBitMasksUnused:					; 8 masks, the top 8 bits down to the top bit ($FF, $FE ... $80); nothing
+									; reads them
 	db $FF,$FE,$FC,$F8,$F0,$E0,$C0,$80
 MenuPlayGames:						; League Menu Play Games: when the season is over (play mode 3), the end
 									; of season (BuildPlayoffDay); else the day's games from the schedule
@@ -1737,16 +1753,16 @@ MenuPlayGames:						; League Menu Play Games: when the season is over (play mode
 	and.w #$00FF
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	bne .2
 	jsl.l SetupPlayoffs
 	inc.w OptPlayMode
 	jmp.w ReturnToLeagueMenu
-.2:									; A = d0, A * 2, X = A, A = DATA8_C360D4,x, ...
+.2:									; A = d0, A * 2, X = A, A = SeasonSchedule,x, ...
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C360D4,x
+	lda.l SeasonSchedule,x
 	tax
 	lda.l $C30000,x
 	and.w #$00FF
@@ -1770,7 +1786,7 @@ MenuPlayGames:						; League Menu Play Games: when the season is over (play mode
 	lda.b d4
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	sta.b tmp1
 	lda.b d4
@@ -1821,7 +1837,7 @@ FinishSeasonDay:					; once no user game of the day is left: Please Wait, the co
 	jsl.l ResetWorkBuf
 	lda.w #$0001
 	sta.w SeasonScoresMode
-	stz.w $1910
+	stz.w SeasonScoresExit
 	jsl.l ResetSprites
 	jsr.w ShowOtherScores
 	stz.w SeasonScoresMode
@@ -1838,18 +1854,18 @@ FinishSeasonDay:					; once no user game of the day is left: Please Wait, the co
 	sta.l SeasonDay
 	lda.w #$0000
 	sta.l SRDayPlayed
-	bit.w $1910
+	bit.w SeasonScoresExit
 	bpl .2
 	jmp.w ReturnToLeagueMenu
 .2:									; go to MenuPlayGames
 	jmp.w MenuPlayGames
-.3:									; HomeTeam = $0004,x, A = $0002,x, VisTeam = A, $2C44 = X, ...
+.3:									; HomeTeam = $0004,x, A = $0002,x, VisTeam = A, ...
 	lda.w $0004,x
 	sta.l HomeTeam
 	lda.w $0002,x
 	plb
 	sta.w VisTeam
-	stx.w $2C44
+	stx.w SeasonUserGamePtr
 	jsl.l ResetTransferQueues
 	jsl.l ResetWorkBuf
 	jsl.l FadeOutWait

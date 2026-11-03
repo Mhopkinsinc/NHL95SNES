@@ -1,5 +1,4 @@
-; Segment bankC5_0000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_0000: game code, jump tables and the data tables the code reads with long addresses.
 org $C50000
 Opening:							; the cold start that Reset_Fast jumps to (94S Opening)
 	pea.w $7E7E
@@ -47,7 +46,7 @@ Restart:							; starts over at the setup screen: the stack reset, StartMenuMusi
 	jsl.l CheckPAL
 	jsl.l GameSetUp
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	stz.w shootoutmode
 	lda.w OptPlayMode
 	cmp.w #$0004
@@ -62,7 +61,7 @@ Restart:							; starts over at the setup screen: the stack reset, StartMenuMusi
 StartGame_go:						; starts a game: fade out, the game RAM cleared, the games started count +
 									; 1, the penalties flag from the option
 	jsl.l FadeOutWait
-	ldx.w #$059E
+	ldx.w #mp5readall
 .loop:								; loop: $00,x = 0, X + 1, X + 1, if X < $1543 go to .loop, ...
 	stz.b $00,x
 	inx
@@ -77,7 +76,7 @@ StartGame_go:						; starts a game: fade out, the game RAM cleared, the games st
 	inx
 	cpx.w #$2375
 	bcc .loop2
-	inc.w $2378
+	inc.w gamesstarted
 	stz.w gmode
 	stz.w gsp
 	lda.w OptPen
@@ -233,13 +232,13 @@ Gameloop:							; the game loop: frame counts and the speed, a random team song,
 	bne .2
 	inc a
 	inx
-.2:									; push X, push A, A = $003C, X = $48, ...
+.2:									; push X, push A, A = $003C, X = gameframes, ...
 	phx
 	pha
 	lda.w #$003C
-	ldx.b $48
+	ldx.b gameframes
 	inx
-	stx.b $48
+	stx.b gameframes
 	stx.b $26
 	jsl.l Mul16x8U
 	lda.w FrameCount
@@ -360,12 +359,12 @@ DoGameFrame:						; one frame of game logic: UpdateBenchCheer, periodicevents,
 	jsl.l updateplayers
 	jsl.l checkwindow
 	jsl.l updatereplay
-.loop:								; loop: if TransfersReady is not 0 go to .loop, $28 = $1D8F, ...
+.loop:								; loop: if TransfersReady is not 0 go to .loop, $28 = OAMBuf+$1FF, ...
 	lda.w TransfersReady
 	bne .loop
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jml.l setvideo
 periodicevents:						; from DoGameFrame and other segments
@@ -471,13 +470,13 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w onetimer
 	beq .13
 	jmp.w .33
-.13:								; if SPA,x is not $2708 go to .14, go to .44
+.13:								; if SPA,x is not SPAinjury1&$FFFF go to .14, go to .44
 	lda.w SPA,x
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	bne .14
 	jmp.w .44
-.14:								; if A < $28F6 go to .15, go to .44
-	cmp.w #$28F6
+.14:								; if A < SPAboardfront&$FFFF go to .15, go to .44
+	cmp.w #SPAboardfront&$FFFF
 	bcc .15
 	jmp.w .44
 .15:								; if X is not $001C go to .16, if puckz = 0 go to .16, go to .33
@@ -500,7 +499,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcc .17
-	inc.b $36
+	inc.b r2+2
 .17:								; Xvel,x = $35, go to .20
 	lda.b $35
 	sta.w Xvel,x
@@ -513,7 +512,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcs .19
-	dec.b $36
+	dec.b r2+2
 .19:								; Xvel,x = $35
 	lda.b $35
 	sta.w Xvel,x
@@ -527,7 +526,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcc .21
-	inc.b $36
+	inc.b r2+2
 .21:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -540,7 +539,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b $35
 	sta.b r2
 	bcs .23
-	dec.b $36
+	dec.b r2+2
 .23:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -574,7 +573,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcc .26
-	inc.b $36
+	inc.b r2+2
 .26:								; Xvel,x = $35, go to .29
 	lda.b $35
 	sta.w Xvel,x
@@ -590,7 +589,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcs .28
-	dec.b $36
+	dec.b r2+2
 .28:								; Xvel,x = $35
 	lda.b $35
 	sta.w Xvel,x
@@ -608,7 +607,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcc .30
-	inc.b $36
+	inc.b r2+2
 .30:								; Yvel,x = $35, go to .33
 	lda.b $35
 	sta.w Yvel,x
@@ -624,7 +623,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sbc.b r0
 	sta.b r2
 	bcs .32
-	dec.b $36
+	dec.b r2+2
 .32:								; Yvel,x = $35
 	lda.b $35
 	sta.w Yvel,x
@@ -634,150 +633,150 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	dec a
 	bne .34
 	jmp.w .38
-.34:								; if Xvel,x < 0 go to .35, $36 = 0, A * 2, A * 2, ...
+.34:								; if Xvel,x < 0 go to .35, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Xvel,x
 	bmi .35
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
 	bra .36
-.35:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.35:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
-.36:								; if Yvel,x < 0 go to .37, $36 = 0, A * 2, A * 2, ...
+.36:								; if Yvel,x < 0 go to .37, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Yvel,x
 	bmi .37
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	jmp.w .42
-.37:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.37:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	jmp.w .42
-.38:								; if Xvel,x < 0 go to .39, $36 = 0, A * 2, A * 2, ...
+.38:								; if Xvel,x < 0 go to .39, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Xvel,x
 	bmi .39
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
 	bra .40
-.39:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.39:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Xfrac,x
 	sta.w Xfrac,x
 	lda.w Xpos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Xpos,x
-.40:								; if Yvel,x < 0 go to .41, $36 = 0, A * 2, A * 2, ...
+.40:								; if Yvel,x < 0 go to .41, r2+2 = 0, A * 2, A * 2, ...
 	lda.w Yvel,x
 	bmi .41
-	stz.b $36
+	stz.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 	bra .42
-.41:								; $36 = Y, A * 2, A * 2, A * 2, ...
-	sty.b $36
+.41:								; r2+2 = Y, A * 2, A * 2, A * 2, ...
+	sty.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	asl a
-	rol.b $36
+	rol.b r2+2
 	clc
 	adc.w Yfrac,x
 	sta.w Yfrac,x
 	lda.w Ypos,x
-	adc.b $36
+	adc.b r2+2
 	sta.w Ypos,x
 .42:								; if X is not $001C go to .44, if puckz < 0 go to .44, ...
 	cpx.w #$001C
@@ -800,7 +799,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	clc
 	adc.w shadowz
 	sta.w shadowz
-	lda.b $36
+	lda.b r2+2
 	adc.w puckz
 	sta.w puckz
 	bpl .44
@@ -927,10 +926,10 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	sta.w PadControlObj+10
 	sta.w PadControlObj+12
 	stz.w padinputdone
-	stz.w $05A6
-	stz.w $05A8
-	stz.w $05AA
-	stz.w $05AC
+	stz.w padinputdone+2
+	stz.w padinputdone+4
+	stz.w padinputdone+6
+	stz.w padinputdone+8
 	stz.b $BD
 	lda.w #$0002
 	sta.b $BF
@@ -1123,7 +1122,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$FF65
 	sta.w puckx
 	ldx.w frame+$1C
-	cpx.w #$01B3
+	cpx.w #SPFpuck
 	bne .74
 	sta.w Xpos+$1E
 .74:								; if puckx - $009B < 0 go to .75, puckx = $009B, ...
@@ -1133,7 +1132,7 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$009B
 	sta.w puckx
 	ldx.w frame+$1C
-	cpx.w #$01B3
+	cpx.w #SPFpuck
 	bne .75
 	sta.w Xpos+$1E
 .75:								; if puckz is not 0 go to .77, if pucky - $FEAE < 0 go to .77, ...
@@ -1157,14 +1156,15 @@ updateplayers:						; every object's frame: the old positions kept, the goalie a
 	lda.w #$013E
 	sta.w pucky
 	sta.w Ypos+$1E
-.77:								; if puckc < 0 go to .rtl, $2000 = pucky
+.77:								; if puckc < 0 go to .rtl, carriedy = pucky
 	lda.w puckc
 	bmi .rtl
 	lda.w pucky
-	sta.w $2000
+	sta.w carriedy
 .rtl:								; return
 	rtl
-DATA8_C50A00:						; not traced: data between routines
+FrictionFactors:					; the friction factor per frame time (timestep 1-10), then the 10 for a
+									; gliding player; nothing in 95 reads it
 	db $FD,$FA,$F7,$F4,$F1,$EE,$EB,$E8,$E6,$E3,$FF,$FF,$FE,$FE,$FE,$FD
 	db $FD,$FD,$FC,$FC
 clockcont_0:						; called from other segments
@@ -1401,7 +1401,7 @@ SeasonGameOver:						; after the user's season game: its game record (the first 
 	lda.w tmshots
 	sta.l $7F8F1C,x
 	sta.l $7F8F18,x
-	lda.w $1299
+	lda.w tmshots+2
 	sta.l $7F8F06,x
 	sta.l $7F8F2E,x
 	lda.w tmchecks
@@ -1414,7 +1414,7 @@ SeasonGameOver:						; after the user's season game: its game record (the first 
 	sta.l $7F8F0A,x
 	lda.w tmPwrGoals
 	sta.l $7F8F22,x
-	lda.w $1261
+	lda.w tmPwrGoals+2
 	sta.l $7F8F0C,x
 	lda.w tmSHShots
 	sta.l $7F8F24,x
@@ -1546,51 +1546,51 @@ Pausemode:							; the game loop's pause (the sflags pause bit): the game state 
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	jsl.l FreePauseBuffers
@@ -1604,7 +1604,7 @@ Pausemode:							; the game loop's pause (the sflags pause bit): the game state 
 	stz.w OldVcount
 	jsl.l WaitTransfers
 	stz.w pausemenuon
-	stz.w $1857
+	stz.w PauseUnused
 	jsl.l forceblack
 	stz.w textdirtylo
 	lda.w #$0001
@@ -1675,7 +1675,7 @@ demoread:							; from Gameloop and other segments
 .5:									; fadestep = 0, go to Restart
 	stz.w fadestep
 	jml.l Restart
-CODE_C50E8D:						; no caller found (not traced)
+FadeStep5Unused:					; fadestep = 5, then rtl; nothing calls it
 	lda.w #$0005
 	sta.w fadestep
 	rtl
@@ -1744,16 +1744,16 @@ CalcAttrib:							; no caller found (not traced)
 	asl a
 	asl a
 	sta.b r0
-	stz.b $81
+	stz.b d0+2
 	ldy.b a2
 	beq .1
 	lda.b r0
 	clc
 	adc.w #$0138
 	sta.b r0
-.1:									; $65 = $00C3, a0 = tmdata,y, A = [a0], A and $07FF, ...
+.1:									; a0+2 = $00C3, a0 = tmdata,y, A = [a0], A and $07FF, ...
 	lda.w #$00C3
-	sta.b $65
+	sta.b a0+2
 	lda.w tmdata,y
 	sta.b a0
 	clc
@@ -1780,7 +1780,7 @@ CalcAttrib:							; no caller found (not traced)
 	asl a
 	tax
 	lda.l BitMaskTable2,x
-	bit.b $91
+	bit.b d4+2
 	bne .3
 	jmp.w .17
 .3:									; if X = $000C go to .4, if X is not $001A go to .5
@@ -1788,8 +1788,8 @@ CalcAttrib:							; no caller found (not traced)
 	beq .4
 	cpx.w #$001A
 	bne .5
-.4:									; $81 + 1
-	inc.b $81
+.4:									; d0+2 + 1
+	inc.b d0+2
 .5:									; A = $000F, A - d2, p1 = A, A / 2, ...
 	lda.w #$000F
 	sec
@@ -1799,8 +1799,8 @@ CalcAttrib:							; no caller found (not traced)
 	clc
 	adc.b a0
 	sta.b p0
-	lda.b $65
-	sta.b $3A
+	lda.b a0+2
+	sta.b p0+2
 	lda.b [p0]
 	sta.b d3
 	lda.b d2
@@ -1856,11 +1856,11 @@ CalcAttrib:							; no caller found (not traced)
 	sec
 	sbc.b r3
 	sta.b r3
-.11:								; if $91 < 0 go to .15, X = p1, A = DATA8_C510CF,x, ...
-	lda.b $91
+.11:								; if d4+2 < 0 go to .15, X = p1, A = SingleAttribWeights,x, ...
+	lda.b d4+2
 	bmi .15
 	ldx.b p1
-	lda.l DATA8_C510CF,x
+	lda.l SingleAttribWeights,x
 	and.w #$00FF
 	beq .14
 	lda.w #$0012
@@ -1883,12 +1883,12 @@ CalcAttrib:							; no caller found (not traced)
 	sta.b d0
 	plx
 	jmp.w .25
-.15:								; A = p1, A + r2, X = A, A = DATA8_C510AF,x, ...
+.15:								; A = p1, A + r2, X = A, A = AttribWeights,x, ...
 	lda.b p1
 	clc
 	adc.b r2
 	tax
-	lda.l DATA8_C510AF,x
+	lda.l AttribWeights,x
 	ldx.b d3
 	jsl.l Mul8U
 	clc
@@ -1956,8 +1956,8 @@ CalcAttrib:							; no caller found (not traced)
 	lda.b r2
 	beq .25
 	lsr.b d0
-.25:								; if $81 is not 0 go to .rtl, if d0 < $0065 go to .26, A = $0064
-	lda.b $81
+.25:								; if d0+2 is not 0 go to .rtl, if d0 < $0065 go to .26, A = $0064
+	lda.b d0+2
 	bne .rtl
 	lda.b d0
 	cmp.w #$0065
@@ -1973,10 +1973,10 @@ CalcAttrib:							; no caller found (not traced)
 	sta.b d0
 .rtl:								; return
 	rtl
-DATA8_C510AF:						; not traced: a table read by CalcAttrib
+AttribWeights:						; weights of the 16 skater attributes, then the goalie weights
 	db $00,$00,$01,$02,$03,$03,$02,$01,$02,$01,$03,$02,$01,$01,$01,$01
 	db $00,$00,$00,$09,$02,$02,$09,$09,$02,$02,$02,$02,$02,$02,$02,$02
-DATA8_C510CF:						; not traced: a table read by CalcAttrib
+SingleAttribWeights:				; attribute weights for the single attribute mode
 	db $00,$00,$00,$01,$01,$01,$01,$01,$01,$00,$01,$01,$01,$01,$01,$01
 GetPeriodTimeRemaining:				; called from other segments
 	lda.w gsp

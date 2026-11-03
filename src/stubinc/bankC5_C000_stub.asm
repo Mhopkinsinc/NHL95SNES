@@ -7,8 +7,8 @@ incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
-DATA8_C3585C = $C3585C
-DATA8_C35E5B = $C35E5B
+TeamCityNames = $C3585C
+PositionGroupNames = $C35E5B
 PlayerList = $C30038
 ReadMenuPads = $C36C2D
 SendTextMap = $C4C2AA
@@ -23,8 +23,8 @@ PrintBoldLeft = $C4BBFC
 PrintBoldLeftStr = $C4BC08
 PrintItalicLeft = $C4BC26
 PrintThinCentred = $C4BCAA
-DATA8_C40EDA = $C40EDA
-DATA8_C57309 = $C57309
+TeamDivisionCodes = $C40EDA
+RosterAttribWeights = $C57309
 CheckTradesFrozen = $C406DD
 StartScrollList = $C55ABC
 ScrollListArrows = $C55BE8
@@ -36,8 +36,8 @@ FitNameToWorkBuf = $C55F8A
 LoadGameRosters = $C52CC1
 BCDTable = $C08C76
 BitMaskTable2 = $C09C24
-DATA8_C04CBF = $C04CBF
-DATA8_C04CC3 = $C04CC3
+DivisionCodes = $C04CBF
+DivisionTeamCounts = $C04CC3
 BuildSpriteOAM = $C5F0D1
 PackOAMHigh = $C5F3DB
 AnimateSprites = $C5E9C7
@@ -69,5 +69,18 @@ QueueVisPalette = $C5A4E2
 BinToBCD = $C5B67A
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
+EvaluateTradePage = $C353FF
+FreeAgentsPage = $C353AB
+ReleasePlayersPage = $C353D5
+TradePlayersPage = $C356F2
+TxtAccepted = $C34D53
+TxtAdvantage = $C34D61
+TxtEtc = $C34D4A
+TxtNoFreeAgents = $C34CE3
+TxtNoSelections = $C34D3F
+TxtPlayer = $C34F6C
+TxtPosition = $C34CD7
+TxtRating = $C34CDE
+TxtRejected = $C34D5A
 
 incsrc "../bankC5_C000.asm"

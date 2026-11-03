@@ -42,7 +42,7 @@ QueueFaceoffBox = $C52008
 ClrHor = $C52264
 freezewindow = $C52284
 setvideo = $C52295
-CODE_C528D3 = $C528D3
+print = $C528D3
 eraser = $C528D4
 clockcont_0 = $C50A14
 PeriodOver = $C50ADD
@@ -50,9 +50,11 @@ ClearTextMapTop = $C58944
 Framer = $C58C36
 BinToBCD = $C5B67A
 DeleteSprite = $C5E596
-DATA8_C09C04 = $C09C04
+dirtab = $C09C04
 Div16x8U = $C09257
 QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
+SPAfaceoff = $C424FA
+SPAfaceoffr = $C42524
 
 incsrc "../bankC5_1000.asm"

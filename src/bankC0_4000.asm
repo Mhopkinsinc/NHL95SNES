@@ -1,6 +1,5 @@
 ; Segment bankC0_4000: two packed tile sets, HDMA tables and the colour hooks of one screen, small tables,
-; then the player photos of Tampa Bay (their palettes, then the photos packed). Items not traced to a use
-; keep an auto name.
+; then the player photos of Tampa Bay (their palettes, then the photos packed).
 org $C04642
 DigitFontTiles:						; 4bpp tiles, packed: the digits and the position letters D, L, C, R, X;
 									; unpacked and sent to VRAM
@@ -24,8 +23,8 @@ BG3ScrollHDMA1:						; indirect HDMA table for BG3VOFS (line count, RAM address 
 	db $10,$0A,$01					; 16 lines
 	db $01,$C6,$04					; 1 line
 	db $00							; end
-BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so it ends
-									; inside the short table after it
+BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so it ends inside
+									; BG2ScrollHDMA after it
 	db $40,$C6,$04					; 64 lines
 	db $38,$00,$01					; 56 lines
 	db $37,$02,$01					; 55 lines
@@ -34,10 +33,17 @@ BG3ScrollHDMA2:						; the same for another screen; the copy takes 28 bytes, so 
 	db $18,$08,$01					; 24 lines
 	db $01,$06,$01					; 1 line
 	db $00							; end
-	db $40,$C2,$04					; the short table: 64 lines
+BG2ScrollHDMA:						; indirect HDMA table for BG2VOFS (line count, RAM address of the value):
+									; 64 lines, then 1, from BG2VScroll
+	db $40,$C2,$04					; 64 lines
 	db $01,$C2,$04					; 1 line
-DATA8_C0491A:						; not traced: a 0, then records of 5 bytes
-	incbin "../Extracted/segments/bankC0_4000.bin":$91A..$A35
+	db $00							; end
+MenuGradientHDMA:					; the menu screens' blue background: HDMA to CGADD / CGDATA, per group of
+									; lines one of colours $11-$1C set to a blue (SetupHDMA, DMAP 3)
+	incbin "../Extracted/segments/bankC0_4000.bin":$91B..$9A8
+BracketGradientHDMA:				; the playoff bracket's version, darker blues (SetupHDMA in
+									; SetupPlayoffBracket)
+	incbin "../Extracted/segments/bankC0_4000.bin":$9A8..$A35
 MainScreenHDMA:						; indirect HDMA table for TM (line count, address of the layers to show)
 	db $40,$4E,$36					; 64 lines
 	db $05,$50,$36					; 5 lines
@@ -77,8 +83,8 @@ DarkBlueColoursHook:				; NMI hook: DarkBlueColours to CGRAM colours $11 on
 	ldx.b #MDMAEN_CH0
 	stx.w MDMAEN
 	rtl
-DATA8_C04AA9:						; 256 words: entry n is (n / 8) * $20 + (n & 7) * 2; read with an
-									; index times 2
+LargeSlotTiles:						; per 16 x 16 sprite slot (A * 2): its first tile, (n / 8) * $20 + (n & 7)
+									; * 2; times 16 its VRAM address
 	dw $0000,$0002,$0004,$0006,$0008,$000A,$000C,$000E,$0020,$0022,$0024,$0026,$0028,$002A,$002C,$002E
 	dw $0040,$0042,$0044,$0046,$0048,$004A,$004C,$004E,$0060,$0062,$0064,$0066,$0068,$006A,$006C,$006E
 	dw $0080,$0082,$0084,$0086,$0088,$008A,$008C,$008E,$00A0,$00A2,$00A4,$00A6,$00A8,$00AA,$00AC,$00AE
@@ -97,14 +103,16 @@ DATA8_C04AA9:						; 256 words: entry n is (n / 8) * $20 + (n & 7) * 2; read wit
 	dw $03C0,$03C2,$03C4,$03C6,$03C8,$03CA,$03CC,$03CE,$03E0,$03E2,$03E4,$03E6,$03E8,$03EA,$03EC,$03EE
 BackdropColour:						; 1 colour queued to CGRAM colour 0
 	dw $7F98
-DATA8_C04CAB:						; not traced
+WordListUnused:						; six words (9, 9, 11, 18, 18, 10) between BackdropColour and
+									; DivisionNames; nothing reads them
 	dw $0009,$0009,$000B,$0012,$0012,$000A
 DivisionNames:						; the packed text of the 4 division names: Western / Pacific, Western /
 									; Central, Eastern / Atlantic, Eastern / Northeast
 	dw $46E2,$46EF,$46FC,$4709
-DATA8_C04CBF:						; 4 bytes picked by the same option
+DivisionCodes:						; per division (d1): the code the team table (TeamDivisionCodes) gives its
+									; teams
 	db $06,$0A,$21,$11
-DATA8_C04CC3:						; 4 more bytes picked by the same option
+DivisionTeamCounts:					; per division (d1): its number of teams (6, 6, 7, 7)
 	db $06,$06,$07,$07
 BitMaskTable:						; single-bit masks, bit 0 up
 	dw $0001,$0002,$0004,$0008,$0010,$0020,$0040,$0080

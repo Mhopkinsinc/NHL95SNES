@@ -1,11 +1,11 @@
 ; Segment bankC5_E000: game code, then the sprite object routines (docs/sprite_objects.md): CreateSprite,
-; UploadSpriteFrame, AnimateSprites, CreateSpriteSharePal. Untraced routines keep their address as a name.
+; UploadSpriteFrame, AnimateSprites, CreateSpriteSharePal.
 org $C5DF5F
 SimPlayerStats:						; spreads a simulated team's game totals over its players: the shots
 									; shared out, each goal to a random skater (+$3A goals, +$A2 shots), then
 									; the assists
 	lda.w $000C,y
-	sta.b $A5
+	sta.b tmp3
 	lda.w $0020,y
 	sta.b $0A
 	lda.w $001E,y
@@ -17,7 +17,7 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	jsl.l Mul16U
 	sec
 	lda.b $0A
-	sbc.b $36
+	sbc.b r2+2
 	sta.b $0A
 	pei ($36)
 	ldy.w #$0002
@@ -59,8 +59,8 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	inc.w $003A,x
 	inc.w $00A2,x
 	bra .loop2
-.1:									; if $A5 is not 0 go to .2, go to SimPlayerStatsReturn
-	lda.b $A5
+.1:									; if tmp3 is not 0 go to .2, go to SimPlayerStatsReturn
+	lda.b tmp3
 	bne .2
 	jmp.w SimPlayerStatsReturn
 .2:									; Y = $0002, SimGroupStart = [p0],y, SimPickFirst = A, Y + 1, ...
@@ -85,14 +85,14 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	bne .3
 	xba
 	bra .4
-.3:									; X = $00C0, call Mul16U, A = $A5, A - $36, ...
+.3:									; X = $00C0, call Mul16U, A = tmp3, A - r2+2, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
-	lda.b $A5
+	lda.b tmp3
 	sec
-	sbc.b $36
+	sbc.b r2+2
 	sta.w SimGiveLater
-	lda.b $36
+	lda.b r2+2
 .4:									; SimGiveCount = A, call SimGiveGoals, ...
 	sta.w SimGiveCount
 	jsr.w SimGiveGoals
@@ -104,24 +104,24 @@ SimPlayerStats:						; spreads a simulated team's game totals over its players: 
 	sta.w SimGiveCount
 	jsr.w SimGiveGoals
 	stz.w SimGiveLater
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	beq SimPlayerStatsReturn
-	sta.b $A5
+	sta.b tmp3
 	xba
 	and.w #$FF00
 	cmp.w #$0100
 	bne .5
 	xba
 	bra .6
-.5:									; X = $00C0, call Mul16U, A = $A5, A - $36, ...
+.5:									; X = $00C0, call Mul16U, A = tmp3, A - r2+2, ...
 	ldx.w #$00C0
 	jsl.l Mul16U
-	lda.b $A5
+	lda.b tmp3
 	sec
-	sbc.b $36
+	sbc.b r2+2
 	sta.w SimGiveLater
-	lda.b $36
+	lda.b r2+2
 .6:									; SimGiveCount = A, SimPickFirst = SimGroupStart, ...
 	sta.w SimGiveCount
 	lda.w SimGroupStart
@@ -323,7 +323,7 @@ SaveDayGameStats:					; for each of the day's games not played by a user: AddTea
 	pla
 	sta.b $0A
 	pla
-	sta.b $A5
+	sta.b tmp3
 	pla
 	sta.b tmp2
 	pla
@@ -462,34 +462,34 @@ WriteTeamStatBit:					; writes bit 0 of tmp1 to bit r2 of the team stats bit str
 	lda.b r2
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
 	eor.w #$FFFF
-	sta.b $A5
+	sta.b tmp3
 	lda.b r2
 	lsr a
 	lsr a
 	lsr a
 	tax
 	lda.l SRTeamStats,x
-	and.b $A5
+	and.b tmp3
 	sta.l SRTeamStats,x
 	inc.b r2
 	rts
-.1:									; A = r2, A and $0007, X = A, A = DATA8_C4C4A6,x, ...
+.1:									; A = r2, A and $0007, X = A, A = ByteBitMasks,x, ...
 	lda.b r2
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4A6,x
+	lda.l ByteBitMasks,x
 	and.w #$00FF
-	sta.b $A5
+	sta.b tmp3
 	lda.b r2
 	lsr a
 	lsr a
 	lsr a
 	tax
 	lda.l SRTeamStats,x
-	ora.b $A5
+	ora.b tmp3
 	sta.l SRTeamStats,x
 	inc.b r2
 	rts
@@ -535,7 +535,7 @@ BuildAllTeamRecords:				; BuildTeamSeasonRecord for every team ($19 down to 0 th
 	sta.w HomeTeam
 	jsr.w BuildTeamSeasonRecord
 	stz.w $0000,x
-	stx.b $81
+	stx.b d0+2
 .loop:								; loop: push X, A = HomeTeam, A - 1, if the result < 0 go to .1, ...
 	phx
 	lda.w HomeTeam
@@ -659,18 +659,18 @@ ClearPlayerGoals:					; clears player A's 9-bit field of SRGoals
 ClearCreatedGoals:					; ClearPlayerGoals for each created player slot in use (its first 3 bits
 									; not 0), players $26A on
 	lda.w #$026A
-	sta.b $A5
+	sta.b tmp3
 	ldy.w #$0000
-.loop:								; loop: call NextSaveBits3, if A = $0000 go to .1, push Y, A = $A5, ...
+.loop:								; loop: call NextSaveBits3, if A = $0000 go to .1, push Y, A = tmp3, ...
 	jsr.w NextSaveBits3
 	cmp.w #$0000
 	beq .1
 	phy
-	lda.b $A5
+	lda.b tmp3
 	jsr.w ClearPlayerGoals
 	ply
-.1:									; $A5 + 1, A = Y, A + $0099, Y = A, ...
-	inc.b $A5
+.1:									; tmp3 + 1, A = Y, A + $0099, Y = A, ...
+	inc.b tmp3
 	clc
 	tya
 	adc.w #$0099
@@ -678,8 +678,7 @@ ClearCreatedGoals:					; ClearPlayerGoals for each created player slot in use (i
 	cpy.w #$0C30
 	bcc .loop
 	rtl
-DATA8_C5E499:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 ShowPleaseWait:						; fades out and shows the Please Wait= screen, then waits for the fade in
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
@@ -691,7 +690,7 @@ ShowPleaseWait:						; fades out and shows the Please Wait= screen, then waits f
 	stz.b $CF
 	lda.w #$0100
 	sta.b $D1
-	ldx.w #$4692
+	ldx.w #TxtPleaseWait&$FFFF
 	ldy.w #$000C
 	jsl.l PrintItalicCentred
 	jsl.l SendTextMap
@@ -804,7 +803,7 @@ ResetSpritesAt:						; resets the sprite objects: the slot list (SpriteObjRAM on
 	dex
 	dec a
 	bpl .loop4
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
 	rts
 DeleteSprite:						; removes the sprite object X: out of the active list, its palette slot
@@ -1009,10 +1008,10 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	sty.b $12
 	tay
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	tya
 	xba
@@ -1037,11 +1036,11 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	lda.b $03,s
 	inc a
 	sta.b $03,s
-.3:									; A = $04, $04 = X, QueueBusy = 0, Y = $12, ...
-	lda.b $04
+.3:									; A = CGRAMQueueSP, CGRAMQueueSP = X, QueueBusy = 0, Y = $12, ...
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ldy.b $12
 	bra .5
@@ -1125,11 +1124,11 @@ CreateSprite:						; make a sprite object from record A (carry clear: made, X = 
 	txa
 	sta.w $0000,y
 	tay
-.10:								; A = $16,x, A * 2, X = A, A = DATA8_C04AA9,x, ...
+.10:								; A = $16,x, A * 2, X = A, A = LargeSlotTiles,x, ...
 	lda.b $16,x
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -1202,7 +1201,7 @@ AllocSpriteTiles:					; takes A sprite tiles from the allocator (SmallTileNext, 
 	sta.w $0012,y
 	rts
 AllocLargeSpriteTiles:				; takes A large sprite slots from LargeSlotNext (below $DF), sets the
-									; object's slot (+$16 / +$18) and VRAM address (+$14, by DATA8_C04AA9);
+									; object's slot (+$16 / +$18) and VRAM address (+$14, by LargeSlotTiles);
 									; with no room the small tiles just taken go back
 	clc
 	adc.w LargeSlotNext
@@ -1224,7 +1223,7 @@ AllocLargeSpriteTiles:				; takes A large sprite slots from LargeSlotNext (below
 	sta.w $0018,y
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -1251,13 +1250,13 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	and.w #$FF00
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $04,x
 	sta.b tmp0
 	dec.b QueueBusy
 	tsc
 	sta.b $0A
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	lda.b tmp2
 	beq .1
@@ -1270,8 +1269,8 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	pea.w $007E
 	sty.b $42
 	ldy.b $07,x
-	sty.b $2E
-	sty.b $32
+	sty.b r0+2
+	sty.b r1+2
 	lda.b $05,x
 	phb
 	jsr.w UnpackStream0
@@ -1280,24 +1279,24 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	sty.b $08
 	ldy.b $42
 	bra .3
-.1:									; $2E = $07,x, $32 = A, A = $05,x, X = A, ...
+.1:									; r0+2 = $07,x, r1+2 = A, A = $05,x, X = A, ...
 	lda.b $07,x
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	tax
 	bra .3
-.2:									; A = $07,x, push A, $2E = A, $32 = A, ...
+.2:									; A = $07,x, push A, r0+2 = A, r1+2 = A, ...
 	lda.b $07,x
 	pha
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	pha
 	adc.b tmp2
 	tax
-.3:									; if $A5 is not 0 go to .4, go to .9
-	lda.b $A5
+.3:									; if tmp3 is not 0 go to .4, go to .9
+	lda.b tmp3
 	bne .4
 	jmp.w .9
 .4:									; A = tmp0, if $0002 bits clear go to .6, ...
@@ -1308,45 +1307,45 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	beq .5
 	sec
 	lda.b $08
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r1
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r0
 	clc
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	bra .7
-.5:									; $42 = Y, Y = $2E, A = X, call UnpackStream0, ...
+.5:									; $42 = Y, Y = r0+2, A = X, call UnpackStream0, ...
 	sty.b $42
-	ldy.b $2E
+	ldy.b r0+2
 	txa
 	phb
 	jsr.w UnpackStream0
 	plb
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $08
 	sta.b r0
 	sty.b $08
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 	ldy.b $42
 	bra .7
-.6:									; r0 = X, A = X, A + $A5, r1 = A
+.6:									; r0 = X, A = X, A + tmp3, r1 = A
 	stx.b r0
 	txa
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 .7:									; $0C = $0014,y
 	lda.w $0014,y
 	sta.b $0C
-.loop:								; loop: A and $00FF, A * 2, $0E = A, A + $A5, ...
+.loop:								; loop: A and $00FF, A * 2, $0E = A, A + tmp3, ...
 	and.w #$00FF
 	asl a
 	sta.b $0E
-	adc.b $A5
+	adc.b tmp3
 	cmp.w #$0201
 	bcc .8
 	lda.w #$0200
@@ -1369,9 +1368,9 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	adc.b $0E
 	sta.b r1
 	sec
-	lda.b $A5
+	lda.b tmp3
 	sbc.b $0E
-	sta.b $A5
+	sta.b tmp3
 	lda.b $0C
 	adc.w #$01FF
 	and.w #$FF00
@@ -1388,9 +1387,9 @@ UploadSpriteFrame:					; queue object X's current frame tiles for VRAM (unpacked
 	pha
 	pei ($32)
 	pei ($30)
-.9:									; $00 = A, A = $0A, QueueBusy = 0, X = Y, ...
+.9:									; VRAMQueueSP = A, A = $0A, QueueBusy = 0, X = Y, ...
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $0A
 	tcs
 	stz.b QueueBusy
@@ -1455,7 +1454,7 @@ ReadSpriteAnim:						; read a frame byte or dispatch a command at the script pos
 	bit.w #$2000
 	beq .2
 	sty.b r2
-	stx.b $36
+	stx.b r2+2
 UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected frame
 	lda.b $12,x
 	cmp.b $10,x
@@ -1504,7 +1503,7 @@ UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected
 	asl a
 	txy
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a
@@ -1512,23 +1511,25 @@ UploadSpriteAnimFrame:				; update sprite VRAM placement and upload the selected
 	adc.b $DB
 	tyx
 	sta.b $14,x
-.5:									; call UploadSpriteFrame, X = $36, $30,x + 1, Y = r2, ...
+.5:									; call UploadSpriteFrame, X = r2+2, $30,x + 1, Y = r2, ...
 	jsr.w UploadSpriteFrame
-	ldx.b $36
+	ldx.b r2+2
 	inc.b $30,x
 	ldy.b r2
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EA91:						; no caller found (not traced)
+CopySpriteFrameUnused:				; sprite object A takes object X's frame words ($28, $2A), $36 = A, then
+									; UploadSpriteAnimFrame; nothing calls it
 	txy
 	tax
 	lda.w $0028,y
 	sta.b $28,x
 	lda.w $002A,y
 	sta.b $2A,x
-	stx.b $36
+	stx.b r2+2
 	jmp.w UploadSpriteAnimFrame
-CODE_C5EAA2:						; no caller found (not traced)
+ClearSpriteFrameUnused:				; sprite object X's frame words $28 / $2A = $FFFF, Y = r2, then
+									; AnimateNextSprite; nothing calls it
 	lda.w #$FFFF
 	sta.b $28,x
 	sta.b $2A,x
@@ -1545,8 +1546,8 @@ DispatchSpriteAnim:					; advance past the opcode and dispatch its low seven bit
 SpriteAnimCommands:					; handlers indexed by the low seven bits of a script command
 	dw SpriteAnimHold,SpriteAnimRestart,SpriteAnimJumpRelative,SpriteAnimSelectScript
 	dw SpriteAnimHold84,SpriteAnimSetReload,SpriteAnimSetSpeed,SpriteAnimSetFrames
-	dw SpriteAnimDelete,CODE_C5EBB8,SpriteAnimSkipByte,SpriteAnimToggleHFlip
-	dw SpriteAnimToggleVFlip,SpriteAnimYield,CODE_C5EC1A,SpriteAnimHold8F
+	dw SpriteAnimDelete,SpriteAnimIncWordUnused,SpriteAnimSkipByte,SpriteAnimToggleHFlip
+	dw SpriteAnimToggleVFlip,SpriteAnimYield,SpriteAnimCallUnused,SpriteAnimHold8F
 	dw SpriteAnimRestoreScript,SpriteAnimHold,SpriteAnimHold,SpriteAnimSetHFlip
 	dw SpriteAnimClearHFlip,SpriteAnimSetVFlip,SpriteAnimClearVFlip,SpriteAnimToggleFlips
 	dw SpriteAnimHold,SpriteAnimHold,SpriteAnimHold,SpriteAnimClearFlag4000
@@ -1607,7 +1608,7 @@ SpriteAnimSetFrames:				; read a count and frame bytes, upload the list and yiel
 	lda.b $01,x
 	and.w #$00FF
 	sta.b p0
-	sta.b $3A
+	sta.b p0+2
 	phy
 .loop:								; loop: A = $02,x, A and $00FF, $0028,y = A, Y + 1, ...
 	lda.b $02,x
@@ -1620,7 +1621,7 @@ SpriteAnimSetFrames:				; read a count and frame bytes, upload the list and yiel
 	bne .loop
 	ora.w #$FFFF
 	sta.w $0028,y
-	lda.b $3A
+	lda.b p0+2
 	sec
 	plx
 	adc.b $30,x
@@ -1632,7 +1633,9 @@ UploadSpriteAnimFrames:				; upload the frame list and restore the saved active-
 	ldx.b p0
 	ply
 	jmp.w AnimateNextSprite
-CODE_C5EB88:						; no caller found (not traced)
+CopySpriteFramesUnused:				; sprite object A takes up to three frame words of object X ($28 on, up to
+									; a negative one), $FFFF after them, then UploadSpriteAnimFrames; nothing
+									; calls it
 	txy
 	tax
 	stx.b p0
@@ -1661,7 +1664,9 @@ SpriteAnimDelete:					; call DeleteSprite via jsr, although its returns use rtl
 	ldy.b tmp0
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EBB8:						; index into UploadSpriteFrames code bytes as pointers; purpose unresolved
+SpriteAnimIncWordUnused:			; script command $89 (no script uses it): brk for an index of 4 or more,
+									; else increments the word a pointer at UploadSpriteFrames + index * 2
+									; (code bytes) points at
 	ldx.b tmp1
 	lda.b $01,x
 	and.w #$00FF
@@ -1718,8 +1723,9 @@ SpriteAnimYield:					; yield with the script position after this command
 	ldy.b tmp0
 	clc
 	jmp.w AnimateNextSprite
-CODE_C5EC1A:						; call through UploadSpriteFrames code bytes as pointers; purpose
-									; unresolved
+SpriteAnimCallUnused:				; script command $8E (no script uses it): calls through a pointer at
+									; UploadSpriteFrames + index * 2 (code bytes), holds when it returns carry
+									; set
 	ldx.b tmp1
 	lda.b $01,x
 	and.w #$00FF
@@ -1793,7 +1799,8 @@ SpriteAnimBranchIfFlagClear:		; jump to the byte position if animation flag $400
 	sta.w $0030,y
 	tyx
 	jmp.w ReadSpriteAnim
-CODE_C5ECA5:						; no caller found (not traced)
+StartSpriteAnimUnused:				; sprite object X starts animation script A: SetSpriteAnim's start steps
+									; without $22,x bit $4000, ending rts; nothing calls it
 	sta.b $1E,x
 	asl a
 	adc.b $2E,x
@@ -1849,7 +1856,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	dec.b QueueBusy
 	tsc
 	sta.b $0A
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	lda.b $28,x
 .1:									; A * 2, A + $26,x, X = A, A = $00,x, ...
@@ -1869,7 +1876,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	and.w #$FF00
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $04,x
 	sta.b p1
 	lda.b tmp2
@@ -1885,8 +1892,8 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	pea.w $007E
 	sty.b $42
 	ldy.b $07,x
-	sty.b $2E
-	sty.b $32
+	sty.b r0+2
+	sty.b r1+2
 	lda.b $05,x
 	phb
 	jsr.w UnpackStream0
@@ -1895,24 +1902,24 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	sty.b $08
 	ldy.b $42
 	bra .4
-.2:									; $2E = $07,x, $32 = A, A = $05,x, X = A, ...
+.2:									; r0+2 = $07,x, r1+2 = A, A = $05,x, X = A, ...
 	lda.b $07,x
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	tax
 	bra .4
-.3:									; A = $07,x, push A, $2E = A, $32 = A, ...
+.3:									; A = $07,x, push A, r0+2 = A, r1+2 = A, ...
 	lda.b $07,x
 	pha
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $05,x
 	pha
 	adc.b tmp2
 	tax
-.4:									; if $A5 is not 0 go to .5, go to .11
-	lda.b $A5
+.4:									; if tmp3 is not 0 go to .5, go to .11
+	lda.b tmp3
 	bne .5
 	jmp.w .11
 .5:									; A = p1, if $0002 bits clear go to .7, if $0001 bits clear go to .6, ...
@@ -1923,45 +1930,45 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	beq .6
 	sec
 	lda.b $08
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r1
-	sbc.b $A5
+	sbc.b tmp3
 	sta.b r0
 	clc
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	bra .8
-.6:									; $42 = Y, Y = $2E, A = X, call UnpackStream0, ...
+.6:									; $42 = Y, Y = r0+2, A = X, call UnpackStream0, ...
 	sty.b $42
-	ldy.b $2E
+	ldy.b r0+2
 	txa
 	phb
 	jsr.w UnpackStream0
 	plb
 	lda.w #$007E
-	sta.b $2E
-	sta.b $32
+	sta.b r0+2
+	sta.b r1+2
 	lda.b $08
 	sta.b r0
 	sty.b $08
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 	ldy.b $42
 	bra .8
-.7:									; r0 = X, A = X, A + $A5, r1 = A
+.7:									; r0 = X, A = X, A + tmp3, r1 = A
 	stx.b r0
 	txa
-	adc.b $A5
+	adc.b tmp3
 	sta.b r1
 .8:									; $0C = $12
 	lda.b $12
 	sta.b $0C
-.loop:								; loop: A and $00FF, A * 2, $0E = A, A + $A5, ...
+.loop:								; loop: A and $00FF, A * 2, $0E = A, A + tmp3, ...
 	and.w #$00FF
 	asl a
 	sta.b $0E
-	adc.b $A5
+	adc.b tmp3
 	cmp.w #$0201
 	bcc .9
 	lda.w #$0200
@@ -1984,15 +1991,15 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	adc.b $0E
 	sta.b r1
 	sec
-	lda.b $A5
+	lda.b tmp3
 	sbc.b $0E
-	sta.b $A5
+	sta.b tmp3
 	lda.b $0C
 	adc.w #$01FF
 	and.w #$FF00
 	sta.b $0C
 	bra .loop
-.9:									; A = $0C, A + $0100, push A, A = $A5, ...
+.9:									; A = $0C, A + $0100, push A, A = tmp3, ...
 	pei ($A5)
 	pei ($0C)
 	pei ($2E)
@@ -2003,7 +2010,7 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	pha
 	pei ($32)
 	pei ($30)
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	adc.b $0C
 	bit.w #$0100
@@ -2018,16 +2025,18 @@ UploadSpriteFrames:					; upload each frame in the object's negative-terminated 
 	bmi .12
 	ldx.b $18
 	jmp.w .1
-.12:								; $00 = A, A = $0A, QueueBusy = 0, Y = $18, ...
+.12:								; VRAMQueueSP = A, A = $0A, QueueBusy = 0, Y = $18, ...
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $0A
 	tcs
 	stz.b QueueBusy
 	ldy.b $18
 	tyx
 	rts
-CODE_C5EE3C:						; no caller found (not traced)
+FreeSpritePaletteUnused:			; gives back sprite object X's palette ($34,x): with more users (the low
+									; byte of SpritePalUse) one fewer, else its slot back on PalSlotList
+									; (PalSlotsUsed - 1); nothing calls it
 	phx
 	lda.b $34,x
 	and.w #$00FF
@@ -2085,10 +2094,10 @@ QueueSpritePalette:					; queues the 16 colours of sprite palette A (low byte) t
 	phy
 	tay
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	tya
 	xba
@@ -2120,12 +2129,12 @@ QueueSpritePalette:					; queues the 16 colours of sprite palette A (low byte) t
 	lsr a
 	lsr a
 	adc.w #$3F02
-.2:									; push A, A = $04, $04 = X, QueueBusy = 0, ...
+.2:									; push A, A = CGRAMQueueSP, CGRAMQueueSP = X, QueueBusy = 0, ...
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	plx
 	rtl
@@ -2283,11 +2292,11 @@ CreateSpriteSharePal:				; CreateSprite, sharing the palette slot of the object 
 	txa
 	sta.w $0000,y
 	tay
-.6:									; A = $16,x, A * 2, X = A, A = DATA8_C04AA9,x, ...
+.6:									; A = $16,x, A * 2, X = A, A = LargeSlotTiles,x, ...
 	lda.b $16,x
 	asl a
 	tax
-	lda.l DATA8_C04AA9,x
+	lda.l LargeSlotTiles,x
 	asl a
 	asl a
 	asl a

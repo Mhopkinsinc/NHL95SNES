@@ -1,5 +1,4 @@
-; Segment bankC4_B000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_B000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4B00F
 ClearOffsidesIfAllPlayers:			; called from other segments
 	ldy.b a2
@@ -52,11 +51,11 @@ IntroMode7Hook:						; writes the intro Mode 7 scale, centre, control and main-s
 	sta.w M7D
 	lda.w introM7X
 	sta.w M7X
-	lda.w $18D3
+	lda.w introM7X+1
 	sta.w M7X
 	lda.w introM7Y
 	sta.w M7Y
-	lda.w $18D5
+	lda.w introM7Y+1
 	sta.w M7Y
 	lda.w introM7SEL
 	sta.w M7SEL
@@ -69,29 +68,29 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 									; ...), run by tasks until they end
 	jsl.l Multi5Bios
 	jsl.l ReadMenuPads
-	ldx.w #DATA8_C07F7B>>16
-	lda.w #DATA8_C07F7B&$FFFF
+	ldx.w #IntroSoundList>>16
+	lda.w #IntroSoundList&$FFFF
 	jsl.l LoadSounds
 	lda.w #IntroMode7Hook
 	ldx.w #IntroMode7Hook>>16
 	jsl.l SetNMIHook
 	jsl.l InitTasks
-	stz.b $81
+	stz.b d0+2
 	lda.b PadRaw1
 	jsr.w CheckIntroMirrorButtons
 	lda.b PadRaw2
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C5
+	lda.b PadRaw3
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C7
+	lda.b PadRaw4
 	jsr.w CheckIntroMirrorButtons
-	lda.b $C9
+	lda.b PadRaw5
 	jsr.w CheckIntroMirrorButtons
 	jsl.l SetupMode7Screen
 	lda.w #$7FFF
 	jsl.l SetBackdropColour
 	lda.b $08
-	sta.b $65
+	sta.b a0+2
 	lda.w #$0021
 	jsl.l CreateSprite
 	stx.b a0
@@ -101,7 +100,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0022
 	jsl.l CreateSprite
 	stx.b a1
@@ -111,7 +110,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $6D
+	sta.b a2+2
 	lda.w #$0023
 	jsl.l CreateSprite
 	stx.b a2
@@ -121,7 +120,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	jsl.l AnimateSprites
 	jsl.l MarkWorkBuf
 	lda.b $08
-	sta.b $71
+	sta.b a3+2
 	lda.w #$0024
 	jsl.l CreateSprite
 	stx.b a3
@@ -140,9 +139,9 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.w #$0010
 	sta.w introTM
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -150,7 +149,7 @@ IntroSequence:						; the power-on animation: the EA Sports logo from its sprite
 	lda.w #$F254
 	sta.b d3
 	ldx.b a0
-	ldy.b $65
+	ldy.b a0+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.w #IntroStartALogo
 	ldx.w #IntroStartALogo>>16
@@ -176,17 +175,17 @@ CheckIntroMirrorButtons:			; sets the intro mirror flag when all masked controll
 	cmp.w #$F0C0
 	bne .rts
 	lda.w #$8000
-	tsb.b $81
+	tsb.b d0+2
 .rts:								; return
 	rts
 IntroStartALogo:					; waits for unit scale, then starts the A logo animation
 	lda.w introM7Scale
 	cmp.w #$0100
 	beq .1
-	jmp.w CODE_C4B27F
-.1:									; X = a1, Y = $69, call PrepareIntroMode7Sprite, A = a1, ...
+	jmp.w IntroEndDelayReturn
+.1:									; X = a1, Y = a1+2, call PrepareIntroMode7Sprite, A = a1, ...
 	ldx.b a1
-	ldy.b $69
+	ldy.b a1+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a1
 	ldx.w #$0001
@@ -198,10 +197,10 @@ IntroStartSportsWord:				; waits for unit scale, then starts the Sports word ani
 	lda.w introM7Scale
 	cmp.w #$0100
 	beq .1
-	jmp.w CODE_C4B27F
-.1:									; X = a2, Y = $6D, call PrepareIntroMode7Sprite, A = a2, ...
+	jmp.w IntroEndDelayReturn
+.1:									; X = a2, Y = a2+2, call PrepareIntroMode7Sprite, A = a2, ...
 	ldx.b a2
-	ldy.b $6D
+	ldy.b a2+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a2
 	ldx.w #$0000
@@ -212,9 +211,9 @@ IntroStartSportsWord:				; waits for unit scale, then starts the Sports word ani
 IntroStartElectronicWord:			; waits for unit scale, then starts the Electronic word animation
 	lda.w introM7Scale
 	cmp.w #$0100
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b a3
-	ldy.b $71
+	ldy.b a3+2
 	jsr.w PrepareIntroMode7Sprite
 	lda.b a3
 	ldx.w #$0000
@@ -225,7 +224,7 @@ IntroStartElectronicWord:			; waits for unit scale, then starts the Electronic w
 IntroWaitForUnitScale:				; waits for unit scale and resets the intro task delay
 	lda.w introM7Scale
 	cmp.w #$0100
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b d1
 	stz.w $0008,x
 	lda.w #IntroShowFinalWord
@@ -233,7 +232,7 @@ IntroWaitForUnitScale:				; waits for unit scale and resets the intro task delay
 IntroShowFinalWord:					; waits 30 task ticks, reveals the final word sprite and resets the delay
 	lda.w $0008,x
 	cmp.w #$001E
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	ldx.b $7B
 	jsr.w ShowIntroSprite
 	ldx.b d1
@@ -243,14 +242,14 @@ IntroShowFinalWord:					; waits 30 task ticks, reveals the final word sprite and
 IntroEndDelay:						; ends the intro task sequence after its final hold
 	lda.w $0008,x
 	cmp.w #$0258
-	bne CODE_C4B27F
+	bne IntroEndDelayReturn
 	lda.w #$8000
-	trb.b $85
-CODE_C4B27F:						; from IntroStartALogo, IntroStartSportsWord, ...
+	trb.b d1+2
+IntroEndDelayReturn:				; IntroEndDelay's rtl, shared by the intro task routines
 	rtl
 PositionIntroSprite:				; positions and hides an intro sprite, mirroring its horizontal position
 									; when enabled
-	bit.b $81
+	bit.b d0+2
 	bpl .1
 	sec
 	sbc.w #$0100
@@ -267,9 +266,9 @@ PositionIntroSprite:				; positions and hides an intro sprite, mirroring its hor
 StartIntroScaleTask:				; starts the intro scale animation for sprite A with flash flag X
 	sta.b d0
 	lda.w #$0001
-	trb.b $81
+	trb.b d0+2
 	txa
-	tsb.b $81
+	tsb.b d0+2
 	lda.w #$0011
 	sta.w introTM
 	lda.w #$4000
@@ -285,7 +284,7 @@ IntroScaleToFlash:					; reduces the intro scale and starts the colour flash at 
 	bcs IntroScaleToFlashReturn
 	lda.w #IntroScaleToSprite
 	sta.w $0002,x
-	lda.b $81
+	lda.b d0+2
 	lsr a
 	bcc IntroScaleToFlashReturn
 	lda.w #IntroColourFlashTask
@@ -327,7 +326,7 @@ ShowIntroSprite:					; reveals an intro sprite and applies horizontal flip when 
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
-	bit.b $81
+	bit.b d0+2
 	bpl .rts
 	lda.b $36,x
 	ora.w #$4000
@@ -339,7 +338,7 @@ IntroColourFlashTask:				; plays the intro fixed-colour flash and removes itself
 	sep #$20
 	lda.w $0008,x
 	tax
-	lda.l DATA8_C4B35D,x
+	lda.l IntroFlashLevels,x
 	beq .1
 	sta.l $002132
 	lda.b #$01
@@ -354,7 +353,8 @@ IntroColourFlashTask:				; plays the intro fixed-colour flash and removes itself
 	sta.l $002132
 	rep #$20
 	jmp.w RemoveTask
-DATA8_C4B35D:						; not traced: a table read by IntroColourFlashTask
+IntroFlashLevels:					; per frame of the intro flash task (its frame count): the COLDATA value,
+									; red and green at intensity 4 up to 31 and back; 0 ends the flash
 	db $64,$68,$6C,$70,$74,$78,$7C,$7F,$78,$70,$68,$64,$00
 PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 tile map and
 									; positioning
@@ -519,10 +519,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	lda.w #$0040
 	sta.b a4
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	lda.w brightness
 	cmp.w #$0080
 	bne .loop2
@@ -538,7 +538,7 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 .4:									; A xor $FFFF, A + 1
 	eor.w #$FFFF
 	inc a
-.5:									; push A, $75 = A, A = $02, $02 = X, ...
+.5:									; push A, $75 = A, A = VRAMModeQueueSP, VRAMModeQueueSP = X, ...
 	pha
 	sta.b $75
 	pea.w $0080
@@ -546,10 +546,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	pea.w $1900
 	pea.w $007E
 	pei ($08)
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	lda.b $75
 	adc.b a4
@@ -567,10 +567,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	lda.w #$F254
 	sta.b d3
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	bra .loop2
 .6:									; A = d3, A + $75, d3 = A, if A < $FF10 go to .7, ...
 	lda.b d3
@@ -618,7 +618,7 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	sbc.w introM7Y
 	eor.w #$FFFF
 	sta.w BG1VScroll
-	bit.b $81
+	bit.b d0+2
 	bpl .8
 	lda.w $0005,y
 	sec
@@ -688,10 +688,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	dec.b $77
 	bne .loop4
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b a4
 	lda.b $08
 	clc
@@ -709,10 +709,10 @@ PrepareIntroMode7Sprite:			; converts the sprite pixels and builds its Mode 7 ti
 	adc.b $08
 	dex
 	bpl .loop5
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	inc.w TransfersReady
 	wai
@@ -750,19 +750,19 @@ MergeIntroPixelRotate1:				; rotates A left once and merges the bits into the in
 IntroSoundCue1:						; starts the first pair of intro sounds after 30 ticks
 	lda.w $0008,x
 	cmp.w #$001E
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue2
 	sta.w $0002,x
 	lda.w #$0014
 	jsl.l StartSound
 	lda.w #$0011
 	bra StartSoundJump
-CODE_C4B688:						; a task routine: stored as the next routine of a task
+IntroSoundCueReturn:				; the intro sound cues' shared rtl; also the last cue's next task routine
 	rtl
 IntroSoundCue2:						; starts the second pair of intro sounds after 60 ticks
 	lda.w $0008,x
 	cmp.w #$003C
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue3
 	sta.w $0002,x
 	lda.w #$0013
@@ -772,7 +772,7 @@ IntroSoundCue2:						; starts the second pair of intro sounds after 60 ticks
 IntroSoundCue3:						; starts the third pair of intro sounds after 90 ticks
 	lda.w $0008,x
 	cmp.w #$005A
-	bcc CODE_C4B688
+	bcc IntroSoundCueReturn
 	lda.w #IntroSoundCue4
 	sta.w $0002,x
 	lda.w #$0016
@@ -782,8 +782,8 @@ IntroSoundCue3:						; starts the third pair of intro sounds after 90 ticks
 IntroSoundCue4:						; starts the last intro sound after 150 ticks and disables this task
 	lda.w $0008,x
 	cmp.w #$0096
-	bcc CODE_C4B688
-	lda.w #CODE_C4B688
+	bcc IntroSoundCueReturn
+	lda.w #IntroSoundCueReturn
 	sta.w $0002,x
 	lda.w #$0015
 StartSoundJump:						; jumps to StartSound: the intro sound cues' shared tail
@@ -791,13 +791,13 @@ StartSoundJump:						; jumps to StartSound: the intro sound cues' shared tail
 TitleStartMusicTask:				; starts the title music after the task delay and disables this task
 	lda.w $0008,x
 	cmp.w #$0177
-	bcc CODE_C4B6EA
+	bcc TitleStartMusicTaskReturn
 	lda.w #$00A4
 	jsl.l StartSound
-	stz.w $1EA7
-	lda.w #CODE_C4B6EA
+	stz.w MenuMusicPending
+	lda.w #TitleStartMusicTaskReturn
 	sta.w $0002,x
-CODE_C4B6EA:						; a task routine: stored as the next routine of a task
+TitleStartMusicTaskReturn:			; TitleStartMusicTask's rtl; also the task's routine once the song started
 	rtl
 InitTasks:							; empties the task list: 10 free task slots, the list head and its last
 									; task (TaskFrameEnd), the task flags; the done flag is kept as the last
@@ -815,21 +815,21 @@ InitTasks:							; empties the task list: 10 free task slots, the list head and 
 	stz.w TaskSlotStack,x
 	stz.w TaskFreeIndex
 	lda.w #TaskFrameEnd
-	sta.w $2D87
-	sta.w $2D93
+	sta.w TaskListHead+2
+	sta.w TaskListEnd+2
 	lda.w #TaskFrameEnd>>16
-	sta.w $2D89
-	sta.w $2D95
-	stz.w $2D8B
-	lda.w #$2D91
+	sta.w TaskListHead+4
+	sta.w TaskListEnd+4
+	stz.w TaskListHead+6
+	lda.w #TaskListEnd
 	sta.w TaskListHead
 	lda.w #$FFFF
-	sta.w $2D97
-	stz.w $2D91
+	sta.w TaskListEnd+6
+	stz.w TaskListEnd
 	lda.w #$8002
-	sta.b $85
+	sta.b d1+2
 	lda.w TasksDone
-	sta.w $2D9F
+	sta.w TasksDoneLast
 	stz.w TasksDone
 	rtl
 AddStartKeyTask:					; adds TaskStartKey to the task list (priority $F000)
@@ -851,7 +851,7 @@ StartTasks:							; a new task list (InitTasks) with TaskEndCheck, then AddTask 
 	plp
 	bcc .1
 	lda.w #$0002
-	trb.b $85
+	trb.b d1+2
 .1:									; pull Y, pull X, pull A
 	ply
 	plx
@@ -894,12 +894,12 @@ RemoveTask:							; takes the running task (d1) out of the task list and frees i
 	lda.w $0002,y
 	ldx.w $0004,y
 	sta.b d2
-	stx.b $89
+	stx.b d2+2
 	ldx.w #TaskListHead
-.loop:								; loop: if A is not $0002,x go to .1, if $89 = $0004,x go to .2, A = d2
+.loop:								; loop: if A is not $0002,x go to .1, if d2+2 = $0004,x go to .2, A = d2
 	cmp.w $0002,x
 	bne .1
-	lda.b $89
+	lda.b d2+2
 	cmp.w $0004,x
 	beq .2
 	lda.b d2
@@ -934,10 +934,10 @@ RunTasks:							; runs each task of the task list once, in order (its frame coun
 	rtl
 TaskEndCheck:						; a task: once task flag bit 15 is cleared, fades out and sets the done
 									; flag the task loops wait for
-	bit.b $85
+	bit.b d1+2
 	bmi .rtl
 	jsl.l FadeOutWait
-	lda.w $2D9F
+	lda.w TasksDoneLast
 	tax
 	inc a
 	sta.w TasksDone
@@ -945,12 +945,12 @@ TaskEndCheck:						; a task: once task flag bit 15 is cleared, fades out and set
 	rtl
 TaskFrameEnd:						; the last task of the list: the sprites to OAM (when task flag bit 1 is
 									; set), then waits for the frame
-	lda.b $85
+	lda.b d1+2
 	bit.w #$0002
 	beq .1
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -969,12 +969,12 @@ TaskStartKey:						; a task: start clears task flag bit 15 (so TaskEndCheck ends
 	bit.w #$1000
 	beq .rtl
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 	lda.w #$0001
-	tsb.b $85
+	tsb.b d1+2
 .rtl:								; return
 	rtl
-CODE_C4B844:						; no caller found (not traced)
+SetTasksDoneUnused:					; TasksDone = A and the stack at $1FFC, then rtl; nothing calls it
 	sta.w TasksDone
 	lda.w #$1FFC
 	tcs
@@ -989,20 +989,20 @@ QueueColours:						; queues d3 colours from X:A for CGRAM at Y (a record on the 
 	sta.b $77
 	stx.b $79
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	lda.b d3
 	asl a
 	pha
 	phy
 	pei ($79)
 	pei ($77)
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	rtl
 PackFadeColours:					; writes the colour fade's d3 current colours as BGR words at A (the 8.8
@@ -1158,15 +1158,15 @@ SetFadeTables:						; lays out the colour fade's six tables of A words from Y: r
 	tya
 	sta.b a0
 	adc.b $77
-	sta.b $65
+	sta.b a0+2
 	adc.b $77
 	sta.b a1
 	adc.b $77
-	sta.b $69
+	sta.b a1+2
 	adc.b $77
 	sta.b a2
 	adc.b $77
-	sta.b $6D
+	sta.b a2+2
 	rts
 FillWords7E:						; fills d3 words of bank $7E from A with Y
 	tax
@@ -1229,7 +1229,7 @@ DeveloperCredits:					; the developer credits: HIGH SCORE PRODUCTIONS AND / VISU
 	lda.w #$CBAE
 	sta.b a3
 	lda.w #$00C2
-	sta.b $71
+	sta.b a3+2
 	lda.b d6
 	ldx.w #$007E
 	ldy.b d7
@@ -1239,7 +1239,7 @@ DeveloperCredits:					; the developer credits: HIGH SCORE PRODUCTIONS AND / VISU
 	lda.b d4
 	sta.b a3
 	ldx.w #$007E
-	stx.b $71
+	stx.b a3+2
 	ldy.w #$0000
 	jsl.l FillWords7E
 	lda.w #(VisualConceptsPalette+$7)&$FFFF
@@ -1307,7 +1307,7 @@ CreditsEndDelay:					; ends the developer credits task sequence after the final 
 	cmp.w #$00B4
 	bne CreditsEndDelayReturn
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 CreditsEndDelayReturn:				; the rtl CreditsEndDelay ends with, shared by the other credits tasks
 	rtl
 TextPalettes:						; the 4 text palettes, 4 colours each, that InitTextMap queues to CGRAM
@@ -1327,22 +1327,22 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	tya
 	beq .1
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	tya
 	asl a
 	asl a
 	asl a
 	pha
 	pea.w $0000
-	pea.w $00C4
-	pea.w $BAD6
-	lda.b $04
+	pea.w TextPalettes>>16
+	pea.w TextPalettes&$FFFF
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 .1:									; $CF = 0, $D1 = $0100, TextSpaceWidth = $0009, TextColLow = $FFFF, ...
 	stz.b $CF
@@ -1354,7 +1354,8 @@ InitTextMap:						; a new text map: $800 bytes cleared from the work buffer, the
 	sta.w TextColLow
 	stz.w TextColHigh
 	rtl
-CODE_C4BB43:						; no caller found (not traced)
+CopyBankC3String:					; copies the zero ended string at A in bank $C3 to Y, the zero too; no
+									; caller found
 	tax
 	phb
 	sep #$20
@@ -1445,7 +1446,7 @@ PrintBoldCentred:					; prints the packed text X at row Y in BoldFontGlyphs, cen
 									; margins
 	jsl.l RenderBoldCentred
 	bra UploadAndMapText
-CODE_C4BBEB:						; no caller found (not traced)
+PrintBoldCentredCopy:				; the same code as PrintBoldCentred; no caller found
 	jsl.l RenderBoldCentred
 	bra UploadAndMapText
 PrintBoldCentredStr:				; PrintBoldCentred for the string X in RAM (CopyString)
@@ -1775,10 +1776,10 @@ DrawText:							; draws the text at X (zero ended) from pixel column A into new 
 	lsr a
 	bcs .2
 	ldy.w #$0200
-.2:									; A = Y, call AllocClearWorkBuf, $A5 = A, push X
+.2:									; A = Y, call AllocClearWorkBuf, tmp3 = A, push X
 	tya
 	jsl.l AllocClearWorkBuf
-	sta.b $A5
+	sta.b tmp3
 	phx
 DrawNextTextCharacter:				; read the next character and prepare its glyph for drawing
 	ply
@@ -1813,21 +1814,21 @@ DrawNextTextCharacter:				; read the next character and prepare its glyph for dr
 	txa
 	adc.w #$002A
 	tax
-	lda.l $C4C48B,x
+	lda.l ItalicFontWidths-$2B,x
 	bra .7
-.4:									; A = $0E, if $0004 bits clear go to .5, A = DATA8_C4C4D7,x, go to .7
+.4:									; A = $0E, if $0004 bits clear go to .5, A = ThinFontWidths,x, go to .7
 	lda.b $0E
 	bit.w #$0004
 	beq .5
-	lda.l DATA8_C4C4D7,x
+	lda.l ThinFontWidths,x
 	bra .7
-.5:									; if a $0001 bit set go to .6, A = DATA8_C4C502,x, go to .7
+.5:									; if a $0001 bit set go to .6, A = BoldFontWidths,x, go to .7
 	bit.w #$0001
 	bne .6
-	lda.l DATA8_C4C502,x
+	lda.l BoldFontWidths,x
 	bra .7
-.6:									; A = DATA8_C4C4B6,x
-	lda.l DATA8_C4C4B6,x
+.6:									; A = ItalicFontWidths,x
+	lda.l ItalicFontWidths,x
 .7:									; A and $00FF, if overflow clear go to .8, A = p0
 	and.w #$00FF
 	bit.b $0E
@@ -1878,11 +1879,11 @@ DrawNextTextCharacter:				; read the next character and prepare its glyph for dr
 	adc.b $0C
 	tax
 	adc.w #$0010
-	sta.b $3A
+	sta.b p0+2
 	lda.b $0A
 	and.w #$FFF8
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	tay
 DrawGlyphRow:						; load a glyph row and dispatch by its destination pixel column
 	phx
@@ -1901,7 +1902,7 @@ DrawGlyphRow:						; load a glyph row and dispatch by its destination pixel colu
 	and.w #$0007
 	asl a
 	tax
-	lda.l DATA8_C4C07D,x
+	lda.l GlyphPixelRoutines,x
 	pha
 	ldx.b p0
 	rts

@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 randomd0 = $C37EBF					; replace d0 with a random number below its current value
@@ -27,5 +28,10 @@ check4bench = $C549A8
 getpde = $C54A0E
 setpde = $C54A2F
 Mul8XS = $C08EEC
+EvadePC = $C4342A
+asspuckc_postab = $C09A98
+dirtab = $C09C04
+rtss = $C4883F
+SPAglideback = $C41F6C
 
 incsrc "../bankC4_2000.asm"

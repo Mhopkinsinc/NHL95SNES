@@ -1,5 +1,4 @@
-; Segment bankC5_4000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_4000: game code, jump tables and the data tables the code reads with long addresses.
 org $C53FE5
 ResetTeamPlayers:					; resets team a2: its flag $0010 cleared, then for its 6 players the
 									; animation (ready for position 0, glide for others), impact, puck block
@@ -26,10 +25,10 @@ ResetTeamPlayers:					; resets team a2: its flag $0010 cleared, then for its 6 p
 	lda.w position,x
 	bmi .5
 	bne .3
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .4
-.3:									; A = $1958
-	lda.w #$1958
+.3:									; A = SPAglide&$FFFF
+	lda.w #SPAglide&$FFFF
 .4:									; call SetSPAFromA, impact,x = 0, nopuck,x = 0, A = pflags,x, ...
 	jsl.l SetSPAFromA
 	stz.w impact,x
@@ -65,11 +64,11 @@ SetLCmode:							; opens the line change box for player X's team when line chang
 .rtl:								; return
 	rtl
 SetLCmode2:							; draws the line change box of team a2: the frame, then a row per line
-									; choice (getlchoice) with its button letter (DATA8_C5410E)
+									; choice (getlchoice) with its button letter (LineChangeButtons)
 	phx
 	jsr.w setlccords
 	sta.b d0
-	sty.b $81
+	sty.b d0+2
 	jsl.l Framer
 	lda.b a2
 	jsr.w TeamSecondText
@@ -82,7 +81,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	txa
 	ldx.w #$007E
 	jsl.l QueueVRAMDMALen
-	lda.b $81
+	lda.b d0+2
 	dec a
 	asl a
 	asl a
@@ -93,8 +92,8 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	adc.b d0
 	sta.b d0
 	lda.w #$0002
-.loop:								; loop: $81 = A, call getlchoice, X = A, if the result < 0 go to .3, ...
-	sta.b $81
+.loop:								; loop: d0+2 = A, call getlchoice, X = A, if the result < 0 go to .3, ...
+	sta.b d0+2
 	jsr.w getlchoice
 	tax
 	bmi .3
@@ -102,7 +101,7 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	lda.w tmflags,y
 	bit.w #$0008
 	bne .1
-	lda.b $81
+	lda.b d0+2
 	cmp.w tmlcchoice,y
 	bne .2
 	ldx.w tmline,y
@@ -113,18 +112,18 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	tay
 	lda.w #$0005
 	sta.w $0000,y
-	lda.b $81
+	lda.b d0+2
 	asl a
 	tax
-	lda.l DATA8_C5410E,x
+	lda.l LineChangeButtons,x
 	sta.w $0001,y
 	lda.b $01,s
 	asl a
 	adc.b $01,s
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0003,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0004,y
 	tya
 	ldx.w #$007E
@@ -137,13 +136,13 @@ SetLCmode2:							; draws the line change box of team a2: the frame, then a row 
 	sec
 	sbc.w #$0020
 	sta.b d0
-.3:									; A = $81, A - 1, if the result >= 0 go to .loop, pull X, ...
-	lda.b $81
+.3:									; A = d0+2, A - 1, if the result >= 0 go to .loop, pull X, ...
+	lda.b d0+2
 	dec a
 	bpl .loop
 	plx
 	rtl
-DATA8_C5410E:						; not traced: a table read by SetLCmode2
+LineChangeButtons:					; per line change choice ($81 * 2): its button (Y, B, A), then a space
 	db $D9,$A0,$C2,$A0,$C1,$A0
 setlccords:							; team a2's line change box: A = its map address (the side by team and the
 									; gmode direction bit), X = the width $B, Y = the height 5, or 4 when
@@ -163,9 +162,9 @@ setlccords:							; team a2's line change box: A = its map address (the side by 
 .2:									; if $0002 bits clear go to .1
 	bit.w #$0002
 	beq .1
-.3:									; Y = $5855, if $18AA = 0 go to .4, Y = $5995
+.3:									; Y = $5855, if LCBoxesClosed = 0 go to .4, Y = $5995
 	ldy.w #$5855
-	lda.w $18AA
+	lda.w LCBoxesClosed
 	beq .4
 	ldy.w #$5995
 .4:									; push Y, A = $0002, call getlchoice, Y = $0005, ...
@@ -181,7 +180,7 @@ setlccords:							; team a2's line change box: A = its map address (the side by 
 	pla
 	rts
 getlchoice:							; A = the line for line choice A of team a2 by the man advantage
-									; (DATA8_C54194, sign extended; -1 none); X and Y kept
+									; (LineChoiceTable, sign extended; -1 none); X and Y kept
 	phx
 	pha
 	lda.b a2
@@ -208,7 +207,7 @@ getlchoice:							; A = the line for line choice A of team a2 by the man advanta
 	adc.b $01,s
 	tax
 	ply
-	lda.l DATA8_C54194,x
+	lda.l LineChoiceTable,x
 	plx
 	and.w #$00FF
 	bit.w #$0080
@@ -216,7 +215,7 @@ getlchoice:							; A = the line for line choice A of team a2 by the man advanta
 	ora.w #$FF00
 .rts:								; return
 	rts
-DATA8_C54194:						; not traced: a table read by getlchoice
+LineChoiceTable:					; the lines for each line change choice ($FF: none)
 	db $00,$01,$02,$01,$02,$00,$02,$00,$01,$00,$01,$02,$00,$01,$02,$00
 	db $01,$02,$00,$01,$02,$03,$04,$FF,$03,$04,$FF,$03,$04,$FF,$03,$04
 	db $FF,$04,$03,$FF,$03,$04,$FF,$03,$04,$FF,$05,$06,$FF,$05,$06,$FF
@@ -263,7 +262,7 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	sta.b d4
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
 .1:									; Y = d4, A = [a4],y, A and $00FF, d5 = A, ...
 	ldy.b d4
@@ -323,7 +322,7 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	sta.b d4
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
 .6:									; Y = d4, A = [a4],y, A and $00FF, d5 = A, ...
 	ldy.b d4
@@ -388,44 +387,43 @@ setpersonel:						; from chk4lc, lcfound and other segments
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
-CODE_C54320:						; no caller found: a label inside setpersonel's register restore
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -433,29 +431,29 @@ CODE_C54320:						; no caller found: a label inside setpersonel's register resto
 SetPlList:							; from setpersonel and other segments
 	lda.w #$007E
 	sta.b $75
-	lda.w #$2008
+	lda.w #PlList
 	sta.b a4
-	stz.w $2008
-	stz.w $200A
-	stz.w $200C
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9B2A
+	stz.w PlList
+	stz.w PlList+2
+	stz.w PlList+4
+	lda.w #priolist>>16
+	sta.b a0+2
+	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .1
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9B38
+	lda.w #(priolist+$E)>>16
+	sta.b a0+2
+	lda.w #(priolist+$E)&$FFFF
 	sta.b a0
 	bra .3
-.1:									; if penshot = 0 go to .2, $65 = $00C0, a0 = $9B31, ...
+.1:									; if penshot = 0 go to .2, a0+2 = (priolist+$7)>>16, ...
 	lda.w penshot
 	beq .2
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9B31
+	lda.w #(priolist+$7)>>16
+	sta.b a0+2
+	lda.w #(priolist+$7)&$FFFF
 	sta.b a0
 	lda.b a2
 	cmp.w BA_Team
@@ -467,18 +465,18 @@ SetPlList:							; from setpersonel and other segments
 	lda.w tmgoalie,y
 	bpl .3
 	inc.b a0
-.3:									; call GetTeamLines, $69 = $71, a1 = a3, pull A, ...
+.3:									; call GetTeamLines, a1+2 = a3+2, a1 = a3, pull A, ...
 	pei ($71)
 	pei ($6F)
 	jsl.l GetTeamLines
-	lda.b $71
-	sta.b $69
+	lda.b a3+2
+	sta.b a1+2
 	lda.b a3
 	sta.b a1
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	ldy.b a2
 	lda.w tmline,y
 	asl a
@@ -573,18 +571,18 @@ SetPlList:							; from setpersonel and other segments
 	lda.w tmpdst,y
 	bmi .13
 	beq .13
-.12:								; call GetTeamLines, $69 = $71, a1 = a3, pull A, ...
+.12:								; call GetTeamLines, a1+2 = a3+2, a1 = a3, pull A, ...
 	pei ($71)
 	pei ($6F)
 	jsl.l GetTeamLines
-	lda.b $71
-	sta.b $69
+	lda.b a3+2
+	sta.b a1+2
 	lda.b a3
 	sta.b a1
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	lda.b d4
 	clc
 	adc.w #$0006
@@ -593,9 +591,9 @@ SetPlList:							; from setpersonel and other segments
 	and.w #$00FF
 	asl a
 	sta.b d0
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9AC0
+	lda.w #sublist>>16
+	sta.b a0+2
+	lda.w #sublist&$FFFF
 	sta.b a0
 	ldy.b d0
 	lda.b [a0],y
@@ -813,11 +811,11 @@ assbench:							; asstab entry 12: an assignment routine
 	beq .10
 	bmi .10
 	jmp.w .17
-.10:								; A = $1958, if position,x is not 0 go to .11, A = $121E
-	lda.w #$1958
+.10:								; A = SPAglide&$FFFF, if position,x is not 0 go to .11, ...
+	lda.w #SPAglide&$FFFF
 	ldy.w position,x
 	bne .11
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 .11:								; call SetSPAFromA, pfnc,x = $0001, if facedir,x = $0004 go to .12, ...
 	jsl.l SetSPAFromA
 	lda.w #$0001
@@ -849,7 +847,7 @@ assbench:							; asstab entry 12: an assignment routine
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$18BE
+	lda.w #SPAwallin&$FFFF
 	jsl.l SetSPAFromA
 	lda.w #$0064
 	sta.w temp1,x
@@ -889,9 +887,9 @@ assbench:							; asstab entry 12: an assignment routine
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$342A
+	lda.w #EvadePC>>16
+	sta.b a0+2
+	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
 .18:								; A = pflags,x, A and $EFFF, pflags,x = A
@@ -941,7 +939,7 @@ asseben:							; asstab entry 10: an assignment routine
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18EC
+	lda.w #SPAwallout&$FFFF
 	jml.l SetSPAUpdate
 .rtl:								; return
 	rtl
@@ -977,7 +975,7 @@ CompLine:							; from chk4lc and other segments
 	lda.w tmap,y
 	ldy.b a1
 	cmp.w tmap,y
-	beq CODE_C54828
+	beq CompLineEvenStrength
 	bpl .1
 	inc.b d0
 	inc.b d0
@@ -1000,41 +998,42 @@ CompLine:							; from chk4lc and other segments
 .3:									; Y = a2, tmline,y = A
 	ldy.b a2
 	sta.w tmline,y
-CODE_C5480F:						; from CODE_C548C1, CODE_C54828
+CompLineReturn:						; restores the saved scratch registers and returns after choosing a line
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
-CODE_C54828:						; from CompLine
+CompLineEvenStrength:				; chooses an even strength line by team, control mode, period, score and
+									; energy
 	ldy.b a2
 	beq .1
-	jmp.w CODE_C548C1
+	jmp.w CompLineEnergySearch
 .1:									; if OptLine is not $0002 go to .2, if c1playernum,y < 0 go to .2, ...
 	lda.w OptLine
 	cmp.w #$0002
 	bne .2
 	lda.w c1playernum,y
 	bmi .2
-	jmp.w CODE_C548C1
-.2:									; d1 = $0002, $65 = $00C5, a0 = $4897, if gsp is not $0002 go to .3, ...
+	jmp.w CompLineEnergySearch
+.2:									; d1 = $0002, a0 = EvenStrengthLines, if gsp is not $0002 go to .3, ...
 	lda.w #$0002
 	sta.b d1
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$4897
+	lda.w #EvenStrengthLines>>16
+	sta.b a0+2
+	lda.w #EvenStrengthLines&$FFFF
 	sta.b a0
 	lda.w gsp
 	cmp.w #$0002
@@ -1044,15 +1043,15 @@ CODE_C54828:						; from CompLine
 	cmp.w tmscore,y
 	beq .3
 	php
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$48A5
+	lda.w #EvenStrengthLines>>16
+	sta.b a0+2
+	lda.w #(EvenStrengthLines+14)&$FFFF
 	sta.b a0
 	plp
 	bpl .3
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$48B3
+	lda.w #EvenStrengthLines>>16
+	sta.b a0+2
+	lda.w #(EvenStrengthLines+28)&$FFFF
 	sta.b a0
 .3:									; Y = a1, A = tmline,y, A * 2, d1 = A, ...
 	ldy.b a1
@@ -1063,22 +1062,25 @@ CODE_C54828:						; from CompLine
 	lda.b [a0],y
 	jsr.w getlinee
 	cmp.w #$0C01
-	bcc CODE_C548C1
+	bcc CompLineEnergySearch
 	ldy.b d1
 	lda.b [a0],y
 	ldy.b a2
 	sta.w tmline,y
-	jmp.w CODE_C5480F
-DATA8_C54897:						; not traced: data between routines
+	jmp.w CompLineReturn
+EvenStrengthLines:					; per score state (rows of 7 words: tied or before the third period, then
+									; leading, trailing) and the other team's line (tmline * 2): the line to
+									; send
 	db $00,$00,$01,$00,$02,$00,$00,$00,$01,$00,$00,$00,$01,$00,$02,$00
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$00,$00,$00,$00,$01,$00
 	db $00,$00,$00,$00,$01,$00,$00,$00,$01,$00
-CODE_C548C1:						; from CODE_C54828
+CompLineEnergySearch:				; scans the score-dependent line order for sufficient energy and stores
+									; the chosen line
 	lda.w #$0002
 	sta.b d1
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$491C
+	lda.w #EnergySearchLines>>16
+	sta.b a0+2
+	lda.w #EnergySearchLines&$FFFF
 	sta.b a0
 	lda.w gsp
 	cmp.w #$0002
@@ -1089,15 +1091,15 @@ CODE_C548C1:						; from CODE_C54828
 	cmp.w tmscore,y
 	beq .loop
 	php
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$4922
+	lda.w #EnergySearchLines>>16
+	sta.b a0+2
+	lda.w #(EnergySearchLines+6)&$FFFF
 	sta.b a0
 	plp
 	bpl .loop
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$4928
+	lda.w #EnergySearchLines>>16
+	sta.b a0+2
+	lda.w #(EnergySearchLines+12)&$FFFF
 	sta.b a0
 .loop:								; loop: A = [a0], a0 + 1, a0 + 1, call getlinee, ...
 	lda.b [a0]
@@ -1114,8 +1116,10 @@ CODE_C548C1:						; from CODE_C54828
 	ldy.b a2
 	lda.b [a0]
 	sta.w tmline,y
-	jmp.w CODE_C5480F
-DATA8_C5491C:						; not traced: data between routines
+	jmp.w CompLineReturn
+EnergySearchLines:					; per score state (rows of 3 words: tied or before the third period, then
+									; leading, trailing): the lines to try in order until one has the energy
+									; ($0F34)
 	db $00,$00,$01,$00,$02,$00,$00,$00,$02,$00,$01,$00,$00,$00,$01,$00
 	db $00,$00
 chk4lc:								; the computer calls a line change on the fly (puck in its own end, one
@@ -1264,7 +1268,7 @@ makepde:							; called from other segments
 	pla
 	ldx.b d0
 	jsl.l Mul16S
-	lda.b $36
+	lda.b r2+2
 	asl.b r2
 	rol a
 	asl.b r2
@@ -1328,21 +1332,21 @@ AvgCline:							; from chk4lc and other segments
 	lda.b r0
 	sta.b d0
 	plx
-.3:									; pull A, $65 = A, pull A, a0 = A, ...
+.3:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	rtl
@@ -1414,10 +1418,10 @@ lcfound_close:						; closes team a2's line change box: its six rows overwritten
 	tay
 	jsl.l WaitTransfers
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	ldx.w #$0006
 .loop:								; loop: push Y, A = Y, A + $0020, Y = A, ...
 	pea.w $000B
@@ -1432,16 +1436,16 @@ lcfound_close:						; closes team a2's line change box: its six rows overwritten
 	tay
 	dex
 	bne .loop
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	pla
 	cmp.w #$5AB5
 	bcc .1
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 .1:									; call showclockdma, call WaitTransfers, go to printscores1
 	jsl.l showclockdma
 	jsl.l WaitTransfers
@@ -1467,10 +1471,10 @@ CloseLCBoxes:						; closes each team's open line change box (tmflags bit 3, onl
 	lda.w #$0002
 	sta.b a2
 	jsl.l lcfound_close
-.2:									; pull A, a2 = A, $18AA + 1
+.2:									; pull A, a2 = A, LCBoxesClosed + 1
 	pla
 	sta.b a2
-	inc.w $18AA
+	inc.w LCBoxesClosed
 .rtl:								; return
 	rtl
 BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 128 capped at
@@ -1536,8 +1540,8 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	beq .4
 	lda.w #$0C00
 	tsb.w printa
-.4:									; $69 = 0, a1 = mesarea, A = printx, A - $000B, ...
-	stz.b $69
+.4:									; a1+2 = 0, a1 = mesarea, A = printx, A - $000B, ...
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w printx
@@ -1546,7 +1550,7 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	sta.w printx
 	lda.w #$4000
 	tsb.w printa
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	sep #$20
@@ -1561,23 +1565,23 @@ BuildMesareaBar:					; no caller found: a four cell bar of d0 in mesarea (d0 / 1
 	lda.w #$4000
 	trb.w printa
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1611,9 +1615,9 @@ getlinee:							; returns the average skater energy of line A for team a2
 	ldy.b a2
 	beq .2
 	adc.w #$0034
-.2:									; Y = A, A = $1309,y, A + r2, r2 = A, ...
+.2:									; Y = A, A = tmpde-2,y, A + r2, r2 = A, ...
 	tay
-	lda.w $1309,y
+	lda.w tmpde-2,y
 	clc
 	adc.b r2
 	sta.b r2
@@ -1635,11 +1639,11 @@ linebar:							; queues an energy bar for line A at the line change row
 	cmp.w #$0FFF
 	bcc .2
 	lda.w #$0FFF
-.2:									; $85 = A, A * 2, A + $85, $85 = A, ...
-	sta.b $85
+.2:									; d1+2 = A, A * 2, A + d1+2, d1+2 = A, ...
+	sta.b d1+2
 	asl a
-	adc.b $85
-	sta.b $85
+	adc.b d1+2
+	sta.b d1+2
 	xba
 	and.w #$00F0
 	lsr a
@@ -1653,15 +1657,17 @@ linebar:							; queues an energy bar for line A at the line change row
 	lda.w #$A0A0
 	sta.w $0000,y
 	sta.w $0001,y
-	jmp (DATA8_C54D3A,x)
-DATA8_C54D3A:						; jump table: the routine for each index
+	jmp (LineBarFills,x)
+LineBarFills:						; per energy third (energy * 3 / $1000, * 2): the routine that fills the
+									; line's energy bar up to that tile (LineBarLow, LineBarMiddle,
+									; LineBarHigh)
 	dw LineBarLow,LineBarMiddle,LineBarHigh
 LineBarHigh:						; fills two energy bar tiles and selects the third tile remainder
 	lda.w #$8888
 	sta.w $0000,y
 	lda.w #$0080
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 	sec
 	sbc.w #$2000
 	iny
@@ -1672,7 +1678,7 @@ LineBarMiddle:						; fills the first energy bar tile and selects the second til
 	sta.w $0000,y
 	lda.w #$0089
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 	sec
 	sbc.w #$1000
 	iny
@@ -1680,7 +1686,7 @@ LineBarMiddle:						; fills the first energy bar tile and selects the second til
 LineBarLow:							; selects the first energy bar tile from the scaled energy
 	lda.w #$0092
 	sta.b d1
-	lda.b $85
+	lda.b d1+2
 LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (the energy
 									; left / $200 + d1), then the three tiles queued to VRAM at d0 + 6
 	and.w #$FE00
@@ -1692,10 +1698,10 @@ LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (t
 	rep #$20
 	ply
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0003
 	pea.w $0000
 	lda.b d0
@@ -1705,10 +1711,10 @@ LineBarQueue:						; the end of linebar's three fill cases: the last bar tile (t
 	pea.w $1800
 	pea.w $007E
 	phy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	rts
 lcfound:							; from lineinput and other segments
@@ -1797,7 +1803,7 @@ Create_HotCold_Table:				; called from other segments
 	rtl
 GetTeamLines:						; from SetPlList and other segments
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	lda.b a2
 	beq .1
 	lda.w #$1813
@@ -1816,20 +1822,20 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	bne .1
 	lda.w InIntermission
 	beq .2
-.1:									; A = (DATA8_CF05D4+$3)&$FFFF, X = (DATA8_CF05D4+$3)>>16, ...
-	lda.w #(DATA8_CF05D4+$3)&$FFFF
-	ldx.w #(DATA8_CF05D4+$3)>>16
+.1:									; A = (SongLists+$3)&$FFFF, X = (SongLists+$3)>>16, ...
+	lda.w #(SongLists+$3)&$FFFF
+	ldx.w #(SongLists+$3)>>16
 	jsl.l LoadSounds
 	lda.w #$00A5
 	jsl.l StartSound
 	jsl.l SoundVolumeUp
 	dec.w PauseMusicOn
-.2:									; call InitPauseScreen, X = $0002, call SetPauseTab, $059E = $0001
+.2:									; call InitPauseScreen, X = $0002, call SetPauseTab, mp5readall = $0001
 	jsr.w InitPauseScreen
 	ldx.w #$0002
 	jsr.w SetPauseTab
 	lda.w #$0001
-	sta.w $059E
+	sta.w mp5readall
 .3:									; TransfersReady + 1
 	inc.w TransfersReady
 .loop:								; loop: if TransfersReady is not 0 go to .loop, A = teampads, ...
@@ -1844,12 +1850,12 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	bra .5
 .4:									; call ReadActiveMenuPad
 	jsl.l ReadActiveMenuPad
-.5:									; $26 + 1, call AnimateSprites, $28 = $1D8F, $2A = $1E00, ...
+.5:									; $26 + 1, call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1865,6 +1871,6 @@ Pausemode_menu:						; the pause menu screen: its music, the Options tab first, 
 	sta.w WorkBufMark
 	sta.b $08
 	stz.b $22
-	ldx.w $18F0
+	ldx.w PauseSprite
 	jsl.l DeleteSprite
 	jmp.w RestoreGameScreen

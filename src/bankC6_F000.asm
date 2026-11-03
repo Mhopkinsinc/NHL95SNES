@@ -1,17 +1,23 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C6F068
-DATA8_C6F068:						; raw frame tiles for transfer index $092; pose not traced
+FrameTiles092:						; the raw tiles of frame $092 (FrameTileSource / FrameBankLayout entry
+									; $092); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$68..$2E8
-DATA8_C6F2E8:						; raw frame tiles for transfer index $093; pose not traced
+FrameTiles093:						; the raw tiles of frame $093 (FrameTileSource / FrameBankLayout entry
+									; $093); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$2E8..$4E8
-DATA8_C6F4E8:						; raw frame tiles for transfer index $094; pose not traced
+FrameTiles094:						; the raw tiles of frame $094 (FrameTileSource / FrameBankLayout entry
+									; $094); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$4E8..$6E8
-DATA8_C6F6E8:						; raw frame tiles for transfer index $095; pose not traced
+FrameTiles095:						; the raw tiles of frame $095 (FrameTileSource / FrameBankLayout entry
+									; $095); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$6E8..$968
-DATA8_C6F968:						; raw frame tiles for transfer index $096; pose not traced
+FrameTiles096:						; the raw tiles of frame $096 (FrameTileSource / FrameBankLayout entry
+									; $096); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$968..$B68
-DATA8_C6FB68:						; raw frame tiles for transfer index $097; pose not traced
+FrameTiles097:						; the raw tiles of frame $097 (FrameTileSource / FrameBankLayout entry
+									; $097); pose not traced
 	incbin "../Extracted/segments/bankC6_F000.bin":$B68..$DE8
 VezinaPicMap:						; the picture of award 0 (AwardPictures): Vezina Trophy
 	dw VezinaPicTiles-VezinaPicMap-2	; map chunk length

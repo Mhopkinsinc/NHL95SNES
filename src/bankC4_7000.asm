@@ -1,5 +1,4 @@
-; Segment bankC4_7000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_7000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4702E
 skatetopuck:						; called from other segments
 	jsl.l skatetopuckinit
@@ -173,10 +172,10 @@ assscore:							; assignment (asstab entry 8): celebrate a goal
 .4:									; temp4,x = Vpos
 	lda.b Vpos
 	sta.w temp4,x
-.5:									; $65 = $00C4, a0 = $883F, d0 = temp3,x, d1 = temp4,x, ...
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+.5:									; a0+2 = rtss>>16, a0 = rtss&$FFFF, d0 = temp3,x, d1 = temp4,x, ...
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w temp3,x
 	sta.b d0
@@ -187,12 +186,12 @@ assscore:							; assignment (asstab entry 8): celebrate a goal
 	sbc.b d7
 	sta.w temp1,x
 	bpl CelebrationSkate
-	lda.w #$2824
+	lda.w #SPAcelebrate&$FFFF
 	sta.b d1
 	sta.w pfalock,x
 	cpx.w shotplayer
 	bne .6
-	lda.w #$27B2
+	lda.w #SPApump2&$FFFF
 	sta.b d1
 	lda.w #$FFFF
 	sta.w shotplayer
@@ -269,14 +268,14 @@ checkfornewpen:						; from PenaltyManager and other segments
 	tay
 	bne .2
 	jmp.w .rtl
-.2:									; A = gmode, if a $0004 bit set go to .5, d0 = Y, $69 = $00C3, ...
+.2:									; A = gmode, if a $0004 bit set go to .5, d0 = Y, ...
 	lda.w gmode
 	bit.w #$0004
 	bne .5
 	sty.b d0
-	lda.w #$00C3
-	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a1+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -325,9 +324,9 @@ checkfornewpen:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
-	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a1+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -505,9 +504,9 @@ chkprogress:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
-	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a1+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	clc
 	adc.b [a1],y
@@ -615,9 +614,9 @@ chkprogress:						; from PenaltyManager and other segments
 	and.w #$00FF
 	sta.b d0
 	tay
-	lda.w #$00C3
-	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a1+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -785,7 +784,7 @@ chkprogress:						; from PenaltyManager and other segments
 	pla
 	sta.b a0
 	pla
-	sta.b $65
+	sta.b a0+2
 	lda.w #$000D
 	sta.b d0
 	jsl.l assreplace
@@ -794,23 +793,23 @@ chkprogress:						; from PenaltyManager and other segments
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -847,25 +846,25 @@ chkprogress:						; from PenaltyManager and other segments
 	lda.w #$0002
 	sta.b a2
 	jsl.l InProgress_ap
-.25:								; pull A, $71 = A, pull A, a3 = A, ...
+.25:								; pull A, a3+2 = A, pull A, a3 = A, ...
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -938,11 +937,11 @@ updatepwrplay:						; called from other segments
 	jsl.l updatepwrplay_clr
 	lda.w #$4000
 	trb.w sflags
-.3:									; A = $2000, if not zero go to .4, call CODE_C53A29, X = a3, ...
+.3:									; A = $2000, if not zero go to .4, call DrawPeriodBox, X = a3, ...
 	lda.w #$2000
 	tsb.w sflags
 	bne .4
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 	ldx.b a3
 	inc.w tmPwrPlays,x
 .4:									; A = $0005, call AllocWorkBuf2, X = A, $0000,x = $0004, ...
@@ -993,12 +992,13 @@ updatepwrplay_clr:					; from updatepwrplay and other segments
 	lda.w #$2000
 	trb.w sflags
 	beq updatepwrplay_clrReturn
-CODE_C4785E:						; called from other segments
+RedrawPeriodBox:					; blanks three 11 tile text map rows from $5AA0 and redraws the period box
+									; (DrawPeriodBox)
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.l TextMapFill
 	sta.w ListBuf
 	ldx.w #ListBuf
@@ -1016,12 +1016,12 @@ CODE_C4785E:						; called from other segments
 	adc.w #$0020
 	dey
 	bpl .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
-	jml.l CODE_C53A29
+	jml.l DrawPeriodBox
 updatepwrplay_clrReturn:			; the rtl updatepwrplay_clr branches to
 	rtl
 AddPenalty:							; from CheckGoalieInterference, Bcheck and other segments
@@ -1101,9 +1101,9 @@ AddPenalty2:						; from AddPenalty and other segments
 	and.w #$FF00
 	ora.b d0
 	sta.b (a1)
-	lda.w #$00C3
-	sta.b $65
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a0+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a0
 	ldy.b d0
 	clc
@@ -1121,17 +1121,17 @@ AddPenalty2:						; from AddPenalty and other segments
 	beq .6
 	lda.w #$0000
 	sta.b (a1)
-.6:									; pull A, $69 = A, pull A, a1 = A, ...
+.6:									; pull A, a1+2 = A, pull A, a1 = A, ...
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 .rtl:								; return
@@ -1161,11 +1161,11 @@ PenGoalStuff:						; called from other segments
 	cmp.w #$0000
 	bne .1
 	jmp.w .5
-.1:									; Y = A, $69 = $00C3, a1 = $4499, A = [a1],y, ...
+.1:									; Y = A, a1+2 = Penaltylist>>16, a1 = Penaltylist&$FFFF, A = [a1],y, ...
 	tay
-	lda.w #$00C3
-	sta.b $69
-	lda.w #$4499
+	lda.w #Penaltylist>>16
+	sta.b a1+2
+	lda.w #Penaltylist&$FFFF
 	sta.b a1
 	lda.b [a1],y
 	clc
@@ -1246,21 +1246,21 @@ PenGoalStuff:						; called from other segments
 	lda.w #$0001
 	tsb.w tmflags
 	tsb.w tmflags+2
-.8:									; pull A, $65 = A, pull A, a0 = A, ...
+.8:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1387,7 +1387,7 @@ assepen:							; assignment (asstab entry 11): leave the penalty box
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18EC
+	lda.w #SPAwallout&$FFFF
 	jsl.l SetSPAFromA
 	jml.l SprSort
 .3:									; facedir,x = $0004, newpnum,x = $FFFF, newpos,x = A, A = pflags,x, ...
@@ -1626,14 +1626,14 @@ asspenalty:							; called from other segments
 	jmp.w .8
 .rtl:								; return
 	rtl
-.3:									; d0 = temp3,x, d1 = temp4,x, $65 = $00C4, a0 = $883F, ...
+.3:									; d0 = temp3,x, d1 = temp4,x, a0+2 = rtss>>16, a0 = rtss&$FFFF, ...
 	lda.w temp3,x
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jml.l skateto
 .4:									; A = Ypos,x, A - temp4,x, if A - $FFF3 < 0 go to .3, ...
@@ -1664,8 +1664,8 @@ asspenalty:							; called from other segments
 	sta.w puckc
 	lda.w #$003C
 	sta.w nopuck,x
-.5:									; pfnc,x = $1958, call SetSPAFromA, d2 = $0006, ...
-	lda.w #$1958
+.5:									; pfnc,x = SPAglide&$FFFF, call SetSPAFromA, d2 = $0006, ...
+	lda.w #SPAglide&$FFFF
 	sta.w pfnc,x
 	jsl.l SetSPAFromA
 	lda.w #$0006
@@ -1704,7 +1704,7 @@ asspenalty:							; called from other segments
 	lda.w #$0002
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$18BE
+	lda.w #SPAwallin&$FFFF
 	jsl.l SetSPAFromA
 	lda.w pflags,x
 	and.w #$BFFF
@@ -1852,7 +1852,7 @@ assdopen:							; from SeatPenaltyBox and other segments
 	lda.w attribute,x
 	and.w #$F7FF
 	sta.w attribute,x
-	lda.w #$02A4
+	lda.w #SPFPen+6
 	sta.w frame,x
 	rtl
 SeatPenaltyBox:						; from chkprogress and other segments

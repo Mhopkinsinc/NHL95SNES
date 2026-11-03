@@ -1,17 +1,23 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C9F14B
-DATA8_C9F14B:						; raw frame tiles for transfer index $23B; pose not traced
+FrameTiles23B:						; the raw tiles of frame $23B (FrameTileSource / FrameBankLayout entry
+									; $23B); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$14B..$3CB
-DATA8_C9F3CB:						; raw frame tiles for transfer index $23C; pose not traced
+FrameTiles23C:						; the raw tiles of frame $23C (FrameTileSource / FrameBankLayout entry
+									; $23C); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$3CB..$62B
-DATA8_C9F62B:						; raw frame tiles for transfer index $23D; pose not traced
+FrameTiles23D:						; the raw tiles of frame $23D (FrameTileSource / FrameBankLayout entry
+									; $23D); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$62B..$8AB
-DATA8_C9F8AB:						; raw frame tiles for transfer index $23E; pose not traced
+FrameTiles23E:						; the raw tiles of frame $23E (FrameTileSource / FrameBankLayout entry
+									; $23E); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$8AB..$B2B
-DATA8_C9FB2B:						; raw frame tiles for transfer index $23F; pose not traced
+FrameTiles23F:						; the raw tiles of frame $23F (FrameTileSource / FrameBankLayout entry
+									; $23F); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$B2B..$D8B
-DATA8_C9FD8B:						; raw frame tiles for transfer index $240; pose not traced
+FrameTiles240:						; the raw tiles of frame $240 (FrameTileSource / FrameBankLayout entry
+									; $240); pose not traced
 	incbin "../Extracted/segments/bankC9_F000.bin":$D8B..$FEB
 JenningsPicMap:						; the picture of award 3 (AwardPictures): William M. Jennings Trophy
 	dw JenningsPicTiles-JenningsPicMap-2	; map chunk length

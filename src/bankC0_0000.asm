@@ -8,22 +8,26 @@ TeamPalettes:						; one 16 colour palette per team in team order (the all-star 
 	dw $0380						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":4..$27E
-ArrowFontTiles:						; 4bpp tiles, packed: a two colour font, ASCII from the space, with
-									; four arrows in place of ^ _ ~ and the last character
+ArrowFontTiles:						; 4bpp tiles, packed: a two colour font, ASCII from the space, with four
+									; arrows in place of ^ _ ~ and the last character; the pause menu's
+									; (PauseScreenDraw loads it, PrintPauseItemText prints with it)
 	dw $0C00						; unpacked size in bytes
 	dw $0004						; format 4: literal runs and copies from up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$282..$83D
-GradientBarTiles:					; 4bpp tiles, packed: bars shaded from dark to light
+GradientBarTiles:					; 4bpp tiles, packed: bars shaded from dark to light, the team-colour name
+									; backplates of the setup, stats, Games Today and award screens
+									; (MapTileBlock draws them 9 x 2)
 	dw $0240						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$841..$976
-MeterFontTiles:						; 4bpp tiles, packed: meter bars in three colours, a PwrPlay label,
-									; box corners, then a font, ASCII from the space
+MeterFontTiles:						; 4bpp tiles, packed: meter bars in three colours, a PwrPlay label, box
+									; corners, then a font, ASCII from the space; the rink's boxes (setupice
+									; and RestoreGameScreen load it for DrawScoreBox, DrawPeriodBox)
 	dw $1000						; unpacked size in bytes
 	dw $0006						; format 6: a flag byte per 8 literal runs or copies, up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$97A..$EE5
-UnusedPalette:						; 16 colours: blue, black, slate, white, green, yellow, red, then magenta;
-									; no code refers to it
+GamePalette0:						; 16 colours: blue, black, slate, white, green, yellow, red, then magenta;
+									; colours 1-15 are the game screen's CGRAM 1-15
 	dw $7C00,$0000,$45CB,$7FFF,$03E0,$03FF,$001F,$7C1F
 	dw $7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F,$7C1F
 SoundRAMClear:						; sound CPU program as upload blocks (length, sound RAM address, bytes;

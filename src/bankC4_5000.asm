@@ -1,5 +1,4 @@
-; Segment bankC4_5000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_5000: game code, jump tables and the data tables the code reads with long addresses.
 org $C44F20
 FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement + 15, then
 									; the fall or stumble animation by the hit
@@ -8,22 +7,22 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	adc.w #$000F
 	bmi .1
 	sta.w CwdExciteLvl
-.1:									; if a2 >= $0018 go to .rtl, if SPA,y = $2708 go to .rtl, ...
+.1:									; if a2 >= $0018 go to .rtl, if SPA,y = SPAinjury1&$FFFF go to .rtl, ...
 	ldy.b a2
 	cpy.w #$0018
 	bcs .rtl
 	lda.w SPA,y
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	beq .rtl
-	cmp.w #$25D2
+	cmp.w #SPAstumble&$FFFF
 	beq .rtl
-	cmp.w #$2376
+	cmp.w #SPAfallfwd&$FFFF
 	beq .rtl
-	cmp.w #$2448
+	cmp.w #SPAfallback&$FFFF
 	beq .rtl
-	cmp.w #$2588
+	cmp.w #SPAflip&$FFFF
 	beq .rtl
-	lda.w #$25D2
+	lda.w #SPAstumble&$FFFF
 	sta.b d1
 	lda.w gmclock
 	bne .2
@@ -107,8 +106,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,y
 	bit.w #$0800
 	bne .14
-.11:								; A = $29EA, go to .15
-	lda.w #$29EA
+.11:								; A = SPAboardright&$FFFF, go to .15
+	lda.w #SPAboardright&$FFFF
 	bra .15
 .12:								; if Ypos,y - $00F0 >= 0 go to .8, if Ypos,y - $FF0A < 0 go to .8, ...
 	lda.w Ypos,y
@@ -133,8 +132,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,y
 	bit.w #$0800
 	bne .11
-.14:								; A = $2A64
-	lda.w #$2A64
+.14:								; A = SPAboardleft&$FFFF
+	lda.w #SPAboardleft&$FFFF
 .15:								; X = a2, pfalock,x = A, call SetSPAUpdate, A = CwdExciteLvl, ...
 	ldx.b a2
 	sta.w pfalock,x
@@ -177,8 +176,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Yvel,y
-.20:								; A = $28F6, go to .15
-	lda.w #$28F6
+.20:								; A = SPAboardfront&$FFFF, go to .15
+	lda.w #SPAboardfront&$FFFF
 	bra .15
 .21:								; if Xpos,y - $0050 >= 0 go to .23, if Xpos,y - $FFB0 < 0 go to .23, ...
 	lda.w Xpos,y
@@ -195,8 +194,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Yvel,y
-.22:								; A = $2970, go to .15
-	lda.w #$2970
+.22:								; A = SPAboardback&$FFFF, go to .15
+	lda.w #SPAboardback&$FFFF
 	jmp.w .15
 .23:								; go to .39
 	jmp.w .39
@@ -211,7 +210,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	jsl.l StartBenchCheer
 	lda.w #$0002
 	sta.w benchrounds
-	lda.w #$2448
+	lda.w #SPAfallback&$FFFF
 	sta.b d1
 	ldy.b a2
 	lda.b d0
@@ -221,7 +220,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	and.w #$0007
 	cmp.w #$0003
 	bcc .26
-	lda.w #$2376
+	lda.w #SPAfallfwd&$FFFF
 	sta.b d1
 	lda.w facedir,y
 	and.w #$0003
@@ -232,7 +231,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bmi .26
 	cpx.w #$0018
 	bcs .26
-	lda.w #$2588
+	lda.w #SPAflip&$FFFF
 	sta.b d1
 .26:								; X = a2, pfalock,x = $0001, call SetSPA, X = a3, ...
 	ldx.b a2
@@ -270,7 +269,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w position,x
 	beq .28
 	lda.w SPA,y
-	cmp.w #$2448
+	cmp.w #SPAfallback&$FFFF
 	bne .28
 	lda.w facedir,y
 	and.w #$0003
@@ -297,12 +296,12 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w pfteam,y
 	beq .30
 	lda.w #$0002
-.30:								; A + $0006, call StartBenchCheer, X = a2, pfalock,x = $2708, ...
+.30:								; A + $0006, call StartBenchCheer, X = a2, ...
 	clc
 	adc.w #$0006
 	jsl.l StartBenchCheer
 	ldx.b a2
-	lda.w #$2708
+	lda.w #SPAinjury1&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -341,10 +340,10 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sta.b d0
 	jsl.l AddPenalty2
 	jmp.w Stop4Pen
-.34:								; Y = a2, if SPA,y = $25D2 go to .35, puckc = $FFFF
+.34:								; Y = a2, if SPA,y = SPAstumble&$FFFF go to .35, puckc = $FFFF
 	ldy.b a2
 	lda.w SPA,y
-	cmp.w #$25D2
+	cmp.w #SPAstumble&$FFFF
 	beq .35
 	lda.w #$FFFF
 	sta.w puckc
@@ -377,7 +376,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$2ADE
+	lda.w #SPAbenchcheckr&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -399,16 +398,16 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	lda.b d3
 	bpl .41
 	ldy.w #$FF16
-.41:								; $81 = X, $85 = Y, A = d2, A - $81, ...
-	stx.b $81
-	sty.b $85
+.41:								; d0+2 = X, d1+2 = Y, A = d2, A - d0+2, ...
+	stx.b d0+2
+	sty.b d1+2
 	lda.b d2
 	sec
-	sbc.b $81
+	sbc.b d0+2
 	sta.b d0
 	lda.b d3
 	sec
-	sbc.b $85
+	sbc.b d1+2
 	sta.b d1
 	ldy.b d0
 	jsl.l ApproxLength
@@ -435,8 +434,8 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	beq .44
 	eor.w #$FFFF
 	inc a
-.44:								; $89 = A, A = d1, X = A, A = d4, ...
-	sta.b $89
+.44:								; d2+2 = A, A = d1, X = A, A = d4, ...
+	sta.b d2+2
 	lda.b d1
 	xba
 	tax
@@ -454,10 +453,10 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	beq .46
 	eor.w #$FFFF
 	inc a
-.46:								; if A >= $89 go to .49, if $81 >= 0 go to .48, A = d5, A - 1, ...
-	cmp.b $89
+.46:								; if A >= d2+2 go to .49, if d0+2 >= 0 go to .48, A = d5, A - 1, ...
+	cmp.b d2+2
 	bcs .49
-	lda.b $81
+	lda.b d0+2
 	bpl .48
 	lda.b d5
 	dec a
@@ -467,11 +466,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	clc
 	adc.w #$0006
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -479,7 +478,7 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	jmp.w .13
 .47:								; go to .24
 	jmp.w .24
-.48:								; if d5 < $0005 go to .47, A = d0, A - $0006, A + $81, ...
+.48:								; if d5 < $0005 go to .47, A = d0, A - $0006, A + d0+2, ...
 	lda.b d5
 	cmp.w #$0005
 	bcc .47
@@ -487,18 +486,18 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	sec
 	sbc.w #$0006
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
 	sta.w Yvel,y
 	jmp.w .10
-.49:								; if $85 >= 0 go to .50, A = d5, A + 1, A and $0007, ...
-	lda.b $85
+.49:								; if d1+2 >= 0 go to .50, A = d5, A + 1, A and $0007, ...
+	lda.b d1+2
 	bpl .50
 	lda.b d5
 	inc a
@@ -507,11 +506,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bcs .47
 	lda.b d0
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -526,11 +525,11 @@ FallDown:							; player a2 falls or stumbles from a hit: the crowd excitement +
 	bcc .47
 	lda.b d0
 	clc
-	adc.b $81
+	adc.b d0+2
 	sta.w Xpos,y
 	lda.b d1
 	clc
-	adc.b $85
+	adc.b d1+2
 	sta.w Ypos,y
 	lda.w #$0000
 	sta.w Xvel,y
@@ -560,17 +559,17 @@ CheckContactHold:					; apply the holding or hooking contact response
 CheckPlayerContact:					; resolve player X checking player a2 from their animations and impact
 	ldy.b a2
 	lda.w SPA,y
-	cmp.w #$224E
+	cmp.w #SPAHold&$FFFF
 	beq CheckContactHold
-	cmp.w #$2684
+	cmp.w #SPAhook&$FFFF
 	beq CheckContactHold
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bne .1
 	jmp.w Bcheck
-.1:									; if SPA,x is not $21BC go to CheckContactReturn, if gmclock = 0 go to .2,
+.1:									; if SPA,x is not SPAburst&$FFFF go to CheckContactReturn, ...
 									; ...
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne CheckContactReturn
 	lda.w gmclock
 	beq .2
@@ -593,9 +592,9 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	and.w #$0007
 	asl a
 	tay
-	lda.w #DATA8_C45519>>16
-	sta.b $65
-	lda.w #DATA8_C45519
+	lda.w #CheckAnimByDir>>16
+	sta.b a0+2
+	lda.w #CheckAnimByDir
 	sta.b a0
 	sta.w pf2aip,x
 	cpy.w #$0000
@@ -693,7 +692,9 @@ CheckPlayerContact:					; resolve player X checking player a2 from their animati
 	jsl.l AddPenalty
 .8:									; go to FallDown
 	jmp.w FallDown
-DATA8_C45519:						; not traced: a table read by CheckPlayerContact
+CheckAnimByDir:						; per direction of the player hit against the checker's facing (* 2): the
+									; check animation (SPA): SPAcrosscheck straight ahead, other checks to the
+									; sides
 	db $30,$20,$26,$21,$8A,$21,$8A,$21,$8A,$21,$58,$21,$58,$21,$F4,$20
 check4check:						; called from other segments
 	lda.w #$0014
@@ -719,12 +720,12 @@ check4check:						; called from other segments
 	cpx.w #$000C
 	bcs .loop
 	ldy.w #$000C
-.loop:								; loop: a0 = Y, if position,y = 0 go to .4, if SPA,y < $2280 go to .3, ...
+.loop:								; loop: a0 = Y, if position,y = 0 go to .4, ...
 	sty.b a0
 	lda.w position,y
 	beq .4
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .3
 	cmp.w #$2345
 	bcc .5
@@ -772,9 +773,9 @@ check4check:						; called from other segments
 	bmi .10
 	cmp.w #$010E
 	bpl .10
-.6:									; if SPA,y < $2280 go to .7, if SPA,y < $2345 go to .11
+.6:									; if SPA,y < SPAHold2&$FFFF go to .7, if SPA,y < $2345 go to .11
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .7
 	cmp.w #$2345
 	bcc .11
@@ -798,7 +799,7 @@ check4check:						; called from other segments
 .11:								; go to burst
 	jml.l burst
 Sweepcheck:							; start a sweep check by player X
-	lda.w #$2082
+	lda.w #SPAsweepchk&$FFFF
 	sta.w pf2aip,x
 	jml.l SetSPAFromA
 Holdplayer:							; called from other segments
@@ -807,7 +808,7 @@ Holdplayer:							; called from other segments
 	lda.w pfalock,x
 	beq .1
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne .1
 .rtl:								; return
 	rtl
@@ -866,7 +867,7 @@ Holdplayer:							; called from other segments
 	dec.b d2
 	bne .loop
 Acheck:								; from check4check and other segments
-	lda.w #$2684
+	lda.w #SPAhook&$FFFF
 	sta.b d1
 	sta.w pfalock,x
 	ldy.b a0
@@ -879,7 +880,7 @@ Acheck:								; from check4check and other segments
 	and.w #$0007
 	cmp.w #$0005
 	bcc .1
-	lda.w #$224E
+	lda.w #SPAHold&$FFFF
 	sta.b d1
 .1:									; go to SetSPA
 	jml.l SetSPA
@@ -938,7 +939,7 @@ holdcheck:							; from CheckContactHold
 	sta.w Yvel,y
 	tya
 	sta.w impactp,x
-	lda.w #$2344
+	lda.w #SPAflail&$FFFF
 	sta.w pfalock,x
 	jsl.l SetSPAFromA
 	ldx.b a2
@@ -947,12 +948,12 @@ holdcheck:							; from CheckContactHold
 	stx.b a3
 	tya
 	sta.w impactp,x
-	lda.w #$2280
+	lda.w #SPAHold2&$FFFF
 	sta.w pfalock,x
 	ldy.w SPA,x
-	cpy.w #$224E
+	cpy.w #SPAHold&$FFFF
 	beq .2
-	lda.w #$22B2
+	lda.w #SPAhook2&$FFFF
 .2:									; call SetSPAFromA, call PenShotChk, if zero go to .3, ...
 	jsl.l SetSPAFromA
 	jsl.l PenShotChk
@@ -975,7 +976,7 @@ holdcheck:							; from CheckContactHold
 	lda.w #$0028
 	sta.b d0
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	beq .4
 	lda.w #$0020
 	sta.b d0
@@ -1024,16 +1025,16 @@ updateanim:							; from SetSPAUpdate and other segments
 	stz.w pf2aip,x
 	stz.w pfalock,x
 	rtl
-.1:									; push Y, a0 = A, $65 = $00C4, Y = $0010, ...
+.1:									; push Y, a0 = A, a0+2 = $00C4, Y = $0010, ...
 	phy
 	sta.b a0
 	lda.w #$00C4
-	sta.b $65
+	sta.b a0+2
 	ldy.w #$0010
 	lda.b [a0],y
 	sta.b d1
 	lda.w SPA,x
-	cmp.w #$2ADE
+	cmp.w #SPAbenchcheckr&$FFFF
 	bcs .2
 	lda.w attribute,x
 	bit.w #$0800
@@ -1077,7 +1078,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.w SPA,x
 	cmp.w #$2B18
 	bcs .4
-	cmp.w #$2ADE
+	cmp.w #SPAbenchcheckr&$FFFF
 	bcs .9
 .4:									; if d1 is not 0 go to .5, SPA,x = 0
 	lda.b d1
@@ -1109,7 +1110,7 @@ updateanim:							; from SetSPAUpdate and other segments
 	lda.w attribute,x
 	ora.w #$0800
 	sta.w attribute,x
-	lda.w #$18EC
+	lda.w #SPAwallout&$FFFF
 	jsl.l SetSPAUpdate
 	bra .8
 dostop:								; called from other segments
@@ -1123,8 +1124,8 @@ dostop:								; called from other segments
 	bmi .1
 	cmp.w #$2001
 	bmi stopna
-.1:									; A = $1958, if pfrev,x is not 0 go to .3, if X is not puckc go to .2, ...
-	lda.w #$1958
+.1:									; A = SPAglide&$FFFF, if pfrev,x is not 0 go to .3, ...
+	lda.w #SPAglide&$FFFF
 	ldy.w pfrev,x
 	bne .3
 	cpx.w puckc
@@ -1132,11 +1133,11 @@ dostop:								; called from other segments
 	lda.w Xvel,x
 	sta.b p0
 	lda.w Yvel,x
-	sta.b $3A
+	sta.b p0+2
 	lda.w #$000F
 	jsl.l StartSound
-.2:									; A = $1AEE, pf2aip,x = 0
-	lda.w #$1AEE
+.2:									; A = SPAstop&$FFFF, pf2aip,x = 0
+	lda.w #SPAstop&$FFFF
 	stz.w pf2aip,x
 .3:									; call SetSPAFromA
 	jsl.l SetSPAFromA
@@ -1206,13 +1207,13 @@ skateto:							; called from other segments
 	sta.w temp2,x
 	bmi .1
 	jmp.w .9
-.1:									; A + $000C, temp2,x = A, $81 = d0, $85 = d1, ...
+.1:									; A + $000C, temp2,x = A, d0+2 = d0, d1+2 = d1, ...
 	adc.w #$000C
 	sta.w temp2,x
 	lda.b d0
-	sta.b $81
+	sta.b d0+2
 	lda.b d1
-	sta.b $85
+	sta.b d1+2
 	jsl.l avdgoal
 	lda.w Xvel,x
 	xba
@@ -1258,13 +1259,13 @@ skateto:							; called from other segments
 	pha
 	lda.b r3
 	clc
-	adc.b $81
+	adc.b d0+2
 	sec
 	sbc.w Xpos,x
 	tay
 	lda.b $42
 	clc
-	adc.b $85
+	adc.b d1+2
 	sec
 	sbc.w Ypos,x
 	jsl.l ApproxLength
@@ -1365,7 +1366,7 @@ RemovePlayerFromList:				; remove a player from the penalty box list by shifting
 	tay
 	sep #$20
 	lda.w tmboxlist,y
-	sta.w $13DA,y
+	sta.w tmboxlist-1,y
 	rep #$30
 	bit.w #$0080
 	beq .loop
@@ -1391,7 +1392,7 @@ PlayerAccFrames:					; the acceleration routine of each direction (0 up, clockwi
 	dw PlayerAccDir0x2,PlayerAccDir1x2,PlayerAccDir2x2,PlayerAccDir3x2
 	dw PlayerAccDir4x2,PlayerAccDir5x2,PlayerAccDir6x2,PlayerAccDir7x2
 PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1434,16 +1435,16 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1452,15 +1453,15 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -1489,7 +1490,7 @@ PlayerAccDir0:						; playeracc toward direction 0 (up), one step (PlayerAccOneF
 	rtl
 PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1534,16 +1535,16 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1552,15 +1553,15 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -1587,7 +1588,8 @@ PlayerAccDir0x2:					; playeracc toward direction 0 (up), the step taken twice
 	jml.l setpde
 .rtl:								; return
 	rtl
-DATA8_C45C7D:						; jump table: the routine for each index
+ScaleSkatingSpeeds:					; per leg speed (legspd * 2): the ScaleSkatingSpeed routine that
+									; multiplies A by it
 	dw ScaleSkatingSpeed0,ScaleSkatingSpeed1,ScaleSkatingSpeed2,ScaleSkatingSpeed3
 	dw ScaleSkatingSpeed4,ScaleSkatingSpeed5,ScaleSkatingSpeed6,ScaleSkatingSpeed7
 	dw ScaleSkatingSpeed8,ScaleSkatingSpeed9,ScaleSkatingSpeed10,ScaleSkatingSpeed11
@@ -1621,12 +1623,12 @@ ScaleSkatingSpeed6:					; multiply the bounded skating speed factor in A by 6
 	adc.b r2
 	rts
 ScaleSkatingSpeed7:					; multiply the bounded skating speed factor in A by 7
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed8:					; multiply the bounded skating speed factor in A by 8
 	asl a
@@ -1648,13 +1650,13 @@ ScaleSkatingSpeed10:				; multiply the bounded skating speed factor in A by 10
 	adc.b r2
 	rts
 ScaleSkatingSpeed11:				; multiply the bounded skating speed factor in A by 11
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed12:				; multiply the bounded skating speed factor in A by 12
 	asl a
@@ -1664,22 +1666,22 @@ ScaleSkatingSpeed12:				; multiply the bounded skating speed factor in A by 12
 	adc.b r2
 	rts
 ScaleSkatingSpeed13:				; multiply the bounded skating speed factor in A by 13
-	sta.b $36
+	sta.b r2+2
 	asl a
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed14:				; multiply the bounded skating speed factor in A by 14
 	asl a
-	sta.b $36
+	sta.b r2+2
 	asl a
 	sta.b r2
 	asl a
 	adc.b r2
-	adc.b $36
+	adc.b r2+2
 	rts
 ScaleSkatingSpeed15:				; multiply the bounded skating speed factor in A by 15
 	sta.b r2
@@ -1691,9 +1693,9 @@ ScaleSkatingSpeed15:				; multiply the bounded skating speed factor in A by 15
 	sbc.b r2
 	rts
 PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1748,16 +1750,16 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1766,15 +1768,15 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1807,9 +1809,9 @@ PlayerAccDir1:						; playeracc toward direction 1 (up-right), one step (PlayerA
 	rtl
 PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1868,16 +1870,16 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1886,15 +1888,15 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1926,7 +1928,7 @@ PlayerAccDir1x2:					; playeracc toward direction 1 (up-right), the step taken t
 .rtl:								; return
 	rtl
 PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -1969,16 +1971,16 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -1987,15 +1989,15 @@ PlayerAccDir2:						; playeracc toward direction 2 (right), one step (PlayerAccO
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5

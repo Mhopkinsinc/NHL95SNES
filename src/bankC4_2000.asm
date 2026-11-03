@@ -1,186 +1,461 @@
-; Segment bankC4_2000: data tables (not traced yet), then game code (routines keep their address as a name,
-; with their callers).
+; Segment bankC4_2000: data tables, then game code.
 org $C42030
-DATA8_C42030:						; not traced: more of the data from bankC4_1000 (pointer tables, lists)
-	db $42,$20,$4A,$20,$52,$20,$5A,$20,$62,$20,$6A,$20,$72,$20,$7A,$20
-	db $00,$00,$2A,$03,$0A,$00,$2A,$03,$F8,$FF,$2B,$03,$0A,$00,$2B,$03
-	db $F8,$FF,$2C,$03,$0A,$00,$2C,$03,$F8,$FF,$2D,$03,$0A,$00,$2D,$03
-	db $F8,$FF,$2E,$03,$0A,$00,$2E,$03,$F8,$FF,$2F,$03,$0A,$00,$2F,$03
-	db $F8,$FF,$30,$03,$0A,$00,$30,$03,$F8,$FF,$31,$03,$0A,$00,$31,$03
-	db $F8,$FF,$94,$20,$A0,$20,$AC,$20,$B8,$20,$C4,$20,$D0,$20,$DC,$20
-	db $E8,$20,$00,$00,$A4,$00,$04,$00,$A6,$00,$08,$00,$A4,$00,$FC,$FF
-	db $A6,$00,$04,$00,$A8,$00,$08,$00,$A6,$00,$FC,$FF,$A8,$00,$04,$00
-	db $AA,$00,$08,$00,$A8,$00,$FC,$FF,$AA,$00,$04,$00,$AC,$00,$08,$00
-	db $AA,$00,$FC,$FF,$AC,$00,$04,$00,$AE,$00,$08,$00,$AC,$00,$FC,$FF
-	db $AE,$00,$04,$00,$B0,$00,$08,$00,$AE,$00,$FC,$FF,$B0,$00,$04,$00
-	db $B2,$00,$08,$00,$B0,$00,$FC,$FF,$B2,$00,$04,$00,$B4,$00,$08,$00
-	db $B2,$00,$FC,$FF,$06,$21,$0A,$21,$0E,$21,$12,$21,$16,$21,$1A,$21
-	db $1E,$21,$22,$21,$00,$00,$7B,$00,$E8,$FF,$7C,$00,$E8,$FF,$7D,$00
-	db $E8,$FF,$7E,$00,$E8,$FF,$7F,$00,$E8,$FF,$80,$00,$E8,$FF,$81,$00
-	db $E8,$FF,$82,$00,$E8,$FF,$38,$21,$3C,$21,$40,$21,$44,$21,$48,$21
-	db $4C,$21,$50,$21,$54,$21,$00,$00,$83,$00,$E8,$FF,$84,$00,$E8,$FF
-	db $85,$00,$E8,$FF,$86,$00,$E8,$FF,$87,$00,$E8,$FF,$88,$00,$E8,$FF
-	db $89,$00,$E8,$FF,$8A,$00,$E8,$FF,$6A,$21,$6E,$21,$72,$21,$76,$21
-	db $7A,$21,$7E,$21,$82,$21,$86,$21,$00,$00,$42,$03,$E8,$FF,$42,$03
-	db $E8,$FF,$42,$03,$E8,$FF,$44,$03,$E8,$FF,$44,$03,$E8,$FF,$44,$03
-	db $E8,$FF,$44,$03,$E8,$FF,$42,$03,$E8,$FF,$9C,$21,$A0,$21,$A4,$21
-	db $A8,$21,$AC,$21,$B0,$21,$B4,$21,$B8,$21,$00,$00,$43,$03,$E8,$FF
-	db $43,$03,$E8,$FF,$43,$03,$E8,$FF,$45,$03,$E8,$FF,$45,$03,$E8,$FF
-	db $45,$03,$E8,$FF,$45,$03,$E8,$FF,$43,$03,$E8,$FF,$CE,$21,$DE,$21
-	db $EE,$21,$FE,$21,$0E,$22,$1E,$22,$2E,$22,$3E,$22,$00,$00,$0B,$01
-	db $06,$00,$0C,$01,$06,$00,$0D,$01,$06,$00,$0E,$01,$FA,$FF,$13,$01
-	db $06,$00,$14,$01,$06,$00,$15,$01,$06,$00,$16,$01,$FA,$FF,$1B,$01
-	db $06,$00,$1C,$01,$06,$00,$1D,$01,$06,$00,$1E,$01,$FA,$FF,$23,$01
-	db $06,$00,$24,$01,$06,$00,$25,$01,$06,$00,$26,$01,$FA,$FF,$2B,$01
-	db $06,$00,$2C,$01,$06,$00,$2D,$01,$06,$00,$2E,$01,$FA,$FF,$33,$01
-	db $06,$00,$34,$01,$06,$00,$35,$01,$06,$00,$36,$01,$FA,$FF,$3B,$01
-	db $06,$00,$3C,$01,$06,$00,$3D,$01,$06,$00,$3E,$01,$FA,$FF,$43,$01
-	db $06,$00,$44,$01,$06,$00,$45,$01,$06,$00,$46,$01,$FA,$FF,$60,$22
-	db $64,$22,$68,$22,$6C,$22,$70,$22,$74,$22,$78,$22,$7C,$22,$00,$00
-	db $9B,$00,$E2,$FF,$9C,$00,$E2,$FF,$9D,$00,$E2,$FF,$9E,$00,$E2,$FF
-	db $9F,$00,$E2,$FF,$A0,$00,$E2,$FF,$A1,$00,$E2,$FF,$A2,$00,$E2,$FF
-	db $92,$22,$96,$22,$9A,$22,$9E,$22,$A2,$22,$A6,$22,$AA,$22,$AE,$22
-	db $00,$00,$9B,$00,$DC,$FF,$9C,$00,$DC,$FF,$9D,$00,$DC,$FF,$9E,$00
-	db $DC,$FF,$9F,$00,$DC,$FF,$A0,$00,$DC,$FF,$A1,$00,$DC,$FF,$A2,$00
-	db $DC,$FF,$C4,$22,$D4,$22,$E4,$22,$F4,$22,$04,$23,$14,$23,$24,$23
-	db $34,$23,$00,$00,$8B,$00,$04,$00,$8C,$00,$04,$00,$8B,$00,$04,$00
-	db $8C,$00,$FC,$FF,$8D,$00,$04,$00,$8E,$00,$04,$00,$8D,$00,$04,$00
-	db $8E,$00,$FC,$FF,$8F,$00,$04,$00,$90,$00,$04,$00,$8F,$00,$04,$00
-	db $90,$00,$FC,$FF,$91,$00,$04,$00,$92,$00,$04,$00,$91,$00,$04,$00
-	db $92,$00,$FC,$FF,$93,$00,$04,$00,$94,$00,$04,$00,$93,$00,$04,$00
-	db $94,$00,$FC,$FF,$95,$00,$04,$00,$96,$00,$04,$00,$95,$00,$04,$00
-	db $96,$00,$FC,$FF,$97,$00,$04,$00,$98,$00,$04,$00,$97,$00,$04,$00
-	db $98,$00,$FC,$FF,$99,$00,$04,$00,$9A,$00,$04,$00,$99,$00,$04,$00
-	db $9A,$00,$FC,$FF,$56,$23,$5A,$23,$5E,$23,$62,$23,$66,$23,$6A,$23
-	db $6E,$23,$72,$23,$00,$00,$02,$00,$D3,$FF,$0A,$00,$D3,$FF,$12,$00
-	db $D3,$FF,$1A,$00,$D3,$FF,$22,$00,$D3,$FF,$2A,$00,$D3,$FF,$32,$00
-	db $D3,$FF,$3A,$00,$D3,$FF,$88,$23,$A0,$23,$B8,$23,$D0,$23,$E8,$23
-	db $00,$24,$18,$24,$30,$24,$00,$00,$B3,$00,$06,$00,$B4,$00,$06,$00
-	db $B5,$00,$06,$00,$B6,$00,$64,$00,$B7,$00,$08,$00,$B8,$00,$F8,$FF
-	db $B9,$00,$06,$00,$BA,$00,$06,$00,$BB,$00,$06,$00,$BC,$00,$64,$00
-	db $BD,$00,$08,$00,$BE,$00,$F8,$FF,$BF,$00,$06,$00,$C0,$00,$06,$00
-	db $C1,$00,$06,$00,$C2,$00,$64,$00,$C3,$00,$08,$00,$C4,$00,$F8,$FF
-	db $C5,$00,$06,$00,$C6,$00,$06,$00,$C7,$00,$06,$00,$C8,$00,$64,$00
-	db $C9,$00,$08,$00,$CA,$00,$F8,$FF,$CB,$00,$06,$00,$CC,$00,$06,$00
-	db $CD,$00,$06,$00,$CE,$00,$64,$00,$CF,$00,$08,$00,$D0,$00,$F8,$FF
-	db $D1,$00,$06,$00,$D2,$00,$06,$00,$D3,$00,$06,$00,$D4,$00,$64,$00
-	db $D5,$00,$08,$00,$D6,$00,$F8,$FF,$D7,$00,$06,$00,$D8,$00,$06,$00
-	db $D9,$00,$06,$00,$DA,$00,$64,$00,$DB,$00,$08,$00,$DC,$00,$F8,$FF
-	db $DD,$00,$06,$00,$DE,$00,$06,$00,$DF,$00,$06,$00,$E0,$00,$64,$00
-	db $E1,$00,$08,$00,$E2,$00,$F8,$FF,$5A,$24,$6E,$24,$82,$24,$96,$24
-	db $AA,$24,$BE,$24,$D2,$24,$E6,$24,$00,$00,$E3,$00,$06,$00,$E4,$00
-	db $06,$00,$E5,$00,$06,$00,$E6,$00,$64,$00,$E7,$00,$F8,$FF,$E8,$00
-	db $06,$00,$E9,$00,$06,$00,$EA,$00,$06,$00,$EB,$00,$64,$00,$EC,$00
-	db $F8,$FF,$ED,$00,$06,$00,$EE,$00,$06,$00,$EF,$00,$06,$00,$F0,$00
-	db $64,$00,$F1,$00,$F8,$FF,$F2,$00,$06,$00,$F3,$00,$06,$00,$F4,$00
-	db $06,$00,$F5,$00,$64,$00,$F6,$00,$F8,$FF,$F7,$00,$06,$00,$F8,$00
-	db $06,$00,$F9,$00,$06,$00,$FA,$00,$64,$00,$FB,$00,$F8,$FF,$FC,$00
-	db $06,$00,$FD,$00,$06,$00,$FE,$00,$06,$00,$FF,$00,$64,$00,$00,$01
-	db $F8,$FF,$01,$01,$06,$00,$02,$01,$06,$00,$03,$01,$06,$00,$04,$01
-	db $64,$00,$05,$01,$F8,$FF,$06,$01,$06,$00,$07,$01,$06,$00,$08,$01
-	db $06,$00,$09,$01,$64,$00,$0A,$01,$F8,$FF,$0C,$25,$18,$25,$18,$25
-	db $18,$25,$18,$25,$18,$25,$18,$25,$18,$25,$00,$00,$A3,$00,$02,$00
-	db $A4,$00,$0A,$00,$4D,$01,$FA,$FF,$AB,$00,$02,$00,$AC,$00,$0A,$00
-	db $6D,$01,$FA,$FF,$36,$25,$3A,$25,$3A,$25,$3A,$25,$3A,$25,$3A,$25
-	db $3A,$25,$3A,$25,$00,$00,$4D,$01,$FB,$FF,$6D,$01,$FB,$FF,$50,$25
-	db $50,$25,$50,$25,$50,$25,$50,$25,$50,$25,$50,$25,$50,$25,$01,$00
-	db $BD,$02,$03,$00,$BE,$02,$03,$00,$BF,$02,$03,$00,$C0,$02,$03,$00
-	db $C1,$02,$03,$00,$C2,$02,$03,$00,$C3,$02,$03,$00,$C4,$02,$03,$00
-	db $C5,$02,$03,$00,$C6,$02,$03,$00,$C7,$02,$03,$00,$C8,$02,$03,$00
-	db $C9,$02,$03,$00,$CA,$02,$FD,$FF,$9A,$25,$9A,$25,$9A,$25,$9A,$25
-	db $B6,$25,$B6,$25,$B6,$25,$B6,$25,$00,$00,$12,$03,$06,$00,$58,$02
-	db $06,$00,$59,$02,$06,$00,$5A,$02,$06,$00,$E5,$00,$64,$00,$E6,$00
-	db $08,$00,$E7,$00,$F8,$FF,$19,$03,$06,$00,$5B,$02,$06,$00,$5C,$02
-	db $06,$00,$5D,$02,$06,$00,$F9,$00,$64,$00,$FA,$00,$08,$00,$FB,$00
-	db $F8,$FF,$E4,$25,$F8,$25,$0C,$26,$20,$26,$34,$26,$48,$26,$5C,$26
-	db $70,$26,$00,$00,$20,$02,$06,$00,$21,$02,$06,$00,$21,$02,$08,$00
-	db $22,$02,$06,$00,$23,$02,$FA,$FF,$24,$02,$06,$00,$25,$02,$06,$00
-	db $25,$02,$08,$00,$26,$02,$06,$00,$27,$02,$FA,$FF,$28,$02,$06,$00
-	db $29,$02,$06,$00,$29,$02,$08,$00,$2A,$02,$06,$00,$2B,$02,$FA,$FF
-	db $2C,$02,$06,$00,$2D,$02,$06,$00,$2D,$02,$08,$00,$2E,$02,$06,$00
-	db $2F,$02,$FA,$FF,$30,$02,$06,$00,$31,$02,$06,$00,$31,$02,$08,$00
-	db $32,$02,$06,$00,$33,$02,$FA,$FF,$34,$02,$06,$00,$35,$02,$06,$00
-	db $35,$02,$08,$00,$36,$02,$06,$00,$37,$02,$FA,$FF,$38,$02,$06,$00
-	db $39,$02,$06,$00,$39,$02,$08,$00,$3A,$02,$06,$00,$3B,$02,$FA,$FF
-	db $3C,$02,$06,$00,$3D,$02,$06,$00,$3D,$02,$08,$00,$3E,$02,$06,$00
-	db $3F,$02,$FA,$FF,$96,$26,$9A,$26,$9E,$26,$A2,$26,$A6,$26,$AA,$26
-	db $AE,$26,$B2,$26,$00,$00,$8C,$00,$E2,$FF,$8E,$00,$E2,$FF,$8E,$00
-	db $E2,$FF,$90,$00,$E2,$FF,$92,$00,$E2,$FF,$94,$00,$E2,$FF,$94,$00
-	db $E2,$FF,$96,$00,$E2,$FF,$C8,$26,$D0,$26,$D8,$26,$E0,$26,$E8,$26
-	db $F0,$26,$F8,$26,$00,$27,$00,$00,$32,$03,$06,$00,$33,$03,$FA,$FF
-	db $34,$03,$06,$00,$35,$03,$FA,$FF,$36,$03,$06,$00,$37,$03,$FA,$FF
-	db $38,$03,$06,$00,$39,$03,$FA,$FF,$3A,$03,$06,$00,$3B,$03,$FA,$FF
-	db $3C,$03,$06,$00,$3D,$03,$FA,$FF,$3E,$03,$06,$00,$3F,$03,$FA,$FF
-	db $40,$03,$06,$00,$41,$03,$FA,$FF,$1A,$27,$1A,$27,$1A,$27,$66,$27
-	db $66,$27,$66,$27,$66,$27,$1A,$27,$00,$00,$B4,$03,$0A,$00,$B5,$03
-	db $0A,$00,$B6,$03,$0A,$00,$B4,$03,$0A,$00,$B5,$03,$0A,$00,$B6,$03
-	db $0A,$00,$B4,$03,$0A,$00,$B5,$03,$0A,$00,$B6,$03,$0A,$00,$B4,$03
-	db $0A,$00,$B5,$03,$0A,$00,$B6,$03,$0A,$00,$B4,$03,$0A,$00,$B5,$03
-	db $0A,$00,$B6,$03,$0A,$00,$B4,$03,$0A,$00,$B5,$03,$0A,$00,$B6,$03
-	db $0A,$00,$B4,$03,$18,$FC,$B7,$03,$0A,$00,$B8,$03,$0A,$00,$B9,$03
-	db $0A,$00,$B7,$03,$0A,$00,$B8,$03,$0A,$00,$B9,$03,$0A,$00,$B7,$03
-	db $0A,$00,$B8,$03,$0A,$00,$B9,$03,$0A,$00,$B7,$03,$0A,$00,$B8,$03
-	db $0A,$00,$B9,$03,$0A,$00,$B7,$03,$0A,$00,$B8,$03,$0A,$00,$B9,$03
-	db $0A,$00,$B7,$03,$0A,$00,$B8,$03,$0A,$00,$B9,$03,$0A,$00,$B7,$03
-	db $18,$FC,$C4,$27,$D0,$27,$DC,$27,$E8,$27,$F4,$27,$00,$28,$0C,$28
-	db $18,$28,$00,$00,$ED,$03,$08,$00,$EC,$03,$08,$00,$ED,$03,$EE,$FF
-	db $EF,$03,$08,$00,$EE,$03,$08,$00,$EF,$03,$EE,$FF,$F1,$03,$08,$00
-	db $F0,$03,$08,$00,$F1,$03,$EE,$FF,$F3,$03,$08,$00,$F2,$03,$08,$00
-	db $F3,$03,$EE,$FF,$F5,$03,$08,$00,$F4,$03,$08,$00,$F5,$03,$EE,$FF
-	db $F7,$03,$08,$00,$F6,$03,$08,$00,$F7,$03,$EE,$FF,$F9,$03,$08,$00
-	db $F8,$03,$08,$00,$F9,$03,$EE,$FF,$FB,$03,$08,$00,$FA,$03,$08,$00
-	db $FB,$03,$EE,$FF,$36,$28,$4E,$28,$66,$28,$7E,$28,$96,$28,$AE,$28
-	db $C6,$28,$DE,$28,$00,$00,$46,$03,$05,$00,$47,$03,$06,$00,$47,$03
-	db $06,$00,$46,$03,$0C,$00,$47,$03,$28,$00,$47,$03,$F1,$FF,$48,$03
-	db $05,$00,$49,$03,$06,$00,$49,$03,$06,$00,$48,$03,$0C,$00,$49,$03
-	db $28,$00,$49,$03,$F1,$FF,$4A,$03,$05,$00,$4B,$03,$06,$00,$4B,$03
-	db $06,$00,$4A,$03,$0C,$00,$4B,$03,$28,$00,$4B,$03,$F1,$FF,$4C,$03
-	db $05,$00,$4D,$03,$06,$00,$4D,$03,$06,$00,$4C,$03,$0C,$00,$4D,$03
-	db $28,$00,$4D,$03,$F1,$FF,$4E,$03,$05,$00,$4F,$03,$06,$00,$4F,$03
-	db $06,$00,$4E,$03,$0C,$00,$4F,$03,$28,$00,$4F,$03,$F1,$FF,$50,$03
-	db $05,$00,$51,$03,$06,$00,$51,$03,$06,$00,$50,$03,$0C,$00,$51,$03
-	db $28,$00,$51,$03,$F1,$FF,$52,$03,$05,$00,$53,$03,$06,$00,$53,$03
-	db $06,$00,$52,$03,$0C,$00,$53,$03,$28,$00,$53,$03,$F1,$FF,$54,$03
-	db $05,$00,$55,$03,$06,$00,$55,$03,$06,$00,$54,$03,$0C,$00,$55,$03
-	db $28,$00,$55,$03,$F1,$FF,$08,$29,$08,$29,$24,$29,$24,$29,$3C,$29
-	db $3C,$29,$58,$29,$58,$29,$00,$00,$78,$03,$06,$00,$79,$03,$06,$00
-	db $7A,$03,$06,$00,$7B,$03,$4B,$00,$E7,$00,$06,$00,$CF,$00,$06,$00
-	db $D0,$00,$FA,$FF,$7C,$03,$06,$00,$7D,$03,$06,$00,$7E,$03,$06,$00
-	db $7F,$03,$4B,$00,$C3,$00,$06,$00,$C4,$00,$FA,$FF,$80,$03,$06,$00
-	db $81,$03,$06,$00,$82,$03,$06,$00,$83,$03,$4B,$00,$FB,$00,$06,$00
-	db $B7,$00,$06,$00,$B8,$00,$FA,$FF,$84,$03,$06,$00,$85,$03,$06,$00
-	db $86,$03,$06,$00,$87,$03,$4B,$00,$DB,$00,$06,$00,$DC,$00,$FA,$FF
-	db $82,$29,$82,$29,$9E,$29,$9E,$29,$B6,$29,$B6,$29,$D2,$29,$D2,$29
-	db $00,$00,$98,$03,$06,$00,$99,$03,$06,$00,$9A,$03,$06,$00,$7B,$03
-	db $4B,$00,$E7,$00,$06,$00,$CF,$00,$06,$00,$D0,$00,$FA,$FF,$9B,$03
-	db $06,$00,$9C,$03,$06,$00,$9D,$03,$06,$00,$9E,$03,$4B,$00,$C3,$00
-	db $06,$00,$C4,$00,$FA,$FF,$9F,$03,$06,$00,$A0,$03,$06,$00,$A1,$03
-	db $06,$00,$83,$03,$4B,$00,$FB,$00,$06,$00,$B7,$00,$06,$00,$B8,$00
-	db $FA,$FF,$A2,$03,$06,$00,$A3,$03,$06,$00,$A4,$03,$06,$00,$A5,$03
-	db $4B,$00,$DB,$00,$06,$00,$DC,$00,$FA,$FF,$FC,$29,$FC,$29,$14,$2A
-	db $14,$2A,$30,$2A,$30,$2A,$48,$2A,$48,$2A,$00,$00,$88,$03,$06,$00
-	db $89,$03,$06,$00,$8A,$03,$06,$00,$8B,$03,$4B,$00,$B7,$00,$06,$00
-	db $B8,$00,$FA,$FF,$8C,$03,$06,$00,$8D,$03,$06,$00,$8E,$03,$06,$00
-	db $8F,$03,$4B,$00,$F1,$00,$06,$00,$DB,$00,$06,$00,$DC,$00,$FA,$FF
-	db $90,$03,$06,$00,$91,$03,$06,$00,$92,$03,$06,$00,$93,$03,$4B,$00
-	db $CF,$00,$06,$00,$D0,$00,$FA,$FF,$94,$03,$06,$00,$95,$03,$06,$00
-	db $96,$03,$06,$00,$97,$03,$4B,$00,$05,$01,$06,$00,$C3,$00,$06,$00
-	db $C4,$00,$FA,$FF,$76,$2A,$76,$2A,$8E,$2A,$8E,$2A,$AA,$2A,$AA,$2A
-	db $C2,$2A,$C2,$2A,$00,$00,$A6,$03,$06,$00,$A7,$03,$06,$00,$A8,$03
-	db $06,$00,$A9,$03,$4B,$00,$B7,$00,$06,$00,$B8,$00,$FA,$FF,$AA,$03
-	db $06,$00,$AB,$03,$06,$00,$AC,$03,$06,$00,$8F,$03,$4B,$00,$F1,$00
-	db $06,$00,$DB,$00,$06,$00,$DC,$00,$FA,$FF,$AD,$03,$06,$00,$AE,$03
-	db $06,$00,$AF,$03,$06,$00,$B0,$03,$4B,$00,$CF,$00,$06,$00,$D0,$00
-	db $FA,$FF,$B1,$03,$06,$00,$B2,$03,$06,$00,$B3,$03,$06,$00,$97,$03
-	db $4B,$00,$05,$01,$06,$00,$C3,$00,$06,$00,$C4,$00,$FA,$FF,$04,$2B
-	db $04,$2B,$F0,$2A,$F0,$2A,$F0,$2A,$F0,$2A,$04,$2B,$04,$2B,$00,$00
-	db $20,$04,$0A,$00,$21,$04,$0A,$00,$22,$04,$0A,$00,$23,$04,$5A,$00
-	db $23,$04,$EC,$FF,$1F,$04,$0A,$00,$1B,$04,$0A,$00,$1C,$04,$0A,$00
-	db $1D,$04,$5A,$00,$1E,$04,$EC,$FF
-GlideBack:							; starts animation $1F6C on player X (SetSPAFromA) unless pfalock is set
+SPAcrosscheck:						; per direction (facedir & 7, * 2): the cross check animation: (frame,
+									; time) pairs, the last time negative
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFcrosscheck,10,SPFcrosscheck,-8
+.d1:								; direction 1
+	dw SPFcrosscheck+1,10,SPFcrosscheck+1,-8
+.d2:								; direction 2
+	dw SPFcrosscheck+2,10,SPFcrosscheck+2,-8
+.d3:								; direction 3
+	dw SPFcrosscheck+3,10,SPFcrosscheck+3,-8
+.d4:								; direction 4
+	dw SPFcrosscheck+4,10,SPFcrosscheck+4,-8
+.d5:								; direction 5
+	dw SPFcrosscheck+5,10,SPFcrosscheck+5,-8
+.d6:								; direction 6
+	dw SPFcrosscheck+6,10,SPFcrosscheck+6,-8
+.d7:								; direction 7
+	dw SPFcrosscheck+7,10,SPFcrosscheck+7,-8
+SPAsweepchk:						; per direction (facedir & 7, * 2): the sweep check
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFsweep+1,4,SPFsweep+3,8,SPFsweep+1,-4
+.d1:								; direction 1
+	dw SPFsweep+3,4,SPFsweep+5,8,SPFsweep+3,-4
+.d2:								; direction 2
+	dw SPFsweep+5,4,SPFsweep+7,8,SPFsweep+5,-4
+.d3:								; direction 3
+	dw SPFsweep+7,4,SPFsweep+9,8,SPFsweep+7,-4
+.d4:								; direction 4
+	dw SPFsweep+9,4,SPFsweep+11,8,SPFsweep+9,-4
+.d5:								; direction 5
+	dw SPFsweep+11,4,SPFsweep+13,8,SPFsweep+11,-4
+.d6:								; direction 6
+	dw SPFsweep+13,4,SPFsweep+15,8,SPFsweep+13,-4
+.d7:								; direction 7
+	dw SPFsweep+15,4,SPFfallfwd+1,8,SPFsweep+15,-4
+SPAshoulderchkl:					; per direction (facedir & 7, * 2): the shoulder check to the left
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFshoulderl,-24
+.d1:								; direction 1
+	dw SPFshoulderl+1,-24
+.d2:								; direction 2
+	dw SPFshoulderl+2,-24
+.d3:								; direction 3
+	dw SPFshoulderl+3,-24
+.d4:								; direction 4
+	dw SPFshoulderl+4,-24
+.d5:								; direction 5
+	dw SPFshoulderl+5,-24
+.d6:								; direction 6
+	dw SPFshoulderl+6,-24
+.d7:								; direction 7
+	dw SPFshoulderl+7,-24
+SPAshoulderchkr:					; per direction (facedir & 7, * 2): the shoulder check to the right
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFshoulderr,-24
+.d1:								; direction 1
+	dw SPFshoulderr+1,-24
+.d2:								; direction 2
+	dw SPFshoulderr+2,-24
+.d3:								; direction 3
+	dw SPFshoulderr+3,-24
+.d4:								; direction 4
+	dw SPFshoulderr+4,-24
+.d5:								; direction 5
+	dw SPFshoulderr+5,-24
+.d6:								; direction 6
+	dw SPFshoulderr+6,-24
+.d7:								; direction 7
+	dw SPFshoulderr+7,-24
+SPAhipchkl:							; per direction (facedir & 7, * 2): the hip check to the left
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFshoulder2,-24
+.d1:								; direction 1
+	dw SPFshoulder2,-24
+.d2:								; direction 2
+	dw SPFshoulder2,-24
+.d3:								; direction 3
+	dw SPFshoulder2+2,-24
+.d4:								; direction 4
+	dw SPFshoulder2+2,-24
+.d5:								; direction 5
+	dw SPFshoulder2+2,-24
+.d6:								; direction 6
+	dw SPFshoulder2+2,-24
+.d7:								; direction 7
+	dw SPFshoulder2,-24
+SPAhipchkr:							; per direction (facedir & 7, * 2): the hip check to the right
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFshoulder2+1,-24
+.d1:								; direction 1
+	dw SPFshoulder2+1,-24
+.d2:								; direction 2
+	dw SPFshoulder2+1,-24
+.d3:								; direction 3
+	dw SPFshoulder2+3,-24
+.d4:								; direction 4
+	dw SPFshoulder2+3,-24
+.d5:								; direction 5
+	dw SPFshoulder2+3,-24
+.d6:								; direction 6
+	dw SPFshoulder2+3,-24
+.d7:								; direction 7
+	dw SPFshoulder2+1,-24
+SPAburst:							; per direction (facedir & 7, * 2): the speed burst
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFburst,6,SPFburst+1,6,SPFburst+2,6,SPFburst+3,-6
+.d1:								; direction 1
+	dw SPFburst+8,6,SPFburst+9,6,SPFburst+10,6,SPFburst+11,-6
+.d2:								; direction 2
+	dw SPFburst+16,6,SPFburst+17,6,SPFburst+18,6,SPFburst+19,-6
+.d3:								; direction 3
+	dw SPFburst+24,6,SPFburst+25,6,SPFburst+26,6,SPFburst+27,-6
+.d4:								; direction 4
+	dw SPFburst+32,6,SPFburst+33,6,SPFburst+34,6,SPFburst+35,-6
+.d5:								; direction 5
+	dw SPFburst+40,6,SPFburst+41,6,SPFburst+42,6,SPFburst+43,-6
+.d6:								; direction 6
+	dw SPFburst+48,6,SPFburst+49,6,SPFburst+50,6,SPFburst+51,-6
+.d7:								; direction 7
+	dw SPFburst+56,6,SPFburst+57,6,SPFburst+58,6,SPFburst+59,-6
+SPAHold:							; per direction (facedir & 7, * 2): holding
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFHold,-30
+.d1:								; direction 1
+	dw SPFHold+1,-30
+.d2:								; direction 2
+	dw SPFHold+2,-30
+.d3:								; direction 3
+	dw SPFHold+3,-30
+.d4:								; direction 4
+	dw SPFHold+4,-30
+.d5:								; direction 5
+	dw SPFHold+5,-30
+.d6:								; direction 6
+	dw SPFHold+6,-30
+.d7:								; direction 7
+	dw SPFHold+7,-30
+SPAHold2:							; per direction (facedir & 7, * 2): held
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFHold,-36
+.d1:								; direction 1
+	dw SPFHold+1,-36
+.d2:								; direction 2
+	dw SPFHold+2,-36
+.d3:								; direction 3
+	dw SPFHold+3,-36
+.d4:								; direction 4
+	dw SPFHold+4,-36
+.d5:								; direction 5
+	dw SPFHold+5,-36
+.d6:								; direction 6
+	dw SPFHold+6,-36
+.d7:								; direction 7
+	dw SPFHold+7,-36
+SPAhook2:							; per direction (facedir & 7, * 2): hooked
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFhook,4,SPFhook+1,4,SPFhook,4,SPFhook+1,-4
+.d1:								; direction 1
+	dw SPFhook+2,4,SPFhook+3,4,SPFhook+2,4,SPFhook+3,-4
+.d2:								; direction 2
+	dw SPFhook+4,4,SPFhook+5,4,SPFhook+4,4,SPFhook+5,-4
+.d3:								; direction 3
+	dw SPFhook+6,4,SPFhook+7,4,SPFhook+6,4,SPFhook+7,-4
+.d4:								; direction 4
+	dw SPFhook+8,4,SPFhook+9,4,SPFhook+8,4,SPFhook+9,-4
+.d5:								; direction 5
+	dw SPFhook+10,4,SPFhook+11,4,SPFhook+10,4,SPFhook+11,-4
+.d6:								; direction 6
+	dw SPFhook+12,4,SPFhook+13,4,SPFhook+12,4,SPFhook+13,-4
+.d7:								; direction 7
+	dw SPFhook+14,4,SPFhook+15,4,SPFhook+14,4,SPFhook+15,-4
+SPAflail:							; per direction (facedir & 7, * 2): flailing
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFskate+1,-45
+.d1:								; direction 1
+	dw SPFskate+9,-45
+.d2:								; direction 2
+	dw SPFskate+17,-45
+.d3:								; direction 3
+	dw SPFskate+25,-45
+.d4:								; direction 4
+	dw SPFskate+33,-45
+.d5:								; direction 5
+	dw SPFskate+41,-45
+.d6:								; direction 6
+	dw SPFskate+49,-45
+.d7:								; direction 7
+	dw SPFskate+57,-45
+SPAfallfwd:							; per direction (facedir & 7, * 2): falling forward
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFfallfwd,6,SPFfallfwd+1,6,SPFfallfwd+2,6,SPFfallfwd+3,100,SPFfallfwd+4,8,SPFfallfwd+5,-8
+.d1:								; direction 1
+	dw SPFfallfwd+6,6,SPFfallfwd+7,6,SPFfallfwd+8,6,SPFfallfwd+9,100,SPFfallfwd+10,8,SPFfallfwd+11,-8
+.d2:								; direction 2
+	dw SPFfallfwd+12,6,SPFfallfwd+13,6,SPFfallfwd+14,6,SPFfallfwd+15,100,SPFfallfwd+16,8,SPFfallfwd+17,-8
+.d3:								; direction 3
+	dw SPFfallfwd+18,6,SPFfallfwd+19,6,SPFfallfwd+20,6,SPFfallfwd+21,100,SPFfallfwd+22,8,SPFfallfwd+23,-8
+.d4:								; direction 4
+	dw SPFfallfwd+24,6,SPFfallfwd+25,6,SPFfallfwd+26,6,SPFfallfwd+27,100,SPFfallfwd+28,8,SPFfallfwd+29,-8
+.d5:								; direction 5
+	dw SPFfallfwd+30,6,SPFfallfwd+31,6,SPFfallfwd+32,6,SPFfallfwd+33,100,SPFfallfwd+34,8,SPFfallfwd+35,-8
+.d6:								; direction 6
+	dw SPFfallfwd+36,6,SPFfallfwd+37,6,SPFfallfwd+38,6,SPFfallfwd+39,100,SPFfallfwd+40,8,SPFfallfwd+41,-8
+.d7:								; direction 7
+	dw SPFfallfwd+42,6,SPFfallfwd+43,6,SPFfallfwd+44,6,SPFfallfwd+45,100,SPFfallfwd+46,8,SPFfallfwd+47,-8
+SPAfallback:						; per direction (facedir & 7, * 2): falling back
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFfallback,6,SPFfallback+1,6,SPFfallback+2,6,SPFfallback+3,100,SPFfallback+4,-8
+.d1:								; direction 1
+	dw SPFfallback+5,6,SPFfallback+6,6,SPFfallback+7,6,SPFfallback+8,100,SPFfallback+9,-8
+.d2:								; direction 2
+	dw SPFfallback+10,6,SPFfallback+11,6,SPFfallback+12,6,SPFfallback+13,100,SPFfallback+14,-8
+.d3:								; direction 3
+	dw SPFfallback+15,6,SPFfallback+16,6,SPFfallback+17,6,SPFfallback+18,100,SPFfallback+19,-8
+.d4:								; direction 4
+	dw SPFfallback+20,6,SPFfallback+21,6,SPFfallback+22,6,SPFfallback+23,100,SPFfallback+24,-8
+.d5:								; direction 5
+	dw SPFfallback+25,6,SPFfallback+26,6,SPFfallback+27,6,SPFfallback+28,100,SPFfallback+29,-8
+.d6:								; direction 6
+	dw SPFfallback+30,6,SPFfallback+31,6,SPFfallback+32,6,SPFfallback+33,100,SPFfallback+34,-8
+.d7:								; direction 7
+	dw SPFfallback+35,6,SPFfallback+36,6,SPFfallback+37,6,SPFfallback+38,100,SPFfallback+39,-8
+SPAfaceoff:							; per direction (facedir & 7, * 2): the face off
+	dw .d0,.d1,.d1,.d1,.d1,.d1,.d1,.d1
+	dw 0
+.d0:								; direction 0
+	dw SPFsweep,2,SPFsweep+1,10,SPFskatewp+2,-6
+.d1:								; directions 1-7
+	dw SPFsweep+8,2,SPFsweep+9,10,SPFskatewp+34,-6
+SPAfaceoffr:						; per direction (facedir & 7, * 2): the face off (r)
+	dw .d0,.d1,.d1,.d1,.d1,.d1,.d1,.d1
+	dw 0
+.d0:								; direction 0
+	dw SPFskatewp+2,-5
+.d1:								; directions 1-7
+	dw SPFskatewp+34,-5
+SPAsiren:							; per direction (facedir & 7, * 2): the goal siren
+	dw .d0,.d0,.d0,.d0,.d0,.d0,.d0,.d0
+	dw 1
+.d0:								; directions 0-7
+	dw SPFSiren,3,SPFSiren+1,3,SPFSiren+2,3,SPFSiren+3,3,SPFSiren+4,3,SPFSiren+5,3,SPFSiren+6,3,SPFSiren+7,3
+	dw SPFSiren+8,3,SPFSiren+9,3,SPFSiren+10,3,SPFSiren+11,3,SPFSiren+12,3,SPFSiren+13,-3
+SPAflip:							; per direction (facedir & 7, * 2): flipping over
+	dw .d0,.d0,.d0,.d0,.d4,.d4,.d4,.d4
+	dw 0
+.d0:								; directions 0-3
+	dw $0312,6,SPFflip,6,SPFflip+1,6,SPFflip+2,6,SPFfallback+2,100,SPFfallback+3,8,SPFfallback+4,-8
+.d4:								; directions 4-7
+	dw $0319,6,SPFflip+3,6,SPFflip+4,6,SPFflip+5,6,SPFfallback+22,100,SPFfallback+23,8,SPFfallback+24,-8
+SPAstumble:							; per direction (facedir & 7, * 2): stumbling
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFstumble,6,SPFstumble+1,6,SPFstumble+1,8,SPFstumble+2,6,SPFstumble+3,-6
+.d1:								; direction 1
+	dw SPFstumble+4,6,SPFstumble+5,6,SPFstumble+5,8,SPFstumble+6,6,SPFstumble+7,-6
+.d2:								; direction 2
+	dw SPFstumble+8,6,SPFstumble+9,6,SPFstumble+9,8,SPFstumble+10,6,SPFstumble+11,-6
+.d3:								; direction 3
+	dw SPFstumble+12,6,SPFstumble+13,6,SPFstumble+13,8,SPFstumble+14,6,SPFstumble+15,-6
+.d4:								; direction 4
+	dw SPFstumble+16,6,SPFstumble+17,6,SPFstumble+17,8,SPFstumble+18,6,SPFstumble+19,-6
+.d5:								; direction 5
+	dw SPFstumble+20,6,SPFstumble+21,6,SPFstumble+21,8,SPFstumble+22,6,SPFstumble+23,-6
+.d6:								; direction 6
+	dw SPFstumble+24,6,SPFstumble+25,6,SPFstumble+25,8,SPFstumble+26,6,SPFstumble+27,-6
+.d7:								; direction 7
+	dw SPFstumble+28,6,SPFstumble+29,6,SPFstumble+29,8,SPFstumble+30,6,SPFstumble+31,-6
+SPAhook:							; per direction (facedir & 7, * 2): hooking
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFhook+1,-30
+.d1:								; direction 1
+	dw SPFhook+3,-30
+.d2:								; direction 2
+	dw SPFhook+3,-30
+.d3:								; direction 3
+	dw SPFhook+5,-30
+.d4:								; direction 4
+	dw SPFhook+7,-30
+.d5:								; direction 5
+	dw SPFhook+9,-30
+.d6:								; direction 6
+	dw SPFhook+9,-30
+.d7:								; direction 7
+	dw SPFhook+11,-30
+SPAcatch:							; per direction (facedir & 7, * 2): catching the puck
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFcatch,6,SPFcatch+1,-6
+.d1:								; direction 1
+	dw SPFcatch+2,6,SPFcatch+3,-6
+.d2:								; direction 2
+	dw SPFcatch+4,6,SPFcatch+5,-6
+.d3:								; direction 3
+	dw SPFcatch+6,6,SPFcatch+7,-6
+.d4:								; direction 4
+	dw SPFcatch+8,6,SPFcatch+9,-6
+.d5:								; direction 5
+	dw SPFcatch+10,6,SPFcatch+11,-6
+.d6:								; direction 6
+	dw SPFcatch+12,6,SPFcatch+13,-6
+.d7:								; direction 7
+	dw SPFcatch+14,6,SPFcatch+15,-6
+SPAinjury1:							; per direction (facedir & 7, * 2): the injury
+	dw .d0,.d0,.d0,.d3,.d3,.d3,.d3,.d0
+	dw 0
+.d0:								; directions 0-2 and 7
+	dw SPFinjury1,10,SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1,10,SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1
+	dw 10,SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1,10,SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1,10
+	dw SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1,10,SPFinjury1+1,10,SPFinjury1+2,10,SPFinjury1,-1000
+.d3:								; directions 3-6
+	dw SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10,SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10
+	dw SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10,SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10
+	dw SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10,SPFinjury1+3,10,SPFinjury1+4,10,SPFinjury1+5,10
+	dw SPFinjury1+3,-1000
+SPApump2:							; per direction (facedir & 7, * 2): the second fist pump
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFpump2+1,8,SPFpump2,8,SPFpump2+1,-18
+.d1:								; direction 1
+	dw SPFpump2+3,8,SPFpump2+2,8,SPFpump2+3,-18
+.d2:								; direction 2
+	dw SPFpump2+5,8,SPFpump2+4,8,SPFpump2+5,-18
+.d3:								; direction 3
+	dw SPFpump2+7,8,SPFpump2+6,8,SPFpump2+7,-18
+.d4:								; direction 4
+	dw SPFpump2+9,8,SPFpump2+8,8,SPFpump2+9,-18
+.d5:								; direction 5
+	dw SPFpump2+11,8,SPFpump2+10,8,SPFpump2+11,-18
+.d6:								; direction 6
+	dw SPFpump2+13,8,SPFpump2+12,8,SPFpump2+13,-18
+.d7:								; direction 7
+	dw SPFpump2+15,8,SPFpump2+14,8,SPFpump2+15,-18
+SPAcelebrate:						; per direction (facedir & 7, * 2): the goal celebration
+	dw .d0,.d1,.d2,.d3,.d4,.d5,.d6,.d7
+	dw 0
+.d0:								; direction 0
+	dw SPFcelebrate,5,SPFcelebrate+1,6,SPFcelebrate+1,6,SPFcelebrate,12,SPFcelebrate+1,40,SPFcelebrate+1,-15
+.d1:								; direction 1
+	dw SPFcelebrate+2,5,SPFcelebrate+3,6,SPFcelebrate+3,6,SPFcelebrate+2,12,SPFcelebrate+3,40,SPFcelebrate+3
+	dw -15
+.d2:								; direction 2
+	dw SPFcelebrate+4,5,SPFcelebrate+5,6,SPFcelebrate+5,6,SPFcelebrate+4,12,SPFcelebrate+5,40,SPFcelebrate+5
+	dw -15
+.d3:								; direction 3
+	dw SPFcelebrate+6,5,SPFcelebrate+7,6,SPFcelebrate+7,6,SPFcelebrate+6,12,SPFcelebrate+7,40,SPFcelebrate+7
+	dw -15
+.d4:								; direction 4
+	dw SPFcelebrate+8,5,SPFcelebrate+9,6,SPFcelebrate+9,6,SPFcelebrate+8,12,SPFcelebrate+9,40,SPFcelebrate+9
+	dw -15
+.d5:								; direction 5
+	dw SPFcelebrate+10,5,SPFcelebrate+11,6,SPFcelebrate+11,6,SPFcelebrate+10,12,SPFcelebrate+11,40
+	dw SPFcelebrate+11,-15
+.d6:								; direction 6
+	dw SPFcelebrate+12,5,SPFcelebrate+13,6,SPFcelebrate+13,6,SPFcelebrate+12,12,SPFcelebrate+13,40
+	dw SPFcelebrate+13,-15
+.d7:								; direction 7
+	dw SPFcelebrate+14,5,SPFcelebrate+15,6,SPFcelebrate+15,6,SPFcelebrate+14,12,SPFcelebrate+15,40
+	dw SPFcelebrate+15,-15
+SPAboardfront:						; per direction (facedir & 7, * 2): checked into the boards from the front
+	dw .d0,.d0,.d2,.d2,.d4,.d4,.d6,.d6
+	dw 0
+.d0:								; directions 0, 1
+	dw SPFboardfront,6,SPFboardfront+1,6,SPFboardfront+2,6,SPFboardfront+3,75,SPFfallback+4,6,SPFfallfwd+28,6
+	dw SPFfallfwd+29,-6
+.d2:								; directions 2, 3
+	dw SPFboardfront+4,6,SPFboardfront+5,6,SPFboardfront+6,6,SPFboardfront+7,75,SPFfallfwd+16,6,SPFfallfwd+17
+	dw -6
+.d4:								; directions 4, 5
+	dw SPFboardfront+8,6,SPFboardfront+9,6,SPFboardfront+10,6,SPFboardfront+11,75,SPFfallback+24,6
+	dw SPFfallfwd+4,6,SPFfallfwd+5,-6
+.d6:								; directions 6, 7
+	dw SPFboardfront+12,6,SPFboardfront+13,6,SPFboardfront+14,6,SPFboardfront+15,75,SPFfallfwd+40,6
+	dw SPFfallfwd+41,-6
+SPAboardback:						; per direction (facedir & 7, * 2): checked into the boards from behind
+	dw .d0,.d0,.d2,.d2,.d4,.d4,.d6,.d6
+	dw 0
+.d0:								; directions 0, 1
+	dw SPFboardback,6,SPFboardback+1,6,SPFboardback+2,6,SPFboardfront+3,75,SPFfallback+4,6,SPFfallfwd+28,6
+	dw SPFfallfwd+29,-6
+.d2:								; directions 2, 3
+	dw SPFboardback+3,6,SPFboardback+4,6,SPFboardback+5,6,SPFboardback+6,75,SPFfallfwd+16,6,SPFfallfwd+17,-6
+.d4:								; directions 4, 5
+	dw SPFboardback+7,6,SPFboardback+8,6,SPFboardback+9,6,SPFboardfront+11,75,SPFfallback+24,6,SPFfallfwd+4,6
+	dw SPFfallfwd+5,-6
+.d6:								; directions 6, 7
+	dw SPFboardback+10,6,SPFboardback+11,6,SPFboardback+12,6,SPFboardback+13,75,SPFfallfwd+40,6,SPFfallfwd+41
+	dw -6
+SPAboardright:						; per direction (facedir & 7, * 2): checked into the boards from the right
+	dw .d0,.d0,.d2,.d2,.d4,.d4,.d6,.d6
+	dw 0
+.d0:								; directions 0, 1
+	dw SPFboardright,6,SPFboardright+1,6,SPFboardright+2,6,SPFboardright+3,75,SPFfallfwd+4,6,SPFfallfwd+5,-6
+.d2:								; directions 2, 3
+	dw SPFboardright+4,6,SPFboardright+5,6,SPFboardright+6,6,SPFboardright+7,75,SPFfallback+14,6,SPFfallfwd+40
+	dw 6,SPFfallfwd+41,-6
+.d4:								; directions 4, 5
+	dw SPFboardright+8,6,SPFboardright+9,6,SPFboardright+10,6,SPFboardright+11,75,SPFfallfwd+28,6
+	dw SPFfallfwd+29,-6
+.d6:								; directions 6, 7
+	dw SPFboardright+12,6,SPFboardright+13,6,SPFboardright+14,6,SPFboardright+15,75,SPFfallback+34,6
+	dw SPFfallfwd+16,6,SPFfallfwd+17,-6
+SPAboardleft:						; per direction (facedir & 7, * 2): checked into the boards from the left
+	dw .d0,.d0,.d2,.d2,.d4,.d4,.d6,.d6
+	dw 0
+.d0:								; directions 0, 1
+	dw SPFboardleft,6,SPFboardleft+1,6,SPFboardleft+2,6,SPFboardleft+3,75,SPFfallfwd+4,6,SPFfallfwd+5,-6
+.d2:								; directions 2, 3
+	dw SPFboardleft+4,6,SPFboardleft+5,6,SPFboardleft+6,6,SPFboardright+7,75,SPFfallback+14,6,SPFfallfwd+40,6
+	dw SPFfallfwd+41,-6
+.d4:								; directions 4, 5
+	dw SPFboardleft+7,6,SPFboardleft+8,6,SPFboardleft+9,6,SPFboardleft+10,75,SPFfallfwd+28,6,SPFfallfwd+29,-6
+.d6:								; directions 6, 7
+	dw SPFboardleft+11,6,SPFboardleft+12,6,SPFboardleft+13,6,SPFboardright+15,75,SPFfallback+34,6
+	dw SPFfallfwd+16,6,SPFfallfwd+17,-6
+SPAbenchcheckr:						; per direction (facedir & 7, * 2): the bench check to the right
+	dw .d0,.d0,.d2,.d2,.d2,.d2,.d0,.d0
+	dw 0
+.d2:								; directions 2-5
+	dw SPFbenchcheck+5,10,SPFbenchcheck+6,10,SPFbenchcheck+7,10,SPFbenchcheck+8,90,SPFbenchcheck+8,-20
+.d0:								; directions 0, 1 and 6, 7
+	dw SPFbenchcheck+4,10,SPFbenchcheck,10,SPFbenchcheck+1,10,SPFbenchcheck+2,90,SPFbenchcheck+3,-20
+GlideBack:							; starts SPAglideback on player X (SetSPAFromA) unless pfalock is set
 	lda.w pfalock,x
 	bne .rtl
-	lda.w #$1F6C
+	lda.w #SPAglideback&$FFFF
 	jsl.l SetSPAFromA
 .rtl:								; return
 	rtl
@@ -308,11 +583,11 @@ assnearest:							; called from other segments
 	ldy.w pfgoal,x
 	bne .12
 	lda.w #$FFA4
-.12:								; d1 = A, $65 = $00C4, a0 = $883F, call skateto, ...
+.12:								; d1 = A, a0+2 = rtss>>16, a0 = rtss&$FFFF, call skateto, ...
 	sta.b d1
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
 	jmp.w check4check
@@ -408,10 +683,10 @@ assnearest:							; called from other segments
 	bpl .20
 	lda.w #$FFB8
 	sta.b d1
-.20:								; $65 = $00C4, a0 = $883F, call skateto, go to check4check
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+.20:								; a0+2 = rtss>>16, a0 = rtss&$FFFF, call skateto, go to check4check
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
 	jmp.w check4check
@@ -434,33 +709,33 @@ burst:								; check button: a speed burst in the facing direction that costs e
 	bne .2
 	lda.w #$1000
 	sta.b d0
-.2:									; r2 = 0, $36 = 0, A = d0, A * 2, ...
+.2:									; r2 = 0, r2+2 = 0, A = d0, A * 2, ...
 	stz.b r2
-	stz.b $36
+	stz.b r2+2
 	lda.b d0
 	asl a
 	sta.b $35
-	stz.b $2E
+	stz.b r0+2
 	asl a
 	asl a
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	asl a
-	rol.b $2E
+	rol.b r0+2
 	adc.b r2
 	sta.b r2
-	lda.b $2E
-	adc.b $36
+	lda.b r0+2
+	adc.b r2+2
 	sta.b $B1
 	lda.w facedir,x
 	asl a
 	asl a
 	tay
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9C04
+	lda.w #dirtab>>16
+	sta.b a0+2
+	lda.w #dirtab&$FFFF
 	sta.b a0
 	lda.b [a0],y
 	iny
@@ -480,7 +755,7 @@ burst:								; check button: a speed burst in the facing direction that costs e
 	clc
 	adc.w Yvel,x
 	sta.w Yvel,x
-	lda.w #$21BC
+	lda.w #SPAburst&$FFFF
 	sta.w pfalock,x
 	jml.l SetSPAFromA
 chkpk:								; return zero if player X is killing a penalty
@@ -508,8 +783,7 @@ asspuckc:							; assignment (asstab entry 17): the puck carrier; others and pad
 	bmi PuckCarrierThink
 .1:									; go to assexit
 	jmp.w assexit
-DATA8_C42DC5:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 PuckCarrierGlideStopped:			; start backward glide and stand still while play is stopped
 	jsl.l GlideBack
 	jmp.w donothing
@@ -563,14 +837,14 @@ PuckCarrierThink:					; update the computer puck carrier decisions and skating t
 	cmp.w #$0011
 	bne .5
 	jsl.l chk4pass
-.5:									; A = $0006, A + temp3,x, d0 = A, $65 = $00C0, ...
+.5:									; A = $0006, A + temp3,x, d0 = A, a0+2 = asspuckc_postab>>16, ...
 	lda.w #$0006
 	clc
 	adc.w temp3,x
 	sta.b d0
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9A98
+	lda.w #asspuckc_postab>>16
+	sta.b a0+2
+	lda.w #asspuckc_postab&$FFFF
 	sta.b a0
 	lda.w sflags
 	bit.w #$8000
@@ -598,10 +872,10 @@ PuckCarrierThink:					; update the computer puck carrier decisions and skating t
 	sec
 	sbc.b d1
 	sta.b d1
-.7:									; $65 = PuckCarrierAvoidThreats>>16, a0 = PuckCarrierAvoidThreats, go to
+.7:									; a0+2 = PuckCarrierAvoidThreats>>16, a0 = PuckCarrierAvoidThreats, ...
 									; skateto
 	lda.w #PuckCarrierAvoidThreats>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #PuckCarrierAvoidThreats
 	sta.b a0
 	jml.l skateto
@@ -788,13 +1062,13 @@ asscentero:							; called from other segments
 	lda.w seed+2
 	cmp.w #$0200
 	bcs .10
-.9:									; temp5,x = d2, Y = A, $65 = DATA8_C43079>>16, a0 = DATA8_C43079, ...
+.9:									; temp5,x = d2, Y = A, a0+2 = CenterOSpots>>16, a0 = CenterOSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
-	lda.w #DATA8_C43079>>16
-	sta.b $65
-	lda.w #DATA8_C43079
+	lda.w #CenterOSpots>>16
+	sta.b a0+2
+	lda.w #CenterOSpots
 	sta.b a0
 	iny
 	iny
@@ -825,15 +1099,14 @@ asscentero:							; called from other segments
 	sec
 	sbc.b d1
 	sta.b d1
-.11:								; $65 = $00C4, a0 = $342A, go to skateto
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$342A
+.11:								; a0+2 = EvadePC>>16, a0 = EvadePC&$FFFF, go to skateto
+	lda.w #EvadePC>>16
+	sta.b a0+2
+	lda.w #EvadePC&$FFFF
 	sta.b a0
 	jml.l skateto
-DATA8_C43078:						; an rtl no traced code reaches
-	db $6B
-DATA8_C43079:						; not traced: a table read by asscentero
+	rtl								; unreached: no code branches, falls or points here
+CenterOSpots:						; the centre's spots on offence, read by asscentero
 	db $00,$00,$3C,$00,$BA,$FF,$0A,$00,$00,$00,$3C,$00,$3C,$00,$0A,$00
 	db $00,$00,$28,$00,$AA,$00,$1E,$00,$00,$00,$50,$00,$AA,$00,$14,$00
 asscenterd:							; called from other segments
@@ -898,8 +1171,7 @@ asscenterd:							; called from other segments
 	ror a
 	sta.b d1
 	bra CenterDefenceSkate
-DATA8_C4311B:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 CenterDefenceTopTarget:				; adjust the defensive center target toward the puck at the top end
 	lda.w #$005C
 	sec
@@ -914,8 +1186,8 @@ CenterDefenceTopTarget:				; adjust the defensive center target toward the puck 
 	ror a
 	sta.b d1
 CenterDefenceSkate:					; skate the defensive center toward d0 and d1 with an empty callback
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jmp.w skateto

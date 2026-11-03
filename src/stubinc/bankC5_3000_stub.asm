@@ -32,5 +32,6 @@ CreateSpriteSharePal = $C5EEF3
 Div16x8U = $C09257
 Mul8U = $C08ED9
 QueueVRAMDMALen = $C58A15
+SPAcrosscheck = $C42030
 
 incsrc "../bankC5_3000.asm"

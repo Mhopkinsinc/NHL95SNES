@@ -1,5 +1,4 @@
-; Segment bankC4_3000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_3000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4313E
 assdefd:							; called from other segments
 	ldy.w puckc
@@ -179,8 +178,7 @@ assdefd:							; called from other segments
 	bpl DefenceSkateAndCheck
 	stz.w temp3,x
 	bra DefenceSkateAndCheck
-DATA8_C432A0:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 DefenceScanTopThreats:				; scan opponents for the top-end defensive depth target
 	sty.b a0
 	lda.w pflags,y
@@ -243,9 +241,9 @@ DefenceSkateAndCheck:				; skate the defender to the saved target and look for a
 	sta.b d0
 	lda.w temp4,x
 	sta.b d1
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	jsl.l skateto
 	jmp.w check4check
@@ -262,8 +260,7 @@ assdefo:							; called from other segments
 	jmp.w assreplace
 OffensiveDefenceReturn:				; return from the offensive defender assignment
 	rtl
-DATA8_C43345:						; not traced: data between routines
-	db $4C,$FD,$36
+	jmp.w donothing					; unreached: no code branches, falls or points here
 DefenceTakePuckAssignment:			; insert the puck carrier assignment for the defender
 	lda.w #$0011
 	sta.b d0
@@ -297,9 +294,9 @@ OffensiveDefenceThink:				; update computer offensive defender movement
 	lda.w #$0000
 .3:									; temp1,x = A
 	sta.w temp1,x
-.4:									; $65 = EvadePC>>16, a0 = EvadePC, Y = $0050, ...
+.4:									; a0+2 = EvadePC>>16, a0 = EvadePC, Y = $0050, ...
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC
 	sta.b a0
 	ldy.w #$0050
@@ -322,8 +319,7 @@ OffensiveDefenceThink:				; update computer offensive defender movement
 	bmi OffensiveDefenceBlendX
 	lda.w puckx
 	bra OffensiveDefenceTargetY
-DATA8_C433C3:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 OffensiveDefenceBlendX:				; blend the puck X position into the defender lateral target
 	lda.w puckx
 	pha
@@ -384,7 +380,7 @@ EvadePC:							; passed as a long pointer (lda #bank, lda #low) to skateto
 	bmi .rtl
 	lda.w Xvel+1,x
 	sec
-	sbc.w $09BD
+	sbc.w puckvx+1
 	and.w #$00FF
 	bit.w #$0080
 	beq .1
@@ -499,8 +495,7 @@ asswingd:							; called from other segments
 	lda.w pucky
 	sta.b d1
 	bra DefensiveWingSkate
-DATA8_C43530:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 DefensiveWingBottomLimit:			; limit the defensive wing target at the bottom goal line
 	lda.w #$FEF2
 	sta.b d2
@@ -536,9 +531,9 @@ DefensiveWingUseLimit:				; use the selected depth limit as the defensive wing t
 	lda.b d2
 	sta.b d1
 DefensiveWingSkate:					; finish the defensive wing lateral target and skate there
-	lda.w #$00C4
-	sta.b $65
-	lda.w #$883F
+	lda.w #rtss>>16
+	sta.b a0+2
+	lda.w #rtss&$FFFF
 	sta.b a0
 	lda.w puckx
 	eor.b d0
@@ -654,13 +649,13 @@ asswingo:							; called from other segments
 	lda.w seed
 	cmp.w #$0200
 	bcs .11
-.10:								; temp5,x = d2, Y = A, $65 = DATA8_C436DD>>16, a0 = DATA8_C436DD, ...
+.10:								; temp5,x = d2, Y = A, a0+2 = WingZoneSpots>>16, a0 = WingZoneSpots, ...
 	lda.b d2
 	sta.w temp5,x
 	tay
-	lda.w #DATA8_C436DD>>16
-	sta.b $65
-	lda.w #DATA8_C436DD
+	lda.w #WingZoneSpots>>16
+	sta.b a0+2
+	lda.w #WingZoneSpots
 	sta.b a0
 	iny
 	iny
@@ -703,15 +698,14 @@ asswingo:							; called from other segments
 	sec
 	sbc.b d1
 	sta.b d1
-.13:								; $65 = EvadePC>>16, a0 = EvadePC, go to skateto
+.13:								; a0+2 = EvadePC>>16, a0 = EvadePC, go to skateto
 	lda.w #EvadePC>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #EvadePC
 	sta.b a0
 	jml.l skateto
-DATA8_C436DC:						; an rtl no traced code reaches
-	db $6B
-DATA8_C436DD:						; not traced: a table read by asswingo
+	rtl								; unreached: no code branches, falls or points here
+WingZoneSpots:						; per zone, the spots a wing on offence picks from (x, y spread pairs)
 	db $50,$00,$14,$00,$BA,$FF,$0A,$00,$64,$00,$14,$00,$3C,$00,$0A,$00
 	db $3C,$00,$32,$00,$E6,$00,$14,$00,$50,$00,$1E,$00,$FA,$00,$14,$00
 donothing:							; from OffensiveDefenceThink, assdefd, asswingd, ...
@@ -773,8 +767,8 @@ assfaceoff:							; assignment (asstab entry 22): players not in the face off wa
 	beq .1
 .rtl:								; return
 	rtl
-.1:									; $18AA = 0, go to assexit
-	stz.w $18AA
+.1:									; LCBoxesClosed = 0, go to assexit
+	stz.w LCBoxesClosed
 	jmp.w assexit
 assfaceoffpl:						; called from other segments
 	lda.w pfalock,x
@@ -790,9 +784,9 @@ assfaceoffpl:						; called from other segments
 	and.w #$FFFD
 	sta.w pflags,x
 	stz.w temp1,x
-.2:									; $65 = $007E, a0 = $2028, if pfteam,x = 0 go to .3, a0 = $202C
+.2:									; a0+2 = $007E, a0 = $2028, if pfteam,x = 0 go to .3, a0 = $202C
 	lda.w #$007E
-	sta.b $65
+	sta.b a0+2
 	lda.w #$2028
 	sta.b a0
 	lda.w pfteam,x
@@ -822,7 +816,7 @@ assfaceoffpl:						; called from other segments
 	pla
 	cmp.w #$0000
 	bne .rtl
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	sta.b d1
 	lda.w temp1+$1C
 	cmp.w #$0011
@@ -831,22 +825,22 @@ assfaceoffpl:						; called from other segments
 	and.w #$0007
 	sta.b d0
 	beq .6
-	lda.w #$2524
+	lda.w #SPAfaceoffr&$FFFF
 	sta.b d1
 	lda.w #$0001
 	sta.w pf2aip,x
 	jml.l SetSPA
-.5:									; $18AA = 0, nopuck,x = $0014, go to assexit
-	stz.w $18AA
+.5:									; LCBoxesClosed = 0, nopuck,x = $0014, go to assexit
+	stz.w LCBoxesClosed
 	lda.w #$0014
 	sta.w nopuck,x
 	jmp.w assexit
-.6:									; A = pfgoal,x, A / 2, if carry clear go to .7, X = $2020
+.6:									; A = pfgoal,x, A / 2, if carry clear go to .7, X = FaceoffSpriteLeft
 	lda.w pfgoal,x
 	lsr a
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	bcc .7
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 .7:									; if OptPlayMode = $0001 go to .8, $30,x = 0
 	lda.w OptPlayMode
 	cmp.w #$0001
@@ -904,7 +898,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w #$FFFF
 	sta.w recsfx
 	sta.w recsfx2
-	stz.w $2346
+	stz.w hattrick
 	lda.l Crowdlevel
 	cmp.w #$0258
 	bcc .2
@@ -915,7 +909,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w #$001E
 	sta.w fadestep
 	jsl.l WaitTransfers
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 	lda.w PBnum
 	beq .4
 	lsr a
@@ -990,19 +984,19 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w puckvx
 	stz.w puckvy
 	stz.w puckvz
-	stz.w $09B8
-	stz.w $09D8
+	stz.w Xvel+24
+	stz.w Yvel+24
 	stz.w Xpos+24
 	lda.w #$0117
 	sta.w Ypos+24
-	stz.w $09BA
-	stz.w $09DA
-	stz.w $082E
+	stz.w Xvel+26
+	stz.w Yvel+26
+	stz.w Xpos+26
 	lda.w #$FEE8
 	sta.w Ypos+26
-	lda.w #$01B3
+	lda.w #SPFpuck
 	sta.w frame+$1E
-	stz.w $0C9E
+	stz.w SPA+$1E
 	stz.w attribute+$1E
 	stz.w attribute+28
 	lda.w #$0040
@@ -1139,18 +1133,18 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	cmp.w #$0001
 	bne .20
 	stz.b d4
-.20:								; $69 = $00C5, A = $195D, A + d4, a1 = A, ...
-	lda.w #$00C5
-	sta.b $69
-	lda.w #$195D
+.20:								; a1 = FaceoffFormations + d4, PenShotFormation in a penalty shot
+	lda.w #FaceoffFormations>>16
+	sta.b a1+2
+	lda.w #FaceoffFormations&$FFFF
 	clc
 	adc.b d4
 	sta.b a1
 	lda.w penshot
 	beq .21
-	lda.w #$00C5
-	sta.b $69
-	lda.w #$1975
+	lda.w #PenShotFormation>>16
+	sta.b a1+2
+	lda.w #PenShotFormation&$FFFF
 	sta.b a1
 .21:								; Y = d1, A = [a1],y, A and $00FF, A * 2, ...
 	ldy.b d1
@@ -1159,9 +1153,9 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	asl a
 	asl a
 	sta.b d4
-	lda.w #$00C5
-	sta.b $69
-	lda.w #$197D
+	lda.w #FaceoffSpots>>16
+	sta.b a1+2
+	lda.w #FaceoffSpots&$FFFF
 	sta.b a1
 	ldy.b d4
 	lda.b [a1],y
@@ -1251,10 +1245,10 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	stz.w SPA,x
 	lda.w position,x
 	bne .28
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .29
-.28:								; A = $1958
-	lda.w #$1958
+.28:								; A = SPAglide&$FFFF
+	lda.w #SPAglide&$FFFF
 .29:								; call SetSPAFromA, call updateanim
 	jsl.l SetSPAFromA
 	jsl.l updateanim
@@ -1272,7 +1266,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	pla
 	sta.b a3
 	pla
-	sta.b $71
+	sta.b a3+2
 	lda.w penshot
 	beq .35
 	ldx.w #$0008
@@ -1345,18 +1339,18 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lsr a
 	clc
 	adc.w #$5860
-	sta.w $2026
+	sta.w FaceoffBoxVRAM
 	lda.w #$005C
 	sta.w fodropy
 	jsl.l SeatPenaltyBox
 	lda.w penshot
 	beq .37
 	jmp.w DrawPenaltyShotMatchup
-.37:								; if OptPlayMode is not $0001 go to .38, go to CODE_C43FC1
+.37:								; if OptPlayMode is not $0001 go to .38, go to PracticeFaceoffSetup
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .38
-	jmp.w CODE_C43FC1
+	jmp.w PracticeFaceoffSetup
 .38:								; fobox = $0001, call WaitTransfers, call RestoreWorkBuf, A = $0A00, ...
 	lda.w #$0001
 	sta.w fobox
@@ -1364,15 +1358,15 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	jsl.l RestoreWorkBuf
 	lda.w #$0A00
 	jsl.l AllocWorkBuf
-	sta.w $2024
+	sta.w FaceoffBoxBuf
 	sta.b r1
 	jsl.l MarkWorkBuf
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #FaceOffMap&$FFFF
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	tax
 	ldy.w #$04FF
 	clc
@@ -1385,35 +1379,35 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	dey
 	bpl .loop5
 	lda.w #$0000
-	sta.w $2014
+	sta.w FaceoffBoxTimer
 	jsl.l QueueFaceoffBox
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $09C0
 	pea.w $4320
 	pea.w $007E
 	clc
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	adc.w #$0A00
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$09C0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w fodropy
@@ -1426,7 +1420,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	sta.b $18
 	lda.w #$001E
 	jsl.l CreateSpriteSharePal
-	stx.w $2020
+	stx.w FaceoffSpriteLeft
 	clc
 	lda.b $18
 	adc.w #$0059
@@ -1440,7 +1434,7 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	jsl.l UseSpritePalette
 	lda.w #$001E
 	jsl.l CreateSpriteSharePal
-	stx.w $2022
+	stx.w FaceoffSpriteRight
 	lda.b $36,x
 	eor.w #$4000
 	sta.b $36,x
@@ -1452,9 +1446,9 @@ puckfaceoff2:						; assignment: the face off and the setup for play; on a new a
 	lda.w VisSpritePal
 	bcc .40
 	lda.w HomeSpritePal
-.40:								; call UseSpritePalette, call CODE_C53A29
+.40:								; call UseSpritePalette, call DrawPeriodBox
 	jsl.l UseSpritePalette
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes on, no penalty
 									; shot), the drop time in temp1, the centres' and the ref's frames
 									; (fofdata2, fofdata), fodir1 / fodir2 cleared, the registers restored
@@ -1498,9 +1492,9 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	asl a
 	adc.b d0
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0001,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0002,y
 	lda.w #$A0A0
 	sta.w $0004,y
@@ -1510,9 +1504,9 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	asl a
 	adc.b d1
 	tax
-	lda.l DATA8_C09B3F,x
+	lda.l linelist,x
 	sta.w $0008,y
-	lda.l DATA8_C09B3F+1,x
+	lda.l linelist+1,x
 	sta.w $0009,y
 	pla
 	clc
@@ -1575,51 +1569,51 @@ FinishFaceoffSetup:					; end of the face off set-up: the line box (line changes
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -1717,7 +1711,7 @@ DrawPenaltyShotMatchup:				; draws the penalty shot box: the shooter's and the o
 CentreNameX:						; r0 = the string pointer, A = (20 - its length) / 2 with carry clear: the
 									; column that centres it in the 20-wide box
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	lda.b [r0]
 	and.w #$00FF
 	eor.w #$FFFF
@@ -1727,6 +1721,7 @@ CentreNameX:						; r0 = the string pointer, A = (20 - its length) / 2 with carr
 	lsr a
 	clc
 	rts
-CODE_C43FC1:						; from puckfaceoff2
-	jsl.l CODE_C53A29
+PracticeFaceoffSetup:				; the face off set-up in practice (OptPlayMode 1): no face off box,
+									; DrawPeriodBox, then FinishFaceoffSetup
+	jsl.l DrawPeriodBox
 	jmp.w FinishFaceoffSetup

@@ -1,5 +1,4 @@
-; Segment bankC4_4000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_4000: game code, jump tables and the data tables the code reads with long addresses.
 org $C43FC8
 checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its position
 									; and at its hot spot (GetFrameHot), then checkplcoll
@@ -81,9 +80,9 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.w OOlistpos,x
 	beq .5
 	sta.b d1
-.loop2:								; loop: Y = d1, A = $10DF,y, A and $00FF, d4 = A, ...
+.loop2:								; loop: Y = d1, A = OOlist-1,y, A and $00FF, d4 = A, ...
 	ldy.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	sta.b d4
 	tay
@@ -100,7 +99,7 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.b d4
 	sta.w OOlist,y
 	txa
-	sta.w $10DF,y
+	sta.w OOlist-1,y
 	rep #$30
 	dec.b d1
 	bne .loop2
@@ -108,9 +107,9 @@ checkcoll:							; collisions of object X (updateplayers): checkwallcoll at its 
 	lda.b d3
 	sta.w Ylist,x
 	rtl
-.6:									; if SPA,x >= $28F6 go to .rtl, Xpos,x = OldXpos,x, Ypos,x = OldYpos,x
+.6:									; if SPA,x >= SPAboardfront&$FFFF go to .rtl, Xpos,x = OldXpos,x, ...
 	lda.w SPA,x
-	cmp.w #$28F6
+	cmp.w #SPAboardfront&$FFFF
 	bcs .rtl
 	lda.w OldXpos,x
 	sta.w Xpos,x
@@ -477,12 +476,12 @@ wallcoll:							; from WallPlayerResponse, checkgoalp, checkgoal, ...
 	asl a
 	pla
 	ror a
-	sta.b $81
+	sta.b d0+2
 	lda.b d3
 	sec
 	sbc.b d0
 	sec
-	sbc.b $81
+	sbc.b d0+2
 	sta.b d3
 	bra .13
 .9:									; go to .14
@@ -503,7 +502,7 @@ wallcoll:							; from WallPlayerResponse, checkgoalp, checkgoal, ...
 	lda.w Xvel,x
 	sta.b p0
 	lda.w Yvel,x
-	sta.b $3A
+	sta.b p0+2
 	lda.w #$0003
 	jsl.l StartSound
 .11:								; A = d2, A / 2, A / 2, if $2000 bits clear go to .12, ...
@@ -647,7 +646,7 @@ checkgoal:							; from checkwallcoll and other segments
 	sta.b d1
 	lda.w Ypos,x
 	sbc.w OldYpos,x
-	sta.b $85
+	sta.b d1+2
 	lda.b $84
 	sta.b d1
 	cmp.w #$0000
@@ -677,7 +676,7 @@ checkgoal:							; from checkwallcoll and other segments
 	sta.b d3
 	lda.w Xpos,x
 	sbc.w OldXpos,x
-	sta.b $8D
+	sta.b d3+2
 	lda.b $8C
 	sta.b d3
 	ldx.b r2
@@ -688,9 +687,9 @@ checkgoal:							; from checkwallcoll and other segments
 	beq .7
 	eor.w #$FFFF
 	inc a
-.7:									; r1 = A, A = $36, if $8000 bits clear go to .8, A xor $FFFF, ...
+.7:									; r1 = A, A = r2+2, if $8000 bits clear go to .8, A xor $FFFF, ...
 	sta.b r1
-	lda.b $36
+	lda.b r2+2
 	bit.w #$8000
 	beq .8
 	eor.w #$FFFF
@@ -893,11 +892,11 @@ checkgoalp:							; from checkgoal
 	bcs .5
 	sta.b d2
 	lda.b d3
-	sta.b $32
+	sta.b r1+2
 	tax
 	jsl.l Mul8S
 	asl a
-	sta.b $36
+	sta.b r2+2
 	ldx.b a3
 	clc
 	adc.b d2
@@ -912,7 +911,7 @@ checkgoalp:							; from checkgoal
 	pei ($8B)
 	pei ($87)
 	lda.b r1
-	ldy.b $32
+	ldy.b r1+2
 	jsl.l ApproxLength
 	inc a
 	sta.b d2
@@ -961,7 +960,7 @@ CheckDislodgeGoal:					; test a burst collision for dislodging the goal and a st
 	and.w #$01C0
 	bne .1
 	lda.w SPA,x
-	cmp.w #$21BC
+	cmp.w #SPAburst&$FFFF
 	bne .1
 	ldy.b a2
 	lda.w pucky
@@ -1082,9 +1081,9 @@ checkplcoll:						; from checkcoll and other segments
 	lda.w OOlistpos,x
 	beq .rtl2
 	sta.b d1
-.loop2:								; loop: Y = d1, A = $10DF,y, A and $00FF, Y = A, ...
+.loop2:								; loop: Y = d1, A = OOlist-1,y, A and $00FF, Y = A, ...
 	ldy.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	tay
 	lda.b d3
@@ -1151,14 +1150,14 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	ora.b d1
 	bne .2
 	jmp.w .16
-.2:									; A = d3, X = d1, call Mul16x8S, $85 = $36, ...
+.2:									; A = d3, X = d1, call Mul16x8S, d1+2 = r2+2, ...
 	pei ($83)
 	pei ($7F)
 	lda.b d3
 	ldx.b d1
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $85
+	lda.b r2+2
+	sta.b d1+2
 	lda.b r2
 	sta.b d1
 	lda.b d2
@@ -1169,14 +1168,14 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	clc
 	adc.b d1
 	sta.b d1
-	lda.b $36
-	adc.b $85
-	sta.b $85
+	lda.b r2+2
+	adc.b d1+2
+	sta.b d1+2
 	bpl .3
 	jmp.w .17
-.3:									; if SPA,x < $2280 go to .5, if SPA,x >= $2345 go to .5, ...
+.3:									; if SPA,x < SPAHold2&$FFFF go to .5, if SPA,x >= $2345 go to .5, ...
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .5
 	cmp.w #$2345
 	bcs .5
@@ -1184,7 +1183,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	stz.w pf2aip,x
 	ldy.w impactp,x
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .4
 	cmp.w #$2345
 	bcs .4
@@ -1193,9 +1192,9 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sta.w pf2aip,y
 .4:									; Y = a2
 	ldy.b a2
-.5:									; if SPA,y < $2280 go to .7, if SPA,y >= $2345 go to .7, ...
+.5:									; if SPA,y < SPAHold2&$FFFF go to .7, if SPA,y >= $2345 go to .7, ...
 	lda.w SPA,y
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .7
 	cmp.w #$2345
 	bcs .7
@@ -1204,7 +1203,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sta.w pf2aip,y
 	ldx.w impactp,y
 	lda.w SPA,x
-	cmp.w #$2280
+	cmp.w #SPAHold2&$FFFF
 	bcc .6
 	cmp.w #$2345
 	bcs .6
@@ -1226,10 +1225,10 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	cmp.w #$0005
 	bcs .8
 	lda.w #$0005
-.8:									; d4 = A, if SPA,x < $2082 go to .10, if SPA,x >= $21BD go to .10
+.8:									; d4 = A, if SPA,x < SPAsweepchk&$FFFF go to .10, ...
 	sta.b d4
 	lda.w SPA,x
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bcc .10
 	cmp.w #$21BD
 	bcs .10
@@ -1239,9 +1238,9 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	adc.b d4
 	sta.b d4
 	bra .11
-.10:								; if SPA,y < $2082 go to .11, if SPA,y < $21BD go to .9
+.10:								; if SPA,y < SPAsweepchk&$FFFF go to .11, if SPA,y < $21BD go to .9
 	lda.w SPA,y
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	bcc .11
 	cmp.w #$21BD
 	bcc .9
@@ -1289,12 +1288,12 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	lda.w collflag
 	bpl .15
 	jmp.w .16
-.15:								; A = d2, X = d1, call Mul16x8S, $85 = $36, ...
+.15:								; A = d2, X = d1, call Mul16x8S, d1+2 = r2+2, ...
 	lda.b d2
 	ldx.b d1
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $85
+	lda.b r2+2
+	sta.b d1+2
 	lda.b r2
 	sta.b d1
 	lda.b d3
@@ -1304,9 +1303,9 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	sec
 	sbc.b d1
 	sta.b d1
-	lda.b $36
-	sbc.b $85
-	sta.b $85
+	lda.b r2+2
+	sbc.b d1+2
+	sta.b d1+2
 	lda.b $84
 	sta.b d5
 	ldx.b a3
@@ -1389,7 +1388,7 @@ CollidePlayers:						; collides player X with player Y: their distance and closi
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
@@ -1425,9 +1424,9 @@ checkpuckcoll:						; called from other segments
 .1:									; if OOlistpos+28 = 0 go to .rtl
 	ldy.w OOlistpos+28
 	beq .rtl
-.loop2:								; loop: d1 = Y, A = $10DF,y, A and $00FF, Y = A, ...
+.loop2:								; loop: d1 = Y, A = OOlist-1,y, A and $00FF, Y = A, ...
 	sty.b d1
-	lda.w $10DF,y
+	lda.w OOlist-1,y
 	and.w #$00FF
 	tay
 	lda.w pucky
@@ -1586,31 +1585,31 @@ checkpuckcoll_ccx:					; puck collision with player Y: the stick (puckstick) whe
 	jsl.l puckbody
 PuckCollisionRestore:				; restore saved puck collision scratch words and return
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1633,8 +1632,7 @@ PuckCollisionGoalieRange:			; test the close puck-to-player range before puckgoa
 	bpl PuckCollisionRestore
 	jsl.l puckgoalie
 	bra PuckCollisionRestore
-DATA8_C44CDD:						; not traced: a table read by PuckCollisionStickRange,
-									; PuckCollisionStickRange
+TwoThirds:							; for each index, index * 2 / 3 rounded (words)
 	db $00,$00,$01,$00,$01,$00,$02,$00,$03,$00,$03,$00,$04,$00,$05,$00
 	db $05,$00,$06,$00,$07,$00,$07,$00,$08,$00,$09,$00,$09,$00,$0A,$00
 	db $0B,$00,$0B,$00,$0C,$00,$0D,$00,$0D,$00,$0E,$00,$0F,$00,$0F,$00
@@ -1649,21 +1647,21 @@ PuckCollisionStickRange:			; test the frame hotspot reach and puck height for st
 	beq .1
 	eor.w #$FFFF
 	inc a
-.1:									; d2 = A, A * 2, X = A, d4 = DATA8_C44CDD,x, ...
+.1:									; d2 = A, A * 2, X = A, d4 = TwoThirds,x, ...
 	sta.b d2
 	asl a
 	tax
-	lda.l DATA8_C44CDD,x
+	lda.l TwoThirds,x
 	sta.b d4
 	lda.b d1
 	bit.w #$8000
 	beq .2
 	eor.w #$FFFF
 	inc a
-.2:									; A * 2, X = A, d3 = DATA8_C44CDD,x, X = curobj, ...
+.2:									; A * 2, X = A, d3 = TwoThirds,x, X = curobj, ...
 	asl a
 	tax
-	lda.l DATA8_C44CDD,x
+	lda.l TwoThirds,x
 	sta.b d3
 	ldx.b curobj
 	lda.b a2
@@ -1753,13 +1751,13 @@ puckglue:							; give player a2 puck possession and update possession statistic
 	jsl.l EndPenaltyShot
 	stz.w breakaway
 	stz.w onetimer
-.1:									; puckc = a2, puckvz = 0, puckz = 0, if SPA,y < $224E go to .2, ...
+.1:									; puckc = a2, puckvz = 0, puckz = 0, ...
 	ldy.b a2
 	sty.w puckc
 	stz.w puckvz
 	stz.w puckz
 	lda.w SPA,y
-	cmp.w #$224E
+	cmp.w #SPAHold&$FFFF
 	bcc .2
 	cmp.w #$22B3
 	bcs .2
@@ -1817,7 +1815,7 @@ puckglue:							; give player a2 puck possession and update possession statistic
 	lda.w #$008C
 	sta.w temp5,y
 	lda.w SPA,y
-	cmp.w #$1552
+	cmp.w #SPAgdive&$FFFF
 	bne .6
 	lda.w #$0005
 	sta.w temp5,y

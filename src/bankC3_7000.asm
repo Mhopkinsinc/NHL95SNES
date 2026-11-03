@@ -1,5 +1,4 @@
-; Segment bankC3_7000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC3_7000: game code, jump tables and the data tables the code reads with long addresses.
 org $C36FF2
 GetNewPresses:						; the changed buttons (padchange) and the new presses (padnew) of the five
 									; pads, from their last state
@@ -13,30 +12,30 @@ GetNewPresses:						; the changed buttons (padchange) and the new presses (padne
 	sta.w padchange+2
 	and.b PadRaw2
 	sta.w padnew+2
-	lda.b $C5
+	lda.b PadRaw3
 	eor.w padlast+4
 	sta.w padchange+4
-	and.b $C5
+	and.b PadRaw3
 	sta.w padnew+4
-	lda.b $C7
+	lda.b PadRaw4
 	eor.w padlast+6
 	sta.w padchange+6
-	and.b $C7
+	and.b PadRaw4
 	sta.w padnew+6
-	lda.b $C9
+	lda.b PadRaw5
 	eor.w padlast+8
 	sta.w padchange+8
-	and.b $C9
+	and.b PadRaw5
 	sta.w padnew+8
 	lda.b PadRaw1
 	sta.w padlast
 	lda.b PadRaw2
 	sta.w padlast+2
-	lda.b $C5
+	lda.b PadRaw3
 	sta.w padlast+4
-	lda.b $C7
+	lda.b PadRaw4
 	sta.w padlast+6
-	lda.b $C9
+	lda.b PadRaw5
 	sta.w padlast+8
 	rts
 ReadjoyA:							; from ReadPausePad and other segments
@@ -212,9 +211,9 @@ UpdateMenuSpritesTwice:				; run the menu sprite update and transfer wait twice
 	jsl.l UpdateMenuSprites
 UpdateMenuSprites:					; animate menu sprites, build their OAM and wait for transfers
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -398,7 +397,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w recsfxpitch+1
 	sta.b WMDATA&$FF
-	lda.w $077B
+	lda.w recsfxvol+1
 	sta.b WMDATA&$FF
 	lda.w recsfx2
 	sta.b WMDATA&$FF
@@ -406,7 +405,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w recsfxpitch2+1
 	sta.b WMDATA&$FF
-	lda.w $0781
+	lda.w recsfxvol2+1
 	sta.b WMDATA&$FF
 	lda.w d7
 	sta.b WMDATA&$FF
@@ -443,7 +442,7 @@ updatereplay:						; called from other segments
 	sta.b WMDATA&$FF
 	lda.w Vpos
 	sta.b WMDATA&$FF
-	lda.w $00CE
+	lda.w Vpos+1
 	sta.b WMDATA&$FF
 	lda.w benchframe
 	sta.b WMDATA&$FF
@@ -460,10 +459,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	bit.w pausepad
 	bpl .1
 	stz.w pausepad
-.1:									; $2CDF = $48, $2CE1 = 0, Crowdlevel = $0000, A = $0800, ...
-	lda.b $48
-	sta.w $2CDF
-	stz.w $2CE1
+.1:									; SavedGameframes = gameframes, ReplayGameframes = 0, ...
+	lda.b gameframes
+	sta.w SavedGameframes
+	stz.w ReplayGameframes
 	lda.w #$0000
 	sta.l Crowdlevel
 	lda.w #$0800
@@ -486,7 +485,7 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	sta.w replaylock
 	sta.l $7E24DA
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.b $08
 	sta.b r1
 	ldx.w #PadButtonsMap>>16
@@ -504,10 +503,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	dey
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $06A0
 	pea.w $44B0
 	pea.w $007E
@@ -519,21 +518,21 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	pea.w $5821
 	pea.w $007E
 	pei ($08)
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$06A0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w recbpr
 	pha
@@ -566,19 +565,19 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	sta.b r2
 	lda.w recbpr+2
 	sbc.w #$007F
-	sta.b $36
+	sta.b r2+2
 	lda.w #$007A
 	sta.b r1
 	jsl.l Div32U
-	lda.b $36
+	lda.b r2+2
 	bne .loop2
 	lda.w recbpr+2
 	sta.b $75
 	lda.w recbpr
 	sta.b a4
 	pea.w $0000
-.loop3:								; loop: $2CE1 - 1, call suba4, pull A, A + 1, ...
-	dec.w $2CE1
+.loop3:								; loop: ReplayGameframes - 1, call suba4, pull A, A + 1, ...
+	dec.w ReplayGameframes
 	jsl.l suba4
 	pla
 	inc a
@@ -588,10 +587,10 @@ ReplayMode:							; open instant replay and restore the live frame on exit
 	pla
 	lsr a
 	pha
-.loop4:								; loop: if $01,s = 0 go to .3, $2CE1 + 1, call adda4, pull A, ...
+.loop4:								; loop: if $01,s = 0 go to .3, ReplayGameframes + 1, call adda4, ...
 	lda.b $01,s
 	beq .3
-	inc.w $2CE1
+	inc.w ReplayGameframes
 	jsl.l adda4
 	pla
 	dec a
@@ -748,19 +747,19 @@ UpdateReplayCamera:					; track the replay camera, render the frame and continue
 	sta.w replayHpos
 	lda.b Vpos
 	sta.w replayVpos
-.24:								; timestep = d7, call SprSort, $28 = $1D8F, $2A = $1E00, ...
+.24:								; timestep = d7, call SprSort, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	lda.b d7
 	sta.w timestep
 	jsl.l SprSort
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l RenderReplayFrame
 	jsl.l WaitTransfers
 	stz.w replaynewframe
 ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
-	inc.w $2CE1
+	inc.w ReplayGameframes
 	ldx.b d7
 	bne .1
 	inx
@@ -783,11 +782,11 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	bit.w #$0008
 	beq .3
 	jmp.w ProcessReplayPlayback
-.3:									; d5 = A, d4 = $FFFF, $91 = A, replaylock = A, ...
+.3:									; d5 = A, d4 = $FFFF, d4+2 = A, replaylock = A, ...
 	sta.b d5
 	lda.w #$FFFF
 	sta.b d4
-	sta.b $91
+	sta.b d4+2
 	sta.w replaylock
 	lda.w #$0016
 	sta.b a0
@@ -830,9 +829,9 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	tax
 	lda.l SignedSquareTable,x
 	adc.b d0
-	cmp.b $91
+	cmp.b d4+2
 	bcs .5
-	sta.b $91
+	sta.b d4+2
 	lda.b a0
 	sta.b d4
 .5:									; a0 - 1, a0 - 1, if the result >= 0 go to .loop, if d4 < 0 go to .6, ...
@@ -841,7 +840,7 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	bpl .loop
 	lda.b d4
 	bmi .6
-	lda.b $91
+	lda.b d4+2
 	cmp.w #$0002
 	bcs .6
 	lda.b d4
@@ -860,20 +859,20 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	asl.b d0
 	asl.b d0
 	ldx.b d0
-	lda.l DATA8_C377BB,x
+	lda.l ReplayCursorSteps,x
 	adc.w Xpos+32
 	sta.b d2
 	ldy.w #$0020
-	lda.l DATA8_C377BB,x
+	lda.l ReplayCursorSteps,x
 	xba
 	and.w #$FF00
 	sta.w Xvel,y
 	pha
-	lda.l DATA8_C377BD,x
+	lda.l ReplayCursorSteps+2,x
 	clc
 	adc.w Ypos+32
 	sta.b d3
-	lda.l DATA8_C377BD,x
+	lda.l ReplayCursorSteps+2,x
 	xba
 	and.w #$FF00
 	sta.w Yvel,y
@@ -961,9 +960,9 @@ ReadReplayCameraInput:				; read replay input and move or lock the camera cursor
 	lda.w #$0010
 	sta.w PadControlObj+12
 	jmp.w UpdateReplayCamera
-DATA8_C377BB:						; not traced: a table read by ReadReplayCameraInput
+ReplayCursorSteps:					; per pad direction (d0 * 4): the replay camera cursor's x step, then its
+									; y step (words)
 	db $00,$00
-DATA8_C377BD:						; not traced: a table read by ReadReplayCameraInput
 	db $02,$00,$00,$00,$02,$00,$02,$00,$00,$00,$02,$00,$00,$00,$00,$00
 	db $FE,$FF,$00,$00,$FE,$FF,$FE,$FF,$00,$00,$FE,$FF,$00,$00
 ProcessReplayPlayback:				; handle replay stepping, play toggle and exit
@@ -1118,9 +1117,9 @@ ProcessReplayPlayback:				; handle replay stepping, play toggle and exit
 	cmp.w #$0002
 	bcc .19
 	jmp.w .19
-.19:								; $48 = $2CDF, return
-	lda.w $2CDF
-	sta.b $48
+.19:								; gameframes = SavedGameframes, return
+	lda.w SavedGameframes
+	sta.b gameframes
 	rtl
 suba4:								; from ReplayMode, ProcessReplayPlayback and other segments
 	lda.b a4
@@ -1271,17 +1270,17 @@ adda43:								; from adda4 and other segments
 	dey
 	bpl .loop
 	lda.b $80
-	sta.w $0818,x
+	sta.w Xpos+4,x
 	lda.b $80
 	sta.w r3
 	and.w #$000F
 	bit.w #$0008
 	beq .4
 	ora.w #$00F0
-.4:									; $0819,x = A, $089A,x = $80, A = r3, A / 2, ...
-	sta.w $0819,x
+.4:									; Xpos+5,x = A, Ypos+4,x = $80, A = r3, A / 2, ...
+	sta.w Xpos+5,x
 	lda.b $80
-	sta.w $089A,x
+	sta.w Ypos+4,x
 	lda.w r3
 	lsr a
 	lsr a
@@ -1290,8 +1289,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .5
 	ora.w #$00F0
-.5:									; $089B,x = A, frame+$4,x = $80, r3 = $80, A and $003F, ...
-	sta.w $089B,x
+.5:									; Ypos+5,x = A, frame+$4,x = $80, r3 = $80, A and $003F, ...
+	sta.w Ypos+5,x
 	lda.b $80
 	sta.w frame+$4,x
 	lda.b $80
@@ -1318,8 +1317,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .6
 	ora.w #$00F0
-.6:									; $082D,x = A, Ypos+24,x = $80, A = r3, A / 2, ...
-	sta.w $082D,x
+.6:									; Xpos+25,x = A, Ypos+24,x = $80, A = r3, A / 2, ...
+	sta.w Xpos+25,x
 	lda.b $80
 	sta.w Ypos+24,x
 	lda.w r3
@@ -1330,8 +1329,8 @@ adda43:								; from adda4 and other segments
 	bit.w #$0008
 	beq .7
 	ora.w #$00F0
-.7:									; $08AF,x = A, frame+$18,x = $80, r3 = $80, A and $003F, ...
-	sta.w $08AF,x
+.7:									; Ypos+25,x = A, frame+$18,x = $80, r3 = $80, A and $003F, ...
+	sta.w Ypos+25,x
 	lda.b $80
 	sta.w frame+$18,x
 	lda.b $80
@@ -1413,7 +1412,7 @@ adda43:								; from adda4 and other segments
 	lda.b $80
 	sta.w recsfxpitch+1
 	lda.b $80
-	sta.w $077B
+	sta.w recsfxvol+1
 	lda.b $80
 	sta.w recsfx2
 	lda.b $80
@@ -1421,7 +1420,7 @@ adda43:								; from adda4 and other segments
 	lda.b $80
 	sta.w recsfxpitch2+1
 	lda.b $80
-	sta.w $0781
+	sta.w recsfxvol2+1
 	lda.b $80
 	sta.w d7
 	lda.b $80
@@ -1608,7 +1607,7 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	lda.l WMDATA
 	sta.w recsfxpitch+1
 	lda.l WMDATA
-	sta.w $077B
+	sta.w recsfxvol+1
 	lda.l WMDATA
 	sta.w recsfx2
 	lda.l WMDATA
@@ -1616,7 +1615,7 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	lda.l WMDATA
 	sta.w recsfxpitch2+1
 	lda.l WMDATA
-	sta.w $0781
+	sta.w recsfxvol2+1
 	lda.l WMDATA
 	sta.b d7
 	lda.l WMDATA
@@ -1707,8 +1706,8 @@ RestoreReplayFrame:					; from suba4, adda4, ...
 	sta.b d1
 	rtl
 RenderReplayFrame:					; build the replay frame sprites and queue display updates
-	lda.w $2CE1
-	sta.b $48
+	lda.w ReplayGameframes
+	sta.b gameframes
 	sta.b $26
 	jsl.l updatescroll
 	jsl.l DrawPlayerTags
@@ -1737,7 +1736,7 @@ randomd0A:							; from randomd0, randomd0s, randomd0sd0 and other segments
 	jsl.l RandomWord
 	plx
 	jsl.l Mul16U
-	lda.b $36
+	lda.b r2+2
 	clc
 	plx
 	rtl
@@ -1778,7 +1777,7 @@ randomd0sd0:						; called from other segments
 	rtl
 Sroot:								; no caller found (not traced)
 	phx
-	lda.b $81
+	lda.b d0+2
 	beq .7
 	ldx.w #$0100
 	ldy.w #$1000
@@ -1815,8 +1814,8 @@ Sroot:								; no caller found (not traced)
 	jsl.l Mul16U
 	lda.b d0
 	cmp.b r2
-	lda.b $81
-	sbc.b $36
+	lda.b d0+2
+	sbc.b r2+2
 	bcs .5
 	pla
 	sta.b p1

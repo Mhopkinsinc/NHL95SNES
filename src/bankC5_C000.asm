@@ -1,22 +1,21 @@
-; Segment bankC5_C000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_C000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5BFE0
 KeepDivisionTeams:					; keeps only the teams of division d1 in the sorted list at ListBuf
-									; (DATA8_C40EDA by team against DATA8_C04CBF), a1 = the count from
-									; DATA8_C04CC3
+									; (TeamDivisionCodes by team against DivisionCodes), a1 = the count from
+									; DivisionTeamCounts
 	ldx.b d1
-	lda.l DATA8_C04CBF,x
+	lda.l DivisionCodes,x
 	and.w #$00FF
 	sta.b tmp0
-	lda.l DATA8_C04CC3,x
+	lda.l DivisionTeamCounts,x
 	and.w #$00FF
 	sta.b a1
 	ldy.w #$0032
-.loop:								; loop: X = ListBuf,y, A = $000C,x, X = A, A = DATA8_C40EDA,x, ...
+.loop:								; loop: X = ListBuf,y, A = $000C,x, X = A, A = TeamDivisionCodes,x, ...
 	ldx.w ListBuf,y
 	lda.w $000C,x
 	tax
-	lda.l DATA8_C40EDA,x
+	lda.l TeamDivisionCodes,x
 	and.w #$00FF
 	cmp.b tmp0
 	beq .1
@@ -41,7 +40,7 @@ KeepDivisionTeams:					; keeps only the teams of division d1 in the sorted list 
 	bcc .loop2
 	rts
 SortStandingsByStat:				; fills the list at ListBuf with the team records linked from $81, sorted
-									; by stat d0 (its compare routine from DATA8_C5C0AE)
+									; by stat d0 (its compare routine from StandingsSortCompares)
 	ldx.w #$0032
 .loop:								; loop: ListBuf,x = 0, X - 1, X - 1, if the result >= 0 go to .loop, ...
 	stz.w ListBuf,x
@@ -51,82 +50,84 @@ SortStandingsByStat:				; fills the list at ListBuf with the team records linked
 	lda.b d0
 	asl a
 	tax
-	lda.l DATA8_C5C0AE,x
+	lda.l StandingsSortCompares,x
 	sta.b tmp0
-	lda.b $81
-CODE_C5C03F:						; from CODE_C5C05C
+	lda.b d0+2
+SortStandingsInsert:				; starts inserting team record A into ListBuf and saves its linked-list
+									; position
 	tax
 	stx.b tmp1
 	ldy.w #$0000
-	bra CODE_C5C04A
-CODE_C5C047:						; from SortByPoints, SortByGoalsAvg, SortByGoalsAllowed, ...
+	bra SortStandingsCompare
+SortStandingsKeep:					; restores the list offset when the compare keeps the existing team first
 	ply
-CODE_C5C048:						; from CODE_C5C054
+SortStandingsNextSlot:				; advances to the next word of the sorted list
 	iny
 	iny
-CODE_C5C04A:						; from CODE_C5C03F
+SortStandingsCompare:				; compares against the current list entry or finishes at the first empty
+									; slot
 	lda.w ListBuf,y
-	beq CODE_C5C05C
+	beq SortStandingsAppend
 	phy
 	tay
 	jmp ($009F)
-CODE_C5C054:						; from SortByPoints, SortByGoalsAvg, SortByGoalsAllowed, ...
+SortStandingsSwap:					; replaces the current slot and carries the displaced record forward
 	txa
 	tyx
 	ply
 	sta.w ListBuf,y
-	bra CODE_C5C048
-CODE_C5C05C:						; from CODE_C5C04A
+	bra SortStandingsNextSlot
+SortStandingsAppend:				; fills the empty slot and starts inserting the next linked team record
 	txa
 	sta.w ListBuf,y
 	ldx.b tmp1
 	lda.w $0002,x
-	bne CODE_C5C03F
+	bne SortStandingsInsert
 	rts
 SortByPoints:						; compare of SortStandingsByStat by points (+$A), highest first; back to
 									; the sort loop
 	lda.w $000A,y
 	cmp.w $000A,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByGoalsAvg:						; compare of SortStandingsByStat by goals a game (+$10), highest first;
 									; back to the sort loop
 	lda.w $0010,y
 	cmp.w $0010,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByGoalsAllowed:					; compare of SortStandingsByStat by goals allowed a game (+$12), lowest
 									; first; back to the sort loop
 	lda.w $0012,x
 	cmp.w $0012,y
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortBySavePct:						; compare of SortStandingsByStat by save percentage (+$14), highest first;
 									; back to the sort loop
 	lda.w $0014,y
 	cmp.w $0014,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShootPct:						; compare of SortStandingsByStat by shooting percentage (+$16), highest
 									; first; back to the sort loop
 	lda.w $0016,y
 	cmp.w $0016,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShotsAvg:						; compare of SortStandingsByStat by shots a game (+$1A), highest first;
 									; back to the sort loop
 	lda.w $001A,y
 	cmp.w $001A,x
-	bcc CODE_C5C054
-	bra CODE_C5C047
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
 SortByShotsAllowed:					; compare of SortStandingsByStat by shots allowed a game (+$30), lowest
 									; first; back to the sort loop
 	lda.w $0030,x
 	cmp.w $0030,y
-	bcc CODE_C5C054
-	bra CODE_C5C047
-DATA8_C5C0AE:						; the compare routines of the sort in SortStandingsByStat (one per sort
-									; key)
+	bcc SortStandingsSwap
+	bra SortStandingsKeep
+StandingsSortCompares:				; per standings column (d0 * 2): the compare routine of
+									; SortStandingsByStat's sort (points for the first two)
 	dw SortByPoints,SortByPoints,SortByGoalsAvg,SortByGoalsAllowed
 	dw SortBySavePct,SortByShootPct,SortByShotsAvg,SortByShotsAllowed
 DrawSetupTeams:						; the setup screen's teams: both colour sets queued, two tile blocks, the
@@ -154,7 +155,7 @@ DrawSetupTeams:						; the setup screen's teams: both colour sets queued, two ti
 	sta.b $18
 	lda.w VisTeam
 	jsl.l CreateSprite
-	stx.b $9D
+	stx.b d7+2
 	inc.b $38,x
 	jsr.w PrintHomeTeamName
 	jmp.w PrintVisTeamName
@@ -171,16 +172,16 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	inc.b $26
 	jsr.w ScrollListArrows
 	ldx.b a0
-	lda.b $85
+	lda.b d1+2
 	asl a
 	asl a
 	asl a
 	adc.w #$0076
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -202,35 +203,35 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	beq .loop
 	bit.w #$0800
 	beq .5
-	lda.b $85
+	lda.b d1+2
 	beq .4
 	dec a
-	sta.b $85
+	sta.b d1+2
 	bra .loop
 .4:									; call ScrollListUp, go to .loop
 	jsr.w ScrollListUp
 	bra .loop
-.5:									; if $0400 bits clear go to .7, if $85 >= $0007 go to .6, A + $69, ...
+.5:									; if $0400 bits clear go to .7, if d1+2 >= $0007 go to .6, A + a1+2, ...
 	bit.w #$0400
 	beq .7
-	lda.b $85
+	lda.b d1+2
 	cmp.w #$0007
 	bcs .6
 	sec
-	adc.b $69
+	adc.b a1+2
 	cmp.b a1
 	beq .loop
-	inc.b $85
+	inc.b d1+2
 	bra .loop
 .6:									; call ScrollListDown, go to .loop
 	jsr.w ScrollListDown
 	jmp.w .loop
-.7:									; if $8000 bits clear go to .15, A = $85, A + $69, X = A, ...
+.7:									; if $8000 bits clear go to .15, A = d1+2, A + a1+2, X = A, ...
 	bit.w #$8000
 	beq .15
-	lda.b $85
+	lda.b d1+2
 	clc
-	adc.b $69
+	adc.b a1+2
 	tax
 	lda.w ScratchBuf,x
 	bit.w #$0040
@@ -252,8 +253,8 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	bcs .10
 	inc.b d1
 	bra .14
-.10:								; $81 + 1, go to .14
-	inc.b $81
+.10:								; d0+2 + 1, go to .14
+	inc.b d0+2
 	bra .14
 .11:								; if the result is not 0 go to .12, d0 - 1, go to .14
 	and.w #$000F
@@ -265,8 +266,8 @@ SignFreeAgents:						; the Hire Free Agents screen: the free agents (up / down, 
 	bcs .13
 	dec.b d1
 	bra .14
-.13:								; $81 - 1
-	dec.b $81
+.13:								; d0+2 - 1
+	dec.b d0+2
 .14:								; call MarkFreeAgentLimits, call PrintPositionCounts, ...
 	jsr.w MarkFreeAgentLimits
 	jsr.w PrintPositionCounts
@@ -297,7 +298,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	jsl.l DeleteSprite
 	ldx.b $75
 	jsl.l DeleteSprite
-	ldx.b $9D
+	ldx.b d7+2
 	lda.w #$00D0
 	sta.b $05,x
 	lda.w #$0028
@@ -307,28 +308,28 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53AB
+	lda.w #FreeAgentsPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$008C
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	jsl.l PrintBoldCentred
 	lda.w #$00A8
 	sta.b $CF
@@ -337,7 +338,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -354,9 +355,9 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	lda.w $0006,x
 	sta.b d1
 	lda.w $0004,x
-	sta.b $81
+	sta.b d0+2
 	stz.b a1
-	stz.b $69
+	stz.b a1+2
 	ldx.w #$0000
 	txy
 .loop:								; loop: A = SRPlayerTeams,x, A and $001F, ...
@@ -394,7 +395,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4CE3
+	ldx.w #TxtNoFreeAgents&$FFFF
 	ldy.w #$000E
 	jsl.l PrintBoldCentred
 	ldx.b a0
@@ -411,7 +412,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 	ldx.w #$0008
 	ldy.w #$000E
 	jsr.w StartScrollList
-	stz.b $85
+	stz.b d1+2
 .4:									; call PrintPositionCounts, call SendTextMap, return
 	jsr.w PrintPositionCounts
 	jsl.l SendTextMap
@@ -419,7 +420,7 @@ DrawFreeAgentsPage:					; draws the Hire Free Agents page and starts its scrolli
 DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent, his position
 									; and rating
 	ldx.b a3
-	stx.b $65
+	stx.b a0+2
 	lda.w ScratchBuf,x
 	bit.w #$0040
 	beq .1
@@ -431,17 +432,17 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	ldy.w #$2C00
 .2:									; $D5 = Y
 	sty.b $D5
-.3:									; A and $000F, A * 2, X = A, A = DATA8_C35E5B,x, ...
+.3:									; A and $000F, A * 2, X = A, A = PositionGroupNames,x, ...
 	and.w #$000F
 	asl a
 	tax
-	lda.l DATA8_C35E5B,x
+	lda.l PositionGroupNames,x
 	tax
 	lda.w #$008C
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	jsr.w FindFreeAgent
 	cmp.w #$026A
@@ -461,7 +462,7 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	lda.l BCDTable,x
 	and.w #$00FF
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	lda.b $01,s
@@ -473,7 +474,7 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	jsl.l UnpackText
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	plx
 	ldy.w #$0000
@@ -487,11 +488,11 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	cpy.w #$0008
 	bne .loop
 	jmp.w .15
-.4:									; call CreatedPlayerBits, call NextSaveBits3, $A5 = $0000
+.4:									; call CreatedPlayerBits, call NextSaveBits3, tmp3 = $0000
 	jsr.w CreatedPlayerBits
 	jsr.w NextSaveBits3
 	ldx.w #$0000
-	stx.b $A5
+	stx.b tmp3
 .5:									; push X, call NextSaveBits5, pull X, if A = $0000 go to .8, ...
 	phx
 	jsr.w NextSaveBits5
@@ -502,14 +503,14 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bne .6
 	lda.w #$003D
 	bra .7
-.6:									; A + $0040, A + $A5
+.6:									; A + $0040, A + tmp3
 	clc
 	adc.w #$0040
-	adc.b $A5
-.7:									; mesarea,x = A, $A5 = $0020, X + 1, if X is not $0008 go to .5, ...
+	adc.b tmp3
+.7:									; mesarea,x = A, tmp3 = $0020, X + 1, if X is not $0008 go to .5, ...
 	sta.w mesarea,x
 	lda.w #$0020
-	sta.b $A5
+	sta.b tmp3
 	inx
 	cpx.w #$0008
 	bne .5
@@ -526,10 +527,10 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bra .loop2
 .9:									; pull X
 	plx
-.10:								; mesarea,x = $0020, $A5 = 0, X + 1, push X
+.10:								; mesarea,x = $0020, tmp3 = 0, X + 1, push X
 	lda.w #$0020
 	sta.w mesarea,x
-	stz.b $A5
+	stz.b tmp3
 	inx
 	phx
 .11:								; push X, call NextSaveBits5, pull X, if A = $0000 go to .loop3, ...
@@ -542,14 +543,14 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	bne .12
 	lda.w #$003D
 	bra .13
-.12:								; A + $0040, A + $A5
+.12:								; A + $0040, A + tmp3
 	clc
 	adc.w #$0040
-	adc.b $A5
-.13:								; mesarea,x = A, $A5 = $0020, X + 1, A = X, ...
+	adc.b tmp3
+.13:								; mesarea,x = A, tmp3 = $0020, X + 1, A = X, ...
 	sta.w mesarea,x
 	lda.w #$0020
-	sta.b $A5
+	sta.b tmp3
 	inx
 	txa
 	sec
@@ -568,29 +569,29 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	plx
 	inx
 	bra .loop3
-.14:								; pull X, $65 = Y, $CF = $0024, X = mesarea, ...
+.14:								; pull X, a0+2 = Y, $CF = $0024, X = mesarea, ...
 	plx
-	sty.b $65
+	sty.b a0+2
 	lda.w #$0024
 	sta.b $CF
 	ldx.w #mesarea
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
-	ldy.b $65
+	ldy.b a0+2
 	jsr.w NextSaveBits7
-	sty.b $65
+	sty.b a0+2
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
 	jsr.w BCDText
 	lda.w #$0010
 	sta.b $CF
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
-	ldy.b $65
+	ldy.b a0+2
 	ldx.w #$0001
 .loop4:								; loop: push X, call NextSaveBits8, pull X, A 8-bit, ...
 	phx
@@ -619,7 +620,7 @@ DrawFreeAgentRow:					; draws row a3 of the Hire Free Agents list: a free agent,
 	lda.w #$00F0
 	sta.b $D1
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
 	sta.b $D5
@@ -628,9 +629,9 @@ MarkFreeAgentLimits:				; sets bit $80 in the flags (ScratchBuf) of each free ag
 									; full (3 goalies, 15 defense or forwards, 25 players: d0, d1, $81) and
 									; clears it on the others
 	ldx.w #$0000
-.1:									; a3 = X, $65 = X, call FindFreeAgent, if A >= $026A go to .4, ...
+.1:									; a3 = X, a0+2 = X, call FindFreeAgent, if A >= $026A go to .4, ...
 	stx.b a3
-	stx.b $65
+	stx.b a0+2
 	jsr.w FindFreeAgent
 	cmp.w #$026A
 	bcs .4
@@ -673,8 +674,8 @@ MarkFreeAgentLimits:				; sets bit $80 in the flags (ScratchBuf) of each free ag
 	cmp.w #$000F
 	bcc .10
 	bra .9
-.8:									; if $81 < $000F go to .10
-	lda.b $81
+.8:									; if d0+2 < $000F go to .10
+	lda.b d0+2
 	cmp.w #$000F
 	bcc .10
 .9:									; A = $0080, A or ScratchBuf,x, A or tmp0, ScratchBuf,x = A, ...
@@ -683,11 +684,11 @@ MarkFreeAgentLimits:				; sets bit $80 in the flags (ScratchBuf) of each free ag
 	ora.b tmp0
 	sta.w ScratchBuf,x
 	bra .11
-.10:								; A = d0, A + d1, A + $81, if A >= $0019 go to .9, ...
+.10:								; A = d0, A + d1, A + d0+2, if A >= $0019 go to .9, ...
 	lda.b d0
 	clc
 	adc.b d1
-	adc.b $81
+	adc.b d0+2
 	cmp.w #$0019
 	bcs .9
 	lda.w ScratchBuf,x
@@ -715,9 +716,9 @@ SignMarkedAgents:					; start on Hire Free Agents: each marked free agent (Scrat
 	dex
 	bpl .2
 	jmp.w GameSetUp
-.2:									; a1 = X, $65 = X, A = ScratchBuf,x, if $0040 bits clear go to .1, ...
+.2:									; a1 = X, a0+2 = X, A = ScratchBuf,x, if $0040 bits clear go to .1, ...
 	stx.b a1
-	stx.b $65
+	stx.b a0+2
 	lda.w ScratchBuf,x
 	bit.w #$0040
 	beq .1
@@ -805,8 +806,7 @@ SignMarkedAgents:					; start on Hire Free Agents: each marked free agent (Scrat
 	sta.l SRPlayerTeams,x
 	ldx.b a1
 	jmp.w .1
-DATA8_C5C655:						; not traced: data between routines
-	db $4C,$32,$8D
+	jmp.w GameSetUp					; unreached: no code branches, falls or points here
 JerseyNumberTaken:					; carry set when a player of VisTeam in SRPlayerTeams already has number
 									; tmp2 (tmp1 = VisTeam * 16)
 	ldx.w #$0000
@@ -851,7 +851,7 @@ JerseyNumberTaken:					; carry set when a player of VisTeam in SRPlayerTeams alr
 .4:									; return
 	sec
 	rts
-RecordOverallLong:					; RecordOverall for long calls, tmp0, $A5 and $0A kept
+RecordOverallLong:					; RecordOverall for long calls, tmp0, tmp3 and $0A kept
 	pei ($9F)
 	pei ($A5)
 	pei ($0A)
@@ -861,20 +861,20 @@ RecordOverallLong:					; RecordOverall for long calls, tmp0, $A5 and $0A kept
 	plx
 	stx.b $0A
 	plx
-	stx.b $A5
+	stx.b tmp3
 	plx
 	stx.b tmp0
 	rtl
 RecordOverall:						; A = the overall rating (25-100) of the player record in mesarea: its
-									; attribute nibbles weighted (DATA8_C57309, the set by RatingMode), at
-									; most 100, below 50 made 25 + A / 2
+									; attribute nibbles weighted (RosterAttribWeights, the set by RatingMode),
+									; at most 100, below 50 made 25 + A / 2
 	ldx.w #$5DF9
 	lda.l $7E24DC
 	beq .1
 	ldx.w #$F0C9
-.1:									; tmp0 = X, $A5 = 0, A = $000F
+.1:									; tmp0 = X, tmp3 = 0, A = $000F
 	stx.b tmp0
-	stz.b $A5
+	stz.b tmp3
 	lda.w #$000F
 .loop:								; loop: $0A = A, A * 2, X = A, A = BitMaskTable2,x, ...
 	sta.b $0A
@@ -899,17 +899,17 @@ RecordOverall:						; A = the overall rating (25-100) of the player record in me
 	clc
 	adc.l $7E24DC
 	tax
-	lda.l DATA8_C57309,x
+	lda.l RosterAttribWeights,x
 	tyx
 	jsl.l Mul8U
 	clc
-	adc.b $A5
-	sta.b $A5
+	adc.b tmp3
+	sta.b tmp3
 .3:									; A = $0A, A - 1, if the result is not 0 go to .loop, ...
 	lda.b $0A
 	dec a
 	bne .loop
-	lda.b $A5
+	lda.b tmp3
 	bpl .4
 	lda.w #$0000
 .4:									; if RatingMode = 0 go to .5, A / 2
@@ -941,16 +941,16 @@ ReleasePlayers:						; the Release Players screen: a team's roster (up / down, B
 	inc.b $26
 	jsr.w ScrollListArrows
 	ldx.b a0
-	lda.b $85
+	lda.b d1+2
 	asl a
 	asl a
 	asl a
 	adc.w #$0076
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -964,39 +964,39 @@ ReleasePlayers:						; the Release Players screen: a team's roster (up / down, B
 	bit.w #$0040
 	beq .2
 	jmp.w GameSetUp
-.2:									; if $0800 bits clear go to .4, if $85 = 0 go to .3, A - 1, $85 = A, ...
+.2:									; if $0800 bits clear go to .4, if d1+2 = 0 go to .3, A - 1, d1+2 = A, ...
 	bit.w #$0800
 	beq .4
-	lda.b $85
+	lda.b d1+2
 	beq .3
 	dec a
-	sta.b $85
+	sta.b d1+2
 	bra .loop
 .3:									; call ScrollListUp, go to .loop
 	jsr.w ScrollListUp
 	bra .loop
-.4:									; if $0400 bits clear go to .6, if $85 >= $0007 go to .5, A + $69, ...
+.4:									; if $0400 bits clear go to .6, if d1+2 >= $0007 go to .5, A + a1+2, ...
 	bit.w #$0400
 	beq .6
-	lda.b $85
+	lda.b d1+2
 	cmp.w #$0007
 	bcs .5
 	sec
-	adc.b $69
+	adc.b a1+2
 	cmp.b a1
 	beq .loop
-	inc.b $85
+	inc.b d1+2
 	bra .loop
 .5:									; call ScrollListDown, go to .loop
 	jsr.w ScrollListDown
 	jmp.w .loop
-.6:									; if $8000 bits clear go to .loop, Y = VisRoster, A = $69, A + $85, ...
+.6:									; if $8000 bits clear go to .loop, Y = VisRoster, A = a1+2, A + d1+2, ...
 	bit.w #$8000
 	beq .loop
 	ldy.w #VisRoster
-	lda.b $69
+	lda.b a1+2
 	clc
-	adc.b $85
+	adc.b d1+2
 	tax
 	lda.w ScratchBuf,x
 	bit.w #$0001
@@ -1020,10 +1020,10 @@ ReleasePlayers:						; the Release Players screen: a team's roster (up / down, B
 	lda.w #$007F
 	sta.b tmp0
 	bra .13
-.9:									; A - $0004,y, if the result >= 0 go to .11, if $81 < $000A go to .16
+.9:									; A - $0004,y, if the result >= 0 go to .11, if d0+2 < $000A go to .16
 	sbc.w $0004,y
 	bpl .11
-	lda.b $81
+	lda.b d0+2
 	cmp.w #$000A
 	bcc .16
 .10:								; tmp0 = $0081, go to .13
@@ -1077,7 +1077,7 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	jsl.l DeleteSprite
 	ldx.b $75
 	jsl.l DeleteSprite
-	ldx.b $9D
+	ldx.b d7+2
 	lda.w #$00D0
 	sta.b $05,x
 	lda.w #$0028
@@ -1087,28 +1087,28 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53D5
+	lda.w #ReleasePlayersPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$008C
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$000C
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	jsl.l PrintBoldCentred
 	lda.w #$00A8
 	sta.b $CF
@@ -1117,7 +1117,7 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -1134,13 +1134,13 @@ DrawReleasePage:					; draws the Release Players page and starts its scrolling l
 	lda.w $0006,x
 	sta.b d1
 	lda.w $0004,x
-	sta.b $81
+	sta.b d0+2
 	clc
 	adc.b d1
 	adc.b d0
 	sta.b a1
-	stz.b $69
-	stz.b $85
+	stz.b a1+2
+	stz.b d1+2
 	ldx.w #$0000
 .loop:								; loop: ScratchBuf,x = 0, X + 1, if X is not a1 go to .loop, ...
 	stz.w ScratchBuf,x
@@ -1173,7 +1173,7 @@ DrawReleaseRow:						; draws row a3 of the Release Players list: a player, his p
 	ldx.w #$4CF6
 	sbc.w $0004,y
 	bpl .3
-	lda.b $81
+	lda.b d0+2
 	cmp.w #$000A
 	bcs .4
 .2:									; $D5 = $2C00, go to .4
@@ -1192,12 +1192,12 @@ DrawReleaseRow:						; draws row a3 of the Release Players list: a player, his p
 	beq .5
 	lda.w #$2400
 	sta.b $D5
-.5:									; $CF = $008C, $D1 = $00C8, Y = $6D, call PrintBoldCentred, ...
+.5:									; $CF = $008C, $D1 = $00C8, Y = a2+2, call PrintBoldCentred, ...
 	lda.w #$008C
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b a3
 	asl a
@@ -1231,7 +1231,7 @@ DrawReleaseRow:						; draws row a3 of the Release Players list: a player, his p
 	lda.w #$0010
 	sta.b $CF
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$0024
 	sta.b $CF
@@ -1245,7 +1245,7 @@ DrawReleaseRow:						; draws row a3 of the Release Players list: a player, his p
 	tax
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.b a3
 	asl a
@@ -1270,7 +1270,7 @@ DrawReleaseRow:						; draws row a3 of the Release Players list: a player, his p
 	lda.w #$00F0
 	sta.b $D1
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
 	sta.b $D5
@@ -1323,7 +1323,7 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	inc.b $26
 	jsr.w PlaceTradeCursors
 	ldx.b a0
-	lda.b $85
+	lda.b d1+2
 	asl a
 	asl a
 	asl a
@@ -1333,12 +1333,12 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	bra .3
 .2:									; A + $008E
 	adc.w #$008E
-.3:									; $08,x = A, call AnimateSprites, $28 = $1D8F, $2A = $1E00, ...
+.3:									; $08,x = A, call AnimateSprites, $28 = OAMBuf+$1FF, ...
 	sta.b $08,x
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1352,21 +1352,21 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	bit.w #$0040
 	beq .5
 	jmp.w GameSetUp
-.5:									; if $0800 bits clear go to .7, if $85 = 0 go to .6, A - 1, $85 = A, ...
+.5:									; if $0800 bits clear go to .7, if d1+2 = 0 go to .6, A - 1, d1+2 = A, ...
 	bit.w #$0800
 	beq .7
-	lda.b $85
+	lda.b d1+2
 	beq .6
 	dec a
-	sta.b $85
+	sta.b d1+2
 	bra .1
 .6:									; call TradeCursorUp, go to .1
 	jsr.w TradeCursorUp
 	bra .1
-.7:									; if $0400 bits clear go to .9, if $85 >= $0004 go to .8, X = a2, ...
+.7:									; if $0400 bits clear go to .9, if d1+2 >= $0004 go to .8, X = a2, ...
 	bit.w #$0400
 	beq .9
-	lda.b $85
+	lda.b d1+2
 	cmp.w #$0004
 	bcs .8
 	ldx.b a2
@@ -1374,7 +1374,7 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	adc.b $77,x
 	cmp.b $7B,x
 	beq .1
-	inc.b $85
+	inc.b d1+2
 	bra .1
 .8:									; call TradeCursorDown, go to .1
 	jsr.w TradeCursorDown
@@ -1394,8 +1394,8 @@ TradePlayers:						; the Trade Players screen: both rosters (Y switches the team
 	beq .11
 	lda.w #$0064
 	sta.b tmp0
-.11:								; A = $85, A + $77,x, A + tmp0, X = A, ...
-	lda.b $85
+.11:								; A = d1+2, A + $77,x, A + tmp0, X = A, ...
+	lda.b d1+2
 	clc
 	adc.b $77,x
 	adc.b tmp0
@@ -1418,7 +1418,7 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	jsl.l WaitTransfers
 	ldx.b d7
 	jsl.l DeleteSprite
-	ldx.b $9D
+	ldx.b d7+2
 	jsl.l DeleteSprite
 	ldx.b a4
 	jsl.l DeleteSprite
@@ -1429,7 +1429,7 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	jsl.l SetSpriteAnim
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$56F2
+	lda.w #TradePlayersPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801
@@ -1448,20 +1448,20 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	ldy.w #$0006
 	jsl.l PrintBoldCentred
-	ldx.w #$4CD7
+	ldx.w #TxtPosition&$FFFF
 	ldy.w #$000F
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	ldy.w #$0006
 	jsl.l PrintBoldCentred
-	ldx.w #$4CDE
+	ldx.w #TxtRating&$FFFF
 	ldy.w #$000F
 	jsl.l PrintBoldCentred
 	lda.w OptPlayMode
@@ -1495,11 +1495,11 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	bne .loop2
 	lda.w #$0005
 	sta.b a1
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0008
 	sta.b a3
 	lda.w #$0011
-	sta.b $71
+	sta.b a3+2
 	lda.w #HomeRoster
 	sta.b a4
 	lda.w #VisRoster
@@ -1508,7 +1508,7 @@ DrawTradePage:						; draws the Trade Players page and starts the two teams' lis
 	jsr.w SetupTradeLists
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
-	stz.b $85
+	stz.b d1+2
 	rts
 DrawTradeRow:						; draws a row of the Trade Players lists: a player, his position and
 									; rating
@@ -1516,7 +1516,7 @@ DrawTradeRow:						; draws a row of the Trade Players lists: a player, his posit
 	lda.w #$0010
 	sta.l $7E24DC
 	ldx.w #$49B8
-	lda.b $91
+	lda.b d4+2
 	sec
 	sbc.w $0002,y
 	bmi .1
@@ -1531,23 +1531,23 @@ DrawTradeRow:						; draws a row of the Trade Players lists: a player, his posit
 	cpy.w #HomeRoster
 	beq .2
 	lda.w #$0064
-.2:									; A + $91, Y = A, A = ScratchBuf,y, if $0001 bits clear go to .3, ...
+.2:									; A + d4+2, Y = A, A = ScratchBuf,y, if $0001 bits clear go to .3, ...
 	clc
-	adc.b $91
+	adc.b d4+2
 	tay
 	lda.w ScratchBuf,y
 	bit.w #$0001
 	beq .3
 	lda.w #$2400
 	sta.b $D5
-.3:									; $CF = $008C, $D1 = $00C8, Y = $6D, call PrintBoldCentred, ...
+.3:									; $CF = $008C, $D1 = $00C8, Y = a2+2, call PrintBoldCentred, ...
 	lda.w #$008C
 	sta.b $CF
 	lda.w #$00C8
 	sta.b $D1
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
-	lda.b $91
+	lda.b d4+2
 	asl a
 	adc.b d2
 	tax
@@ -1579,11 +1579,11 @@ DrawTradeRow:						; draws a row of the Trade Players lists: a player, his posit
 	lda.w #$0010
 	sta.b $CF
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$0024
 	sta.b $CF
-	lda.b $91
+	lda.b d4+2
 	asl a
 	asl a
 	asl a
@@ -1594,9 +1594,9 @@ DrawTradeRow:						; draws a row of the Trade Players lists: a player, his posit
 	tax
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
-	lda.b $91
+	lda.b d4+2
 	asl a
 	asl a
 	asl a
@@ -1620,7 +1620,7 @@ DrawTradeRow:						; draws a row of the Trade Players lists: a player, his posit
 	lda.w #$00F0
 	sta.b $D1
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
 	sta.b $D5
@@ -1635,9 +1635,9 @@ GMDecisionScreen:					; the trade decision: DrawGMDecision, then start does an a
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1686,12 +1686,12 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	ldx.b d3
 	jsl.l DeleteSprite
 	stz.b d3
-	ldx.b $8D
+	ldx.b d3+2
 	jsl.l DeleteSprite
-	stz.b $8D
+	stz.b d3+2
 	jsl.l ResetWorkBuf
 	jsl.l InitTextMap
-	lda.w #$53FF
+	lda.w #EvaluateTradePage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	ldy.w #$2801
@@ -1710,7 +1710,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0005
 	jsl.l PrintThinCentred
@@ -1738,13 +1738,13 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	plx
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4D53
+	ldx.w #TxtAccepted&$FFFF
 	jsl.l PrintItalicLeft
 	bra .5
-.2:									; $D5 = $2800, X = $4D5A, call PrintItalicLeft, $D5 = $2000, ...
+.2:									; $D5 = $2800, X = TxtRejected&$FFFF, call PrintItalicLeft, ...
 	lda.w #$2800
 	sta.b $D5
-	ldx.w #$4D5A
+	ldx.w #TxtRejected&$FFFF
 	jsl.l PrintItalicLeft
 	lda.w #$2000
 	sta.b $D5
@@ -1753,8 +1753,8 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	beq .3
 	ldx.w #$4B7F
 	bra .4
-.3:									; X = $4D61
-	ldx.w #$4D61
+.3:									; X = TxtAdvantage&$FFFF
+	ldx.w #TxtAdvantage&$FFFF
 .4:									; Y = $0014, call PrintBoldLeft, $CF = $0061, pull A, ...
 	ldy.w #$0014
 	jsl.l PrintBoldLeft
@@ -1763,7 +1763,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	pla
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0014
 	jsl.l PrintBoldLeft
@@ -1774,7 +1774,7 @@ DrawGMDecision:						; draws the trade decision: both teams, their chosen player
 	rts
 PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of each entry): No
 									; Selections when none, Etc. after 8
-	sty.b $6D
+	sty.b a2+2
 	stx.b tmp0
 	sta.b tmp1
 	ldx.w #$0000
@@ -1790,8 +1790,8 @@ PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of ea
 	bne .loop
 	cpx.w #$0000
 	bne .2
-	ldx.w #$4D3F
-	ldy.b $6D
+	ldx.w #TxtNoSelections&$FFFF
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	rts
 .2:									; tmp0 = X, tmp2 = 0, Y = $0000
@@ -1816,9 +1816,9 @@ PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of ea
 	tax
 	lda.w #$000C
 	jsl.l FitNameToWorkBuf
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
-	inc.b $6D
+	inc.b a2+2
 	ply
 	lda.b tmp2
 	inc a
@@ -1832,8 +1832,8 @@ PrintTradedPlayers:					; prints the chosen players of a trade list (bit 0 of ea
 	inc a
 	cmp.b tmp0
 	beq .loop2
-	ldx.w #$4D4A
-	ldy.b $6D
+	ldx.w #TxtEtc&$FFFF
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 	rts
 CheckTrade:							; checks the trade: carry clear when it can go; else carry set, X = the
@@ -1851,8 +1851,8 @@ CheckTrade:							; checks the trade: carry clear when it can go; else carry set
 	jsr.w TradeValue
 	lda.b d0
 	sta.b d5
-	lda.b $81
-	sta.b $95
+	lda.b d0+2
+	sta.b d5+2
 	lda.b d1
 	sta.b d6
 	lda.w #$0079
@@ -1892,15 +1892,15 @@ CheckTrade:							; checks the trade: carry clear when it can go; else carry set
 	cmp.w #$0002
 	bcs .4
 	jmp.w .5
-.4:									; if A >= $0004 go to .5, r3 = A, A = HomeRoster+4, A - $95, ...
+.4:									; if A >= $0004 go to .5, r3 = A, A = HomeRoster+4, A - d5+2, ...
 	cmp.w #$0004
 	bcs .5
 	sta.b r3
 	lda.w HomeRoster+4
 	sec
-	sbc.b $95
+	sbc.b d5+2
 	clc
-	adc.b $81
+	adc.b d0+2
 	cmp.w #$0009
 	bcc .5
 	cmp.w #$0010
@@ -1931,9 +1931,9 @@ CheckTrade:							; checks the trade: carry clear when it can go; else carry set
 	sta.b r3
 	lda.w VisRoster+4
 	sec
-	sbc.b $81
+	sbc.b d0+2
 	clc
-	adc.b $95
+	adc.b d5+2
 	cmp.w #$0009
 	bcc .6
 	cmp.w #$0010

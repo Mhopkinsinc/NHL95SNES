@@ -1,5 +1,4 @@
-; Segment bankC5_1000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_1000: game code, jump tables and the data tables the code reads with long addresses.
 org $C510F6
 GetPeriodTime:						; d0 = the period length in seconds for the period length option
 									; (Optperlen), tmp0 the same as BCD minutes and seconds
@@ -7,35 +6,39 @@ GetPeriodTime:						; d0 = the period length in seconds for the period length op
 	lda.w Optperlen
 	asl a
 	tax
-	lda.l DATA8_C51112,x
+	lda.l PeriodTimesBCD,x
 	sta.b tmp0
-	lda.l DATA8_C5110A,x
+	lda.l GetPeriodTime_timetab,x
 	sta.b d0
 	plx
 	rtl
-DATA8_C5110A:						; not traced: a table read by GetPeriodTime
+GetPeriodTime_timetab:				; the period lengths in seconds (300, 600, 1200, 30) GetPeriodTime picks
+									; from
 	db $2C,$01,$58,$02,$B0,$04,$1E,$00
-DATA8_C51112:						; not traced: a table read by GetPeriodTime
+PeriodTimesBCD:						; per period length option (Optperlen * 2): the length as BCD minutes and
+									; seconds ($0500 = 5:00)
 	db $00,$05,$00,$10,$00,$20,$30,$00
 printscores1:						; X = a3; chk4lc, SetFaceoffComputerLine and lcfound_close call it after a
 									; line change
 	ldx.b a3
 	rtl
-CODE_C5111D:						; no caller found (not traced)
+printscores1_per:					; steps a1 by period through the length-prefixed entries at $C09B54
+									; (RatingColumns: its first word 0 keeps a1 there), calls print (a bare
+									; rtl), writes team a2's score to mesarea; no caller found
 	lda.w gsp
 	sta.b d0
 	cmp.w #$0004
 	bne .1
 	dec.w printx
 	inc.b d0
-.1:									; $65 = $00C0, a0 = $9B54
+.1:									; a0+2 = $00C0, a0 = $9B54
 	lda.w #$00C0
-	sta.b $65
+	sta.b a0+2
 	lda.w #$9B54
 	sta.b a0
-.loop:								; loop: $69 = $65, a1 = a0, A = [a0], A + a0, ...
-	lda.b $65
-	sta.b $69
+.loop:								; loop: a1+2 = a0+2, a1 = a0, A = [a0], A + a0, ...
+	lda.b a0+2
+	sta.b a1+2
 	lda.b a0
 	sta.b a1
 	lda.b [a0]
@@ -44,12 +47,12 @@ CODE_C5111D:						; no caller found (not traced)
 	sta.b a0
 	dec.b d0
 	bpl .loop
-	jsl.l CODE_C528D3
+	jsl.l print
 	ldy.b a2
 	lda.w tmscore,y
 	sta.b d0
 	jsl.l Mod100
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0004
@@ -87,7 +90,7 @@ AlignBigNumber:						; no caller found (not traced)
 	cmp.b [a1]
 	bcc .loop
 	rtl
-Mod100:								; from CODE_C5111D and other segments
+Mod100:								; from printscores1_per and other segments
 	lda.b d0
 .loop:								; loop: if A < $0064 go to .1, A - $0064, go to .loop
 	cmp.w #$0064
@@ -97,8 +100,7 @@ Mod100:								; from CODE_C5111D and other segments
 .1:									; d0 = A, return
 	sta.b d0
 	rtl
-DATA8_C511B7:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 SetScore:							; the score of the other game a0 for the ticker: its period stepped and
 									; both scores raised from the teams' strengths (SimPeriodGoals), or the
 									; game ended
@@ -171,36 +173,38 @@ SetScore:							; the score of the other game a0 for the ticker: its period step
 	clc
 	adc.b d0
 	sta.w gss2,x
-.5:									; pull A, $69 = A, pull A, a1 = A, ...
+.5:									; pull A, a1+2 = A, pull A, a1 = A, ...
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 .6:									; pull X, return
 	plx
 	rtl
-DATA8_C51271:						; not traced: data between routines
+sctab:								; 8 rows (by a 3-bit rating) of the weights of 0, 1, 2 and 3 goals;
+									; SimPeriodGoals adds the scoring team's row (rating bits 4-6) and the
+									; other's (bits 0-2)
 	db $2B,$00,$1E,$00,$17,$00,$04,$00,$27,$00,$20,$00,$18,$00,$05,$00
 	db $23,$00,$21,$00,$1A,$00,$06,$00,$1E,$00,$22,$00,$1E,$00,$06,$00
 	db $1A,$00,$24,$00,$1E,$00,$08,$00,$16,$00,$25,$00,$1F,$00,$0A,$00
 	db $13,$00,$26,$00,$1F,$00,$0C,$00,$0F,$00,$26,$00,$20,$00,$0F,$00
 SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period of another
-									; game, from both teams' weight rows (DATA8_C51271 by their ratings)
+									; game, from both teams' weight rows (sctab by their ratings)
 	asl.b d0
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	stz.b a1
 	ldy.b d0
 	lda.b [a1],y
@@ -211,10 +215,10 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	lda.b [a1]
 	and.w #$0070
 	lsr a
-	adc.w #$1271
+	adc.w #sctab&$FFFF
 	sta.b a1
-	lda.w #$00C5
-	sta.b $69
+	lda.w #sctab>>16
+	sta.b a1+2
 	lda.b [a1]
 	sta.w nibblebuffer
 	ldy.w #$0002
@@ -228,7 +232,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	sta.w nibblebuffer+6
 	asl.b d1
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	stz.b a1
 	ldy.b d1
 	lda.b [a1],y
@@ -241,10 +245,10 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	asl a
 	asl a
 	asl a
-	adc.w #$1271
+	adc.w #sctab&$FFFF
 	sta.b a1
-	lda.w #$00C5
-	sta.b $69
+	lda.w #sctab>>16
+	sta.b a1+2
 	lda.b [a1]
 	adc.w nibblebuffer
 	sta.w nibblebuffer
@@ -266,7 +270,7 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	pei ($83)
 	pei ($69)
 	pei ($67)
-	stz.b $69
+	stz.b a1+2
 	lda.w #nibblebuffer
 	sta.b a1
 	stz.b d1
@@ -300,11 +304,11 @@ SimPeriodGoals:						; d0 = the goals team d0 scores against team d1 in a period
 	pla
 	sta.b a1
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $85
+	sta.b d1+2
 	rtl
 showclockdma:						; puts the game clock (clockbcd as M:SS, no leading zero) in the
 									; scoreboard text and queues it to VRAM
@@ -382,51 +386,51 @@ USBoard:							; the penalty box lists of both teams (DispPen for team 0, then 2
 	sta.b a2
 	jsl.l DispPen
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -498,7 +502,7 @@ pplpen:								; from DispPen and other segments
 	and.w #$07FF
 	sta.b d2
 	lda.w #$00C3
-	sta.b $69
+	sta.b a1+2
 	ldy.b a2
 	lda.w tmdata,y
 	sta.b a1
@@ -622,51 +626,51 @@ Intermission:						; the intermission between periods: the teams set up
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $9D
+	sta.b d7+2
 	pla
 	sta.b d7
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	jsl.l FreePauseBuffers
@@ -864,13 +868,13 @@ waitxsr:							; no caller found (not traced)
 	jsl.l ReadjoyA
 	lda.b d3
 	bne .2
-.1:									; X + 1, if X < $0005 go to .loop2, $28 = $1D8F, $2A = $1E00, ...
+.1:									; X + 1, if X < $0005 go to .loop2, $28 = OAMBuf+$1FF, ...
 	inx
 	cpx.w #$0005
 	bcc .loop2
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l setvideo
 	lda.b Vcount
@@ -896,7 +900,8 @@ clockcont:							; called from other segments
 	rtl
 DoHiLights:							; an rtl: called where 94S plays the playoff highlights
 	rtl
-CODE_C51812:						; no caller found (not traced)
+EraseBoxUnused:						; eraser (a bare rtl) for a 19 x 9 box of blankchar (d0 / d1 / d2);
+									; nothing calls it
 	lda.w #$0013
 	sta.b d0
 	lda.w #$0009
@@ -910,7 +915,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	pei ($6B)
 	pei ($71)
 	pei ($6F)
-	inc.w $18AA
+	inc.w LCBoxesClosed
 	lda.w #$FFFF
 	sta.w lcpad
 	sta.w lcpad+2
@@ -918,7 +923,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	lda.w ScoreSumbytes
 	sec
 	sbc.w #$0006
-	sta.b $6D
+	sta.b a2+2
 	tax
 	ldy.w #$0004
 	lda.w ScoreSum+4,x
@@ -935,7 +940,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	lda.w #$584C
 	jsl.l Framer
 	ldy.w #$0000
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+2,x
 	bit.w #$0080
 	beq .2
@@ -974,11 +979,11 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	clc
 	adc.w #$0110
 	sta.b a2
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+3,x
 	and.w #$00FF
 	jsr.w GoalBoxPlayer
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+4,x
 	bit.w #$0080
 	bne .6
@@ -994,7 +999,7 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	pla
 	and.w #$00FF
 	jsr.w GoalBoxPlayer
-	ldx.b $6D
+	ldx.b a2+2
 	lda.w ScoreSum+5,x
 	bit.w #$0080
 	bne .6
@@ -1005,11 +1010,11 @@ ShowGoalBox:						; the goal box after a goal: both line change boxes closed (Cl
 	sta.b a3
 	tax
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a2
 	pla
-	sta.b $6D
+	sta.b a2+2
 	rtl
 GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2 (32 bytes a
 									; player), his name fitted to 13 letters, queued at a3; a3 to the next row
@@ -1019,7 +1024,7 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	asl a
 	asl a
 	adc.b a2
-	sta.b $71
+	sta.b a3+2
 	tax
 	lda.w $0000,x
 	and.w #$00FF
@@ -1031,7 +1036,7 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	sec
 	adc.w #mesarea
 	tay
-	lda.b $71
+	lda.b a3+2
 	clc
 	adc.w #$0008
 	tax
@@ -1049,11 +1054,18 @@ GoalBoxPlayer:						; a goal box row: the number of player A of the roster at a2
 	adc.w #$0020
 	sta.b a3
 	rts
-DATA8_C5195D:						; not traced: data between routines
-	db $00,$01,$02,$03,$04,$05,$06,$00,$00,$01,$05,$03,$04,$02,$00,$00
-	db $00,$03,$05,$01,$04,$00,$00,$00,$00,$04,$04,$04,$04,$04,$04,$00
-	db $00,$00,$06,$FF,$DD,$FF,$CE,$FF,$23,$00,$CE,$FF,$CE,$FF,$F6,$FF
-	db $00,$00,$F1,$FF,$32,$00,$F6,$FF,$00,$00,$C4,$FF
+FaceoffFormations:					; per formation ((6 - tmap) * 8: 6, 5 or 4 men) and position (d1): the
+									; player's face off spot (FaceoffSpots entry)
+	db $00,$01,$02,$03,$04,$05,$06,$00
+	db $00,$01,$05,$03,$04,$02,$00,$00
+	db $00,$03,$05,$01,$04,$00,$00,$00
+PenShotFormation:					; the penalty shot formation: per position (d1), the face off spot: the
+									; skaters all at spot 4
+	db $00,$04,$04,$04,$04,$04,$04,$00
+FaceoffSpots:						; per face off spot (entry * 4): its x and y offset from the face off
+									; point (both negated for pfgoal 0)
+	dw $0000,$FF06,$FFDD,$FFCE,$0023,$FFCE,$FFCE,$FFF6
+	dw $0000,$FFF1,$0032,$FFF6,$0000,$FFC4
 updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from the time left
 									; (fofdata)
 	lda.w temp1,x
@@ -1073,9 +1085,9 @@ updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from 
 	beq .2
 	phx
 	phy
-	lda.w $2014
+	lda.w FaceoffBoxTimer
 	inc a
-	sta.w $2014
+	sta.w FaceoffBoxTimer
 	lsr a
 	lsr a
 	cmp.w #$0004
@@ -1105,18 +1117,18 @@ updatefaceoff:						; the face off countdown (temp1): the ref's drop frame from 
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .4
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 	jsl.l DeleteSprite
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	jsl.l DeleteSprite
-	lda.w $2024
+	lda.w FaceoffBoxBuf
 	sta.w WorkBufMark
 .4:									; pull A, pull Y, pull X, FrameCount = 0, ...
 	pla
 	ply
 	plx
 	stz.w FrameCount
-	stz.b $48
+	stz.b gameframes
 	rtl
 PracticeFaceoffDrop:				; practice mode's drop (OptPlayMode 1): the puck still at the face off
 									; spot (fox / foy), then each team's first free pad takes its goalie
@@ -1252,7 +1264,7 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	lda.w #$0010
 	sta.b d2
 	ldx.w fofdata2
-	lda.l DATA8_C51C52-1,x
+	lda.l FaceoffFrameWeights-1,x
 	and.w #$00FF
 	bit.w #$0080
 	beq .1
@@ -1264,7 +1276,7 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	adc.b d2
 	sta.b d2
 	ldx.w fofdata2+4
-	lda.l DATA8_C51C52-1,x
+	lda.l FaceoffFrameWeights-1,x
 	and.w #$00FF
 	bit.w #$0080
 	beq .2
@@ -1310,11 +1322,11 @@ Endfaceoff:							; drops the puck: the face off sound, sflags $0100 / $0400 cle
 	lda.b d0
 	eor.w #$0004
 	sta.b d0
-.6:									; d0 * 2, d0 * 2, X = d0, A = DATA8_C09C04,x, ...
+.6:									; d0 * 2, d0 * 2, X = d0, A = dirtab,x, ...
 	asl.b d0
 	asl.b d0
 	ldx.b d0
-	lda.l DATA8_C09C04,x
+	lda.l dirtab,x
 	asl a
 	asl a
 	asl a
@@ -1387,7 +1399,8 @@ FindPositionSlot:					; Y = the slot (from Y, six of them) of the player in posi
 .1:									; return
 	cpy.w #$0000
 	rts
-DATA8_C51C52:						; not traced: data between routines
+FaceoffFrameWeights:				; per face off frame (fofdata2 / fofdata2+4, 1-6, read at -1): the
+									; centre's edge in the draw (0, 8, 16 for each team's three)
 	db $00,$08,$10,$00,$08,$10
 faceoffinput:						; pad input of a centre taking a face off (assignment $17): the pad
 									; direction to fodir1 / fodir2 by pfgoal; B starts the swing (pf2aip)
@@ -1407,11 +1420,11 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .1
-	ldx.w $2020
+	ldx.w FaceoffSpriteLeft
 	stz.b $30,x
-.1:									; X = a3, A = $24FA, go to SetSPAFromA
+.1:									; X = a3, A = SPAfaceoff&$FFFF, go to SetSPAFromA
 	ldx.b a3
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
 .rtl:								; return
 	rtl
@@ -1427,14 +1440,14 @@ faceoffinput:						; pad input of a centre taking a face off (assignment $17): t
 	lda.w OptPlayMode
 	cmp.w #$0001
 	beq .3
-	ldx.w $2022
+	ldx.w FaceoffSpriteRight
 	stz.b $30,x
-.3:									; X = a3, A = $24FA, go to SetSPAFromA
+.3:									; X = a3, A = SPAfaceoff&$FFFF, go to SetSPAFromA
 	ldx.b a3
-	lda.w #$24FA
+	lda.w #SPAfaceoff&$FFFF
 	jml.l SetSPAFromA
-.4:									; A = $2524, go to SetSPAFromA
-	lda.w #$2524
+.4:									; A = SPAfaceoffr&$FFFF, go to SetSPAFromA
+	lda.w #SPAfaceoffr&$FFFF
 	jml.l SetSPAFromA
 puckfaceoff:						; assignment (asstab entry 27): the puck at the start of play; PeriodOver
 									; when the clock has run out, Stop4Pen for a penalty
@@ -1490,12 +1503,12 @@ puckfaceoff:						; assignment (asstab entry 27): the puck at the start of play;
 	ora.w penshotlive
 	beq .8
 	jmp.w WaitForFaceoffLineChanges
-.8:									; lcpad = $FFFF, lcpad+2 = A, $18E2 = 0, $18E4 = 0, ...
+.8:									; lcpad = $FFFF, lcpad+2 = A, FaceoffLCClosed = 0, ...
 	lda.w #$FFFF
 	sta.w lcpad
 	sta.w lcpad+2
-	stz.w $18E2
-	stz.w $18E4
+	stz.w FaceoffLCClosed
+	stz.w FaceoffLCClosed+2
 	lda.w #$0008
 	trb.w tmflags
 	trb.w tmflags+2
@@ -1692,13 +1705,13 @@ UpdateFaceoffLineChangeTimer:		; line change timer d0 (0 home, $20 away) of the 
 	bne .3
 	phy
 	ldy.b a2
-	lda.w $18E2,y
+	lda.w FaceoffLCClosed,y
 	beq .2
 	ply
 	bra .3
-.2:									; A + 1, $18E2,y = A, pull Y, A = a3, ...
+.2:									; A + 1, FaceoffLCClosed,y = A, pull Y, A = a3, ...
 	inc a
-	sta.w $18E2,y
+	sta.w FaceoffLCClosed,y
 	ply
 	lda.b a3
 	clc
@@ -1783,7 +1796,7 @@ limitfo:							; keeps the face off spot away from the blue line for every calle
 	pei ($65)
 	pei ($67)
 	pei ($69)
-	stz.b $65
+	stz.b a0+2
 	lda.w #PenBuf
 	sta.b a0
 .loop:								; loop: A = [a0], call LimitPenaltyFaceoff, a0 + 1, a0 + 1, ...
@@ -1794,19 +1807,19 @@ limitfo:							; keeps the face off spot away from the blue line for every calle
 	lda.b [a0]
 	bne .loop
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl

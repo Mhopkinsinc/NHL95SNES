@@ -6,14 +6,14 @@ incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
-DATA8_C4C4A6 = $C4C4A6
+ByteBitMasks = $C4C4A6
 SendTextMap = $C4C2AA
 MarkWorkBuf = $C4C541
 WaitTransfers = $C4CEDB
 PrintItalicCentred = $C4BCA4
 AddGamePlayerStats = $C40A6D
 SetupScreen = $C55951
-DATA8_C04AA9 = $C04AA9
+LargeSlotTiles = $C04AA9
 Div16x8U = $C09257
 Mul16U = $C0906C
 UnpackStream0 = $C5F071
@@ -24,5 +24,6 @@ BuildTeamSeasonRecord = $C5B983
 RefreshSprites = $C5BBC0
 NextSaveBits3 = $C5D7E9
 FadeOutWait = $C58A99
+TxtPleaseWait = $C34692
 
 incsrc "../bankC5_E000.asm"

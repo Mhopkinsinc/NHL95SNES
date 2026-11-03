@@ -1,5 +1,4 @@
-; Segment bankC5_5000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_5000: game code, jump tables and the data tables the code reads with long addresses.
 org $C54F05
 PauseMenuInput:						; the pause menu's pad: left / right the tab (pausetab 0-2), up / down the
 									; item (pauseitem), B runs the item through the tab's table (the shorter
@@ -30,7 +29,8 @@ PauseMenuInput:						; the pause menu's pad: left / right the tab (pausetab 0-2)
 PauseMenuReturn:					; the shared rts of PauseMenuInput and its item and tab routines
 	rts
 RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info, Stats,
-									; Options or the quit prompt (DATA8_C55012 / 18 in play mode 1)
+									; Options or the quit prompt (PracticeInfoJumps / PracticeOptionsJumps in
+									; play mode 1)
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .4
@@ -43,13 +43,13 @@ RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info
 	beq .2
 	dec a
 	beq .1
-	jmp (DATA8_C55038,x)
-.1:									; jump through DATA8_C55018,x
-	jmp (DATA8_C55018,x)
-.2:									; jump through DATA8_C55026,x
-	jmp (DATA8_C55026,x)
-.3:									; jump through DATA8_C55012,x
-	jmp (DATA8_C55012,x)
+	jmp (QuitPromptJumps,x)
+.1:									; jump through PracticeOptionsJumps,x
+	jmp (PracticeOptionsJumps,x)
+.2:									; jump through PauseStatsJumps,x
+	jmp (PauseStatsJumps,x)
+.3:									; jump through PracticeInfoJumps,x
+	jmp (PracticeInfoJumps,x)
 .4:									; A = pauseitem, A * 2, X = A, if pausetab = 0 go to .7, ...
 	lda.w pauseitem
 	asl a
@@ -60,13 +60,13 @@ RunPauseItem:						; runs item pauseitem of tab pausetab through its table: Info
 	beq .6
 	dec a
 	beq .5
-	jmp (DATA8_C55038,x)
-.5:									; jump through DATA8_C5502C,x
-	jmp (DATA8_C5502C,x)
-.6:									; jump through DATA8_C55026,x
-	jmp (DATA8_C55026,x)
-.7:									; jump through DATA8_C5501C,x
-	jmp (DATA8_C5501C,x)
+	jmp (QuitPromptJumps,x)
+.5:									; jump through PauseOptionsJumps,x
+	jmp (PauseOptionsJumps,x)
+.6:									; jump through PauseStatsJumps,x
+	jmp (PauseStatsJumps,x)
+.7:									; jump through PauseInfoJumps,x
+	jmp (PauseInfoJumps,x)
 PauseItemUp:						; the pause menu item one up (pauseitem - 1, not below 0), the tab redrawn
 	lda.w pauseitem
 	beq PauseMenuReturn
@@ -94,18 +94,18 @@ SetPauseTab:						; switches the pause menu to tab X when it is another: the old
 	pla
 	sta.w pausetab
 	stz.w pauseitem
-DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from DATA8_C55002, or
-									; DATA8_C5500A in play mode 1), the current item's row highlighted
-									; (palette $3200), queued to VRAM
+DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from PauseTabLists, or
+									; PracticePauseTabLists in play mode 1), the current item's row
+									; highlighted (palette $3200), queued to VRAM
 	asl a
 	tax
 	lda.w OptPlayMode
 	cmp.w #$0001
 	bne .1
-	lda.l DATA8_C5500A,x
+	lda.l PracticePauseTabLists,x
 	bra .2
-.1:									; A = DATA8_C55002,x
-	lda.l DATA8_C55002,x
+.1:									; A = PauseTabLists,x
+	lda.l PauseTabLists,x
 .2:									; call DrawPauseItems, call SelectPauseTab, A = pauseitem, A / 2, ...
 	jsr.w DrawPauseItems
 	jsr.w SelectPauseTab
@@ -125,42 +125,46 @@ DrawPauseTab:						; draws tab A's item list (its text in bank $C3 from DATA8_C5
 	dey
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
 	lda.w PauseMapBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jmp.w ShowPenaltyBoxes
-DATA8_C55002:						; the item list (bank $C3) of each pause menu tab: Info, Stats, Options,
-									; the quit prompt; DrawPauseTab
-	db $CB,$5C,$EF,$5C,$07,$5D,$21,$5D
-DATA8_C5500A:						; the same in game mode 1: shorter Info and Options lists; DrawPauseTab
-	db $E1,$5C,$EF,$5C,$FD,$5C,$21,$5D
-DATA8_C55012:						; game mode 1, Info tab: Team Roster, Score Summry, Records (RunPauseItem
-									; jumps through it)
+PauseTabLists:						; per pause tab (pausetab * 2: Info, Stats, Options, the quit prompt): its
+									; item list in bank $C3 for DrawPauseItems
+	dw PauseInfoItems&$FFFF,PauseStatsItems&$FFFF,PauseOptionsItems&$FFFF,QuitPromptItems&$FFFF
+PracticePauseTabLists:				; the same in practice (OptPlayMode 1): shorter Info and Options lists
+	dw PracticeInfoItems&$FFFF,PauseStatsItems&$FFFF,PracticeOptionsItems&$FFFF
+	dw QuitPromptItems&$FFFF
+PracticeInfoJumps:					; practice Info tab (OptPlayMode 1): per item (pauseitem * 2) its routine:
+									; Team Roster, Score Summry, Records
 	dw TeamRoster,ShowScoringSummary,RecordHoldersScreen
-DATA8_C55018:						; game mode 1, Options tab: Inst Replay, Quit Game
+PracticeOptionsJumps:				; practice Options tab: per item (pauseitem * 2) its routine: Inst Replay,
+									; Quit Game
 	dw PauseReplay,ShowQuitPrompt
-DATA8_C5501C:						; pause menu Info tab: Team Roster, Score Summry, Penalties, Records,
-									; Other Scores (RunPauseItem)
+PauseInfoJumps:						; pause menu Info tab: per item (pauseitem * 2) its routine: Team Roster,
+									; Score Summry, Penalties, Records, Other Scores
 	dw TeamRoster,ShowScoringSummary,ShowPenaltySummary,RecordHoldersScreen
 	dw ShowOtherScores
-DATA8_C55026:						; pause menu Stats tab: Game Stats, Period Stats, Player Stats
+PauseStatsJumps:					; pause menu Stats tab: per item (pauseitem * 2) its routine: Game Stats,
+									; Period Stats, Player Stats
 	dw ShowGameStats,ShowPeriodStats,ShowPlayerStats
-DATA8_C5502C:						; pause menu Options tab: Inst Replay, Edit Lines, Chnge Goalie, the
-									; goalie mode, Time Out, Quit Game
+PauseOptionsJumps:					; pause menu Options tab: per item (pauseitem * 2) its routine: Inst
+									; Replay, Edit Lines, Chnge Goalie, the goalie mode, Time Out, Quit Game
 	dw PauseReplay,EditLinesScreen,PauseGoalie,PauseGoalieMode
 	dw PauseTimeout,ShowQuitPrompt
-DATA8_C55038:						; the quit prompt: Resume Game (back to the Options tab), Quit Game
+QuitPromptJumps:					; the quit prompt: per item (pauseitem * 2) its routine: Resume Game (back
+									; to the Options tab), Quit Game
 	dw ResumeFromQuit,QuitGameJump
 InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, the game's text
 									; map read from VRAM into a buffer, BackupPauseBuffers, PauseScreenMap
@@ -173,23 +177,23 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	sta.w pausetab
 	lda.w #$0802
 	jsl.l AllocWorkBuf
-	sta.l $7E364A
+	sta.l pausesavebuf
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $0802
 	pea.w $0080
 	pea.w $5800
 	pea.w $3981
 	pea.w $007E
-	lda.l $7E364A
+	lda.l pausesavebuf
 	pha
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsl.l BackupPauseBuffers
@@ -199,7 +203,7 @@ InitPauseScreen:					; the pause screen's set-up: pausemenuon / pausetab $FFFF, 
 	sta.b r1
 	jsl.l MarkWorkBuf
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #PauseScreenMap&$FFFF
 	ldx.w #PauseScreenMap>>16
 	jsl.l MapSetToWRAM
@@ -235,16 +239,16 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	lda.w gsp
 	asl a
 	tax
-	lda.l DATA8_C55245,x
+	lda.l PauseSpriteX,x
 	sta.b $18
 	lda.w #$001F
 	jsl.l CreateSprite
-	stx.w $18F0
+	stx.w PauseSprite
 	lda.w #$0100
 	sta.b $22
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -275,10 +279,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	bpl .loop
 	rep #$20
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
@@ -290,47 +294,47 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	clc
 	adc.w #$08C0
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0040
 	pea.w $0050
 	pea.w $007E
 	adc.w #$2200
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$4100
 	jsl.l AllocWorkBuf
 	sta.b r0
 	pha
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #TeamNicknameTiles>>16
 	lda.w #TeamNicknameTiles&$FFFF
 	jsl.l Decompress
 	pla
 	sta.b r0
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0280
 	pea.w $3430
 	pea.w $007E
 	lda.w HomeTeam
 	asl a
-	sta.b $2E
+	sta.b r0+2
 	asl a
 	asl a
-	adc.b $2E
+	adc.b r0+2
 	asl a
 	asl a
 	asl a
@@ -344,10 +348,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	pea.w $007E
 	lda.w VisTeam
 	asl a
-	sta.b $2E
+	sta.b r0+2
 	asl a
 	asl a
-	adc.b $2E
+	adc.b r0+2
 	asl a
 	asl a
 	asl a
@@ -356,10 +360,10 @@ PauseScreenDraw:					; draws the pause screen from its map buffer: a sprite (rec
 	asl a
 	adc.b r0
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsr.w PauseScoresClock
@@ -390,25 +394,26 @@ FillPauseMapTileRun:				; writes consecutive tile words into the pause map at of
 	cpy.w #$000A
 	bne .loop
 	rts
-DATA8_C55245:						; not traced: a table read by PauseScreenDraw
+PauseSpriteX:						; per period (gsp * 2): the x of the sprite PauseScreenDraw creates
+									; (record $1F, y $39)
 	db $62,$01,$7D,$01,$97,$01
 DeselectPauseTab:					; copies the inactive tab tiles into the current pause tab header
 	lda.w pausetab
 	asl a
 	tax
-	lda.l DATA8_C5529C,x
+	lda.l PauseTabPlain,x
 	bra CopyPauseTabTiles
 SelectPauseTab:						; copies the active tab tiles into the current pause tab header
 	lda.w pausetab
 	asl a
 	tax
-	lda.l DATA8_C55294,x
+	lda.l PauseTabSelected,x
 CopyPauseTabTiles:					; copies a tab's two rows of eight tiles from pause map offset A to its
-									; place in the tab header (DATA8_C5528C by X); DeselectPauseTab and
+									; place in the tab header (PauseTabPlaces by X); DeselectPauseTab and
 									; SelectPauseTab end here
 	adc.w PauseMapBuf
 	tay
-	lda.l DATA8_C5528C,x
+	lda.l PauseTabPlaces,x
 	adc.w PauseMapBuf
 	tax
 	jsr.w CopyPauseTabTileRow
@@ -431,28 +436,31 @@ CopyPauseTabTileRow:				; copies eight tile words from Y to X
 	dec.b tmp0
 	bne .loop
 	rts
-DATA8_C5528C:						; not traced: a table read by CopyPauseTabTiles
+PauseTabPlaces:						; per pause tab (pausetab * 2): the pause map offset of its two rows of 8
+									; tiles in the tab header (the quit prompt uses the Options tab's)
 	db $44,$00,$58,$00,$6C,$00,$6C,$00
-DATA8_C55294:						; not traced: a table read by SelectPauseTab
+PauseTabSelected:					; per pause tab (pausetab * 2): the pause map offset of its selected look,
+									; copied into its place
 	db $C0,$07,$D0,$07,$E0,$07,$E0,$07
-DATA8_C5529C:						; not traced: a table read by DeselectPauseTab
+PauseTabPlain:						; per pause tab (pausetab * 2): the pause map offset of its plain look,
+									; copied into its place
 	db $40,$08,$50,$08,$60,$08,$60,$08
 DrawPauseItems:						; blanks the pause item rows (the bank $C3 list of seven blank items) and
 									; prints item list A (PrintPauseItems)
 	pha
-	ldx.w #$5D41
+	ldx.w #BlankPauseItems&$FFFF
 	jsr.w PrintPauseItems
 	plx
 PrintPauseItems:					; prints pause item list X (bank $C3: a count to pauseitems, then a
 									; routine and a text word an item) into the pause map, an item every two
 									; rows from row 12, attribute $3A00
 	lda.w #$00C3
-	sta.b $2E
+	sta.b r0+2
 	ldy.w #$0314
 	lda.l $C30000,x
 	sta.w pauseitems
 	sta.b tmp0
-CODE_C552BD:						; from PrintPauseItemText
+PrintPauseItemsRow:					; saves the item and row, then dispatches its callback or reads its text
 	phx
 	phy
 	lda.l $C30002,x
@@ -494,7 +502,7 @@ PrintPauseItemText:					; prints item text A (bank $C3, length-prefixed; 0 leave
 	adc.w #$0004
 	tax
 	dec.b tmp0
-	bne CODE_C552BD
+	bne PrintPauseItemsRow
 	rts
 GoalieModeItemText:					; the Options tab's goalie mode item: the manual goalie text when
 									; goaliemode1 of the pad's team (GetPadTeam) is set, else the auto goalie
@@ -570,7 +578,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	pha
 	tay
 	asl a
-	sta.b $A5
+	sta.b tmp3
 .loop:								; loop: A = tmboxlist,y, Y + 1, A and $00FF, ...
 	lda.w tmboxlist,y
 	iny
@@ -578,7 +586,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	bit.w #$0080
 	bne .1
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmpdst,x
 	bit.w #$4000
@@ -594,7 +602,7 @@ ShowPenaltyBox:						; the players in the penalty box list at tmboxlist + A (bit
 	bit.w #$0080
 	bne rtsmenu
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmpdst,x
 	bit.w #$4000
@@ -607,12 +615,12 @@ ShowPenaltyBoxPlayer:				; player X's jersey number and penalty time (tmpdst A) 
 	phy
 	ldy.b tmp2
 	cpy.w #$0200
-	bcc CODE_C553D6
+	bcc ShowPenaltyBoxPlayerBody
 	ply
 rtsmenu:							; the rts ShowPenaltyBox's second pass and a full ShowPenaltyBoxPlayer
 									; leave through
 	rts
-CODE_C553D6:						; from ShowPenaltyBoxPlayer
+ShowPenaltyBoxPlayerBody:			; draws the penalty box player after the row limit check
 	pha
 	txa
 	asl a
@@ -658,7 +666,7 @@ CODE_C553D6:						; from ShowPenaltyBoxPlayer
 	cmp.b #$3F
 	bne .loop
 	lda.b #$3A
-	sta.w $04F4,x
+	sta.w mesarea-1,x
 	rep #$20
 	lda.w #$0020
 	jsl.l AllocWorkBuf
@@ -686,7 +694,7 @@ CODE_C553D6:						; from ShowPenaltyBoxPlayer
 	dec.b QueueBusy
 	tsc
 	sta.b r3
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	phx
 	lda.w #$5800
@@ -697,7 +705,7 @@ CODE_C553D6:						; from ShowPenaltyBoxPlayer
 	pea.w $007E
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b r3
 	tcs
 	stz.b QueueBusy
@@ -753,7 +761,7 @@ PutPauseScore:						; the three big digits PushNumberWrap left (width 3) to paus
 	jsr.w PutClockDigit
 	iny
 	iny
-	lda.w $055C
+	lda.w PushWidthBuf+3
 	jsr.w PutClockDigit
 	iny
 	iny
@@ -792,11 +800,11 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w PauseMusicOn
 	beq .1
 	jsl.l LoadTeamSongs
-.1:									; DMAEnShadow = 0, call WaitTransfers, $32 = $007E, A = $21F0, ...
+.1:									; DMAEnShadow = 0, call WaitTransfers, r1+2 = $007E, A = $21F0, ...
 	stz.w DMAEnShadow
 	jsl.l WaitTransfers
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #$21F0
 	jsl.l AllocWorkBuf
 	pha
@@ -806,10 +814,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l MapSetToWRAM
 	ply
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $18A0
 	pea.w $2200
 	pea.w $007E
@@ -817,21 +825,21 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	clc
 	adc.w #$0930
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pea.w $007E
 	adc.w #$18A0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$21F0
@@ -919,47 +927,47 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	sta.b tmp1
 	lda.w #$2160
 	sta.b tmp2
-	lda.w #$01BE
+	lda.w #SPFgoal
 	jsl.l QueueFrameTiles
 	lda.w #$2168
 	sta.b tmp2
-	lda.w #$01BF
+	lda.w #SPFgoal+1
 	jsl.l QueueFrameTiles
 	lda.w #$2588
 	sta.b tmp2
-	lda.w #$006F
+	lda.w #SPFpad
 	jsl.l QueueFrameTiles
 	lda.w #$2035
 	sta.b tmp1
-	lda.w #$01B3
+	lda.w #SPFpuck
 	jsl.l QueueFrameTiles
 	lda.w #$2454
 	sta.b tmp1
 	lda.w #$25E0
 	sta.b tmp2
-	lda.w #$0072
+	lda.w #SPFreplay
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$01E0
 	pha
 	jsl.l AllocWorkBuf
 	pea.w $6360
 	ldx.w #$007E
 	phx
-	stx.b $2E
+	stx.b r0+2
 	pha
 	sta.b r0
 	lda.w #DigitFontTiles&$FFFF
 	ldx.w #DigitFontTiles>>16
 	jsl.l Decompress
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$01E0
@@ -967,69 +975,69 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.w #IceRinkMap&$FFFF
 	sta.b r1
 	lda.w #IceRinkMap>>16
-	sta.b $32
+	sta.b r1+2
 	lda.b [r1]
 	clc
 	adc.b r1
 	bcc .2
-	inc.b $32
+	inc.b r1+2
 	clc
-.2:									; A + $0002, if carry clear go to .3, $32 + 1
+.2:									; A + $0002, if carry clear go to .3, r1+2 + 1
 	adc.w #$0002
 	bcc .3
-	inc.b $32
+	inc.b r1+2
 	clc
-.3:									; r0 = A, $2E = $32, r1 = A, A + [r1], ...
+.3:									; r0 = A, r0+2 = r1+2, r1 = A, A + [r1], ...
 	sta.b r0
-	ldx.b $32
-	stx.b $2E
+	ldx.b r1+2
+	stx.b r0+2
 	sta.b r1
 	adc.b [r1]
 	bcc .4
-	inc.b $32
+	inc.b r1+2
 	clc
-.4:									; A + $0009, r1 = A, if carry clear go to .5, $32 + 1
+.4:									; A + $0009, r1 = A, if carry clear go to .5, r1+2 + 1
 	adc.w #$0009
 	sta.b r1
 	bcc .5
-	inc.b $32
-.5:									; A = r0, A + $0008, if carry clear go to .6, $2E + 1
+	inc.b r1+2
+.5:									; A = r0, A + $0008, if carry clear go to .6, r0+2 + 1
 	lda.b r0
 	clc
 	adc.w #$0008
 	bcc .6
-	inc.b $2E
-.6:									; r0 = A, A = $4100, call AllocWorkBuf, $364C = A, ...
+	inc.b r0+2
+.6:									; r0 = A, A = $4100, call AllocWorkBuf, RestoreScreenBuf = A, ...
 	sta.b r0
 	lda.w #$4100
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf
 	ldx.w #$007E
 	jsr.w DecompressLZSS
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
-	lda.w $364C
+	lda.w RestoreScreenBuf
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $001E
 	pea.w $0001
-	pea.w $00C0
-	pea.w $0EE7
+	pea.w GamePalette0>>16
+	pea.w (GamePalette0+2)&$FFFF
 	pea.w $0002
 	pea.w $0000
-	pea.w $00C0
-	pea.w $4CA9
+	pea.w BackdropColour>>16
+	pea.w BackdropColour&$FFFF
 	pea.w $0040
 	pea.w $0010
 	pei ($32)
@@ -1052,28 +1060,28 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lsr a
 	adc.w #$3F02
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$4100
 	jsl.l FreeWorkBuf
 	lda.w #$4E00
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #CenterIceTiles>>16
 	lda.w #CenterIceTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0300
 	pea.w $2080
 	pea.w $007E
@@ -1081,14 +1089,14 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	asl a
 	adc.w HomeTeam
 	xba
-	adc.w $364C
+	adc.w RestoreScreenBuf
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0060
 	pea.w $00C2
@@ -1100,10 +1108,10 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	asl a
 	adc.w #$ADCA
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$4E00
@@ -1116,40 +1124,40 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	jsl.l DecompressToVRAM
 	lda.w #$13E0
 	jsl.l AllocWorkBuf
-	sta.w $364C
+	sta.w RestoreScreenBuf
 	sta.b r1
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.w #FaceOffMap&$FFFF
 	ldx.w #FaceOffMap>>16
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $09C0
 	pea.w $4320
 	pea.w $007E
 	clc
-	lda.w $364C
+	lda.w RestoreScreenBuf
 	adc.w #$0A00
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0070
 	pea.w $007E
 	adc.w #$09C0
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
@@ -1157,27 +1165,27 @@ RestoreGameScreen:					; leaves the pause screen: the team songs back when the p
 	lda.b #$13
 	sta.l TM
 	rep #$20
-	jsl.l CODE_C53A29
+	jsl.l DrawPeriodBox
 	jsl.l WaitTransfers
 	jml.l RestoreWorkBuf
 QueueSavedTextMap:					; queues the text map saved at the pause ($800 bytes from the buffer at
-									; $364A) to VRAM $5800
+									; pausesavebuf) to VRAM $5800
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0800
 	pea.w $5800
 	pea.w $007E
-	lda.w $364A
+	lda.w pausesavebuf&$FFFF
 	inc a
 	inc a
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$0802
@@ -1191,7 +1199,7 @@ FreePauseBuffers:					; frees the pause screen's work buffers (FreeWorkBuf $040E
 RestorePauseBuffers:				; copies BackupPauseBuffers' two buffers back (the sprite objects at
 									; SpriteObjRAM, the palette slots from PalSlotList) and re-uploads the
 									; frames of the objects in use
-	ldx.w $3648
+	ldx.w PauseSpriteBackup
 	ldy.w #SpriteObjRAM
 	lda.w #$01FD
 	mvn $7E,$7E
@@ -1230,11 +1238,11 @@ RestorePauseBuffers:				; copies BackupPauseBuffers' two buffers back (the sprit
 	and.w #$FF00
 	ora.w VisSpritePal
 	jsl.l QueueSpritePalette
-	lda.w $4828
+	lda.w SpritePalUse+$170
 	and.w #$FF00
 	ora.w #$00B8
 	jsl.l QueueSpritePalette
-	lda.w $482A
+	lda.w SpritePalUse+$172
 	and.w #$FF00
 	ora.w #$00B9
 	jsl.l QueueSpritePalette
@@ -1253,13 +1261,15 @@ SetupScreen:						; common start of the stats screens: the tiled background, VRA
 	jsl.l CreateSprite
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0400
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsr.w MapSetToVRAMBody
 	ldy.w #$5000
@@ -1281,23 +1291,23 @@ SetupScreen:						; common start of the stats screens: the tiled background, VRA
 	sta.b r0
 	sta.b r2
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #GradientBarTiles>>16
 	lda.w #GradientBarTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0010
 	pea.w $007E
 	pei ($34)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsr.w QueueHomePalette
 	jsr.w QueueVisPalette
@@ -1359,7 +1369,7 @@ SetupStatsPage:						; SetupScreen, then the page A (PrintTextPage) and both tea
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000C
 	jsl.l PrintThinCentred
@@ -1370,7 +1380,7 @@ SetupStatsPage:						; SetupScreen, then the page A (PrintTextPage) and both tea
 	lda.w HomeTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000C
 	jsl.l PrintThinCentred
@@ -1381,9 +1391,9 @@ StartScrollListLong:				; StartScrollList for long calls
 StartScrollList:					; starts a scrolling list: X rows shown from text row Y, each row drawn by
 									; the routine A, a1 = the last row; the first rows drawn
 	sta.b $75
-	stx.b $71
+	stx.b a3+2
 	sty.b a4
-	stz.b $69
+	stz.b a1+2
 	jsl.l WaitTransfers
 	ldx.w #$0060
 	jsl.l SetupHDMA
@@ -1410,7 +1420,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	sta.w BG3ScrollHDMA+$13,x
 	lda.w #$0013
 	sta.w BG3ScrollHDMA+$14,x
-	lda.b $71
+	lda.b a3+2
 	asl a
 	asl a
 	asl a
@@ -1449,9 +1459,9 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	ldx.w #$0050
 	jsl.l SetupHDMA
 	db $02,$12,$8F,$46,$7E,$7E		; inline parameters
-.3:									; X = $FFFF, A = $71, A + 1, A + 1, ...
+.3:									; X = $FFFF, A = a3+2, A + 1, A + 1, ...
 	ldx.w #$FFFF
-	lda.b $71
+	lda.b a3+2
 	inc a
 	inc a
 	asl a
@@ -1478,7 +1488,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	jsl.l SetSpriteAnim
 	lda.b a4
 	clc
-	adc.b $71
+	adc.b a3+2
 	asl a
 	asl a
 	asl a
@@ -1491,7 +1501,7 @@ StartScrollList:					; starts a scrolling list: X rows shown from text row Y, ea
 	jsl.l SetSpriteAnim
 	stz.b a3
 	lda.b a4
-	sta.b $6D
+	sta.b a2+2
 StartScrollRowNext:					; StartScrollList's row loop: text row $6D cleared, then the row routine
 									; at $75 (returning to StartScrollRowDrawn)
 	jsr.w ClearTextRow
@@ -1501,30 +1511,30 @@ StartScrollRowDrawn:				; a row drawn for StartScrollList: WaitTransfers, Restor
 									; row while rows and window last, then ScrollListArrows
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
-	inc.b $6D
+	inc.b a2+2
 	inc.b a3
 	lda.b a3
 	cmp.b a1
 	bcs ScrollListArrows
 	dec a
-	cmp.b $71
+	cmp.b a3+2
 	bcc StartScrollRowNext
 ScrollListArrows:					; a scrolling list each frame: its up arrow sprite shown when rows are
 									; above, the down arrow when rows are below
 	ldx.b $77
 	lda.b $22,x
-	ldy.b $69
+	ldy.b a1+2
 	beq .1
 	ora.w #$0001
 	bra .2
 .1:									; A and $FFFE
 	and.w #$FFFE
-.2:									; $22,x = A, X = $79, A = Y, A + $71, ...
+.2:									; $22,x = A, X = $79, A = Y, A + a3+2, ...
 	sta.b $22,x
 	ldx.b $79
 	tya
 	clc
-	adc.b $71
+	adc.b a3+2
 	tay
 	lda.b $22,x
 	cpy.b a1
@@ -1537,16 +1547,16 @@ ScrollListArrows:					; a scrolling list each frame: its up arrow sprite shown w
 	sta.b $22,x
 	rts
 RedrawScrollList:					; redraws the visible scrolling list and its adjacent buffered rows
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $71
+	lda.b a3+2
 	sec
-	adc.b $69
+	adc.b a1+2
 	pha
-	lda.b $69
+	lda.b a1+2
 	beq RedrawScrollRowNext
 	dec a
 RedrawScrollRowNext:				; RedrawScrollList's loop: row A (from the one above the window) while
@@ -1562,10 +1572,10 @@ RedrawScrollRowNext:				; RedrawScrollList's loop: row A (from the one above the
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w RedrawScrollRowDrawn-1
 	jmp ($0075)
@@ -1583,14 +1593,14 @@ ScrollListDownLong:					; calls ScrollListDown for long callers
 	jsr.w ScrollListDown
 	rtl
 ScrollListDown:						; scrolls a scrolling list down a row (the pad's down) when rows are below
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $69
+	lda.b a1+2
 	clc
-	adc.b $71
+	adc.b a3+2
 	cmp.b a1
 	bcs ScrollListDownReturn
 	inc a
@@ -1602,10 +1612,10 @@ ScrollListDown:						; scrolls a scrolling list down a row (the pad's down) when
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w ScrollDownRowDrawn-1
 	jmp ($0075)
@@ -1621,7 +1631,7 @@ ScrollListDownReturn:				; the rts ScrollListDown leaves through when the list i
 	rts
 ScrollListDownAnim:					; scrolls the list down a row over 8 frames by the BG3 scroll HDMA entries
 									; (BG3ScrollHDMA+$6 on), then ScrollListDownDone
-	inc.b $69
+	inc.b a1+2
 	ldx.w #$0008
 .loop:								; loop: X - 1, if the result < 0 go to ScrollListDownDone, ...
 	dex
@@ -1661,15 +1671,15 @@ ScrollListDownAnim:					; scrolls the list down a row over 8 frames by the BG3 s
 	stz.w BG3ScrollHDMA+$F
 	bra .loop
 ScrollListUp:						; scrolls a scrolling list up a row (the pad's up) when rows are above
-	lda.b $71
+	lda.b a3+2
 	inc a
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $69
+	lda.b a1+2
 	beq ScrollListUpReturn
 	dec a
-	sta.b $69
+	sta.b a1+2
 	dec a
 	bmi ScrollListUpAnim
 	sta.b a3
@@ -1678,10 +1688,10 @@ ScrollListUp:						; scrolls a scrolling list up a row (the pad's up) when rows 
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + a4, $6D = A, call ClearTextRow, jump through $0075
+.1:									; A + a4, a2+2 = A, call ClearTextRow, jump through $0075
 	clc
 	adc.b a4
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w ScrollUpRowDrawn-1
 	jmp ($0075)
@@ -1734,10 +1744,11 @@ ScrollListUpAnim:					; scrolls the list up a row over 8 frames by the BG3 scrol
 	stz.w padchangeany
 ScrollListUpReturn:					; the rts ScrollListUp leaves through when the list is at its top
 	rts
-DATA8_C55D6B:						; jump table: the routine for each index (code in bankC5_6000 uses it)
+GameStatFormats:					; per game stat row format (the row's byte at +2 in bank $C3): the routine
+									; that prints a team's value: a number, a pair, a percentage, a time
 	dw DrawTeamStatNumber,DrawTeamStatPair,DrawTeamStatPercent,DrawTeamStatTime
 ClearTextRow:						; clears row $6D of the text map at $D3 (32 tiles)
-	lda.b $6D
+	lda.b a2+2
 	xba
 	lsr a
 	lsr a
@@ -1753,7 +1764,7 @@ ClearTextRow:						; clears row $6D of the text map at $D3 (32 tiles)
 	bne .loop
 	rts
 DrawTeamStatNumber:					; formats a team stat as a centred decimal value
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
@@ -1763,12 +1774,12 @@ DrawTeamStatNumber:					; formats a team stat as a centred decimal value
 	lda.l BCDTable,x
 	and.w #$00FF
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatPair:					; formats two team stats separated by the pair separator
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
@@ -1782,7 +1793,7 @@ DrawTeamStatPair:					; formats two team stats separated by the pair separator
 	sta.w mesarea,x
 	inx
 	txy
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30005,x
 	clc
 	adc.b a2
@@ -1793,12 +1804,12 @@ DrawTeamStatPair:					; formats two team stats separated by the pair separator
 	and.w #$00FF
 	tyx
 	jsr.w BCDTextAt
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatPercent:				; formats the ratio of two team stats as a percentage capped at 100
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30005,x
 	clc
 	adc.b a2
@@ -1824,23 +1835,23 @@ DrawTeamStatPercent:				; formats the ratio of two team stats as a percentage ca
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
-.2:									; call BCDText, mesarea,x = $003C, Y = $6D, X = mesarea, ...
+.2:									; call BCDText, mesarea,x = $003C, Y = a2+2, X = mesarea, ...
 	jsr.w BCDText
 	lda.w #$003C
 	sta.w mesarea,x
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
 DrawTeamStatTime:					; formats a team stat time as centred minutes and seconds
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30003,x
 	clc
 	adc.b a2
 	sta.b tmp0
 	lda.b (tmp0)
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	rts
@@ -1852,13 +1863,13 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lda.b a2
 	beq .1
 	ldy.w VisTeam
-.1:									; push Y, QueueBusy - 1, A = $04, $04 = X, ...
+.1:									; push Y, QueueBusy - 1, A = CGRAMQueueSP, CGRAMQueueSP = X, ...
 	phy
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0020
 	pea.w $007F
@@ -1869,10 +1880,10 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lsr a
 	adc.w #$D80A
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.b $01,s
 	jsl.l CreateSprite
@@ -1880,16 +1891,16 @@ TeamLogoSprite:						; for team a2 (HomeTeam / VisTeam): its 16 logo colours que
 	lda.w #$0001
 	trb.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
 	pla
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -1961,7 +1972,7 @@ FitNameToMesarea:					; FitName into mesarea (Y = mesarea)
 FitName:							; copies the zero-ended name at X to Y in at most A characters: as it is,
 									; else the first name as an initial ('F= Last'), else cut short with '=';
 									; X = Y
-	sty.b $2E
+	sty.b r0+2
 	sta.b r0
 	phx
 	sep #$20
@@ -1980,7 +1991,7 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	cmp.b r0
 	bcc .2
 	beq .2
-	ldx.b $2E
+	ldx.b r0+2
 	txy
 .loop2:								; loop: A = $0001,x, X + 1, if $0001,x is not $20 go to .loop2, ...
 	lda.w $0001,x
@@ -2000,12 +2011,12 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	tya
 	inc a
 	sec
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .2
 	beq .2
 	sep #$20
-	ldy.b $2E
+	ldy.b r0+2
 	ldx.b r0
 .loop4:								; loop: $0000,y = $0003,y, if $0003,y = 0 go to .2, Y + 1, X - 1, ...
 	lda.w $0003,y
@@ -2018,9 +2029,9 @@ FitName:							; copies the zero-ended name at X to Y in at most A characters: a
 	rep #$20
 	lda.w #$003D
 	sta.w $0000,y
-.2:									; A 16-bit, X = $2E, return
+.2:									; A 16-bit, X = r0+2, return
 	rep #$20
-	ldx.b $2E
+	ldx.b r0+2
 	rts
 FitNameToWorkBuf:					; FitName into a new work buffer entry of A + 2 bytes (long calls)
 	pha
@@ -2034,7 +2045,7 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 									; place, as FitName does
 	sta.b r0
 	jsl.l UnpackText
-	stx.b $2E
+	stx.b r0+2
 	ldy.w #$0000
 	sep #$20
 .loop:								; loop: if $0000,x = 0 go to .1, X + 1, Y + 1, go to .loop
@@ -2043,11 +2054,11 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 	inx
 	iny
 	bra .loop
-.1:									; if Y < r0 go to .3, if zero go to .3, X = $2E, Y = X
+.1:									; if Y < r0 go to .3, if zero go to .3, X = r0+2, Y = X
 	cpy.b r0
 	bcc .3
 	beq .3
-	ldx.b $2E
+	ldx.b r0+2
 	txy
 .loop2:								; loop: A = $0001,x, X + 1, if $0001,x is not $20 go to .loop2, ...
 	lda.w $0001,x
@@ -2067,31 +2078,31 @@ UnpackFitName:						; unpacks text X (UnpackText) and fits the name in at most A
 	tya
 	inc a
 	sec
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .3
 	beq .3
 	tya
 	dec a
 	clc
-	sbc.b $2E
+	sbc.b r0+2
 	cmp.b r0
 	bcc .2
 	beq .2
-	lda.b $2E
+	lda.b r0+2
 	clc
 	adc.b r0
 	adc.w #$0004
 	tax
 	lda.w #$003D
 	sta.w $0000,x
-.2:									; A = $2E, A + $0003, X = A, return
-	lda.b $2E
+.2:									; A = r0+2, A + $0003, X = A, return
+	lda.b r0+2
 	clc
 	adc.w #$0003
 	tax
 	rts
-.3:									; A 16-bit, X = $2E, return
+.3:									; A 16-bit, X = r0+2, return
 	rep #$20
-	ldx.b $2E
+	ldx.b r0+2
 	rts

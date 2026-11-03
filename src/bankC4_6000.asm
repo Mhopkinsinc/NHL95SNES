@@ -1,9 +1,8 @@
-; Segment bankC4_6000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_6000: game code, jump tables and the data tables the code reads with long addresses.
 org $C45FAC
 PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -48,16 +47,16 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -66,15 +65,15 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -102,9 +101,9 @@ PlayerAccDir2x2:					; playeracc toward direction 2 (right), the step taken twic
 .rtl:								; return
 	rtl
 PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -160,16 +159,16 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -178,15 +177,15 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -219,9 +218,9 @@ PlayerAccDir3:						; playeracc toward direction 3 (down-right), one step (Playe
 	rtl
 PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -281,16 +280,16 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -299,15 +298,15 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -339,7 +338,7 @@ PlayerAccDir3x2:					; playeracc toward direction 3 (down-right), the step taken
 .rtl:								; return
 	rtl
 PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -383,16 +382,16 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -401,15 +400,15 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -438,7 +437,7 @@ PlayerAccDir4:						; playeracc toward direction 4 (down), one step (PlayerAccOn
 	rtl
 PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -484,16 +483,16 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -502,15 +501,15 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -538,9 +537,9 @@ PlayerAccDir4x2:					; playeracc toward direction 4 (down), the step taken twice
 .rtl:								; return
 	rtl
 PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -597,16 +596,16 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -615,15 +614,15 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -656,9 +655,9 @@ PlayerAccDir5:						; playeracc toward direction 5 (down-left), one step (Player
 	rtl
 PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -719,16 +718,16 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -737,15 +736,15 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -777,7 +776,7 @@ PlayerAccDir5x2:					; playeracc toward direction 5 (down-left), the step taken 
 .rtl:								; return
 	rtl
 PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -821,16 +820,16 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -839,15 +838,15 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -876,7 +875,7 @@ PlayerAccDir6:						; playeracc toward direction 6 (left), one step (PlayerAccOn
 	rtl
 PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
 	ldx.b curobj
 	lda.w Wallsin,x
@@ -922,16 +921,16 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .4
@@ -940,15 +939,15 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .4
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .4:									; pull A, if carry clear go to .5, Xvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .5
@@ -976,9 +975,9 @@ PlayerAccDir6x2:					; playeracc toward direction 6 (left), the step taken twice
 .rtl:								; return
 	rtl
 PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAccOneFrame)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1034,16 +1033,16 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1052,15 +1051,15 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1093,9 +1092,9 @@ PlayerAccDir7:						; playeracc toward direction 7 (up-left), one step (PlayerAc
 	rtl
 PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken twice
 									; (PlayerAccFrames)
-	lda.l DATA8_C4692F,x
+	lda.l PlayerAccStepX,x
 	sta.b d0
-	lda.l DATA8_C4693F,x
+	lda.l PlayerAccStepY,x
 	sta.b d1
 	ldx.b curobj
 	lda.w Wallcos,x
@@ -1155,16 +1154,16 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	lda.b d0
 	lsr a
 	adc.w #$0800
-	jsr (DATA8_C45C7D,x)
+	jsr (ScaleSkatingSpeeds,x)
 	xba
 	lsr a
 	lsr a
 	and.w #$003C
 	tax
-	lda.l DATA8_C09BC4,x
+	lda.l MaxSpeed,x
 	sta.b d2
-	lda.l DATA8_C09BC4+2,x
-	sta.b $89
+	lda.l MaxSpeed+2,x
+	sta.b d2+2
 	ldx.b curobj
 	lda.w position,x
 	bne .6
@@ -1173,15 +1172,15 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	lda.w goalieflags,x
 	bit.w #$0004
 	bne .6
-	lda.b $89
+	lda.b d2+2
 	lsr a
 	lsr a
 	eor.w #$FFFF
 	inc a
-	adc.b $89
-	sta.b $89
+	adc.b d2+2
+	sta.b d2+2
 .6:									; pull A, if carry clear go to .7, Yvel,x = A
-	lda.b $89
+	lda.b d2+2
 	cmp.b d3
 	pla
 	bcc .7
@@ -1212,23 +1211,25 @@ PlayerAccDir7x2:					; playeracc toward direction 7 (up-left), the step taken tw
 	jml.l setpde
 .rtl:								; return
 	rtl
-DATA8_C4692F:						; not traced: a table read by PlayerAccDir2x2, PlayerAccDir3, ...
+PlayerAccStepX:						; per direction (d2 * 2, 0 up, clockwise): the x step of the acceleration
+									; (0, 4, 7, 4, 0, -4, -7, -4)
 	db $00,$00,$04,$00,$07,$00,$04,$00,$00,$00,$FC,$FF,$F9,$FF,$FC,$FF
-DATA8_C4693F:						; not traced: a table read by PlayerAccDir3, PlayerAccDir3x2, ...
+PlayerAccStepY:						; per direction (d2 * 2, 0 up, clockwise): the y step of the acceleration
+									; (7, 4, 0, -4, -7, -4, 0, 4)
 	db $07,$00,$04,$00,$00,$00,$FC,$FF,$F9,$FF,$FC,$FF,$00,$00,$04,$00
 doplayeracc:						; from skatetopuck and other segments
 	lda.w position,x
 	bne .1
 	jmp.w goalieacc
-.1:									; if SPA,x = $2082 go to .rtl, d1 = $1958, if pfrev,x = 0 go to .2, ...
+.1:									; if SPA,x = SPAsweepchk&$FFFF go to .rtl, d1 = SPAglide&$FFFF, ...
 	lda.w SPA,x
-	cmp.w #$2082
+	cmp.w #SPAsweepchk&$FFFF
 	beq .rtl
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 	sta.b d1
 	lda.w pfrev,x
 	beq .2
-	lda.w #$1F6C
+	lda.w #SPAglideback&$FFFF
 	sta.b d1
 .2:									; A = d0, A and $000F, d0 = A, if A < $0008 go to .4, ...
 	lda.b d0
@@ -1354,7 +1355,7 @@ doplayeracc:						; from skatetopuck and other segments
 	asl a
 	sta.b d0
 	tax
-	lda.l DATA8_C46B26,x
+	lda.l TurnSteps,x
 	ldx.b a3
 	cmp.w #$0000
 	bne .13
@@ -1385,12 +1386,12 @@ doplayeracc:						; from skatetopuck and other segments
 	bpl .14
 	lda.w #$0180
 	sta.b d4
-.14:								; A = tmp0, X = d4, call Mul16x8S, $91 = $36, ...
+.14:								; A = tmp0, X = d4, call Mul16x8S, d4+2 = r2+2, ...
 	lda.b tmp0
 	ldx.b d4
 	jsl.l Mul16x8S
-	lda.b $36
-	sta.b $91
+	lda.b r2+2
+	sta.b d4+2
 	lda.b r2
 	sta.b d4
 	ldx.b a3
@@ -1401,32 +1402,32 @@ doplayeracc:						; from skatetopuck and other segments
 	sbc.b d4
 	sta.b d4
 	lda.w #$0000
-	sbc.b $91
-	sta.b $91
+	sbc.b d4+2
+	sta.b d4+2
 .15:								; A = facefrac,x, A + d4, facefrac,x = A, A = facedir,x, ...
 	lda.w facefrac,x
 	clc
 	adc.b d4
 	sta.w facefrac,x
 	lda.w facedir,x
-	adc.b $91
+	adc.b d4+2
 	and.w #$0007
 	sta.w facedir,x
 	sta.b d2
 	lda.b d3
 	cmp.w #$0015
 	bcc .17
-	lda.w #$198A
+	lda.w #SPAskatewp&$FFFF
 	sta.b d1
 	lda.b tmp0
 	bpl .16
-	lda.w #$198A
+	lda.w #SPAskatewp&$FFFF
 	sta.b d1
-.16:								; A = attribute,x, if $0800 bits clear go to .17, d1 = $198A
+.16:								; A = attribute,x, if $0800 bits clear go to .17, d1 = SPAskatewp&$FFFF
 	lda.w attribute,x
 	bit.w #$0800
 	beq .17
-	lda.w #$198A
+	lda.w #SPAskatewp&$FFFF
 	sta.b d1
 .17:								; if pf2aip,x is not 0 go to .18, call SetSPA, pf2aip,x = $0001
 	lda.w pf2aip,x
@@ -1441,7 +1442,7 @@ doplayeracc:						; from skatetopuck and other segments
 	jmp.w revplayeracc
 .rtl2:								; return
 	rtl
-DATA8_C46B26:						; not traced: a table read by doplayeracc
+TurnSteps:							; the turn step for each direction difference (eight directions)
 	db $00,$00,$11,$00,$11,$00,$11,$00,$00,$00,$EF,$FF,$EF,$FF,$EF,$FF
 noturn0:							; from doplayeracc
 	lda.w #$0002
@@ -1479,39 +1480,39 @@ noturn0:							; from doplayeracc
 	beq .3
 	dec.w facedir,x
 	dec.w facedir,x
-.3:									; A = facedir,x, A and $0007, facedir,x = A, d1 = $1958, ...
+.3:									; A = facedir,x, A and $0007, facedir,x = A, d1 = SPAglide&$FFFF, ...
 	lda.w facedir,x
 	and.w #$0007
 	sta.w facedir,x
-	lda.w #$1958
+	lda.w #SPAglide&$FFFF
 	sta.b d1
 	lda.w pfrev,x
 	bne .4
 	jmp.w SetSPA
-.4:									; Y = $0001, A = $1F6C, go to SetSPAFromA
+.4:									; Y = $0001, A = SPAglideback&$FFFF, go to SetSPAFromA
 	ldy.w #$0001
-	lda.w #$1F6C
+	lda.w #SPAglideback&$FFFF
 	jml.l SetSPAFromA
-.5:									; Y = $0001, d1 = $1F9E, if pfrev,x is not 0 go to .7, Y = $0000, ...
+.5:									; Y = $0001, d1 = SPAskateback&$FFFF, if pfrev,x is not 0 go to .7, ...
 	ldy.w #$0001
-	lda.w #$1F9E
+	lda.w #SPAskateback&$FFFF
 	sta.b d1
 	lda.w pfrev,x
 	bne .7
 	ldy.w #$0000
-	lda.w #$1A3C
+	lda.w #SPAskate&$FFFF
 	sta.b d1
 	lda.w pflags,x
 	bit.w #$0004
 	beq .6
 	ldy.w #$0001
-	lda.w #$25D2
+	lda.w #SPAstumble&$FFFF
 	sta.b d1
-.6:									; if X is not puckc go to .7, Y = $0000, d1 = $198A
+.6:									; if X is not puckc go to .7, Y = $0000, d1 = SPAskatewp&$FFFF
 	cpx.w puckc
 	bne .7
 	ldy.w #$0000
-	lda.w #$198A
+	lda.w #SPAskatewp&$FFFF
 	sta.b d1
 .7:									; if pf2aip,x is not 0 go to revplayeracc, A = Y, pf2aip,x = A, ...
 	lda.w pf2aip,x
@@ -1532,11 +1533,11 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	lda.w Xpos,x
 	sta.b p0
 	lda.w Ypos,x
-	sta.b $3A
+	sta.b p0+2
 	lda.b d0
 	sta.b p1
 	lda.b d1
-	sta.b $3E
+	sta.b p1+2
 	lda.w position,x
 	bne .1
 	jmp.w AvoidGoalForGoalie
@@ -1569,19 +1570,19 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	bne .4
 	ldx.b curobj
 	rtl
-.2:									; A = r3, r3 = $42, $42 = A, A = $3A, ...
+.2:									; A = r3, r3 = $42, $42 = A, A = p0+2, ...
 	lda.b r3
 	ldy.b $42
 	sty.b r3
 	sta.b $42
-	lda.b $3A
+	lda.b p0+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3A
-	lda.b $3E
+	sta.b p0+2
+	lda.b p1+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3E
+	sta.b p1+2
 	lda.b tmp0
 	bit.w #$000A
 	beq .3
@@ -1593,11 +1594,11 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	beq .4
 	eor.w #$000A
 	sta.b tmp1
-.4:									; if tmp1 = 0 go to .5, X = tmp0, call (DATA8_C46DB0,x), X = curobj, ...
+.4:									; if tmp1 = 0 go to .5, X = tmp0, call (AvoidGoalHandlers,x), ...
 	lda.b tmp1
 	beq .5
 	ldx.b tmp0
-	jsr (DATA8_C46DB0,x)
+	jsr (AvoidGoalHandlers,x)
 	ldx.b curobj
 	rtl
 .5:									; call AvoidGoalInsideTarget, X = curobj, return
@@ -1606,15 +1607,15 @@ avdgoal:							; adjust the skating target so the path avoids a goal
 	rtl
 AvoidGoalInsideTarget:				; adjust an inside-box target for crossing the goal line or goalie
 	ldx.b curobj
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl .1
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .rts
 	bra AvoidGoalFromBehind
-.1:									; if $3E - $FEF2 < 0 go to .3, if $44 < 0 go to .rts, ...
-	lda.b $3E
+.1:									; if p1+2 - $FEF2 < 0 go to .3, if $44 < 0 go to .rts, ...
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .3
 	ldy.b $44
@@ -1644,7 +1645,7 @@ AvoidGoalLeftEdge:					; set the skating target to the left edge of the goal avo
 	sta.b d0
 	rts
 AvoidGoalInsideStart:				; choose a detour from inside the skater goal avoidance box
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl AvoidGoalFromFront
 AvoidGoalFromBehind:				; route a skater from behind the goal around an edge
@@ -1657,7 +1658,7 @@ AvoidGoalFromBehind:				; route a skater from behind the goal around an edge
 	sta.b d1
 	bra AvoidGoalClampTargetX
 AvoidGoalFromFront:					; route a skater from in front of the goal around the goalie
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bpl .1
 	lda.b $46
@@ -1766,7 +1767,7 @@ AvoidGoalLeftHighY:					; route from the left high-Y corner of the mirrored skat
 	lda.w #$FFCA
 	sta.b d0
 	rts
-DATA8_C46DB0:						; jump table: the routine for each index
+AvoidGoalHandlers:					; avdgoal's handler for each start code (AvoidGoal...)
 	dw AvoidGoalInsideStart,AvoidGoalHighY,AvoidGoalRightSide,AvoidGoalRightHighY
 	dw AvoidGoalLowY,$0000,AvoidGoalRightLowY,$0000
 	dw AvoidGoalLeftSide,AvoidGoalLeftHighY,$0000,$0000
@@ -1776,8 +1777,8 @@ ClassifySkaterGoalPath:				; classify the start and target around the skater goa
 	sty.b $42
 	stz.b tmp0
 	stz.b tmp1
-	ldx.b $3A
-	ldy.b $3E
+	ldx.b p0+2
+	ldy.b p1+2
 	cpx.b r3
 	bpl .3
 	lda.w #$0008
@@ -1861,19 +1862,19 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	bne .3
 	ldx.b curobj
 	rtl
-.1:									; A = r3, r3 = $42, $42 = A, A = $3A, ...
+.1:									; A = r3, r3 = $42, $42 = A, A = p0+2, ...
 	lda.b r3
 	ldy.b $42
 	sty.b r3
 	sta.b $42
-	lda.b $3A
+	lda.b p0+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3A
-	lda.b $3E
+	sta.b p0+2
+	lda.b p1+2
 	eor.w #$FFFF
 	inc a
-	sta.b $3E
+	sta.b p1+2
 	lda.b tmp0
 	bit.w #$000A
 	beq .2
@@ -1885,11 +1886,11 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	beq .3
 	eor.w #$000A
 	sta.b tmp1
-.3:									; if tmp1 = 0 go to .4, X = tmp0, call (DATA8_C46F93,x), X = curobj, ...
+.3:									; if tmp1 = 0 go to .4, X = tmp0, call (GoalieAvoidHandlers,x), ...
 	lda.b tmp1
 	beq .4
 	ldx.b tmp0
-	jsr (DATA8_C46F93,x)
+	jsr (GoalieAvoidHandlers,x)
 	ldx.b curobj
 	rtl
 .4:									; call GoalieAvoidInsideTarget, X = curobj, return
@@ -1898,21 +1899,21 @@ AvoidGoalForGoalie:					; adjust a goalie skating target to avoid the net
 	rtl
 GoalieAvoidInsideTarget:			; route a goalie whose target is inside the avoidance box
 	ldx.b curobj
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl .1
-	lda.b $3E
+	lda.b p1+2
 	cmp.w #$FEF2
 	bmi .rts
 	bra GoalieAvoidFromBehind
-.1:									; if $3E - $FEF2 >= 0 go to .rts, go to GoalieAvoidFarBoundary
-	lda.b $3E
+.1:									; if p1+2 - $FEF2 >= 0 go to .rts, go to GoalieAvoidFarBoundary
+	lda.b p1+2
 	cmp.w #$FEF2
 	bpl .rts
 	bra GoalieAvoidFarBoundary
 .rts:								; return
 	rts
-CODE_C46EDA:						; no caller found (not traced)
+.2:									; no caller found: if A < Xpos,y, d1 = $42, return
 	cmp.w Xpos,y
 	bpl GoalieAvoidReturn
 	lda.b $42
@@ -1923,7 +1924,7 @@ GoalieAvoidLeftEdge:				; set the goalie target to the left avoidance edge
 	sta.b d0
 	rts
 GoalieAvoidInsideStart:				; choose a detour from inside the goalie avoidance box
-	lda.b $3A
+	lda.b p0+2
 	cmp.w #$FEF2
 	bpl GoalieAvoidFromFront
 GoalieAvoidFromBehind:				; route a goalie from behind the net around an edge
@@ -2019,7 +2020,7 @@ GoalieAvoidLeftHighY:				; route from the left high-Y corner of the mirrored goa
 	lda.w #$FFDA
 	sta.b d0
 	rts
-DATA8_C46F93:						; jump table: the routine for each index
+GoalieAvoidHandlers:				; AvoidGoalForGoalie's handler for each start code (GoalieAvoid...)
 	dw GoalieAvoidInsideStart,GoalieAvoidHighY,GoalieAvoidRightSide,GoalieAvoidRightHighY
 	dw GoalieAvoidLowY,$0000,GoalieAvoidRightLowY,$0000
 	dw GoalieAvoidLeftSide,GoalieAvoidLeftHighY,$0000,$0000
@@ -2029,8 +2030,8 @@ ClassifyGoalieGoalPath:				; classify the start and target around the goalie avo
 	sty.b $42
 	stz.b tmp0
 	stz.b tmp1
-	ldx.b $3A
-	ldy.b $3E
+	ldx.b p0+2
+	ldy.b p1+2
 	cpx.b r3
 	bpl .3
 	lda.w #$0008

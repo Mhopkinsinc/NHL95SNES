@@ -1,5 +1,4 @@
-; Segment bankC4_D000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_D000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4CFF5
 ClearSeasonData:					; clears the season in save RAM (SeasonDay and the day, result and stat
 									; blocks, the team stats, the playoffs); with OptEraseRosters also the
@@ -58,14 +57,14 @@ InitPlayerTeams:					; SRPlayerTeams from the team data: each player of teams $1
 	tya
 	and.w #$07FF
 	tax
-.2:									; tmp2 = X, A = X, A - $0038, $A5 = A, ...
+.2:									; tmp2 = X, A = X, A - $0038, tmp3 = A, ...
 	stx.b tmp2
 	txa
 	sec
 	sbc.w #$0038
-	sta.b $A5
+	sta.b tmp3
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	lsr a
 	lsr a
 	tay
@@ -77,28 +76,28 @@ InitPlayerTeams:					; SRPlayerTeams from the team data: each player of teams $1
 	asl a
 	asl a
 	asl a
-	sta.b $A5
+	sta.b tmp3
 	lda.l $C2FFFF,x
 	and.w #$7F00
 	asl a
-	tsb.b $A5
+	tsb.b tmp3
 	lda.w SRPlayerTeams&$FFFF,y
 	and.w #$000F
 	bra .4
-.3:									; A = tmp0, A / 2, $A5 = A, A = $C2FFFF,x, ...
+.3:									; A = tmp0, A / 2, tmp3 = A, A = $C2FFFF,x, ...
 	lda.b tmp0
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.l $C2FFFF,x
 	and.w #$7F00
 	lsr a
 	lsr a
 	lsr a
-	tsb.b $A5
+	tsb.b tmp3
 	lda.w SRPlayerTeams&$FFFF,y
 	and.w #$F000
-.4:									; A or $A5, SRPlayerTeams&$FFFF,y = A, X = tmp2, X + 1, ...
-	ora.b $A5
+.4:									; A or tmp3, SRPlayerTeams&$FFFF,y = A, X = tmp2, X + 1, ...
+	ora.b tmp3
 	sta.w SRPlayerTeams&$FFFF,y
 	ldx.b tmp2
 	inx
@@ -138,9 +137,15 @@ ClearCreatedPlayerTeams:			; sets team $1F (no team; free agents are $1A) in the
 	dec.b tmp0
 	bpl .1
 	rts
-DATA8_C4D101:						; not traced: data between routines
-	db $4A,$01,$78,$22,$38,$22,$01,$33,$00
-DATA8_C4D10A:						; not traced: a table read by TitleFadeTextOut, DrawTitleTextPage, ...
+TitleMapFill:						; the title screen's map fill entry (tile $4A, attribute byte $01): the
+									; fixed-source DMA reads its low byte for the tiles, the next for the
+									; attribute bytes
+	db $4A,$01
+TitleBG34HDMA:						; HDMA table for BG34NBA (BG3 / BG4 tile data addresses): $22 for 176
+									; lines, then $33
+	db $78,$22,$38,$22,$01,$33,$00
+CreditsList:						; the title screen's credit pages: per page a count, then that many packed
+									; text addresses (bank $C3), a line each; a 0 count ends
 	db $03,$E4,$50,$F2,$50,$FE,$50,$03,$08,$51,$11,$51,$1B,$51,$03,$26
 	db $51,$2D,$51,$34,$51,$03,$26,$51,$41,$51,$4A,$51,$03,$26,$51,$55
 	db $51,$62,$51,$03,$26,$51,$6C,$51,$75,$51,$02,$26,$51,$80,$51,$03
@@ -170,32 +175,32 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	ldy.w #$3000
 	jsl.l QueueClearVRAM
 	dec.b QueueBusy
-	lda.b $02
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	pea.w $02C0
 	pea.w $0000
 	pea.w $5400
 	pea.w $1808
-	pea.w $00C4
-	pea.w $D101
+	pea.w TitleMapFill>>16
+	pea.w TitleMapFill&$FFFF
 	pea.w $02C0
 	pea.w $0080
 	pea.w $5400
 	pea.w $1908
-	pea.w $00C4
-	pea.w $D102
+	pea.w TitleMapFill>>16
+	pea.w (TitleMapFill+1)&$FFFF
 	pea.w $0180
 	pea.w $0000
 	pea.w $56C0
 	pea.w $1809
-	pea.w $00C5
-	pea.w $8A63
-	lda.b $02
+	pea.w ZeroFillWord>>16
+	pea.w ZeroFillWord&$FFFF
+	lda.b VRAMModeQueueSP
 	tsx
 	tcs
-	stx.b $02
+	stx.b VRAMModeQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$5420
@@ -207,10 +212,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	ldy.w #$2A50
 	jsl.l MapSetToVRAM
 	dec.b QueueBusy
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0010
 	ldx.w #TitleLogoMap>>16
@@ -218,10 +223,10 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	jsr.w GetMapSetPalettePointer
 	phx
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$5820
 	sta.b tmp0
@@ -255,7 +260,9 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	rep #$20
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $00,$0C,$03,$D1,$C4,$7E		; inline parameters
+	db $00,$0C						; inline parameters: DMAP and BBAD
+	dl TitleBG34HDMA				; the HDMA table
+	db $7E							; the indirect bank
 	lda.w #$8000
 	sta.w DMAEnShadow
 	jsl.l BlackBackdrop
@@ -263,7 +270,7 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	lda.w #$0010
 	sta.b $7D
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	lda.b $08
 	sta.b d4
 	sta.b a3
@@ -302,7 +309,7 @@ TitleScreen:						; the title screen: TitleLogoMap, TitleGoalieMap, TitlePlayers
 	lda.w #TitleStartMusicTask
 	ldy.w #$FF00
 	jsl.l AddTask
-	inc.w $1EA7
+	inc.w MenuMusicPending
 	stz.w fadestep
 .loop:								; loop: call RunTasks, call AnimateSprites, ...
 	jsl.l RunTasks
@@ -373,7 +380,7 @@ TitleSlideBothBGs:					; scrolls BG1 and BG2 apart, then creates the first fadin
 	lda.w #TitleFadeFirstLogo
 	sta.w $0002,x
 TitleFadeFirstLogo:					; fades the first title logo palette before creating the second logo
-	ldx.b $91
+	ldx.b d4+2
 	lda.w $0034,x
 	and.w #$FF00
 	xba
@@ -402,7 +409,7 @@ TitleCreateSecondLogo:				; creates the second title logo sprite and starts its 
 	lda.w #TitleFadeSecondLogo
 	sta.w $0002,x
 TitleFadeSecondLogo:				; fades the second title logo palette, then resets the task delay
-	ldx.b $91
+	ldx.b d4+2
 	lda.w $0034,x
 	and.w #$FF00
 	xba
@@ -429,7 +436,7 @@ TitleStartWhiteFade:				; waits for the task delay, then starts a white fade for
 	ldy.w #$7FFF
 	jsl.l FillWords7E
 	ldx.w #$00C2
-	stx.b $71
+	stx.b a3+2
 	lda.w #$0AB8
 	sta.b a3
 	clc
@@ -452,8 +459,8 @@ TitleStartWhiteFade:				; waits for the task delay, then starts a white fade for
 	adc.w #$0009
 	bcc .4
 	inx
-.4:									; $71 = X, a3 = A, X = $007E, A = d4, ...
-	stx.b $71
+.4:									; a3+2 = X, a3 = A, X = $007E, A = d4, ...
+	stx.b a3+2
 	sta.b a3
 	ldx.w #$007E
 	lda.b d4
@@ -466,7 +473,7 @@ TitleFinishWhiteFade:				; completes the title palette fade and enables the star
 	lda.w #$0020
 	jsr.w QueueFadeStep
 	bne TitleFinishWhiteFadeReturn
-	stz.b $95
+	stz.b d5+2
 	jsl.l AddStartKeyTask
 	ldx.b d1
 	lda.w #TitleStartTextPage
@@ -497,9 +504,9 @@ TitleHoldTextPage:					; holds the title text page, then starts its fade to blac
 	lda.b d4
 	ldy.w #$0000
 	jsl.l FillWords7E
-	lda.w #$00C4
-	sta.b $71
-	lda.w #$BAD6
+	lda.w #TextPalettes>>16
+	sta.b a3+2
+	lda.w #TextPalettes&$FFFF
 	sta.b a3
 	ldx.w #$007E
 	lda.b d4
@@ -512,8 +519,8 @@ TitleFadeTextOut:					; fades out the text and selects the next page or the fina
 	lda.w #$0000
 	jsr.w QueueFadeStep
 	bne TitleEndDelayReturn
-	ldx.b $95
-	lda.l DATA8_C4D10A,x
+	ldx.b d5+2
+	lda.l CreditsList,x
 	and.w #$00FF
 	bne .1
 	ldx.b d1
@@ -531,25 +538,25 @@ TitleEndDelay:						; ends the title task sequence after the final delay
 	cmp.w #$01E0
 	bne TitleEndDelayReturn
 	lda.w #$8000
-	trb.b $85
+	trb.b d1+2
 TitleEndDelayReturn:				; the rtl TitleEndDelay ends with, shared by TitleHoldTextPage and
 									; TitleFadeTextOut
 	rtl
 CreateTitleFadingSprite:			; creates a title sprite with a black palette and starts its colour fade
 	jsl.l CreateSprite
-	stx.b $91
+	stx.b d4+2
 	lda.w #$0010
 	sta.b d3
 	lda.b d4
 	ldy.w #$0000
 	jsl.l FillWords7E
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	lda.b d4
 	sta.b a3
 	lda.w #$0020
 	sta.b $7D
-	ldx.b $91
+	ldx.b d4+2
 	ldy.w $0034,x
 	lda.l $008004
 	and.w #$00FF
@@ -563,7 +570,7 @@ CreateTitleFadingSprite:			; creates a title sprite with a black palette and sta
 	adc.l $008002
 	ldy.b d5
 	jsl.l StartColourFade
-	ldx.b $91
+	ldx.b d4+2
 	lda.w $0034,x
 	and.w #$FF00
 	xba
@@ -601,7 +608,7 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	lsr a
 	sta.b d3
 	lda.w #$007E
-	sta.b $71
+	sta.b a3+2
 	lda.b d4
 	sta.b a3
 	ldy.w #$0000
@@ -613,10 +620,10 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	lda.b $D3
 	ldy.w #$0700
 	jsl.l ClearRAM7E
-	ldx.b $95
-	lda.l DATA8_C4D10A,x
+	ldx.b d5+2
+	lda.l CreditsList,x
 	and.w #$00FF
-	sta.b $99
+	sta.b d6+2
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$00F0
@@ -625,38 +632,38 @@ DrawTitleTextPage:					; draws the next centred title text page and starts its p
 	lda.w #$2400
 	sta.b $D5
 	inx
-.loop:								; loop: $95 = X, A = DATA8_C4D10A,x, X = A, Y = d6, ...
-	stx.b $95
-	lda.l DATA8_C4D10A,x
+.loop:								; loop: d5+2 = X, A = CreditsList,x, X = A, Y = d6, ...
+	stx.b d5+2
+	lda.l CreditsList,x
 	tax
 	ldy.b d6
 	jsl.l PrintBoldCentred
-	ldx.b $95
+	ldx.b d5+2
 	lda.w #$2000
 	cmp.b $D5
 	beq .1
 	sta.b $D5
 	inc.b d6
-.1:									; d6 + 1, X + 1, X + 1, $99 - 1, ...
+.1:									; d6 + 1, X + 1, X + 1, d6+2 - 1, ...
 	inc.b d6
 	inx
 	inx
-	dec.b $99
+	dec.b d6+2
 	bne .loop
-	stx.b $95
+	stx.b d5+2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0180
 	pea.w $56C0
 	pea.w $007E
 	pei ($D3)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rts
 GetMapSetPalettePointer:			; returns the map set palette data pointer in X:A
@@ -692,7 +699,9 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	wai
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$FFFF
 	stz.w BG1HScroll
 	stz.w BG2HScroll
@@ -703,8 +712,8 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsl.l MapSetToVRAM
 	sep #$20
@@ -755,7 +764,7 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	jsl.l InitTextMap
 	lda.w #$0004
 	sta.w TextSpaceWidth
-	lda.w #$54F9
+	lda.w #CopyrightPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	lda.w #$8000
@@ -773,8 +782,8 @@ CopyrightScreen:					; the copyright and licence page at start, with logo sprite
 	lda.b $26
 	cmp.w #$003C
 	bne .1
-	lda.w #DATA8_CF05D4&$FFFF
-	ldx.w #DATA8_CF05D4>>16
+	lda.w #SongLists&$FFFF
+	ldx.w #SongLists>>16
 	jsl.l LoadSounds
 	bra .loop
 .1:									; if A < $00C3 go to .loop, if a0 is not 0 go to .2, ...
@@ -792,7 +801,7 @@ InitAwardScreen:					; prepares the shared awards background, sprites, text map 
 	jsl.l ResetSprites
 	jsl.l ResetWorkBuf
 	lda.w #$007F
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$D80A
 	sta.b r0
 	lda.w #TeamPalettes&$FFFF
@@ -810,13 +819,15 @@ InitAwardScreen:					; prepares the shared awards background, sprites, text map 
 	jsl.l CreateSprite
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0400
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsl.l MapSetToVRAM
 	ldy.w #$5000
@@ -845,8 +856,8 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 									; DrawAward, FindAwardWinner and its winner; pad left / right steps
 									; through the 8 awards, start returns
 	jsl.l SoundVolumeDown
-	lda.w #(DATA8_CF05D4+$7)&$FFFF
-	ldx.w #(DATA8_CF05D4+$7)>>16
+	lda.w #(SongLists+$7)&$FFFF
+	ldx.w #(SongLists+$7)>>16
 	ldy.w #$FF00
 	jsl.l LoadSounds
 	lda.w #$00A7
@@ -869,23 +880,23 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	sta.b r0
 	sta.b r2
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	ldx.w #GradientBarTiles>>16
 	lda.w #GradientBarTiles&$FFFF
 	jsl.l Decompress
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0240
 	pea.w $0640
 	pea.w $007E
 	pei ($34)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldy.w #$2864
@@ -898,7 +909,7 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	jsl.l FreeWorkBuf
 	lda.w #$0002
 	sta.w BG2VScroll
-	lda.w #$5419
+	lda.w #SeasonAwardsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l WaitTransfers
 	jsl.l SendTextMap
@@ -914,9 +925,9 @@ SeasonAwards:						; the end of season awards: the awards music, then award a0 (
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1015,19 +1026,19 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	lda.b $08
 	sta.b r1
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	lda.l AwardPictures+2,x
 	tay
 	lda.l AwardPictures,x
 	tyx
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.b a0
-	lda.l DATA8_C4DA75,x
+	lda.l AwardPicTileCounts,x
 	and.w #$00FF
 	asl a
 	asl a
@@ -1043,27 +1054,27 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	adc.w #$00EA
 	pha
 	adc.b tmp0
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007E
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.w #$50B3
 	ldy.b $08
 .loop:								; loop: push X, push Y, A = Y, A + $0012, ...
@@ -1081,10 +1092,10 @@ DrawAward:							; award a0: prints its name (AwardNames) and description (Award
 	tax
 	cmp.w #$5253
 	bne .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
@@ -1100,7 +1111,8 @@ AwardPictures:						; the picture (map set) of each award, a long pointer; read 
 	dw ArtRossPicMap&$FFFF,ArtRossPicMap>>16	; 5: Art Ross Trophy
 	dw NorrisPicMap&$FFFF,NorrisPicMap>>16	; 6: James Norris Memorial Trophy
 	dw PresidentsPicMap&$FFFF,PresidentsPicMap>>16	; 7: Presidents Trophy
-DATA8_C4DA75:						; not traced: a table read by DrawAward
+AwardPicTileCounts:					; per award (a0): the number of tiles of its picture; DrawAward queues
+									; count * 32 bytes of them to VRAM, then the 16 colours after them
 	db $3B,$2F,$4C,$5F,$31,$52,$42,$22
 AwardNames:							; per award: the name text, then a second line or 0; DrawAward
 	dw $4FC2,$0000					; 0: Vezina Trophy
@@ -1132,7 +1144,7 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	sta.b $CF
 	lda.w #$0070
 	sta.b $D1
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0012
 	jsl.l PrintThinCentred
@@ -1144,11 +1156,11 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	iny
 	cmp.w HomeRoster+58,y
 	bne .loop
-	sty.b $65
+	sty.b a0+2
 	lda.w HomeRoster+222,y
 	sta.b a1
 	and.w #$00FF
-	sta.b $71
+	sta.b a3+2
 	tax
 	cmp.w #$00FF
 	beq .1
@@ -1162,20 +1174,20 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	ply
 	sta.b a2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pei ($6B)
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($71)
@@ -1186,10 +1198,10 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	lsr a
 	adc.b a3
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ldx.b a4
 	lda.b $22,x
@@ -1215,25 +1227,25 @@ DrawAwardWinner:					; winner A of award a0: his team's name, his photo (the tea
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
-.2:									; $CF = $0010, $D1 = $0080, A = $65, A * 2, ...
+.2:									; $CF = $0010, $D1 = $0080, A = a0+2, A * 2, ...
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$0080
 	sta.b $D1
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -1260,7 +1272,7 @@ DrawPresidentsWinner:				; winner A of the Presidents Trophy: the team's name an
 	sta.b $CF
 	lda.w #$0070
 	sta.b $D1
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0012
 	jsl.l PrintThinCentred
@@ -1270,18 +1282,18 @@ DrawPresidentsWinner:				; winner A of the Presidents Trophy: the team's name an
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0760
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b a4
 	lda.b $22,x
@@ -1303,7 +1315,7 @@ DrawPresidentsWinner:				; winner A of the Presidents Trophy: the team's name an
 	rts
 FindAwardWinner:					; A = the winner of award a0, from its routine in AwardScanTbl
 	lda.w #$0030
-	sta.b $69
+	sta.b a1+2
 	lda.b a0
 	asl a
 	tax
@@ -1316,8 +1328,8 @@ ScanVezina:							; Vezina Trophy: of the goalies of the 26 teams, the one Seaso
 									; scores highest
 	lda.w #$0000
 	sta.b a2
-.1:									; $6D = A, HomeTeam = A, call LoadSeasonHomeRoster
-	sta.b $6D
+.1:									; a2+2 = A, HomeTeam = A, call LoadSeasonHomeRoster
+	sta.b a2+2
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 .loop:								; loop: A = HomeRoster+2, A - 1, if the result < 0 go to .2, ...
@@ -1335,19 +1347,19 @@ ScanVezina:							; Vezina Trophy: of the goalies of the 26 teams, the one Seaso
 	bcc .loop
 	sta.b a2
 	lda.b a3
-	sta.b $71
+	sta.b a3+2
 	bra .loop
-.2:									; A = $6D, A + 1, if A is not $001A go to .1, A = $71, ...
-	lda.b $6D
+.2:									; A = a2+2, A + 1, if A is not $001A go to .1, A = a3+2, ...
+	lda.b a2+2
 	inc a
 	cmp.w #$001A
 	bne .1
-	lda.b $71
+	lda.b a3+2
 	rts
-ScanSelke:							; Selke Trophy: from the team CODE_C4DF5B picks, the forward with the most
-									; goals + assists
+ScanSelke:							; Selke Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; forward with the most goals + assists
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1375,17 +1387,17 @@ ScanSelke:							; Selke Trophy: from the team CODE_C4DF5B picks, the forward wi
 	bcc .loop
 	sta.b a2
 	lda.b a3
-	sta.b $71
+	sta.b a3+2
 	bra .loop
-.1:									; A = $71, return
-	lda.b $71
+.1:									; A = a3+2, return
+	lda.b a3+2
 	rts
 ScanConnSmythe:						; Conn Smythe Trophy: of the skaters of the 16 playoff teams, the one with
 									; the highest playoff goals + assists
 	lda.w #$0000
 	sta.b a2
-.1:									; $6D = A, X = A, A = SRPOTeams,x, A and $00FF, ...
-	sta.b $6D
+.1:									; a2+2 = A, X = A, A = SRPOTeams,x, A and $00FF, ...
+	sta.b a2+2
 	tax
 	lda.l SRPOTeams,x
 	and.w #$00FF
@@ -1400,14 +1412,14 @@ ScanConnSmythe:						; Conn Smythe Trophy: of the skaters of the 16 playoff team
 	dec a
 	bmi .2
 	sta.w HomeRoster
-	ldx.b $6D
+	ldx.b a2+2
 	sec
 	adc.w HomeRoster+2
 	pha
 	jsr.w ReadPlayoffPlayerGoals
 	sta.b tmp2
 	pla
-	ldx.b $6D
+	ldx.b a2+2
 	jsr.w ReadPlayoffPlayerAssists
 	clc
 	adc.b tmp2
@@ -1420,19 +1432,19 @@ ScanConnSmythe:						; Conn Smythe Trophy: of the skaters of the 16 playoff team
 	asl a
 	tax
 	lda.w HomeRoster+58,x
-	sta.b $71
+	sta.b a3+2
 	bra .loop
-.2:									; A = $6D, A + 1, if A < $0010 go to .1, A = $71, ...
-	lda.b $6D
+.2:									; A = a2+2, A + 1, if A < $0010 go to .1, A = a3+2, ...
+	lda.b a2+2
 	inc a
 	cmp.w #$0010
 	bcc .1
-	lda.b $71
+	lda.b a3+2
 	rts
-ScanJennings:						; Jennings Trophy: from the team CODE_C4DF5B picks, ...
-									; scores highest
+ScanJennings:						; Jennings Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; goalie with the most season games (SeasonGoalieGamesLong)
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1451,15 +1463,15 @@ ScanJennings:						; Jennings Trophy: from the team CODE_C4DF5B picks, ...
 	bcc .loop
 	sta.b a2
 	lda.b a3
-	sta.b $71
+	sta.b a3+2
 	bra .loop
-.1:									; A = $71, return
-	lda.b $71
+.1:									; A = a3+2, return
+	lda.b a3+2
 	rts
 ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0A, the
 									; skater with the biggest share of his team's goals + assists
 	stz.b a2
-	stz.b $32
+	stz.b r1+2
 	ldx.w #$002E
 .loop:								; loop: ScratchBuf,x = 0, X - 1, X - 1, ...
 	stz.w ScratchBuf,x
@@ -1467,8 +1479,8 @@ ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0
 	dex
 	bpl .loop
 	lda.w #$0000
-.1:									; $6D = A, call BuildTeamSeasonRecordLong, X = ScratchBuf
-	sta.b $6D
+.1:									; a2+2 = A, call BuildTeamSeasonRecordLong, X = ScratchBuf
+	sta.b a2+2
 	jsl.l BuildTeamSeasonRecordLong
 	ldx.w #ScratchBuf
 .loop2:								; loop: if $000A,y >= $0000,x go to .2, A = X, A + $0006, X = A, ...
@@ -1494,21 +1506,21 @@ ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0
 	beq .3
 	dec a
 	mvp $7E,$7E
-.3:									; pull Y, X + 1, $0000,x = $000A,y, $0004,x = $6D
+.3:									; pull Y, X + 1, $0000,x = $000A,y, $0004,x = a2+2
 	ply
 	inx
 	lda.w $000A,y
 	sta.w $0000,x
-	lda.b $6D
+	lda.b a2+2
 	sta.w $0004,x
-.4:									; A = $6D, A + 1, if A is not $001A go to .1, X = $0000
-	lda.b $6D
+.4:									; A = a2+2, A + 1, if A is not $001A go to .1, X = $0000
+	lda.b a2+2
 	inc a
 	cmp.w #$001A
 	bne .1
 	ldx.w #$0000
-.5:									; $6D = X, HomeTeam = ScratchBuf+$4,x, call LoadSeasonHomeRoster, ...
-	stx.b $6D
+.5:									; a2+2 = X, HomeTeam = ScratchBuf+$4,x, call LoadSeasonHomeRoster, ...
+	stx.b a2+2
 	lda.w ScratchBuf+$4,x
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
@@ -1556,7 +1568,7 @@ ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0
 	bmi .6
 	stx.b tmp2
 	stz.b r2
-	stz.b $36
+	stz.b r2+2
 	lda.w ScratchBuf+$32,x
 	asl a
 	sta.b $35
@@ -1564,7 +1576,7 @@ ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0
 	pei ($32)
 	jsl.l Div32x32U
 	pla
-	sta.b $32
+	sta.b r1+2
 	pla
 	sta.b r1
 	ldx.b tmp2
@@ -1573,18 +1585,18 @@ ScanHart:							; Hart Trophy: of the 8 teams with the highest standings word $0
 	bcc .loop4
 	sta.b a2
 	lda.w ScratchBuf+$30,x
-	sta.b $71
+	sta.b a3+2
 	bra .loop4
-.6:									; A = $6D, A + $0006, X = A, if A >= $0030 go to .7, ...
-	lda.b $6D
+.6:									; A = a2+2, A + $0006, X = A, if A >= $0030 go to .7, ...
+	lda.b a2+2
 	clc
 	adc.w #$0006
 	tax
 	cmp.w #$0030
 	bcs .7
 	jmp.w .5
-.7:									; A = $71, return
-	lda.b $71
+.7:									; A = a3+2, return
+	lda.b a3+2
 	rts
 ScanArtRoss:						; Art Ross Trophy: of all players, goalies skipped, the one with the most
 									; goals + assists
@@ -1615,7 +1627,7 @@ ScanArtRoss:						; Art Ross Trophy: of all players, goalies skipped, the one wi
 	pei ($71)
 	jsl.l LoadSeasonHomeRoster
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 .2:									; A = HomeRoster+2, A - 1, A * 2, X = A, ...
@@ -1642,18 +1654,18 @@ ScanArtRoss:						; Art Ross Trophy: of all players, goalies skipped, the one wi
 	bcc .3
 	sta.b a2
 	lda.b a3
-	sta.b $71
-.3:									; A = a3, A + 1, if A < $027E go to .loop, A = $71, ...
+	sta.b a3+2
+.3:									; A = a3, A + 1, if A < $027E go to .loop, A = a3+2, ...
 	lda.b a3
 	inc a
 	cmp.w #$027E
 	bcc .loop
-	lda.b $71
+	lda.b a3+2
 	rts
-ScanNorris:							; Norris Trophy: from the team CODE_C4DF5B picks, the defenceman with the
-									; most goals + assists
+ScanNorris:							; Norris Trophy: from the team FindFewestGoalsAllowedTeam picks, the
+									; defenceman with the most goals + assists
 	stz.b a2
-	jsr.w CODE_C4DF5B
+	jsr.w FindFewestGoalsAllowedTeam
 	sta.w HomeTeam
 	jsl.l LoadSeasonHomeRoster
 	stz.b a2
@@ -1681,10 +1693,10 @@ ScanNorris:							; Norris Trophy: from the team CODE_C4DF5B picks, the defencem
 	bcc .loop
 	sta.b a2
 	lda.b a3
-	sta.b $71
+	sta.b a3+2
 	bra .loop
-.1:									; A = $71, return
-	lda.b $71
+.1:									; A = a3+2, return
+	lda.b a3+2
 	rts
 ScanPresidents:						; Presidents Trophy: the team with the most standings points ($0004 of its
 									; record), the lower $0006 on a tie
@@ -1692,8 +1704,8 @@ ScanPresidents:						; Presidents Trophy: the team with the most standings point
 	sta.b a3
 	lda.w #$0000
 	sta.b a2
-.loop:								; loop: $6D = A, call BuildTeamSeasonRecordLong, ...
-	sta.b $6D
+.loop:								; loop: a2+2 = A, call BuildTeamSeasonRecordLong, ...
+	sta.b a2+2
 	jsl.l BuildTeamSeasonRecordLong
 	lda.w $0004,x
 	cmp.b a2
@@ -1704,39 +1716,40 @@ ScanPresidents:						; Presidents Trophy: the team with the most standings point
 	bcs .2
 	sta.b a3
 	lda.w $0004,x
-.1:									; a2 = A, a3 = $0006,x, $71 = $6D
+.1:									; a2 = A, a3 = $0006,x, a3+2 = a2+2
 	sta.b a2
 	lda.w $0006,x
 	sta.b a3
-	lda.b $6D
-	sta.b $71
-.2:									; A = $6D, A + 1, if A is not $001A go to .loop, A = $71, ...
-	lda.b $6D
+	lda.b a2+2
+	sta.b a3+2
+.2:									; A = a2+2, A + 1, if A is not $001A go to .loop, A = a3+2, ...
+	lda.b a2+2
 	inc a
 	cmp.w #$001A
 	bne .loop
-	lda.b $71
+	lda.b a3+2
 	rts
-CODE_C4DF5B:						; from ScanSelke, ScanJennings, ScanNorris
+FindFewestGoalsAllowedTeam:			; returns in A (and $71) the team with the fewest goals allowed this
+									; season (BuildTeamSeasonRecord field $2A)
 	lda.w #$0000
 	sta.b a2
-	sta.b $71
+	sta.b a3+2
 	dec.b a2
-.loop:								; loop: $6D = A, call BuildTeamSeasonRecordLong, ...
-	sta.b $6D
+.loop:								; loop: a2+2 = A, call BuildTeamSeasonRecordLong, ...
+	sta.b a2+2
 	jsl.l BuildTeamSeasonRecordLong
 	lda.w $002A,x
 	cmp.b a2
 	bcs .1
 	sta.b a2
-	lda.b $6D
-	sta.b $71
-.1:									; A = $6D, A + 1, if A is not $001A go to .loop, A = $71, ...
-	lda.b $6D
+	lda.b a2+2
+	sta.b a3+2
+.1:									; A = a2+2, A + 1, if A is not $001A go to .loop, A = a3+2, ...
+	lda.b a2+2
 	inc a
 	cmp.w #$001A
 	bne .loop
-	lda.b $71
+	lda.b a3+2
 	rts
 ReadPlayoffPlayerGoals:				; returns the seven-bit playoff goals total for player A on playoff team X
 	sta.b tmp0
@@ -1749,7 +1762,7 @@ ReadPlayoffPlayerGoals:				; returns the seven-bit playoff goals total for playe
 	txa
 	asl a
 	tax
-	lda.l DATA8_C40D76,x
+	lda.l PlayoffStatBitOffsets,x
 	adc.b tmp0
 	tay
 	lsr a
@@ -1779,7 +1792,7 @@ ReadPlayoffPlayerAssists:			; returns the seven-bit playoff assists total for pl
 	txa
 	asl a
 	tax
-	lda.l DATA8_C40D76,x
+	lda.l PlayoffStatBitOffsets,x
 	adc.b tmp0
 	tay
 	lsr a

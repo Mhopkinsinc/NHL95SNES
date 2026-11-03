@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 StartCrowdSound = $CF038E
@@ -34,8 +35,8 @@ ClrHor = $C52264
 checkwindow = $C529D7
 FormatRosterShortName = $C533EF
 FaceoffPads = $C53651
-CODE_C539D7 = $C539D7
-CODE_C53A29 = $C53A29
+DrawScoreBox = $C539D7
+DrawPeriodBox = $C53A29
 ResetBench = $C53AE0
 forcepldata = $C53B51
 resetplstuff = $C53F8D
@@ -48,10 +49,18 @@ Framer = $C58C36
 SetSpriteAnim = $C5ECBD
 UseSpritePalette = $C5EE6C
 CreateSpriteSharePal = $C5EEF3
-DATA8_C09B3F = $C09B3F
+linelist = $C09B3F
 FadeOutWait = $C58A99
 QueueVRAMDMALen = $C58A15
 RandomWord = $C08E48
 FaceOffMap = $C1CFE2
+rtss = $C4883F
+FaceoffFormations = $C5195D
+PenShotFormation = $C51975
+FaceoffSpots = $C5197D
+SPAfaceoff = $C424FA
+SPAfaceoffr = $C42524
+SPAglide = $C41958
+SPAgready = $C4121E
 
 incsrc "../bankC4_3000.asm"

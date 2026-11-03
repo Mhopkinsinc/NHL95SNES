@@ -1,5 +1,5 @@
-; Segment bankC3_8000: the rest of bank $C3's game code (routines keep their address as a name, with their
-; callers) and the data tables it reads; the sound samples start after it.
+; Segment bankC3_8000: the rest of bank $C3's game code and the data tables it reads; the sound samples start
+; after it.
 org $C37FE2
 GetFrameHot:						; return the current frame hot spot in d0 and d1
 	phx
@@ -7,21 +7,21 @@ GetFrameHot:						; return the current frame hot spot in d0 and d1
 	lda.w frame,y
 	asl a
 	tax
-	lda.l DATA8_CE0192,x
+	lda.l FrameHotY,x
 	eor.w #$FFFF
 	inc a
 	sta.b d1
 	lda.w attribute,y
 	bit.w #$0800
 	beq .1
-	lda.l DATA8_CDF94A,x
+	lda.l FrameHotX,x
 	eor.w #$FFFF
 	inc a
 	sta.b d0
 	plx
 	rtl
-.1:									; d0 = DATA8_CDF94A,x, pull X, return
-	lda.l DATA8_CDF94A,x
+.1:									; d0 = FrameHotX,x, pull X, return
+	lda.l FrameHotX,x
 	sta.b d0
 	plx
 	rtl
@@ -54,16 +54,19 @@ projxy:								; project rink coordinates and height into screen coordinates
 	sbc.b d1
 	sta.b d1
 	rtl
-DATA8_C3803D:						; not traced: data between routines
-	db $A9,$20,$4E,$85,$83,$6B
+.1:									; unreached: 94S projxy's off-screen exit .t1x (d1 = $4E20); 95 projxy has
+									; no range checks that branch here
+	lda.w #$4E20
+	sta.b d1
+	rtl
 setpads:							; called from other segments
 	txa
 	lsr a
 	ldy.b d4
 	sta.w PadControlObj,y
 	rtl
-DATA8_C3804B:						; not traced: data between routines
-	db $6B,$6B
+	rtl								; unreached: no code branches, falls or points here
+	rtl
 SetupScrollIRQ:						; no caller found (not traced): the three BG1 scroll splits at the
 									; lines A, X and Y; the scroll values start at $FFFF
 	sta.w irqline1
@@ -175,28 +178,28 @@ ShowScoringLeaders:					; display the three leading scorers with their team and 
 	ldx.w ScoringLeaders+$4
 	bmi .5
 	jsr.w PrintScoringLeader
-.5:									; pull A, a2 = A, pull A, $6D = A, ...
+.5:									; pull A, a2 = A, pull A, a2+2 = A, ...
 	pla
 	sta.b a2
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a1
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a0
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b d0
 	pla
-	sta.b $81
+	sta.b d0+2
 	ply
 	plx
 	rtl
 PrintScoringLeader:					; queue the team and player name of one scoring leader
-	stx.b $65
+	stx.b a0+2
 	lda.w #$0000
 	cpx.w #$001A
 	bcc .1
@@ -209,7 +212,7 @@ PrintScoringLeader:					; queue the team and player name of one scoring leader
 	ldx.w #$007E
 	ldy.b a0
 	jsl.l QueueVRAMDMALen
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -349,7 +352,7 @@ StartBenchCheer:					; an rtl: called where 94S starts the bench cheer
 UpdateBenchCheer:					; an rtl: called where 94S updates the bench cheer
 	rtl
 UpdateGameObjectSprites:			; queue changed player frames and build sorted object sprites
-	lda.b $48
+	lda.b gameframes
 	lsr a
 	bcc .1
 	jmp.w .8
@@ -491,7 +494,7 @@ UpdateGameObjectSprites:			; queue changed player frames and build sorted object
 	tcs
 	ldy.b $2A
 	lda.w #NextSortedGameObjectJump&$FFFF
-	sta.b $A5
+	sta.b tmp3
 	ldx.w #$000F
 DrawSortedGameObject:				; draw the current sorted object with its frame and flip attributes
 	lda.w OOlist,x
@@ -513,18 +516,18 @@ DrawSortedGameObject:				; draw the current sorted object with its frame and fli
 	lda.w attribute,x
 	and.w #$0800
 	beq .1
-	lda.l DATA8_C384BC,x
+	lda.l ObjSmallTilesFlip,x
 	sta.b tmp1
-	lda.l DATA8_C384DC,x
+	lda.l ObjBigTilesFlip,x
 	sta.b tmp2
 	lda.w frame+$20,x
 	bmi NextSortedGameObject
 	beq NextSortedGameObject
 	jml.l DrawFrameLayoutFlip
-.1:									; tmp1 = DATA8_C3847C,x, tmp2 = DATA8_C3849C,x, ...
-	lda.l DATA8_C3847C,x
+.1:									; tmp1 = ObjSmallTiles,x, tmp2 = ObjBigTiles,x, ...
+	lda.l ObjSmallTiles,x
 	sta.b tmp1
-	lda.l DATA8_C3849C,x
+	lda.l ObjBigTiles,x
 	sta.b tmp2
 	lda.w frame+$20,x
 	bmi NextSortedGameObject
@@ -541,16 +544,17 @@ NextSortedGameObject:				; advance the sorted object loop or restore the caller 
 	sty.b $2A
 	stz.b QueueBusy
 	rtl
-DATA8_C3847C:						; not traced: a table read by DrawSortedGameObject
+ObjSmallTiles:						; per game object (X = object * 2): the OAM tile and attribute word of its
+									; 8 x 8 pieces
 	db $00,$20,$04,$20,$08,$20,$0C,$20,$10,$20,$14,$20,$18,$22,$1C,$22
 	db $20,$22,$24,$22,$28,$22,$2C,$22,$30,$20,$30,$20,$34,$20,$35,$20
-DATA8_C3849C:						; not traced: a table read by DrawSortedGameObject
+ObjBigTiles:						; per game object: the OAM tile and attribute word of its 16 x 16 pieces
 	db $A0,$20,$A8,$20,$C0,$20,$C8,$20,$E0,$20,$E8,$20,$00,$23,$08,$23
 	db $20,$23,$28,$23,$40,$23,$48,$23,$60,$21,$68,$21,$80,$21,$80,$35
-DATA8_C384BC:						; not traced: a table read by DrawSortedGameObject
+ObjSmallTilesFlip:					; ObjSmallTiles with the x flip bit ($4000), for flipped objects
 	db $00,$60,$04,$60,$08,$60,$0C,$60,$10,$60,$14,$60,$18,$62,$1C,$62
 	db $20,$62,$24,$62,$28,$62,$2C,$62,$30,$60,$30,$60,$34,$60,$35,$60
-DATA8_C384DC:						; not traced: a table read by DrawSortedGameObject
+ObjBigTilesFlip:					; ObjBigTiles with the x flip bit ($4000), for flipped objects
 	db $A0,$60,$A8,$60,$C0,$60,$C8,$60,$E0,$60,$E8,$60,$00,$63,$08,$63
 	db $20,$63,$28,$63,$40,$63,$48,$63,$60,$61,$68,$61,$80,$61,$80,$75
 SprSort:							; from defaultsprites_0 and other segments
@@ -602,15 +606,15 @@ SprSort:							; from defaultsprites_0 and other segments
 	lda.b d2
 	bne .loop2
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ply
@@ -638,28 +642,28 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	sta.w oldframe,y
 	sta.w frame+$20,y
 	sta.w pnum,y
-	lda.l DATA8_C38658,x
+	lda.l SortObjInitTable,x
 	sta.w Xpos,y
-	lda.l DATA8_C3865A,x
+	lda.l SortObjInitTable+2,x
 	sta.w Ypos,y
-	lda.l DATA8_C3865E,x
+	lda.l SortObjInitTable+6,x
 	sta.w frame,y
-	lda.l DATA8_C38660,x
+	lda.l SortObjInitTable+8,x
 	sta.w attribute,y
-	lda.l DATA8_C38662,x
+	lda.l SortObjInitTable+10,x
 	sta.w radiusx,y
-	lda.l DATA8_C38664,x
+	lda.l SortObjInitTable+12,x
 	sta.w radiusy,y
 	lda.b d6
 	asl a
 	asl a
 	asl a
 	tay
-	lda.l DATA8_C38666,x
+	lda.l SortObjInitTable+14,x
 	sta.w asslist,y
 	ldy.b a3
 	sta.w asscur,y
-	lda.l DATA8_C38668,x
+	lda.l SortObjInitTable+16,x
 	sta.w pflags,y
 	lda.w #$0000
 	sta.w pfnc,y
@@ -703,10 +707,10 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	cmp.w #$0010
 	beq .3
 	jmp.w .loop2
-.3:									; $0A38 = $FFFF, $0A3A = A, frame+$38 = frame+$18, ...
+.3:									; position+24 = $FFFF, position+26 = A, frame+$38 = frame+$18, ...
 	lda.w #$FFFF
-	sta.w $0A38
-	sta.w $0A3A
+	sta.w position+24
+	sta.w position+26
 	lda.w frame+$18
 	sta.w frame+$38
 	lda.w frame+$1A
@@ -714,38 +718,24 @@ defaultsprites_0:					; clear object state, load initial fields and sort the obj
 	lda.w frame+$1E
 	sta.w frame+$3E
 	jmp.w SprSort
-DATA8_C38658:						; not traced: a table read by defaultsprites_0
-	db $60,$01
-DATA8_C3865A:						; not traced: a table read by defaultsprites_0
-	db $C0,$00,$00,$00
-DATA8_C3865E:						; not traced: a table read by defaultsprites_0
-	db $01,$00
-DATA8_C38660:						; not traced: a table read by defaultsprites_0
-	db $00,$00
-DATA8_C38662:						; not traced: a table read by defaultsprites_0
-	db $08,$00
-DATA8_C38664:						; not traced: a table read by defaultsprites_0
-	db $04,$00
-DATA8_C38666:						; not traced: a table read by defaultsprites_0
-	db $00,$00
-DATA8_C38668:						; not traced: a table read by defaultsprites_0
-	db $00,$00,$38,$FF,$9C,$FF,$00,$00,$01,$00,$00,$00,$08,$00,$04,$00
-	db $00,$00,$00,$00,$38,$FF,$B0,$FF,$00,$00,$01,$00,$00,$00,$08,$00
-	db $04,$00,$00,$00,$00,$00,$38,$FF,$C4,$FF,$00,$00,$01,$00,$00,$00
-	db $08,$00,$04,$00,$00,$00,$00,$00,$38,$FF,$D8,$FF,$00,$00,$01,$00
-	db $00,$00,$08,$00,$04,$00,$00,$00,$00,$00,$38,$FF,$EC,$FF,$00,$00
-	db $01,$00,$00,$00,$08,$00,$04,$00,$00,$00,$00,$00,$C0,$00,$C0,$00
-	db $00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00,$00,$00,$38,$FF
-	db $28,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00,$00,$00
-	db $38,$FF,$3C,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00,$00,$00
-	db $00,$00,$38,$FF,$50,$00,$00,$00,$01,$00,$01,$00,$08,$00,$04,$00
-	db $00,$00,$00,$00,$38,$FF,$64,$00,$00,$00,$01,$00,$01,$00,$08,$00
-	db $04,$00,$00,$00,$00,$00,$38,$FF,$78,$00,$00,$00,$01,$00,$01,$00
-	db $08,$00,$04,$00,$00,$00,$00,$00,$00,$00,$17,$01,$00,$00,$BE,$01
-	db $00,$00,$16,$00,$0A,$00,$00,$00,$00,$00,$00,$00,$E8,$FE,$00,$00
-	db $BF,$01,$00,$00,$17,$00,$0A,$00,$00,$00,$00,$00,$00,$00,$00,$00
-	db $00,$00,$B4,$01,$00,$00,$05,$00,$05,$00,$18,$00,$01,$00,$00,$00
-	db $00,$00,$00,$00,$B3,$01,$00,$00,$03,$00,$03,$00,$19,$00,$00,$00
+SortObjInitTable:					; a record of 9 words per object: x, y, height, frame, attribute,
+									; collision width and height, assignment, flags
+	dw $0160,$00C0,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FF9C,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFB0,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFC4,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFD8,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $FF38,$FFEC,$0000,$0001,$0000,$0008,$0004,$0000,$0000
+	dw $00C0,$00C0,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0028,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$003C,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0050,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0064,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $FF38,$0078,$0000,$0001,$0001,$0008,$0004,$0000,$0000
+	dw $0000,$0117,$0000,$01BE,$0000,$0016,$000A,$0000,$0000
+	dw $0000,$FEE8,$0000,$01BF,$0000,$0017,$000A,$0000,$0000
+	dw $0000,$0000,$0000,$01B4,$0000,$0005,$0005,$0018,$0001
+	dw $0000,$0000,$0000,$01B3,$0000,$0003,$0003,$0019,$0000
 ApproxLength:						; called from other segments
 	cmp.w #$0000
 	bpl .1
@@ -828,7 +818,7 @@ WriteNineMapTiles:					; write nine consecutive tile entries starting at Y to VM
 BackupPauseBuffers:					; allocate and copy the buffers saved for the pause screen
 	lda.w #$01FE
 	jsl.l AllocWorkBuf
-	sta.w $3648
+	sta.w PauseSpriteBackup
 	tay
 	lda.w #$0210
 	jsl.l AllocWorkBuf
@@ -974,7 +964,7 @@ SetPA2:								; step the referee animation and draw its next frame
 	beq .4
 	lda.l Penaltylist,x
 	tax
-	lda.l DATA8_C3449B,x
+	lda.l Penaltylist+2,x
 	and.w #$00FF
 	sec
 	adc.b tmp0
@@ -982,7 +972,7 @@ SetPA2:								; step the referee animation and draw its next frame
 	sec
 	adc.b tmp0
 	tax
-	lda.l DATA8_C3449A,x
+	lda.l Penaltylist+1,x
 	bpl .3
 	eor.w #$FFFF
 	inc a
@@ -1015,11 +1005,11 @@ PushRef:							; draw a referee frame or clear the referee window
 	beq .1
 	lda.w #$0001
 	sta.w refwindow
-.1:									; A = tmp0, A * 2, X = A, A = DATA8_C38D43,x, ...
+.1:									; A = tmp0, A * 2, X = A, A = RefFrameOffsets,x, ...
 	lda.b tmp0
 	asl a
 	tax
-	lda.l DATA8_C38D43,x
+	lda.l RefFrameOffsets,x
 	tax
 	ldy.w #$5842
 	jsr.w CopyRefereeFrameToVRAM
@@ -1039,7 +1029,8 @@ PushRef:							; draw a referee frame or clear the referee window
 	tsb.w sflags
 	stz.w refwindow
 	rtl
-DATA8_C38D43:						; not traced: a table read by PushRef
+RefFrameOffsets:					; per referee frame: its offset in RefsMapBuf (frames 7 words wide, rows
+									; of frames $310 apart)
 	db $00,$00,$0E,$00,$1C,$00,$2A,$00,$38,$00,$46,$00,$54,$00,$10,$03
 	db $1E,$03,$2C,$03,$3A,$03,$48,$03,$56,$03,$64,$03,$20,$06,$2E,$06
 	db $3C,$06,$4A,$06,$58,$06,$66,$06,$74,$06
@@ -1051,12 +1042,12 @@ ClearRefereeMessage:				; queue blank tiles over the referee message rows
 	ldy.w #ScratchBuf+$2
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	clc
-	lda.w $1541
+	lda.w RefMessageWidth
 	adc.w #$0002
 	tay
 	ldx.w #$0002
@@ -1069,10 +1060,10 @@ ClearRefereeMessage:				; queue blank tiles over the referee message rows
 	pea.w ScratchBuf
 	dex
 	bpl .loop
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 CopyRefereeFrameToVRAM:				; copy the selected referee map frame to VRAM
@@ -1087,131 +1078,131 @@ CopyRefereeFrameToVRAM:				; copy the selected referee map frame to VRAM
 	tya
 	clc
 	sta.b VMADDL&$FF
-	ldy.w $C6FA,x
+	ldy.w RefsMapBuf&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C6FC,x
+	ldy.w (RefsMapBuf+$2)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C6FE,x
+	ldy.w (RefsMapBuf+$4)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C700,x
+	ldy.w (RefsMapBuf+$6)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C702,x
+	ldy.w (RefsMapBuf+$8)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C704,x
+	ldy.w (RefsMapBuf+$A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C706,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C75C,x
-	sty.b VMDATAL&$FF
-	ldy.w $C75E,x
-	sty.b VMDATAL&$FF
-	ldy.w $C760,x
-	sty.b VMDATAL&$FF
-	ldy.w $C762,x
-	sty.b VMDATAL&$FF
-	ldy.w $C764,x
-	sty.b VMDATAL&$FF
-	ldy.w $C766,x
-	sty.b VMDATAL&$FF
-	ldy.w $C768,x
+	ldy.w (RefsMapBuf+$C)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C7BE,x
+	ldy.w (RefsMapBuf+$62)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C0,x
+	ldy.w (RefsMapBuf+$64)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C2,x
+	ldy.w (RefsMapBuf+$66)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C4,x
+	ldy.w (RefsMapBuf+$68)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C6,x
+	ldy.w (RefsMapBuf+$6A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7C8,x
+	ldy.w (RefsMapBuf+$6C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C7CA,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C820,x
-	sty.b VMDATAL&$FF
-	ldy.w $C822,x
-	sty.b VMDATAL&$FF
-	ldy.w $C824,x
-	sty.b VMDATAL&$FF
-	ldy.w $C826,x
-	sty.b VMDATAL&$FF
-	ldy.w $C828,x
-	sty.b VMDATAL&$FF
-	ldy.w $C82A,x
-	sty.b VMDATAL&$FF
-	ldy.w $C82C,x
+	ldy.w (RefsMapBuf+$6E)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C882,x
+	ldy.w (RefsMapBuf+$C4)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C884,x
+	ldy.w (RefsMapBuf+$C6)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C886,x
+	ldy.w (RefsMapBuf+$C8)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C888,x
+	ldy.w (RefsMapBuf+$CA)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88A,x
+	ldy.w (RefsMapBuf+$CC)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88C,x
+	ldy.w (RefsMapBuf+$CE)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C88E,x
-	sty.b VMDATAL&$FF
-	adc.w #$0020
-	sta.b VMADDL&$FF
-	ldy.w $C8E4,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8E6,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8E8,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EA,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EC,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8EE,x
-	sty.b VMDATAL&$FF
-	ldy.w $C8F0,x
+	ldy.w (RefsMapBuf+$D0)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C946,x
+	ldy.w (RefsMapBuf+$126)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C948,x
+	ldy.w (RefsMapBuf+$128)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94A,x
+	ldy.w (RefsMapBuf+$12A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94C,x
+	ldy.w (RefsMapBuf+$12C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C94E,x
+	ldy.w (RefsMapBuf+$12E)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C950,x
+	ldy.w (RefsMapBuf+$130)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C952,x
+	ldy.w (RefsMapBuf+$132)&$FFFF,x
 	sty.b VMDATAL&$FF
 	adc.w #$0020
 	sta.b VMADDL&$FF
-	ldy.w $C9A8,x
+	ldy.w (RefsMapBuf+$188)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AA,x
+	ldy.w (RefsMapBuf+$18A)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AC,x
+	ldy.w (RefsMapBuf+$18C)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9AE,x
+	ldy.w (RefsMapBuf+$18E)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B0,x
+	ldy.w (RefsMapBuf+$190)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B2,x
+	ldy.w (RefsMapBuf+$192)&$FFFF,x
 	sty.b VMDATAL&$FF
-	ldy.w $C9B4,x
+	ldy.w (RefsMapBuf+$194)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$1EA)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1EC)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1EE)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F0)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F2)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F4)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$1F6)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$24C)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$24E)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$250)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$252)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$254)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$256)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$258)&$FFFF,x
+	sty.b VMDATAL&$FF
+	adc.w #$0020
+	sta.b VMADDL&$FF
+	ldy.w (RefsMapBuf+$2AE)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B0)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B2)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B4)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B6)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2B8)&$FFFF,x
+	sty.b VMDATAL&$FF
+	ldy.w (RefsMapBuf+$2BA)&$FFFF,x
 	sty.b VMDATAL&$FF
 	plb
 	pld

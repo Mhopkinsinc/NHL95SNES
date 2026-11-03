@@ -1,5 +1,4 @@
-; Segment bankC4_A000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_A000: game code, jump tables and the data tables the code reads with long addresses.
 org $C49FBD
 chk4pass:							; called from other segments
 	lda.w threat
@@ -231,7 +230,7 @@ dopass:								; from passmode, chk4pass and other segments
 	adc.w #$9C06
 	sta.b a0
 	lda.w #$00C0
-	sta.b $65
+	sta.b a0+2
 	lda.b [a0]
 	cmp.w #$8000
 	ror a
@@ -282,19 +281,19 @@ dopass_swing:						; from dopass, LaunchDumpIn
 	eor.w #$FFFF
 	inc a
 	sta.w puckvy
-.3:									; d0 = puckvx, d1 = puckvy, call vtoa, Y = $144E, ...
+.3:									; d0 = puckvx, d1 = puckvy, call vtoa, Y = SPAgswing&$FFFF, ...
 	lda.w puckvx
 	sta.b d0
 	lda.w puckvy
 	sta.b d1
 	jsl.l vtoa
-	ldy.w #$144E
+	ldy.w #SPAgswing&$FFFF
 	lda.w position,x
 	beq .4
-	ldy.w #$1B40
+	ldy.w #SPApassf&$FFFF
 	jsl.l Findhittype
 	beq .4
-	ldy.w #$1BB2
+	ldy.w #SPApassb&$FFFF
 .4:									; d1 = Y, call SetSPA, pfalock,x = $0001, ...
 	sty.b d1
 	jsl.l SetSPA
@@ -345,11 +344,11 @@ dopass_count:						; from dopass and other segments
 	bra .3
 .2:									; A = facedir,y
 	lda.w facedir,y
-.3:									; A and $0007, A * 2, X = A, A = DATA8_C41E48,x, ...
+.3:									; A and $0007, A * 2, X = A, A = SPAonetimerf,x, ...
 	and.w #$0007
 	asl a
 	tax
-	lda.l DATA8_C41E48,x
+	lda.l SPAonetimerf,x
 	tax
 	lda.l $C40000,x
 	ldx.b a3
@@ -382,7 +381,7 @@ dopass_count:						; from dopass and other segments
 	ldy.b a0
 	ldx.w Xvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d0
 	sta.b d2
@@ -393,7 +392,7 @@ dopass_count:						; from dopass and other segments
 	asl a
 	ldx.w Yvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d1
 	sta.b d3
@@ -430,7 +429,7 @@ dopass_count:						; from dopass and other segments
 	ldy.b a0
 	ldx.w Xvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d0
 	sta.b d2
@@ -441,7 +440,7 @@ dopass_count:						; from dopass and other segments
 	asl a
 	ldx.w Yvel,y
 	jsl.l Mul16XS
-	lda.b $36
+	lda.b r2+2
 	clc
 	adc.b d1
 	sta.b d3
@@ -651,21 +650,21 @@ LaunchDumpIn:						; launch the puck toward the dump-in target and start the pas
 	asl a
 	sta.b d4
 	ldx.w dumpintarget
-	lda.l DATA8_C4A5FD,x
+	lda.l DumpInSpreadX,x
 	clc
 	adc.b d4
 	jsl.l randomd0s
 	clc
-	adc.l DATA8_C4A62D,x
+	adc.l DumpInTargetX,x
 	sec
 	sbc.w puckx
 	sta.b d0
-	lda.l DATA8_C4A615,x
+	lda.l DumpInSpreadY,x
 	clc
 	adc.b d4
 	jsl.l randomd0s
 	clc
-	adc.l DATA8_C4A645,x
+	adc.l DumpInTargetY,x
 	sec
 	sbc.w pucky
 	sta.b d1
@@ -738,20 +737,21 @@ LaunchDumpIn:						; launch the puck toward the dump-in target and start the pas
 	lsr a
 	sta.w lastplayer
 	jmp.w dopass_swing
-DATA8_C4A5FD:						; not traced: a table read by LaunchDumpIn
+DumpInSpreadX:						; per dump in target: the x spread (plus the rating term)
 	db $19,$00,$19,$00,$19,$00,$19,$00,$14,$00,$19,$00,$19,$00,$19,$00
 	db $19,$00,$19,$00,$14,$00,$19,$00
-DATA8_C4A615:						; not traced: a table read by LaunchDumpIn
+DumpInSpreadY:						; per dump in target: the y spread
 	db $14,$00,$19,$00,$19,$00,$46,$00,$14,$00,$46,$00,$14,$00,$19,$00
 	db $19,$00,$46,$00,$14,$00,$46,$00
-DATA8_C4A62D:						; not traced: a table read by LaunchDumpIn
+DumpInTargetX:						; per dump in target: x
 	db $00,$00,$B0,$FF,$50,$00,$B0,$FF,$00,$00,$50,$00,$00,$00,$50,$00
 	db $B0,$FF,$B0,$FF,$00,$00,$50,$00
-DATA8_C4A645:						; not traced: a table read by LaunchDumpIn
+DumpInTargetY:						; per dump in target: y toward the goal (the second half for the other
+									; end)
 	db $97,$FF,$8D,$FF,$8D,$FF,$4C,$FF,$29,$FF,$4C,$FF,$69,$00,$73,$00
 	db $73,$00,$B4,$00,$D7,$00,$B4,$00
 puckshadow:							; assignment (asstab entry 25): the puck shadow (object 15): under the
-									; puck when the puck frame is $01B3, else at a fixed spot flipped by the
+									; puck when the puck frame is SPFpuck, else at a fixed spot flipped by the
 									; puck's end
 	lda.w frame+$1E
 	cmp.w frame+$3E
@@ -768,8 +768,8 @@ puckshadow:							; assignment (asstab entry 25): the puck shadow (object 15): u
 	jsl.l QueueFrameTiles
 	plx
 	lda.w frame+$1E
-.1:									; if A is not $01B3 go to .2, Xpos+$1E = puckx, A = pucky, A + 1, ...
-	cmp.w #$01B3
+.1:									; if A is not SPFpuck go to .2, Xpos+$1E = puckx, A = pucky, A + 1, ...
+	cmp.w #SPFpuck
 	bne .2
 	lda.w puckx
 	sta.w Xpos+$1E
@@ -851,8 +851,8 @@ puckbody:							; called from other segments
 	lda.b d2
 	tax
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $89
+	lda.b r2+2
+	sta.b d2+2
 	lda.b r2
 	sta.b d2
 	lda.b d3
@@ -863,9 +863,9 @@ puckbody:							; called from other segments
 	clc
 	adc.b d2
 	sta.b d2
-	lda.b $36
-	adc.b $89
-	sta.b $89
+	lda.b r2+2
+	adc.b d2+2
+	sta.b d2+2
 	cmp.w #$0900
 	bcc .5
 	lda.w puckz
@@ -880,7 +880,7 @@ puckbody:							; called from other segments
 	bne .rtl
 	inc a
 	sta.w pf2aip,y
-	lda.w #$26B6
+	lda.w #SPAcatch&$FFFF
 	ldx.b a2
 	jsl.l SetSPAFromA
 	ldx.b a3
@@ -955,10 +955,10 @@ puckgoalie:							; called from other segments
 	lda.b d2
 	eor.w #$0002
 	sta.b d2
-.5:									; A = frame,y, A - $0286, if A >= $0018 go to .6, ...
+.5:									; A = frame,y, A - SPFgdive, if A >= $0018 go to .6, ...
 	lda.w frame,y
 	sec
-	sbc.w #$0286
+	sbc.w #SPFgdive
 	cmp.w #$0018
 	bcs .6
 	lda.w puckz
@@ -1225,22 +1225,22 @@ ChkShotStat:						; from puckgoalie, Goal and other segments
 	sep #$20
 	inc.w tmpshots,x
 	rep #$20
-.13:								; pull X, pull A, $81 = A, pull A, ...
+.13:								; pull X, pull A, d0+2 = A, pull A, ...
 	plx
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	lda.w CwdExciteLvl
@@ -1410,9 +1410,9 @@ Goal:								; called from other segments
 	sec
 	sbc.w #$0006
 	sta.w ScoreSumbytes
-.20:								; $65 = $007E, A = ScoreSum, A + ScoreSumbytes, a0 = A, ...
+.20:								; a0+2 = $007E, A = ScoreSum, A + ScoreSumbytes, a0 = A, ...
 	lda.w #$007E
-	sta.b $65
+	sta.b a0+2
 	lda.w #ScoreSum
 	clc
 	adc.w ScoreSumbytes
@@ -1506,9 +1506,9 @@ Goal:								; called from other segments
 	adc.b d0
 	tax
 	inc.w tmgoals,x
-.28:								; call PenGoalStuff, call CODE_C539D7, X = a3, d0 = $0008, ...
+.28:								; call PenGoalStuff, call DrawScoreBox, X = a3, d0 = $0008, ...
 	jsl.l PenGoalStuff
-	jsl.l CODE_C539D7
+	jsl.l DrawScoreBox
 	ldx.b a3
 	lda.w #$0008
 	sta.b d0
@@ -1549,7 +1549,7 @@ Goal:								; called from other segments
 	jsl.l assreplace
 	inx
 	inx
-	lda.w #$253E
+	lda.w #SPAsiren&$FFFF
 	jsl.l SetSPAFromA
 	ldy.b a2
 	ldx.w tmsort,y
@@ -1675,8 +1675,8 @@ puckstick:							; from puckbody and other segments
 	phx
 	tax
 	jsl.l Mul16S
-	lda.b $36
-	sta.b $81
+	lda.b r2+2
+	sta.b d0+2
 	lda.b r2
 	sta.b d0
 	lda.w puckvy
@@ -1687,9 +1687,9 @@ puckstick:							; from puckbody and other segments
 	clc
 	adc.b d0
 	sta.b d0
-	lda.b $36
-	adc.b $81
-	sta.b $81
+	lda.b r2+2
+	adc.b d0+2
+	sta.b d0+2
 	stz.b d1
 	lda.w sflags
 	bit.w #$1000
@@ -1719,8 +1719,8 @@ puckstick:							; from puckbody and other segments
 	plx
 	lda.b r2
 	cmp.b d0
-	lda.b $36
-	sbc.b $81
+	lda.b r2+2
+	sbc.b d0+2
 	bcs .10
 	lda.w position,x
 	beq .9

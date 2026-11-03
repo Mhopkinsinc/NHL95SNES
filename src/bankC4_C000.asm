@@ -1,5 +1,4 @@
-; Segment bankC4_C000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_C000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4BF47
 DrawGlyphPixel0:					; draw the next glyph pixel at column zero of the tile
 	asl.b $16
@@ -135,7 +134,7 @@ DrawGlyphNextRow:					; advance to the next glyph row or finish the character
 	plx
 	inx
 	inx
-	cpx.b $3A
+	cpx.b p0+2
 	bcs .1
 	jmp.w DrawGlyphRow
 .1:									; A = $0E, A / 2, if carry clear go to .2, A = X, ...
@@ -146,7 +145,7 @@ DrawGlyphNextRow:					; advance to the next glyph row or finish the character
 	adc.w #$000F
 	tax
 	adc.w #$0010
-	sta.b $3A
+	sta.b p0+2
 	tya
 	adc.w #$01F0
 	tay
@@ -168,16 +167,17 @@ FinishTextDraw:						; record the rightmost text extent and return
 	sta.l $0018DC
 .rtl:								; return
 	rtl
-DATA8_C4C07D:						; the 8 routines DrawGlyphRow runs (address - 1: pushed, then rts)
+GlyphPixelRoutines:					; per pixel column of the glyph's left edge ($0A & 7, * 2): the
+									; DrawGlyphPixel routine DrawGlyphRow runs (address - 1: pushed, then rts)
 	dw DrawGlyphPixel0-1,DrawGlyphPixel1-1,DrawGlyphPixel2-1,DrawGlyphPixel3-1
 	dw DrawGlyphPixel4-1,DrawGlyphPixel5-1,DrawGlyphPixel6-1,DrawGlyphPixel7-1
 CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps existing text pixels
 	lda.b $0A
 	and.w #$0007
 	tax
-	lda.l DATA8_C4C4AE,x
+	lda.l PixelBitMasks,x
 	and.w #$00FF
-	sta.b $36
+	sta.b r2+2
 	lda.b $10
 	clc
 	adc.b $0C
@@ -185,7 +185,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	lda.b $0A
 	and.w #$FFF8
 	asl a
-	adc.b $A5
+	adc.b tmp3
 	tay
 	sep #$20
 	lda.l $C00000,x
@@ -194,7 +194,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .1
 	lda.w $0000,y
 	ora.w $0001,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .1:									; A = $C00002,x, A or $C00003,x, A * 2, if carry clear go to .2, ...
 	lda.l $C00002,x
@@ -203,7 +203,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .2
 	lda.w $0002,y
 	ora.w $0003,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .2:									; A = $C00004,x, A or $C00005,x, A * 2, if carry clear go to .3, ...
 	lda.l $C00004,x
@@ -212,7 +212,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .3
 	lda.w $0004,y
 	ora.w $0005,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .3:									; A = $C00006,x, A or $C00007,x, A * 2, if carry clear go to .4, ...
 	lda.l $C00006,x
@@ -221,7 +221,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .4
 	lda.w $0006,y
 	ora.w $0007,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .4:									; A = $C00008,x, A or $C00009,x, A * 2, if carry clear go to .5, ...
 	lda.l $C00008,x
@@ -230,7 +230,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .5
 	lda.w $0008,y
 	ora.w $0009,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .5:									; A = $C0000A,x, A or $C0000B,x, A * 2, if carry clear go to .6, ...
 	lda.l $C0000A,x
@@ -239,7 +239,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .6
 	lda.w $000A,y
 	ora.w $000B,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .6:									; A = $C0000C,x, A or $C0000D,x, A * 2, if carry clear go to .8, ...
 	lda.l $C0000C,x
@@ -248,7 +248,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .8
 	lda.w $000C,y
 	ora.w $000D,y
-	bit.b $36
+	bit.b r2+2
 	beq .8
 .7:									; A 16-bit, return
 	rep #$20
@@ -260,7 +260,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .9
 	lda.w $000E,y
 	ora.w $000F,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .9:									; A = $0E, A / 2, if carry set go to .10, A 16-bit, ...
 	lda.b $0E
@@ -275,7 +275,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .11
 	lda.w $0200,y
 	ora.w $0201,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .11:								; A = $C00022,x, A or $C00023,x, A * 2, if carry clear go to .12, ...
 	lda.l $C00022,x
@@ -284,7 +284,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .12
 	lda.w $0202,y
 	ora.w $0203,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .12:								; A = $C00024,x, A or $C00025,x, A * 2, if carry clear go to .13, ...
 	lda.l $C00024,x
@@ -293,7 +293,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .13
 	lda.w $0204,y
 	ora.w $0205,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .13:								; A = $C00026,x, A or $C00027,x, A * 2, if carry clear go to .14, ...
 	lda.l $C00026,x
@@ -302,7 +302,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .14
 	lda.w $0206,y
 	ora.w $0207,y
-	bit.b $36
+	bit.b r2+2
 	bne .7
 .14:								; A = $C00028,x, A or $C00029,x, A * 2, if carry clear go to .15, ...
 	lda.l $C00028,x
@@ -311,7 +311,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .15
 	lda.w $0208,y
 	ora.w $0209,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .15:								; A = $C0002A,x, A or $C0002B,x, A * 2, if carry clear go to .16, ...
 	lda.l $C0002A,x
@@ -320,7 +320,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .16
 	lda.w $020A,y
 	ora.w $020B,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .16:								; A = $C0002C,x, A or $C0002D,x, A * 2, if carry clear go to .17, ...
 	lda.l $C0002C,x
@@ -329,7 +329,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .17
 	lda.w $020C,y
 	ora.w $020D,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 .17:								; A = $C0002E,x, A or $C0002F,x, A * 2, if carry clear go to .18, ...
 	lda.l $C0002E,x
@@ -338,7 +338,7 @@ CheckGlyphLeftOverlap:				; test whether the glyph leading column overlaps exist
 	bcc .18
 	lda.w $020E,y
 	ora.w $020F,y
-	bit.b $36
+	bit.b r2+2
 	bne .18
 	clc
 .18:								; A 16-bit, return
@@ -366,24 +366,24 @@ QueueTextTiles:						; queues the tiles DrawText made for VRAM (text row Y)
 	adc.b p0
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.b $12
 	and.w #$FFF8
 	pha
 	asl a
 	phy
 	pea.w $007E
-	adc.b $A5
+	adc.b tmp3
 	pha
 	lda.b $0A
 	adc.w #$0007
 	sec
 	sbc.b $07,s
 	and.w #$FFF8
-	sta.b $A5
+	sta.b tmp3
 	asl a
 	sta.b $07,s
 	tax
@@ -398,11 +398,11 @@ QueueTextTiles:						; queues the tiles DrawText made for VRAM (text row Y)
 	lda.b $07,s
 	adc.w #$0200
 	pha
-.1:									; A = $00, $00 = X, QueueBusy = 0, TransfersReady + 1, ...
-	lda.b $00
+.1:									; A = VRAMQueueSP, VRAMQueueSP = X, QueueBusy = 0, TransfersReady + 1, ...
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	inc.w TransfersReady
 	rtl
@@ -412,11 +412,11 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	asl a
 	adc.b $D3
 	tax
-	lda.b $A5
+	lda.b tmp3
 	lsr a
 	lsr a
 	lsr a
-	sta.b $A5
+	sta.b tmp3
 	lda.b p0
 	sec
 	sbc.w #$3000
@@ -436,10 +436,10 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	tya
 	adc.w #$001F
 	sta.l $7E0040,x
-.1:									; X + 1, X + 1, $A5 - 1, if the result is not 0 go to .loop, ...
+.1:									; X + 1, X + 1, tmp3 - 1, if the result is not 0 go to .loop, ...
 	inx
 	inx
-	dec.b $A5
+	dec.b tmp3
 	bne .loop
 	lda.b $0A
 	sec
@@ -447,22 +447,23 @@ MapTextTiles:						; writes the text map entries of the tiles DrawText made (row
 	rtl
 SendTextMap:						; queues the text map ($800 bytes) for VRAM at $5C00
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0800
 	pea.w $5C00
 	pea.w $007E
 	pei ($D3)
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
-CODE_C4C2C6:						; no caller found (not traced)
-	sty.b $A5
+SendTextMapPartUnused:				; queues Y rows of the text map from row A, columns TextColLow to
+									; TextColHigh, to the VRAM map at $5C00 from row X; nothing calls it
+	sty.b tmp3
 	tay
 	lda.w TextColLow
 	lsr a
@@ -498,7 +499,7 @@ CODE_C4C2C6:						; no caller found (not traced)
 	dec.b QueueBusy
 	tsc
 	sta.b $1C
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 .loop:								; loop: push X, push Y, A = X, A + $0020, ...
 	pei ($14)
@@ -511,10 +512,10 @@ CODE_C4C2C6:						; no caller found (not traced)
 	tya
 	adc.w #$0040
 	tay
-	dec.b $A5
+	dec.b tmp3
 	bne .loop
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $1C
 	tcs
 	stz.b QueueBusy
@@ -544,8 +545,8 @@ TextWidth:							; the width in pixels of the text at X in the font of $0E (per 
 	bcc .3
 	sbc.w #$0020
 	tax
-.3:									; A = DATA8_C4C4D7,x, A and $007F
-	lda.l DATA8_C4C4D7,x
+.3:									; A = ThinFontWidths,x, A and $007F
+	lda.l ThinFontWidths,x
 	and.w #$007F
 .4:									; A + $0A, $0A = A, go to .1
 	clc
@@ -669,11 +670,12 @@ DecodePackedText:					; decode packed text symbols into the allocated string buf
 	rtl
 .9:									; call ReadTextThreeBits
 	jsr.w ReadTextThreeBits
-.10:								; X = A, A = DATA8_C4C420,x, go to .6
+.10:								; X = A, A = PackedTextSymbols,x, go to .6
 	tax
-	lda.l DATA8_C4C420,x
+	lda.l PackedTextSymbols,x
 	bra .6
-DATA8_C4C420:						; not traced: a table read by DecodePackedText
+PackedTextSymbols:					; the characters of packed text codes $1D-$1F (a 3-bit index, + 8 for $1E,
+									; + 16 for $1F): $30-$40, the digits, then the punctuation up to $40
 	db $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 	db $40
 ReadTextThreeBits:					; read a three-bit packed text extension
@@ -750,24 +752,28 @@ CopyString2:						; CopyString into the second work buffer (AllocWorkBuf2)
 	plx
 	ply
 	rtl
-DATA8_C4C4A6:						; not traced: data between routines
+ByteBitMasks:						; the 8 single bit masks of a byte ($01 first)
 	db $01,$02,$04,$08,$10,$20,$40,$80
-DATA8_C4C4AE:						; not traced: a table read by CheckGlyphLeftOverlap
+PixelBitMasks:						; per pixel column (x & 7): its bit in a glyph row byte, $80 the leftmost
 	db $80,$40,$20,$10,$08,$04,$02,$01
-DATA8_C4C4B6:						; not traced: a table read by DrawNextTextCharacter
+ItalicFontWidths:					; per glyph (character - $30): the italic font's width in pixels; it runs
+									; on into ThinFontWidths
 	db $0B,$07,$0B,$0B,$0B,$0B,$0B,$09,$0B,$0C,$05,$08,$0C,$06,$0B,$07
 	db $05,$0A,$0B,$0B,$0B,$0B,$0B,$0B,$0C,$07,$0C,$0C,$08,$0D,$0D,$0B
 	db $0B
-DATA8_C4C4D7:						; not traced: a table read by TextWidth, DrawNextTextCharacter
+ThinFontWidths:						; per glyph (character - $30): the thin font's width in pixels (bit 7
+									; clear: drawn up to 2 pixels left where that overlaps nothing); its first
+									; 10 bytes are the italic font's Q-Z
 	db $0B,$0B,$0B,$0A,$0C,$09,$0C,$0B,$0A,$0B,$02,$03,$01,$83,$87,$83
 	db $84,$87,$87,$86,$87,$86,$86,$87,$86,$82,$85,$87,$85,$88,$87,$88
 	db $86,$88,$86,$85,$86,$86,$87,$88,$86,$86,$85
-DATA8_C4C502:						; not traced: a table read by DrawNextTextCharacter
+BoldFontWidths:						; per glyph (character - $30): the bold font's width in pixels (bit 7
+									; clear: drawn up to 2 pixels left where that overlaps nothing)
 	db $86,$85,$86,$86,$87,$86,$86,$86,$86,$86,$83,$83,$88,$83,$85,$83
 	db $83,$88,$87,$88,$87,$86,$86,$88,$87,$83,$86,$87,$87,$88,$87,$88
 	db $87,$88,$88,$87,$87,$87,$88,$88,$87,$87,$87,$02,$03,$01
 ResetWorkBuf:						; both work buffer pointers back to their starts, the saved mark too
-	lda.w #$50DC
+	lda.w #unpackbuf&$FFFF
 	sta.w WorkBufMark
 RestoreWorkBuf:						; the work buffer pointer back to the saved mark (MarkWorkBuf), the second
 									; one to its start
@@ -815,24 +821,24 @@ FreeWorkBuf:						; gives the last A bytes back to the work buffer (AllocWorkBuf
 	inc a
 	sta.b $08
 	rtl
-ResetTransferQueues:				; empties the transfer queues: their stack pointers $00 = $03FF, $02 =
-									; $01FF, $04 = $048F, with QueueBusy set around the stores
+ResetTransferQueues:				; empties the transfer queues: VRAMQueueSP = $03FF, VRAMModeQueueSP =
+									; $01FF, CGRAMQueueSP = $048F, with QueueBusy set around the stores
 	lda.w #$FFFF
 	sta.b QueueBusy
 	lda.w #$03FF
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.w #$01FF
-	sta.b $02
+	sta.b VRAMModeQueueSP
 	lda.w #$048F
-	sta.b $04
+	sta.b CGRAMQueueSP
 	stz.b QueueBusy
 	rtl
 ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues and uploads sprite
 									; OAM
-	ldx.b $02
+	ldx.b VRAMModeQueueSP
 	dex
 	stz.b $00,x
-	ldx.b $00
+	ldx.b VRAMQueueSP
 	dex
 	stz.b $00,x
 	sep #$11
@@ -1577,7 +1583,7 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	lda.w #$2200
 	sta.w DMAP0
 	rep #$30
-	ldx.w $0004
+	ldx.w CGRAMQueueSP
 	dex
 	stz.w $0000,x
 	sep #$10
@@ -1797,26 +1803,26 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	lda.b $00
 	sta.w A1T0L
 	sty.w MDMAEN
-.75:								; A = $0000, $00 = $03FF, $02 = $01FF, $04 = $048F, ...
+.75:								; A = $0000, VRAMQueueSP = $03FF, VRAMModeQueueSP = $01FF, ...
 	rep #$31
 	lda.w #$0000
 	tcd
 	lda.w #$03FF
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.w #$01FF
-	sta.b $02
+	sta.b VRAMModeQueueSP
 	lda.w #$048F
-	sta.b $04
+	sta.b CGRAMQueueSP
 	stz.w $2102
 	sec
 	lda.b $28
-	sbc.w #$1B91
+	sbc.w #OAMBuf+$1
 	bcc .76
 	adc.w #$0001
 	sta.w DAS0L
-	lda.w #$939C
+	lda.w #OAMClearByte&$FFFF
 	sta.w A1T0L
-	lda.w #$C593
+	lda.w #OAMClearByte>>8
 	sta.w $4303
 	lda.w #$0408
 	sta.w DMAP0
@@ -1834,10 +1840,10 @@ ProcessQueuedTransfers:				; runs queued VRAM and palette DMA, resets the queues
 	sta.w A1T0L
 	stx.w MDMAEN
 	rtl
-.76:								; DAS0L = $0220, A1T0L = $1B90, $4303 = $001B, DMAP0 = $0400, ...
+.76:								; DAS0L = $0220, A1T0L = OAMBuf, $4303 = $001B, DMAP0 = $0400, ...
 	lda.w #$0220
 	sta.w DAS0L
-	lda.w #$1B90
+	lda.w #OAMBuf
 	sta.w A1T0L
 	lda.w #$001B
 	sta.w $4303
@@ -1851,18 +1857,19 @@ WaitTransfers:						; lets the NMI run the queued transfers (TransfersReady + 1)
 	inc.w TransfersReady
 	wai
 	rtl
-CODE_C4CEE0:						; no caller found (not traced)
+TransferQueueStubUnused:			; r0 = A, $2E = X, then the transfer queue opened and closed once with no
+									; record; nothing calls it
 	sta.b r0
-	stx.b $2E
+	stx.b r0+2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
-	lda.b $00
+	stx.b VRAMQueueSP
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
 InitSaveRAM:						; checks the save signatures and initializes save RAM and defaults on

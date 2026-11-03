@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 DrawFrameLayout = $CFEE6C
@@ -40,8 +41,8 @@ findpc = $C537C4
 PadTakeGoalie = $C538FE
 PadTakeRightDefense = $C53903
 PadTakeLeftDefense = $C53921
-CODE_C539D7 = $C539D7
-CODE_C53A29 = $C53A29
+DrawScoreBox = $C539D7
+DrawPeriodBox = $C53A29
 AnimateSprites = $C5E9C7
 BuildSpriteOAM = $C5F0D1
 PauseFromPad = $C50D24
@@ -65,5 +66,7 @@ DigitFontTiles = $C04642
 LinePieceTiles = $C04708
 MeterFontTiles = $C00976
 RefsMap = $C2CC6E
+BackdropColour = $C04CA9
+GamePalette0 = $C00EE5
 
 incsrc "../bankC5_2000.asm"

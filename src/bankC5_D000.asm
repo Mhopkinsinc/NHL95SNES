@@ -1,16 +1,15 @@
-; Segment bankC5_D000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_D000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5D00D
 TradeValue:							; one side of a trade: the value of its chosen players (from their
 									; ratings, RecordOverall) into (tmp1), and how many goalies (d0), forwards
 									; and defencemen (d1) it gives
 	stz.b d0
-	stz.b $81
+	stz.b d0+2
 	stz.b d1
 	stz.b r1
 	lda.w #$0000
-.1:									; $91 = A, Y = A, A = (d2),y, if $0001 bits clear go to .5, ...
-	sta.b $91
+.1:									; d4+2 = A, Y = A, A = (d2),y, if $0001 bits clear go to .5, ...
+	sta.b d4+2
 	tay
 	lda.b (d2),y
 	bit.w #$0001
@@ -25,8 +24,8 @@ TradeValue:							; one side of a trade: the value of its chosen players (from t
 	bcc .2
 	inc.b d1
 	bra .4
-.2:									; $81 + 1, go to .4
-	inc.b $81
+.2:									; d0+2 + 1, go to .4
+	inc.b d0+2
 	bra .4
 .3:									; d0 + 1, RatingMode = $0010
 	inc.b d0
@@ -54,8 +53,8 @@ TradeValue:							; one side of a trade: the value of its chosen players (from t
 	adc.b (tmp1)
 	sta.b (tmp1)
 	inc.b r1
-.5:									; A = $91, A + 1, if A is not tmp2 go to .1, if r1 = 0 go to .rts, ...
-	lda.b $91
+.5:									; A = d4+2, A + 1, if A is not tmp2 go to .1, if r1 = 0 go to .rts, ...
+	lda.b d4+2
 	inc a
 	cmp.b tmp2
 	bne .1
@@ -88,7 +87,7 @@ SetMarkedPlayersTeam:				; each player marked in the list at Y (bit 0; roster X)
 									; SRPlayerTeams entry
 	stx.b tmp2
 	sty.b tmp1
-	sta.b $A5
+	sta.b tmp3
 	asl a
 	asl a
 	asl a
@@ -120,7 +119,7 @@ SetMarkedPlayersTeam:				; each player marked in the list at Y (bit 0; roster X)
 	tax
 	lda.l SRPlayerTeams,x
 	and.w #$FFE0
-	ora.b $A5
+	ora.b tmp3
 	sta.l SRPlayerTeams,x
 .3:									; Y + 1, if Y is not tmp0 go to .1, return
 	iny
@@ -165,15 +164,15 @@ UserNameEntry:						; with user records on (not in practice): NameEntryScreen fo
 	sta.b a2
 	sty.w pausepad
 	jsr.w NameEntryScreen
-	lda.b $65
+	lda.b a0+2
 	sta.w HomeUserRec
 	bra .1
-.3:									; a2 = VisTeam, pausepad = Y, call NameEntryScreen, VisUserRec = $65, ...
+.3:									; a2 = VisTeam, pausepad = Y, call NameEntryScreen, VisUserRec = a0+2, ...
 	lda.w VisTeam
 	sta.b a2
 	sty.w pausepad
 	jsr.w NameEntryScreen
-	lda.b $65
+	lda.b a0+2
 	sta.w VisUserRec
 	rts
 NameEntryScreen:					; the Name Entry screen of a pad: the 8 user names (up / down), B edits
@@ -187,9 +186,9 @@ NameEntryScreen:					; the Name Entry screen of a pad: the 8 user names (up / do
 	jsl.l ReadPauseMenuPad
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -200,24 +199,24 @@ NameEntryScreen:					; the Name Entry screen of a pad: the 8 user names (up / do
 	beq .1
 	jsr.w EditUserName
 	bra .loop
-.1:									; if $0400 bits clear go to .2, A = $65, A + 1, if A < $0008 go to .3, ...
+.1:									; if $0400 bits clear go to .2, A = a0+2, A + 1, ...
 	bit.w #$0400
 	beq .2
-	lda.b $65
+	lda.b a0+2
 	inc a
 	cmp.w #$0008
 	bcc .3
 	lda.w #$0000
 	bra .3
-.2:									; if $0800 bits clear go to .4, A = $65, A - 1, ...
+.2:									; if $0800 bits clear go to .4, A = a0+2, A - 1, ...
 	bit.w #$0800
 	beq .4
-	lda.b $65
+	lda.b a0+2
 	dec a
 	bpl .3
 	lda.w #$0007
-.3:									; $65 = A, A * 2, A * 2, A * 2, ...
-	sta.b $65
+.3:									; a0+2 = A, A * 2, A * 2, A * 2, ...
+	sta.b a0+2
 	asl a
 	asl a
 	asl a
@@ -251,7 +250,7 @@ StartUserNameEntry:					; UserNameEntry's start: fade out, the five sprites at $
 	rts
 DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user names,
 									; numbered
-	stz.b $65
+	stz.b a0+2
 	ldx.b a0
 	lda.w #$0010
 	sta.b $05,x
@@ -267,16 +266,16 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	cmp.w HomeTeam
 	beq .1
 	ldy.w #$2C01
-.1:									; X = $5115, call MapTileBlock, X = d7, Y = $9D, ...
+.1:									; X = $5115, call MapTileBlock, X = d7, Y = d7+2, ...
 	ldx.w #$5115
 	jsl.l MapTileBlock
 	ldx.b d7
-	ldy.b $9D
+	ldy.b d7+2
 	lda.b a2
 	cmp.w HomeTeam
 	beq .2
 	txy
-	ldx.b $9D
+	ldx.b d7+2
 .2:									; $05,x = $00D0, $08,x = $0028, A = $22,x, A or $0001, ...
 	lda.w #$00D0
 	sta.b $05,x
@@ -288,7 +287,7 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	lda.w $0022,y
 	and.w #$FFFE
 	sta.w $0022,y
-	lda.w #$542B
+	lda.w #NameLogPage&$FFFF
 	jsl.l PrintTextPage
 	lda.w #$00A8
 	sta.b $CF
@@ -297,7 +296,7 @@ DrawNameLog:						; draws the Name Entry page: the team's name, then the 8 user 
 	lda.b a2
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$0009
 	jsl.l PrintThinCentred
@@ -462,9 +461,9 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l ReadPauseMenuPad
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -513,12 +512,12 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 .5:									; call MoveGridCursor, go to .11
 	jsr.w MoveGridCursor
 	bra .11
-.6:									; if $8080 bits clear go to .8, X = a1, A = DATA8_C598FA,x, Y = $69, ...
+.6:									; if $8080 bits clear go to .8, X = a1, A = LetterGridChars,x, ...
 	bit.w #$8080
 	beq .8
 	ldx.b a1
-	lda.l DATA8_C598FA,x
-	ldy.b $69
+	lda.l LetterGridChars,x
+	ldy.b a1+2
 	sep #$20
 	cmp.b #$3D
 	bne .7
@@ -529,33 +528,33 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	iny
 	cpy.w #$000C
 	bcs .10
-	sty.b $69
+	sty.b a1+2
 	bra .10
-.8:									; if $4000 bits clear go to .12, if $69 = 0 go to .9, X - 1
+.8:									; if $4000 bits clear go to .12, if a1+2 = 0 go to .9, X - 1
 	bit.w #$4000
 	beq .12
-	ldx.b $69
+	ldx.b a1+2
 	beq .9
 	dex
-.9:									; mesarea,x = $3E3E, $69 = X
+.9:									; mesarea,x = $3E3E, a1+2 = X
 	lda.w #$3E3E
 	sta.w mesarea,x
-	stx.b $69
+	stx.b a1+2
 .10:								; call PrintEditedName, call SendTextMap
 	jsr.w PrintEditedName
 	jsl.l SendTextMap
 .11:								; go to .loop
 	jmp.w .loop
-.12:								; if $0040 bits clear go to .13, A = $65, call GetUserName, go to .14
+.12:								; if $0040 bits clear go to .13, A = a0+2, call GetUserName, go to .14
 	bit.w #$0040
 	beq .13
-	lda.b $65
+	lda.b a0+2
 	jsr.w GetUserName
 	bra .14
-.13:								; if $1000 bits clear go to .11, A = $65, call PutUserName
+.13:								; if $1000 bits clear go to .11, A = a0+2, call PutUserName
 	bit.w #$1000
 	beq .11
-	lda.b $65
+	lda.b a0+2
 	jsr.w PutUserName
 .14:								; X = $FFFF, A 8-bit
 	ldx.w #$FFFF
@@ -567,7 +566,7 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	bne .loop2
 	stz.w mesarea,x
 	rep #$20
-	lda.b $65
+	lda.b a0+2
 	xba
 	lsr a
 	lsr a
@@ -578,7 +577,7 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	lda.w mesarea
 	and.w #$00FF
 	beq .15
-	lda.b $65
+	lda.b a0+2
 	clc
 	adc.w #$0006
 	tay
@@ -594,10 +593,10 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l ClearRAM7E
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F40
+	ldx.w #TxtBEditName&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
-	ldx.w #$4F4A
+	ldx.w #TxtStartSelectPlayer&$FFFF
 	ldy.w #$001A
 	jsl.l PrintBoldLeft
 	jsl.l SendTextMap
@@ -606,7 +605,7 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	jsl.l SetSpriteAnim
 	lda.w #$0010
 	sta.b $05,x
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -615,7 +614,7 @@ EditUserName:						; edits the chosen user name on the letter grid (DrawNameGrid
 	lda.w padchangeany
 	bit.w #$0040
 	bne .rts
-	lda.b $65
+	lda.b a0+2
 	jsr.w ClearUserRecord
 .rts:								; return
 	rts
@@ -631,25 +630,25 @@ DrawNameGrid:						; draws the letter grid and its keys for EditUserName
 	sta.b $D5
 	lda.w #$001A
 	ldy.w #$000F
-	ldx.w #$490D
+	ldx.w #TxtAbcdefghi&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0012
-	ldx.w #$4914
+	ldx.w #TxtJklmnopqr&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$001A
 	ldy.w #$0015
-	ldx.w #$4922
+	ldx.w #TxtStuvwxyz2&$FFFF
 	jsl.l PrintItalicFixedLeft
 	lda.w #$2000
 	sta.b $D5
-	lda.w #$543D
+	lda.w #NameGridPage&$FFFF
 	jsl.l PrintTextPage
 	ldx.w #$0000
-	stx.b $69
+	stx.b a1+2
 	cpx.w #$000C
 	bne .1
-	dec.b $69
+	dec.b a1+2
 .1:									; A = $003E
 	lda.w #$003E
 .loop:								; loop: if X = $000C go to .2, mesarea,x = A, X + 1, go to .loop
@@ -667,16 +666,16 @@ DrawNameGrid:						; draws the letter grid and its keys for EditUserName
 	jsr.w MoveGridCursor
 	rts
 MoveGridCursor:						; puts the cursor's palette 0 on letter grid cell a1 (GridCellPalette0)
-									; and moves the cursor sprite (a0) onto it (x and y from DATA8_C5A225 /
-									; DATA8_C5A25B)
+									; and moves the cursor sprite (a0) onto it (x and y from LetterGridX /
+									; LetterGridY)
 	jsr.w GridCellPalette0
 	ldy.b a0
 	lda.b a1
 	asl a
 	tax
-	lda.l DATA8_C5A225,x
+	lda.l LetterGridX,x
 	sta.w $0005,y
-	lda.l DATA8_C5A25B,x
+	lda.l LetterGridY,x
 	clc
 	adc.w #$0018
 	sta.w $0008,y
@@ -689,13 +688,13 @@ GridCellPalette3:					; puts palette 3 (the cells' normal look) on letter grid c
 									; (SetGridCellPalette $0C00)
 	lda.w #$0C00
 SetGridCellPalette:					; puts palette bits tmp0 on the 2 x 2 tiles of letter grid cell a1 (its
-									; position from DATA8_C5A1D7), then SendTextMap
+									; position from LetterGridCells), then SendTextMap
 	sta.b tmp0
 	lda.b a1
 	asl a
 	tax
 	lda.b $D3
-	adc.l DATA8_C5A1D7,x
+	adc.l LetterGridCells,x
 	adc.w #$00C0
 	tay
 	jsr.w SetTilePalette
@@ -720,7 +719,7 @@ SetTilePalette:						; puts palette bits tmp0 on the text map tile at Y (its pal
 	rts
 PrintEditedName:					; prints the name being edited (mesarea) on row $65 + 6 in the fixed-width
 									; bold font (width 10), the row cleared first
-	lda.b $65
+	lda.b a0+2
 	xba
 	lsr a
 	lsr a
@@ -730,7 +729,7 @@ PrintEditedName:					; prints the name being edited (mesarea) on row $65 + 6 in 
 	jsl.l ClearRAM7E
 	lda.w #$0020
 	sta.b $CF
-	lda.b $65
+	lda.b a0+2
 	clc
 	adc.w #$0006
 	tay
@@ -747,9 +746,9 @@ UpdateRecords:						; after a game, outside play mode 1 and with user records on
 	lda.w OptUserRec
 	beq .rtl
 	lda.w HomeTeam
-	sta.w $12AF
+	sta.w RecordTeams
 	lda.w VisTeam
-	sta.w $12B1
+	sta.w RecordTeams+2
 	lda.w HomeUserRec
 	bmi .1
 	ldx.w #$0000
@@ -774,31 +773,31 @@ UpdateUserRecord:					; adds the game to the user record of team X: a win, loss 
 	bcs .2
 	inc.b d4
 	bra .4
-.1:									; $8D + 1, go to .4
-	inc.b $8D
+.1:									; d3+2 + 1, go to .4
+	inc.b d3+2
 	bra .4
-.2:									; d3 + 1, A = tmshots,y, A - tmscore,y, if A < $85 go to .3, ...
+.2:									; d3 + 1, A = tmshots,y, A - tmscore,y, if A < d1+2 go to .3, ...
 	inc.b d3
 	lda.w tmshots,y
 	sec
 	sbc.w tmscore,y
-	cmp.b $85
+	cmp.b d1+2
 	bcc .3
 	beq .3
-	sta.b $85
-	lda.w $12AF,x
+	sta.b d1+2
+	lda.w RecordTeams,x
 	sta.b d2
-	lda.w $12AF,y
-	sta.b $89
-.3:									; if tmscore,x < d0 go to .4, if zero go to .4, d0 = A, $81 = $12AF,x, ...
+	lda.w RecordTeams,y
+	sta.b d2+2
+.3:									; if tmscore,x < d0 go to .4, if zero go to .4, d0 = A, ...
 	lda.w tmscore,x
 	cmp.b d0
 	bcc .4
 	beq .4
 	sta.b d0
-	lda.w $12AF,x
-	sta.b $81
-	lda.w $12AF,y
+	lda.w RecordTeams,x
+	sta.b d0+2
+	lda.w RecordTeams,y
 	sta.b d1
 .4:									; pull A
 	pla
@@ -807,7 +806,7 @@ WriteUserRecord:					; writes d0, $81, d1 and $85 back as user a3's record in sa
 	sta.b a3
 	asl a
 	adc.b a3
-	sta.b $71
+	sta.b a3+2
 	asl a
 	sec
 	sbc.b a3
@@ -825,19 +824,19 @@ WriteUserRecord:					; writes d0, $81, d1 and $85 back as user a3's record in sa
 	lda.b d0
 	jsr.w WriteUserField12
 	ldx.w #$711E
-	lda.b $81
+	lda.b d0+2
 	jsr.w WriteUserField5
 	ldx.w #$7123
 	lda.b d1
 	jsr.w WriteUserField5
 	ldx.w #$7128
-	lda.b $85
+	lda.b d1+2
 	jsr.w WriteUserField12
 	ldx.w #$7134
 	lda.b d2
 	jsr.w WriteUserField5
 	ldx.w #$7139
-	lda.b $89
+	lda.b d2+2
 	jsr.w WriteUserField5
 	ldx.w #$713E
 	lda.b d3
@@ -846,11 +845,11 @@ WriteUserRecord:					; writes d0, $81, d1 and $85 back as user a3's record in sa
 	lda.b d4
 	jsr.w WriteUserField12
 	ldx.w #$7156
-	lda.b $8D
+	lda.b d3+2
 WriteUserField12:					; writes A as the 12-bit field of the user record at X ($71 half-bytes in)
 	stx.b $77
 	tax
-	lda.b $71
+	lda.b a3+2
 	lsr a
 	tay
 	bcc .1
@@ -900,7 +899,7 @@ ReadUserRecord:						; reads user A's record from save RAM ($307112 on, $30 bits
 	sta.b a0
 	asl a
 	adc.b a0
-	sta.b $65
+	sta.b a0+2
 	asl a
 	sec
 	sbc.b a0
@@ -911,27 +910,27 @@ ReadUserRecord:						; reads user A's record from save RAM ($307112 on, $30 bits
 	sta.b a1
 	txa
 	and.w #$0007
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0030
-	sta.b $6D
+	sta.b a2+2
 	ldx.w #$7112
 	jsr.w ReadUserField12
 	sta.b d0
 	ldx.w #$711E
 	jsr.w ReadUserField5
-	sta.b $81
+	sta.b d0+2
 	ldx.w #$7123
 	jsr.w ReadUserField5
 	sta.b d1
 	ldx.w #$7128
 	jsr.w ReadUserField12
-	sta.b $85
+	sta.b d1+2
 	ldx.w #$7134
 	jsr.w ReadUserField5
 	sta.b d2
 	ldx.w #$7139
 	jsr.w ReadUserField5
-	sta.b $89
+	sta.b d2+2
 	ldx.w #$713E
 	jsr.w ReadUserField12
 	sta.b d3
@@ -940,12 +939,12 @@ ReadUserRecord:						; reads user A's record from save RAM ($307112 on, $30 bits
 	sta.b d4
 	ldx.w #$7156
 	jsr.w ReadUserField12
-	sta.b $8D
+	sta.b d3+2
 	plx
 	rts
 ReadUserField12:					; A = the 12-bit field of the user record at X ($65 half-bytes in)
 	stx.b a2
-	lda.b $65
+	lda.b a0+2
 	lsr a
 	tay
 	lda.b [a2],y
@@ -960,7 +959,7 @@ ReadUserField12:					; A = the 12-bit field of the user record at X ($65 half-by
 ReadUserField5:						; A = the 5-bit field of the user record at X (byte a1, bit $69)
 	stx.b a2
 	ldy.b a1
-	ldx.b $69
+	ldx.b a1+2
 	lda.b [a2],y
 .loop:								; loop: A / 2, X - 1, if the result >= 0 go to .loop, A and $001F, ...
 	lsr a
@@ -971,14 +970,14 @@ ReadUserField5:						; A = the 5-bit field of the user record at X (byte a1, bit
 	rts
 ClearUserRecord:					; clears user a3's record (every field 0, WriteUserRecord)
 	stz.b d0
-	stz.b $81
+	stz.b d0+2
 	stz.b d1
-	stz.b $85
+	stz.b d1+2
 	stz.b d2
-	stz.b $89
+	stz.b d2+2
 	stz.b d3
 	stz.b d4
-	stz.b $8D
+	stz.b d3+2
 	jmp.w WriteUserRecord
 FindFreeAgent:						; A = the player index of free agent $65 (counting the players whose team
 									; in SRPlayerTeams is $1A)
@@ -989,7 +988,7 @@ FindFreeAgent:						; A = the player index of free agent $65 (counting the playe
 	and.w #$001F
 	cmp.w #$001A
 	bne .1
-	dec.b $65
+	dec.b a0+2
 	bmi .3
 .1:									; Y + 1, if Y >= $027E go to .3, A = SRPlayerTeams+1,x, A / 2, ...
 	iny
@@ -1003,7 +1002,7 @@ FindFreeAgent:						; A = the player index of free agent $65 (counting the playe
 	and.w #$001F
 	cmp.w #$001A
 	bne .2
-	dec.b $65
+	dec.b a0+2
 	bmi .3
 .2:									; X + 1, X + 1, X + 1, Y + 1, ...
 	inx
@@ -1161,7 +1160,7 @@ PrintPositionCounts:				; prints the goalie, defence and forward counts (d0, d1,
 	ldx.w #mesarea
 	ldy.w #$0007
 	jsl.l PrintBoldLeftStr
-	ldx.b $81
+	ldx.b d0+2
 	lda.l BCDTable,x
 	and.w #$00FF
 	jsr.w BCDText
@@ -1171,7 +1170,7 @@ PrintPositionCounts:				; prints the goalie, defence and forward counts (d0, d1,
 	lda.b d0
 	clc
 	adc.b d1
-	adc.b $81
+	adc.b d0+2
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
@@ -1212,7 +1211,7 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	lda.w #$0008
 	sta.w ListBuf+$6
 	stx.w ListBuf+$7
-	lda.b $71
+	lda.b a3+2
 	clc
 	sbc.b a3
 	sbc.b a1
@@ -1225,7 +1224,7 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	lda.w #$0008
 	sta.w ListBuf+$A
 	stx.w ListBuf+$B
-	lda.b $69
+	lda.b a1+2
 	asl a
 	asl a
 	asl a
@@ -1254,7 +1253,7 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	asl a
 	sta.w TradeScrollHDMA+$3
 	sty.w TradeScrollHDMA+$4
-	lda.b $71
+	lda.b a3+2
 	clc
 	sbc.b a3
 	sbc.b a1
@@ -1264,7 +1263,7 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	asl a
 	sta.w TradeScrollHDMA+$6
 	sty.w TradeScrollHDMA+$7
-	lda.b $69
+	lda.b a1+2
 	inc a
 	inc a
 	asl a
@@ -1290,11 +1289,11 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	jsl.l SetSpriteAnim
 	lda.w #$001C
 	jsl.l CreateSprite
-	stx.b $8D
+	stx.b d3+2
 	lda.w #$0002
 	jsl.l SetSpriteAnim
 	lda.b $77
-	sta.b $91
+	sta.b d4+2
 	lda.b a4
 	sta.b d2
 	ldy.b a3
@@ -1302,12 +1301,12 @@ SetupTradeLists:					; the trade screen's two lists: the band HDMA tables (TM at
 	lda.b a1
 	jsr.w DrawTradeListRows
 	lda.b $79
-	sta.b $91
+	sta.b d4+2
 	lda.b $75
 	sta.b d2
-	ldy.b $71
+	ldy.b a3+2
 	ldx.b $7D
-	lda.b $69
+	lda.b a1+2
 	jsr.w DrawTradeListRows
 PlaceTradeCursors:					; each frame, places the two trade list cursor sprites (d3, $8D) at their
 									; rows and hides the one past its list's end
@@ -1328,9 +1327,9 @@ PlaceTradeCursors:					; each frame, places the two trade list cursor sprites (d
 .1:									; A = $22,x, A and $FFFE
 	lda.b $22,x
 	and.w #$FFFE
-.2:									; $22,x = A, X = $8D, A = $006F,y, A + $0067,y, ...
+.2:									; $22,x = A, X = d3+2, A = $006F,y, A + $0067,y, ...
 	sta.b $22,x
-	ldx.b $8D
+	ldx.b d3+2
 	lda.w $006F,y
 	clc
 	adc.w $0067,y
@@ -1356,7 +1355,7 @@ PlaceTradeCursors:					; each frame, places the two trade list cursor sprites (d
 RedrawTradeLists:					; draws both trade lists again and rebuilds the scroll table
 									; (TradeScrollHDMA) for their windows
 	lda.b $77
-	sta.b $91
+	sta.b d4+2
 	lda.b a4
 	sta.b d2
 	ldy.b a3
@@ -1364,17 +1363,17 @@ RedrawTradeLists:					; draws both trade lists again and rebuilds the scroll tab
 	lda.b a1
 	jsr.w DrawTradeListRows
 	lda.b $79
-	sta.b $91
+	sta.b d4+2
 	lda.b $75
 	sta.b d2
-	ldy.b $71
+	ldy.b a3+2
 	ldx.b $7D
-	lda.b $69
+	lda.b a1+2
 	jsr.w DrawTradeListRows
 	ldy.w #$0003
 	lda.w #$0000
 	jsr.w TradeListScrollEntries
-	lda.b $71
+	lda.b a3+2
 	clc
 	sbc.b a3
 	sbc.b a1
@@ -1409,9 +1408,9 @@ DrawTradeListRows:					; draws a trade list's rows from $91 - 1 to just below it
 	sta.b tmp2
 	tya
 	sec
-	adc.b $91
+	adc.b d4+2
 	pha
-	lda.b $91
+	lda.b d4+2
 	beq DrawTradeRowNext
 	dec a
 DrawTradeRowNext:					; DrawTradeListRows' loop: row A while below both limits
@@ -1419,16 +1418,16 @@ DrawTradeRowNext:					; DrawTradeListRows' loop: row A while below both limits
 	bcs DrawTradeListRowsDone
 	cmp.b $03,s
 	bcs DrawTradeListRowsDone
-	sta.b $91
+	sta.b d4+2
 .loop:								; loop: if A < tmp1 go to .1, A - tmp2, if the result >= 0 go to .loop
 	cmp.b tmp1
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + $05,s, $6D = A, call ClearTextRow, jump through $008F
+.1:									; A + $05,s, a2+2 = A, call ClearTextRow, jump through $008F
 	clc
 	adc.b $05,s
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w TradeRowDrawn-1
 	jmp ($008F)
@@ -1436,7 +1435,7 @@ TradeRowDrawn:						; the row routine returns here: WaitTransfers, RestoreWorkBu
 									; row
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
-	lda.b $91
+	lda.b d4+2
 	inc a
 	bra DrawTradeRowNext
 DrawTradeListRowsDone:				; DrawTradeListRows' end: its three pushed values dropped
@@ -1455,7 +1454,7 @@ TradeCursorUp:						; moves the cursor of team a2's trade list up a row; when it
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $71
+	lda.b a3+2
 	clc
 	sbc.b a3
 	sbc.b a1
@@ -1471,16 +1470,16 @@ TradeCursorUp:						; moves the cursor of team a2's trade list up a row; when it
 	sta.b $77,x
 	dec a
 	bmi ScrollTradeListUp
-	sta.b $91
+	sta.b d4+2
 .loop:								; loop: if A < tmp1 go to .1, A - tmp2, if the result >= 0 go to .loop
 	cmp.b tmp1
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + $6F,x, $6D = A, call ClearTextRow, jump through $008F
+.1:									; A + $6F,x, a2+2 = A, call ClearTextRow, jump through $008F
 	clc
 	adc.b $6F,x
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w TradeUpRowDrawn-1
 	jmp ($008F)
@@ -1555,7 +1554,7 @@ TradeCursorDown:					; moves the cursor of team a2's trade list down a row (not 
 	sta.b tmp1
 	inc a
 	sta.b tmp2
-	lda.b $71
+	lda.b a3+2
 	clc
 	sbc.b a3
 	sbc.b a1
@@ -1573,16 +1572,16 @@ TradeCursorDown:					; moves the cursor of team a2's trade list down a row (not 
 	inc a
 	cmp.b $7B,x
 	bcs ScrollTradeListDown
-	sta.b $91
+	sta.b d4+2
 .loop:								; loop: if A < tmp1 go to .1, A - tmp2, if the result >= 0 go to .loop
 	cmp.b tmp1
 	bcc .1
 	sbc.b tmp2
 	bpl .loop
-.1:									; A + $6F,x, $6D = A, call ClearTextRow, jump through $008F
+.1:									; A + $6F,x, a2+2 = A, call ClearTextRow, jump through $008F
 	clc
 	adc.b $6F,x
-	sta.b $6D
+	sta.b a2+2
 	jsr.w ClearTextRow
 	pea.w TradeDownRowDrawn-1
 	jmp ($008F)
@@ -1657,17 +1656,17 @@ TradeListScrollEntries:				; the BG3 scroll HDMA entries at TradeScrollHDMA,y of
 	lda.b $67,x
 	inc a
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	lda.b $77,x
-.loop:								; loop: if A < $A5 go to .1, A - $A5, if the result >= 0 go to .loop
-	cmp.b $A5
+.loop:								; loop: if A < tmp3 go to .1, A - tmp3, if the result >= 0 go to .loop
+	cmp.b tmp3
 	bcc .1
-	sbc.b $A5
+	sbc.b tmp3
 	bpl .loop
-.1:									; if A is not $0000 go to .2, A = $A5, A * 2, A * 2, ...
+.1:									; if A is not $0000 go to .2, A = tmp3, A * 2, A * 2, ...
 	cmp.w #$0000
 	bne .2
-	lda.b $A5
+	lda.b tmp3
 	asl a
 	asl a
 	asl a
@@ -1684,7 +1683,7 @@ TradeListScrollEntries:				; the BG3 scroll HDMA entries at TradeScrollHDMA,y of
 	asl a
 	sta.w TradeScrollHDMA+$3,y
 	tax
-	lda.b $A5
+	lda.b tmp3
 	asl a
 	asl a
 	asl a
@@ -2037,7 +2036,7 @@ SimDayGameStats:					; fills the stats of each of the day's computer games: both
 	lda.w #VisRoster
 	sta.b p0
 	lda.w #$007E
-	sta.b $3A
+	sta.b p0+2
 	lda.b $01,s
 	tay
 	adc.w #$001A

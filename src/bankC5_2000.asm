@@ -1,30 +1,30 @@
-; Segment bankC5_2000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_2000: game code, jump tables and the data tables the code reads with long addresses.
 org $C52008
-QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from the box buffer
-									; ($2024 + DATA8_C5202F by frame) to the box's address ($2026)
+QueueFaceoffBox:					; queues face off box frame A to VRAM: $280 bytes from FaceoffBoxBuf (+
+									; FaceoffBoxFrameOffsets by frame) to FaceoffBoxVRAM
 	asl a
 	tax
 	lda.l $7E2024
-	adc.l DATA8_C5202F,x
+	adc.l FaceoffBoxFrameOffsets,x
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0280
-	lda.w $2026
+	lda.w FaceoffBoxVRAM
 	pha
 	pea.w $007E
 	phy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	rtl
-DATA8_C5202F:						; not traced: a table read by QueueFaceoffBox
+FaceoffBoxFrameOffsets:				; per face off box frame (A * 2): the offset of its $280 bytes in
+									; FaceoffBoxBuf
 	db $00,$00,$80,$02,$00,$05,$80,$07
 setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the tiles and
 									; the scoreboard
@@ -38,35 +38,35 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l MapSetToUnpackbuf
 	ldx.w #$2A7E
 	clc
-.loop:								; loop: $7F9C7A,x = $50DC,x, X - 1, X - 1, ...
-	lda.w $50DC,x
-	sta.l $7F9C7A,x
+.loop:								; loop: rinkmapbuf,x = unpackbuf&$FFFF,x, X - 1, X - 1, ...
+	lda.w unpackbuf&$FFFF,x
+	sta.l rinkmapbuf,x
 	dex
 	dex
 	bpl .loop
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $4100
 	pea.w $0000
 	pea.w $007E
 	pea.w $7B5C
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $001E
 	pea.w $0001
-	pea.w $00C0
-	pea.w $0EE7
+	pea.w GamePalette0>>16
+	pea.w (GamePalette0+2)&$FFFF
 	pea.w $0002
 	pea.w $0000
-	pea.w $00C0
-	pea.w $4CA9
+	pea.w BackdropColour>>16
+	pea.w BackdropColour&$FFFF
 	pea.w $0040
 	pea.w $0010
 	pea.w $007E
@@ -89,60 +89,60 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	lsr a
 	adc.w #$3F02
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	lda.w #$2030
 	sta.b tmp1
 	lda.w #$2160
 	sta.b tmp2
-	lda.w #$01BE
+	lda.w #SPFgoal
 	jsl.l QueueFrameTiles
 	lda.w #$2168
 	sta.b tmp2
-	lda.w #$01BF
+	lda.w #SPFgoal+1
 	jsl.l QueueFrameTiles
 	lda.w #$2588
 	sta.b tmp2
-	lda.w #$006F
+	lda.w #SPFpad
 	jsl.l QueueFrameTiles
 	lda.w #$2035
 	sta.b tmp1
-	lda.w #$01B3
+	lda.w #SPFpuck
 	jsl.l QueueFrameTiles
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$01E0
 	pha
 	jsl.l AllocWorkBuf
 	pea.w $6360
 	ldx.w #$007E
 	phx
-	stx.b $2E
+	stx.b r0+2
 	pha
 	sta.b r0
 	lda.w #DigitFontTiles&$FFFF
 	ldx.w #DigitFontTiles>>16
 	jsl.l Decompress
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #CenterIceTiles&$FFFF
 	ldx.w #CenterIceTiles>>16
 	jsl.l DecompressUnpackbuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0300
 	pea.w $2080
 	pea.w $007E
@@ -150,14 +150,14 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	asl a
 	adc.w HomeTeam
 	xba
-	adc.w #$50DC
+	adc.w #unpackbuf&$FFFF
 	pha
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0060
 	pea.w $00C2
@@ -169,10 +169,10 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	asl a
 	adc.w #$ADCA
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #RefsMap&$FFFF
@@ -180,36 +180,36 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l MapSetToUnpackbuf
 	ldx.w #$092E
 	clc
-.loop2:								; loop: A = $50DC,x, A + $3420, $7FC6FA,x = A, X - 1, ...
-	lda.w $50DC,x
+.loop2:								; loop: A = unpackbuf&$FFFF,x, A + $3420, RefsMapBuf,x = A, X - 1, ...
+	lda.w unpackbuf&$FFFF,x
 	adc.w #$3420
-	sta.l $7FC6FA,x
+	sta.l RefsMapBuf,x
 	dex
 	dex
 	bpl .loop2
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $18A0
 	pea.w $2200
 	pea.w $007E
 	pea.w $5A0C
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pea.w $007E
 	pea.w $72AC
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	stz.w vramrow
@@ -223,20 +223,20 @@ setupice:							; sets up the rink screen: the rink map set (IceRinkMap), the ti
 	jsl.l ClearTextMap
 	jsl.l WaitTransfers
 	lda.w #$FFFF
-	sta.w $151B
-	sta.w $151D
-	sta.w $151F
-	sta.w $1521
-	sta.w $1523
+	sta.w PadArrowTileMode
+	sta.w PadArrowTileMode+2
+	sta.w PadArrowTileMode+4
+	sta.w PadArrowTileMode+6
+	sta.w PadArrowTileMode+8
 	lda.w #$D02A
 	sta.b r0
 	lda.w #$007F
-	sta.b $2E
+	sta.b r0+2
 	lda.w #LinePieceTiles&$FFFF
 	ldx.w #LinePieceTiles>>16
 	jsl.l Decompress
-	jsl.l CODE_C539D7
-	jmp.w CODE_C53A29
+	jsl.l DrawScoreBox
+	jmp.w DrawPeriodBox
 setupice_reset:						; resets the rink state: Oldrow $03E7, the pause bit cleared, Hpos / Vpos
 									; 0, the sort objects, pfgoal turned with the direction of play, sfhormode
 									; 0, then the scoreboard
@@ -263,9 +263,9 @@ setupice_reset:						; resets the rink state: Oldrow $03E7, the pause bit cleare
 	dex
 	dex
 	bpl .loop
-.1:									; sfhormode = 0, go to CODE_C539D7
+.1:									; sfhormode = 0, go to DrawScoreBox
 	stz.w sfhormode
-	jmp.w CODE_C539D7
+	jmp.w DrawScoreBox
 ClrHor:								; what is left of 94S ClrHor: sfhormode = 0; X = a3
 	stz.w sfhormode
 	ldx.b a3
@@ -319,37 +319,39 @@ DrawPadArrows:						; the arrow sprite over the player each pad controls (c1play
 	tcs
 	ldy.w c1playernum
 	bmi PadArrow2
-	ldx.w #$22DF
+	ldx.w #PadArrow2&$FFFF
 	bra DrawPadArrow
-DATA8_C522D1:						; not traced: data between routines
+PadArrow1Data:						; pad 1's arrow, read back from its continuation in X (PadArrow2 - $E on):
+									; its image state word's address, its images (bank $7F), two OAM tile
+									; words, three VRAM addresses
 	db $1B,$15,$2A,$D0,$A0,$25,$45,$24,$00,$7A,$00,$7B,$50,$64
-PadArrow2:							; DrawPadArrows' step for pad 2 ($1513), continuing with PadArrow3
-	ldy.w $1513
+PadArrow2:							; DrawPadArrows' step for pad 2 (c1playernum+2), continuing with PadArrow3
+	ldy.w c1playernum+2
 	bmi PadArrow3
-	ldx.w #$22F7
+	ldx.w #PadArrow3&$FFFF
 	bra DrawPadArrow
-DATA8_C522E9:						; not traced: data between routines
+PadArrow2Data:						; pad 2's arrow, as PadArrow1Data, read back from PadArrow3
 	db $1D,$15,$CA,$D2,$A2,$25,$48,$24,$20,$7A,$20,$7B,$80,$64
-PadArrow3:							; DrawPadArrows' step for pad 3 ($1515), continuing with PadArrow4
-	ldy.w $1515
+PadArrow3:							; DrawPadArrows' step for pad 3 (c1playernum+4), continuing with PadArrow4
+	ldy.w c1playernum+4
 	bmi PadArrow4
-	ldx.w #$230F
+	ldx.w #PadArrow4&$FFFF
 	bra DrawPadArrow
-DATA8_C52301:						; not traced: data between routines
+PadArrow3Data:						; pad 3's arrow, as PadArrow1Data, read back from PadArrow4
 	db $1F,$15,$6A,$D5,$A4,$25,$4B,$24,$40,$7A,$40,$7B,$B0,$64
-PadArrow4:							; DrawPadArrows' step for pad 4 ($1517), continuing with PadArrow5
-	ldy.w $1517
+PadArrow4:							; DrawPadArrows' step for pad 4 (c1playernum+6), continuing with PadArrow5
+	ldy.w c1playernum+6
 	bmi PadArrow5
-	ldx.w #$2327
+	ldx.w #PadArrow5&$FFFF
 	bra DrawPadArrow
-DATA8_C52319:						; not traced: data between routines
+PadArrow4Data:						; pad 4's arrow, as PadArrow1Data, read back from PadArrow5
 	db $21,$15,$2A,$D0,$A6,$27,$4E,$26,$60,$7A,$60,$7B,$E0,$64
-PadArrow5:							; DrawPadArrows' step for pad 5 ($1519), continuing with PadArrowsDone
-	ldy.w $1519
+PadArrow5:							; pad 5 player arrow, then PadArrowsDone
+	ldy.w c1playernum+8
 	bmi PadArrowsDone
-	ldx.w #$233F
+	ldx.w #PadArrowsDone&$FFFF
 	bra DrawPadArrow
-DATA8_C52331:						; not traced: data between routines
+PadArrow5Data:						; pad 5's arrow, as PadArrow1Data, read back from PadArrowsDone
 	db $23,$15,$CA,$D2,$A8,$27,$51,$26,$80,$7A,$80,$7B,$10,$65
 PadArrowsDone:						; the end of DrawPadArrows: the OAM pointer ($28) kept, the stack back,
 									; QueueBusy cleared
@@ -361,7 +363,7 @@ PadArrowsDone:						; the end of DrawPadArrows: the OAM pointer ($28) kept, the 
 	rtl
 DrawPadArrow:						; the arrow for player Y: over him when he is on screen, else at the
 									; screen edge pointing at him; then on to the continuation in X
-	stx.b $A5
+	stx.b tmp3
 	lda.w Xpos,y
 	clc
 	adc.w #$0080
@@ -730,7 +732,7 @@ QueuePadArrowVert:					; queues the pad's up / down edge arrow image (from + 0 o
 									; in bank $7F) to its three VRAM blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -754,7 +756,7 @@ QueuePadArrowVert:					; queues the pad's up / down edge arrow image (from + 0 o
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -762,7 +764,7 @@ QueuePadArrowCorner:				; queues the pad's corner arrow image (source + $E0) to 
 									; blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -787,7 +789,7 @@ QueuePadArrowCorner:				; queues the pad's corner arrow image (source + $E0) to 
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -795,7 +797,7 @@ QueuePadArrowSide:					; queues the pad's left / right edge arrow image (source 
 									; three VRAM blocks
 	tsc
 	sta.b $28
-	lda.b $00
+	lda.b VRAMQueueSP
 	tcs
 	pea.w $0040
 	lda.l $C4FFFA,x
@@ -820,7 +822,7 @@ QueuePadArrowSide:					; queues the pad's left / right edge arrow image (source 
 	pea.w $007F
 	phy
 	tsc
-	sta.b $00
+	sta.b VRAMQueueSP
 	lda.b $28
 	tcs
 	rts
@@ -868,7 +870,7 @@ DrawPadTag:							; pad Y's tag ($0F: none): the player's screen spot, then his 
 	sta.b $0C
 	plp
 	bcc .2
-	jmp.w CODE_C52842
+	jmp.w TagReplayPoint
 .2:									; A = position,x, A and $0007, A * 2, $0E = A, ...
 	lda.w position,x
 	and.w #$0007
@@ -893,7 +895,7 @@ DrawPadTag:							; pad Y's tag ($0F: none): the player's screen spot, then his 
 	adc.w #$2436
 	sta.b tmp2
 	lda.w #TagSecondDigit
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagSecondDigit:						; a tag continuation: the second roster number digit, 8 pixels right
 	clc
@@ -903,7 +905,7 @@ TagSecondDigit:						; a tag continuation: the second roster number digit, 8 pix
 	lda.b tmp2
 	sta.b tmp1
 	lda.w #TagPositionMark
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagPositionMark:					; a tag continuation: the position mark (PositionMarkTiles), none for
 									; position 0
@@ -916,7 +918,7 @@ TagPositionMark:					; a tag continuation: the position mark (PositionMarkTiles)
 	lda.l PositionMarkTiles,x
 	sta.b tmp1
 	lda.w #TagPadMarker
-	sta.b $A5
+	sta.b tmp3
 	jmp.w PutTagChar
 TagPadMarker:						; a tag continuation: the pad's marker 20 pixels up, its tile
 									; (PadMarkerTiles) and its mirror, 16 x 16 each
@@ -930,12 +932,12 @@ TagPadMarker:						; a tag continuation: the pad's marker 20 pixels up, its tile
 	ldx.b $0E
 	bne .1
 	sbc.w #$0004
-.1:									; $0A = A, if $10 is not $000C go to .2, go to CODE_C52852
+.1:									; $0A = A, if $10 is not $000C go to .2, go to TagReplayMarker
 	sta.b $0A
 	ldx.b $10
 	cpx.w #$000C
 	bne .2
-	jmp.w CODE_C52852
+	jmp.w TagReplayMarker
 .2:									; tmp2 = PadMarkerTiles,x, Y = $2A, X = $0002, A = $FFF0, ...
 	lda.l PadMarkerTiles,x
 	sta.b tmp2
@@ -1019,7 +1021,8 @@ NextPadTag:							; the next pad's tag; after pad 0, the stack and QueueBusy res
 	tcs
 	stz.b QueueBusy
 	rtl
-CODE_C52842:						; from DrawPadTag
+TagReplayPoint:						; the replay camera's free cursor point (PadControlObj $10, object 16): no
+									; roster number, the marks $0C right and $14 up, then TagReplayMarker
 	lda.b $0A
 	clc
 	adc.w #$000C
@@ -1028,7 +1031,8 @@ CODE_C52842:						; from DrawPadTag
 	sec
 	sbc.w #$0014
 	sta.b $0C
-CODE_C52852:						; from TagPadMarker
+TagReplayMarker:					; the replay camera cursor's marker (tag slot $0C): the four corner marks,
+									; SPFreplay, through DrawFrameLayout, then PadTagFrameDone
 	lda.w #$2454
 	sta.b tmp1
 	lda.w #$25E0
@@ -1042,9 +1046,9 @@ CODE_C52852:						; from TagPadMarker
 	adc.w #$0010
 	sta.b $0C
 	lda.w #PadTagFrameDoneJump&$FFFF
-	sta.b $A5
+	sta.b tmp3
 	ldy.b $2A
-	lda.w #$0072
+	lda.w #SPFreplay
 	jml.l DrawFrameLayout
 PadTagFrameDone:					; the frame layout's continuation for the player tags: the OAM pointer
 									; kept, then NextPadTag
@@ -1056,7 +1060,7 @@ PadMarkerTiles:						; the marker tile of each pad
 PositionMarkTiles:					; the position mark tile of each position
 	db $8E,$27,$40,$24,$40,$24,$41,$24,$42,$24,$43,$24,$44,$24
 PutTagChar:							; writes one 8 x 8 tag sprite (tile tmp1) at screen x $0A, y $0C into the
-									; OAM buffer (skipped off screen), then on to the continuation in $A5
+									; OAM buffer (skipped off screen), then on to the continuation in tmp3
 	ldy.b $2A
 	pei ($A1)
 	ldx.w #$0000
@@ -1090,7 +1094,7 @@ PutTagChar:							; writes one 8 x 8 tag sprite (tile tmp1) at screen x $0A, y $
 .5:									; $2A = Y, jump through $00A5
 	sty.b $2A
 	jmp ($00A5)
-CODE_C528D3:						; called from other segments
+print:								; a bare rtl where 94S prints the string at a1
 	rtl
 eraser:								; a bare rtl where 94S fills a d0 by d1 box of the text map with tile d2
 									; (blankchar)
@@ -1155,12 +1159,12 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	sec
 	sbc.b tmp1
 	sta.b tmp0
-.4:									; QueueBusy - 1, A = $00, $00 = X, A = $0020, ...
+.4:									; QueueBusy - 1, A = VRAMQueueSP, VRAMQueueSP = X, A = $0020, ...
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	lda.w #$0020
 	sec
 	sbc.b tmp2
@@ -1175,7 +1179,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	lsr a
 	lsr a
 	pha
-	stx.b $A5
+	stx.b tmp3
 	tax
 	lda.b tmp2
 	xba
@@ -1191,7 +1195,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	xba
 	lsr a
 	lsr a
-	adc.w #$9C7A
+	adc.w #rinkmapbuf&$FFFF
 	pha
 	phx
 	phy
@@ -1200,7 +1204,7 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	pha
 	stz.b tmp2
 	lda.b tmp0
-	adc.b $A5
+	adc.b tmp3
 	sta.b tmp0
 .5:									; A = tmp1, A / 2, A / 2, push A, ...
 	lda.b tmp1
@@ -1223,17 +1227,17 @@ updatescroll_rows:					; queues the rink map rows that the vertical scroll broug
 	xba
 	lsr a
 	lsr a
-	adc.w #$9C7A
+	adc.w #rinkmapbuf&$FFFF
 	pha
 	phx
 	phy
 	pea.w $007F
 	adc.w #$1540
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 .6:									; A = Hscroll, A + $00C0, BG2HScroll = A, return
 	lda.w Hscroll
@@ -1587,7 +1591,7 @@ doinput:							; called from other segments
 	sty.b d0
 	inc.w onetimerreq
 	lda.w #$7FFF
-	sta.w $0674
+	sta.w OneTimerDist
 	jml.l AssignPadPlayer
 LoadGameRostersLong:				; LoadGameRosters for long calls
 	jsr.w LoadGameRosters
@@ -1741,7 +1745,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	ldy.b tmp1
 	lda.w $0000,y
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	lda.w $0002,y
 	inc a
 	sta.b $0A
@@ -1810,7 +1814,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	adc.b $0A
 	sta.b $0A
 	lda.w $003A,y
-	cmp.b $A5
+	cmp.b tmp3
 	bcs .7
 	jmp.w .13
 .7:									; if A < $0A go to .8, go to .13
@@ -1830,12 +1834,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	pla
 	lda.w #$0500
 	bra .12
-.9:									; A = $003A,y, A - $A5, A + 1, $A5 = A, ...
+.9:									; A = $003A,y, A - tmp3, A + 1, tmp3 = A, ...
 	lda.w $003A,y
 	sec
-	sbc.b $A5
+	sbc.b tmp3
 	inc a
-	sta.b $A5
+	sta.b tmp3
 	pla
 	tax
 	sec
@@ -1844,27 +1848,27 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	sta.b $0A
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 	inx
 	lda.l $C30000,x
 	and.w #$00FF
-	cmp.b $A5
+	cmp.b tmp3
 	beq .11
 .10:								; $00AC,y = $FFFF, $00DE,y = A, go to .14
 	lda.w #$FFFF
@@ -1927,7 +1931,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	asl a
 	asl a
 	adc.b tmp1
-	sta.b $A5
+	sta.b tmp3
 	pha
 	lda.b $03,s
 	tay
@@ -1936,9 +1940,9 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	jsr.w NextSaveBits3
 	stz.b $0C
 	pei ($A5)
-.19:								; call NextSaveBits5, X = $A5, if A = $0000 go to .22, ...
+.19:								; call NextSaveBits5, X = tmp3, if A = $0000 go to .22, ...
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	cmp.w #$0000
 	beq .22
 	cmp.w #$001D
@@ -1949,12 +1953,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	clc
 	adc.w #$0040
 	adc.b $0C
-.21:								; $0118,x = A, $0C = $0020, X + 1, $A5 = X, ...
+.21:								; $0118,x = A, $0C = $0020, X + 1, tmp3 = X, ...
 	sta.w $0118,x
 	lda.w #$0020
 	sta.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	txa
 	sec
 	sbc.b $01,s
@@ -1982,11 +1986,11 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	sta.w $0118,x
 	stz.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	phx
-.25:								; call NextSaveBits5, X = $A5, if A = $0000 go to .loop7, ...
+.25:								; call NextSaveBits5, X = tmp3, if A = $0000 go to .loop7, ...
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	cmp.w #$0000
 	beq .loop7
 	cmp.w #$001D
@@ -1997,12 +2001,12 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	clc
 	adc.w #$0040
 	adc.b $0C
-.27:								; $0118,x = A, $0C = $0020, X + 1, $A5 = X, ...
+.27:								; $0118,x = A, $0C = $0020, X + 1, tmp3 = X, ...
 	sta.w $0118,x
 	lda.w #$0020
 	sta.b $0C
 	inx
-	stx.b $A5
+	stx.b tmp3
 	txa
 	sec
 	sbc.b $01,s
@@ -2016,25 +2020,25 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	cmp.w #$0009
 	beq .28
 	jsr.w NextSaveBits5
-	ldx.b $A5
+	ldx.b tmp3
 	inx
-	stx.b $A5
+	stx.b tmp3
 	bra .loop7
-.28:								; pull X, pull A, $A5 = A, call NextSaveBits7, ...
+.28:								; pull X, pull A, tmp3 = A, call NextSaveBits7, ...
 	plx
 	pla
-	sta.b $A5
+	sta.b tmp3
 	jsr.w NextSaveBits7
-	ldx.b $A5
+	ldx.b tmp3
 	sta.w $0110,x
 	lda.w #$0006
 	sta.b $0A
-.loop8:								; loop: call NextSaveBits8, A 8-bit, X = $A5, X + 1, ...
+.loop8:								; loop: call NextSaveBits8, A 8-bit, X = tmp3, X + 1, ...
 	jsr.w NextSaveBits8
 	sep #$20
-	ldx.b $A5
+	ldx.b tmp3
 	inx
-	stx.b $A5
+	stx.b tmp3
 	sta.w $0110,x
 	rep #$20
 	dec.b $0A
@@ -2051,7 +2055,7 @@ LoadTeamRoster:						; builds team A's roster table at Y from its team data (fro
 	asl a
 	adc.b tmp1
 	tay
-	lda.l $C30000,x
+	lda.l $C30000,x					; the record's number and 7 rating bytes; its packed name follows
 	sta.w $0110,y
 	lda.l $C30002,x
 	sta.w $0112,y

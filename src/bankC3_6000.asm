@@ -1,7 +1,6 @@
-; Segment bankC3_6000: data tables (not traced; labelled where code reads them), then game code (routines keep
-; their address as a name, with their callers).
+; Segment bankC3_6000: data tables, then game code.
 org $C36000
-DATA8_C36000:						; not traced: data between routines
+; the rest of SeasonDates (from bankC3_5000), to its closing 0
 	db $1B,$0B,$3C,$0B,$5D,$0B,$7E,$0B,$9F,$0B,$A1,$00,$C2,$00,$03,$00
 	db $24,$00,$45,$00,$66,$00,$87,$00,$A8,$00,$C9,$00,$0A,$00,$2B,$00
 	db $4C,$00,$6D,$00,$8E,$00,$AF,$00,$D0,$00,$11,$00,$32,$00,$53,$00
@@ -16,7 +15,8 @@ DATA8_C36000:						; not traced: data between routines
 	db $3D,$02,$5E,$02,$7F,$02,$81,$03,$A2,$03,$C3,$03,$04,$03,$25,$03
 	db $46,$03,$67,$03,$88,$03,$A9,$03,$CA,$03,$0B,$03,$2C,$03,$4D,$03
 	db $6E,$03,$00,$00
-DATA8_C360D4:						; not traced: a table read by DrawDayGames, MenuPlayGames, DayFirstGame
+SeasonSchedule:						; per season day (A * 2) the address (bank $C3) of its games: a count
+									; byte, then 2 bytes a game
 	db $46,$62,$4F,$62,$5E,$62,$6B,$62,$72,$62,$89,$62,$96,$62,$9D,$62
 	db $A8,$62,$B3,$62,$BE,$62,$C7,$62,$E0,$62,$E5,$62,$EE,$62,$FB,$62
 	db $06,$63,$15,$63,$1E,$63,$35,$63,$3C,$63,$43,$63,$50,$63,$5D,$63
@@ -260,9 +260,9 @@ ReadMenuPads:						; the buttons of all 5 pads ORed into the menu pad word; repe
 									; counts the frames they stay the same (0 on a change)
 	lda.b PadRaw1
 	ora.b PadRaw2
-	ora.b $C5
-	ora.b $C7
-	ora.b $C9
+	ora.b PadRaw3
+	ora.b PadRaw4
+	ora.b PadRaw5
 	sta.w padchangeany
 	inc.w repeatdelayframes
 	cmp.w padlast
@@ -286,28 +286,28 @@ ReadActiveMenuPad:					; select the first enabled pad with held buttons for the 
 	lda.b PadRaw2
 	and.w #$FFF0
 	bne .6
-.2:									; pausepad + 1, pausepad + 1, if minus go to .3, A = $C5, ...
+.2:									; pausepad + 1, pausepad + 1, if minus go to .3, A = PadRaw3, ...
 	inc.w pausepad
 	inc.w pausepad
 	bit.w padside+4
 	bmi .3
-	lda.b $C5
+	lda.b PadRaw3
 	and.w #$FFF0
 	bne .6
-.3:									; pausepad + 1, pausepad + 1, if minus go to .4, A = $C7, ...
+.3:									; pausepad + 1, pausepad + 1, if minus go to .4, A = PadRaw4, ...
 	inc.w pausepad
 	inc.w pausepad
 	bit.w padside+6
 	bmi .4
-	lda.b $C7
+	lda.b PadRaw4
 	and.w #$FFF0
 	bne .6
-.4:									; pausepad + 1, pausepad + 1, if minus go to .5, A = $C9, ...
+.4:									; pausepad + 1, pausepad + 1, if minus go to .5, A = PadRaw5, ...
 	inc.w pausepad
 	inc.w pausepad
 	bit.w padside+8
 	bmi .5
-	lda.b $C9
+	lda.b PadRaw5
 	and.w #$FFF0
 	bne .6
 .5:									; padchangeany = 0, padlast = 0, pausepad = $FFFF, return
@@ -341,21 +341,21 @@ ReadPads:							; once per frame: each pad's direction (PadDirection), then the 
 	lda.l PadDirection,x
 	and.w #$00FF
 	sta.w paddir+2
-	lda.b $C5
+	lda.b PadRaw3
 	xba
 	and.w #$000F
 	tax
 	lda.l PadDirection,x
 	and.w #$00FF
 	sta.w paddir+4
-	lda.b $C7
+	lda.b PadRaw4
 	xba
 	and.w #$000F
 	tax
 	lda.l PadDirection,x
 	and.w #$00FF
 	sta.w paddir+6
-	lda.b $C9
+	lda.b PadRaw5
 	xba
 	and.w #$000F
 	tax
@@ -399,9 +399,9 @@ Multi5Bios:							; called from other segments
 	lda.w mp5present
 	bne .1
 	jmp.w .4
-.1:									; $C5 = $421E, A = X, A and $0F, mp5padsig+2 = A, ...
+.1:									; PadRaw3 = $421E, A = X, A and $0F, mp5padsig+2 = A, ...
 	ldx.w $421E
-	stx.b $C5
+	stx.b PadRaw3
 	txa
 	and.b #$0F
 	sta.w mp5padsig+2
@@ -411,7 +411,7 @@ Multi5Bios:							; called from other segments
 	lsr a
 	rol.w mp5padsig+2
 	stz.w $4201
-	lda.w $059E
+	lda.w mp5readall
 	ora.w mp5warning
 	bne .3
 	lda.w cont4team
@@ -468,48 +468,48 @@ Multi5Bios:							; called from other segments
 	rol.b $CA
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
+	rol.b PadRaw5
 	lda.w $4017
 	lsr a
-	rol.b $C7
+	rol.b PadRaw4
 	lsr a
-	rol.b $C9
-	lda.b $C7
+	rol.b PadRaw5
+	lda.b PadRaw4
 	and.b #$0F
 	sta.w mp5padsig+3
-	lda.b $C9
+	lda.b PadRaw5
 	and.b #$0F
 	sta.w mp5padsig+4
 	lda.w $4017
@@ -554,12 +554,12 @@ Multi5Bios:							; called from other segments
 	lda.w mp5checktimer
 	bne .8
 	bra .12
-.8:									; call Multi5ConnectCheck, $C5 = $000F, $C7 = X, $C9 = X, ...
+.8:									; call Multi5ConnectCheck, PadRaw3 = $000F, PadRaw4 = X, PadRaw5 = X, ...
 	jsl.l Multi5ConnectCheck
 	ldx.w #$000F
-	stx.b $C5
-	stx.b $C7
-	stx.b $C9
+	stx.b PadRaw3
+	stx.b PadRaw4
+	stx.b PadRaw5
 	lda.w mp5connect
 	and.b #$80
 	beq .9
@@ -598,35 +598,35 @@ Multi5Bios:							; called from other segments
 	stx.b PadRaw2
 	ldx.w mp5present
 	beq .18
-.15:								; if mp5present = 0 go to .18, if mp5padsig+2 = $01 go to .16, $C5 = $000F
+.15:								; if mp5present = 0 go to .18, if mp5padsig+2 = $01 go to .16, ...
 	lda.w mp5present
 	beq .18
 	lda.w mp5padsig+2
 	cmp.b #$01
 	beq .16
 	ldx.w #$000F
-	stx.b $C5
-.16:								; if mp5padsig+3 = $01 go to .17, $C7 = $000F
+	stx.b PadRaw3
+.16:								; if mp5padsig+3 = $01 go to .17, PadRaw4 = $000F
 	lda.w mp5padsig+3
 	cmp.b #$01
 	beq .17
 	ldx.w #$000F
-	stx.b $C7
-.17:								; if mp5padsig+4 = $01 go to .18, $C9 = $000F
+	stx.b PadRaw4
+.17:								; if mp5padsig+4 = $01 go to .18, PadRaw5 = $000F
 	lda.w mp5padsig+4
 	cmp.b #$01
 	beq .18
 	ldx.w #$000F
-	stx.b $C9
-.18:								; if mp5warning = 0 go to .19, PadRaw1 = $0000, PadRaw2 = X, $C5 = X, ...
+	stx.b PadRaw5
+.18:								; if mp5warning = 0 go to .19, PadRaw1 = $0000, PadRaw2 = X, ...
 	lda.w mp5warning
 	beq .19
 	ldx.w #$0000
 	stx.b PadRaw1
 	stx.b PadRaw2
-	stx.b $C5
-	stx.b $C7
-	stx.b $C9
+	stx.b PadRaw3
+	stx.b PadRaw4
+	stx.b PadRaw5
 .19:								; return
 	plp
 	rtl
@@ -635,9 +635,9 @@ Multi5Init:							; detect the multitap and initialize its pads and status
 	plb
 	jsl.l Multi5ConnectCheck
 	lda.w #$000F
-	sta.b $C5
-	sta.b $C7
-	sta.b $C9
+	sta.b PadRaw3
+	sta.b PadRaw4
+	sta.b PadRaw5
 	stz.w mp5present
 	stz.w mp5warning
 	stz.w mp5checktimer

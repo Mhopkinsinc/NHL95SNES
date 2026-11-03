@@ -10,8 +10,9 @@ TeamList:							; a word per team (team number = index) to its team record, as 9
 	dw Philadelphia,Pittsburgh,Quebec,SanJose
 	dw StLouis,TampaBay,Toronto,Vancouver
 	dw Washington,Winnipeg,AllStarsEast,AllStarsWest
-PlayerList:							; a word per player to its record, plus flags in bits 14-15 (0, $4000,
-									; $8000: they group like goalies, defence, forwards; not traced)
+PlayerList:							; a word per player: the low 14 bits its record's address in this bank,
+									; bits 14-15 its group (0 goalie, $4000 defence, $8000 forward); a record:
+									; the sweater number, 7 bytes of rating nibbles, the packed name
 	dw Player000,Player001,Player002+$8000,Player003+$8000
 	dw Player004+$8000,Player005+$8000,Player006+$8000,Player007+$8000
 	dw Player008+$8000,Player009+$8000,Player010+$8000,Player011+$8000

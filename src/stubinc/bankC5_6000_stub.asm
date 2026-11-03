@@ -7,10 +7,10 @@ incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
-DATA8_C3585C = $C3585C
-DATA8_C35E25 = $C35E25
-DATA8_C35E2D = $C35E2D
-DATA8_C35F60 = $C35F60
+TeamCityNames = $C3585C
+PerLabels = $C35E25
+ScoringStrengthTexts = $C35E2D
+SeasonDates = $C35F60
 ReadMenuPads = $C36C2D
 Penaltylist = $C34499
 SendTextMap = $C4C2AA
@@ -52,11 +52,40 @@ CopyFlipString2 = $C58BB9
 BCDDigits4 = $C5A321
 DeleteSprite = $C5E596
 PackOAMHigh = $C5F3DB
-DATA8_C55D6B = $C55D6B
+GameStatFormats = $C55D6B
 Div16U = $C091F3
 Div16x8U = $C09257
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
 WaitFrames_Inc = $C08D89
+PlayerStatsPage = $C3533B
+TeamRosterPage = $C35369
+TxtGoalies = $C347F8
+TxtA = $C34F73
+TxtBGoalies = $C34EF6
+TxtBPlayers = $C34EFE
+TxtG = $C34F71
+TxtGA = $C34F7D
+TxtGoalAss = $C34F91
+TxtGoalie = $C349B8
+TxtNoPenalties = $C34C2D
+TxtNoScoring = $C34C43
+TxtPM = $C34F7B
+TxtPS = $C34F8E
+TxtPer = $C34F83
+TxtPlayer = $C34F6C
+TxtPt = $C34F75
+TxtPtg = $C34F7F
+TxtSh = $C34F78
+TxtTime = $C34F87
+TxtTm = $C34F8B
+TxtTotal = $C34C1C
+TxtAssists = $C34B6F
+TxtGoals = $C34B6A
+TxtPenalties = $C34808
+TxtPoints = $C34B75
+TxtShots = $C34B9E
+BlankPauseItems = $C35D41
+TxtBGoals = $C34EE1
 
 incsrc "../bankC5_6000.asm"

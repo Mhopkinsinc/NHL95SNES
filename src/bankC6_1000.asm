@@ -1,7 +1,8 @@
 ; Frame placement tables and raw planar frame tiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C61090
-DATA8_C61090:						; placement words read by the normal frame path; axis not traced
+FrameOffsetX:						; per frame (1060 words): the x offset DrawFrameLayout adds to the
+									; object's screen x
 	dw $FFFA,$FFF0,$FFEF,$FFF5,$FFF5,$FFEE,$FFEC,$FFF1
 	dw $FFF5,$FFF1,$FFE5,$FFF2,$FFF7,$FFF9,$FFED,$FFF9
 	dw $FFF4,$FFF0,$FFEF,$FFF1,$FFF0,$FFF5,$FFEC,$FFF1
@@ -135,7 +136,8 @@ DATA8_C61090:						; placement words read by the normal frame path; axis not tra
 	dw $FFC3,$FFDA,$FFCE,$FFCB,$FFC5,$FFC4,$FFD8,$FFDC
 	dw $FFDC,$FFE5,$FFE9,$FFDC,$FFDF,$FFE8,$FFEA,$FFD8
 	dw $FFF8,$FFFB,$000D,$0018
-DATA8_C618D8:						; placement words shared by the normal and mirrored frame paths
+FrameOffsetY:						; per frame (1060 words): the y offset added to the object's screen y
+									; (both paths)
 	dw $FFDD,$FFE4,$FFE0,$FFDE,$FFE4,$FFD5,$FFD8,$FFE0
 	dw $FFDF,$FFE5,$FFE6,$FFE5,$FFE5,$FFE2,$FFDC,$FFE2
 	dw $FFE5,$FFEA,$FFEA,$FFE9,$FFE7,$FFE9,$FFE3,$FFE9

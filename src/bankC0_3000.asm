@@ -3,11 +3,12 @@
 ; colours and the home team's white colours, 64 bytes per team.
 org $C03CF9
 WonCheckTiles:						; 4bpp tiles, packed: a WON label in two sizes, a check mark and framed
-									; boxes; unpacked and sent to VRAM, with WonCheckPalette
+									; boxes: Games Today's selection and played-game marks (GamesToday loads
+									; them, DrawGameMarks places them)
 	dw $0600						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_3000.bin":$CFD..$EE2
-WonCheckPalette:					; 16 colours sent to CGRAM palette 7 with WonCheckTiles
+WonCheckPalette:					; 16 colours for WonCheckTiles; GamesToday sends them to CGRAM palette 7
 	dw $4010,$7FDE,$6ED6,$61EF,$5129,$44A5,$3421,$2800
 	dw $7DFE,$44F0,$54D4,$2869,$7F5F,$001F,$1006,$03E0
 AwayUniformPalettes:				; 16 colours per team, 64 bytes apart, in team order (the all-star teams

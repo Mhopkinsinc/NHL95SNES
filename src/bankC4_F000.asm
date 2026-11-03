@@ -1,5 +1,4 @@
-; Segment bankC4_F000: game code (routines keep their address as a name, with their callers), then sound
-; sample 2 and zeros to the end of the bank.
+; Segment bankC4_F000: game code, then sound sample 2 and zeros to the end of the bank.
 org $C4F01E
 BuildTeamLines:						; builds the line data of roster table Y from its players: each player's
 									; value (RecordOverallLong), then the line slots filled position by
@@ -49,7 +48,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	tax
 	lda.w $0004,y
 	sta.b tmp1
-	sta.b $A5
+	sta.b tmp3
 .loop2:								; loop: call InsertRankedLineForward, X - 1, X - 1, tmp1 - 1, ...
 	jsr.w InsertRankedLineForward
 	dex
@@ -90,7 +89,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	ldy.w #ScratchBuf+$188
 	mvn $7E,$7E
 	stz.b r0
-	stz.b $2E
+	stz.b r0+2
 	lda.w #$0005
 	sta.b tmp1
 	ldx.w #ScratchBuf+$188
@@ -165,7 +164,7 @@ BuildTeamLines:						; builds the line data of roster table Y from its players: 
 	rts
 NoLineDefenceman:					; PickUnusedLineDefenceman's end of list: the used count ($2E) back to 0,
 									; X restored, carry set
-	stz.b $2E
+	stz.b r0+2
 	ldx.b $14
 	sec
 	rts
@@ -193,7 +192,7 @@ PickUnusedLineForward:				; selects the next ranked forward not in the used list
 									; pool is exhausted
 	rep #$20
 	lda.b tmp2
-	cmp.b $A5
+	cmp.b tmp3
 	beq NoLineForward
 	asl a
 	tay
@@ -206,7 +205,7 @@ PickUnusedLineForward:				; selects the next ranked forward not in the used list
 IsLineDefencemanUsed:				; advances the candidate index and returns carry set if the defenceman is
 									; already used
 	inc.b tmp2
-	ldx.b $2E
+	ldx.b r0+2
 	dex
 	bmi LinePlayerNotUsed
 .loop:								; loop: if A = ScratchBuf+$200,x go to LinePlayerUsed, X - 1, ...
@@ -242,10 +241,10 @@ MarkLineForwardUsed:				; appends the forward index to the used list and increme
 	sty.b r0
 	rts
 MarkLineDefencemanUsed:				; appends the defenceman index to the used list and increments its count
-	ldy.b $2E
+	ldy.b r0+2
 	sta.w ScratchBuf+$200,y
 	iny
-	sty.b $2E
+	sty.b r0+2
 	rts
 InsertRankedLineForward:			; inserts a forward and his overall rating into the descending line
 									; selection lists

@@ -1,15 +1,20 @@
 ; Raw planar frame tiles, followed by an award picture that ends in the next bank.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C8F1B9
-DATA8_C8F1B9:						; raw frame tiles for transfer index $1D0; pose not traced
+FrameTiles1D0:						; the raw tiles of frame $1D0 (FrameTileSource / FrameBankLayout entry
+									; $1D0); pose not traced
 	incbin "../Extracted/segments/bankC8_F000.bin":$1B9..$439
-DATA8_C8F439:						; raw frame tiles for transfer index $1D1; pose not traced
+FrameTiles1D1:						; the raw tiles of frame $1D1 (FrameTileSource / FrameBankLayout entry
+									; $1D1); pose not traced
 	incbin "../Extracted/segments/bankC8_F000.bin":$439..$6B9
-DATA8_C8F6B9:						; raw frame tiles for transfer index $1D2; pose not traced
+FrameTiles1D2:						; the raw tiles of frame $1D2 (FrameTileSource / FrameBankLayout entry
+									; $1D2); pose not traced
 	incbin "../Extracted/segments/bankC8_F000.bin":$6B9..$939
-DATA8_C8F939:						; raw frame tiles for transfer index $1D3; pose not traced
+FrameTiles1D3:						; the raw tiles of frame $1D3 (FrameTileSource / FrameBankLayout entry
+									; $1D3); pose not traced
 	incbin "../Extracted/segments/bankC8_F000.bin":$939..$BB9
-DATA8_C8FBB9:						; raw frame tiles for transfer index $1D4; pose not traced
+FrameTiles1D4:						; the raw tiles of frame $1D4 (FrameTileSource / FrameBankLayout entry
+									; $1D4); pose not traced
 	incbin "../Extracted/segments/bankC8_F000.bin":$BB9..$E39
 ConnSmythePicMap:					; the picture of award 2 (AwardPictures): Conn Smythe Trophy
 	dw ConnSmythePicTiles-ConnSmythePicMap-2	; map chunk length

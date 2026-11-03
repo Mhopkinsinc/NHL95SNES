@@ -1,5 +1,4 @@
-; Segment bankC4_8000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_8000: game code, jump tables and the data tables the code reads with long addresses.
 org $C47FB5
 updatepentime:						; called from other segments
 	lda.w #$0020
@@ -36,9 +35,9 @@ UpdateTeamPenaltyTimes:				; start the penalty clock update for team a2
 	lda.b a2
 	beq .1
 	lda.w #$001A
-.1:									; a0 = A, $69 = 0, a1 = mesarea, d1 = $0002, ...
+.1:									; a0 = A, a1+2 = 0, a1 = mesarea, d1 = $0002, ...
 	sta.b a0
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0002
@@ -188,9 +187,9 @@ releasepl:							; return the released penalty player to an available on-ice slo
 	lda.w #$0001
 	tsb.w tmflags
 	tsb.w tmflags+2
-	lda.w #$00C0
-	sta.b $65
-	lda.w #$9B2A
+	lda.w #priolist>>16
+	sta.b a0+2
+	lda.w #priolist&$FFFF
 	sta.b a0
 	lda.w tmgoalie,y
 	bpl .1
@@ -207,35 +206,35 @@ releasepl:							; return the released penalty player to an available on-ice slo
 	ora.w #$1000
 	sta.w pflags,x
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -290,10 +289,10 @@ prefmes:							; the message for penalty d0 (negative: none): penmsgbox cleared,
 	ldx.b d0
 	bpl .2
 	rtl
-.2:									; A = Penaltylist,x, X = A, A = DATA8_C3449B,x, A and $00FF, ...
+.2:									; A = Penaltylist,x, X = A, A = Penaltylist+2,x, A and $00FF, ...
 	lda.l Penaltylist,x
 	tax
-	lda.l DATA8_C3449B,x
+	lda.l Penaltylist+2,x
 	and.w #$00FF
 	dec a
 	beq .rtl
@@ -317,7 +316,7 @@ prefmes:							; the message for penalty d0 (negative: none): penmsgbox cleared,
 	inx
 	txa
 	asl a
-	sta.w $1541
+	sta.w RefMessageWidth
 	ldy.w #$0002
 	lda.w #$5941
 	jsl.l Framer
@@ -415,7 +414,7 @@ ShowInjuryBox:						; the injury box: a frame, its two texts (a third one when T
 	pei ($71)
 	pei ($73)
 	pei ($75)
-	inc.w $18AA
+	inc.w LCBoxesClosed
 	lda.w #$58CA
 	ldx.w #$0012
 	ldy.w #$0004
@@ -446,31 +445,31 @@ ShowInjuryBox:						; the injury box: a frame, its two texts (a third one when T
 	pla
 	sta.b a4
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -530,17 +529,17 @@ checkob:							; called from other segments
 	lda.w refwindow
 	bne .6
 	jsl.l ClearTextMapTop
-.6:									; pull A, $65 = A, pull A, a0 = A, ...
+.6:									; pull A, a0+2 = A, pull A, a0 = A, ...
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 .rtl:								; return
@@ -893,7 +892,7 @@ EndPenaltyShot:						; called from other segments
 	beq .rtl
 	phx
 	jsl.l WaitTransfers
-	jsl.l CODE_C4785E
+	jsl.l RedrawPeriodBox
 	stz.w PenShotActive
 	stz.w penshot
 	lda.w #$FFFF
@@ -909,7 +908,7 @@ EndPenaltyShot:						; called from other segments
 .rtl:								; return
 	rtl
 goalieacc:							; called from other segments
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	sta.b d1
 	lda.b d0
 	and.w #$000F
@@ -947,16 +946,16 @@ goalieacc:							; called from other segments
 	ldy.w playerpad,x
 	bmi .5
 	lda.w SPA,x
-	cmp.w #$1552
+	cmp.w #SPAgdive&$FFFF
 	bcc .5
-	cmp.w #$2708
+	cmp.w #SPAinjury1&$FFFF
 	bcc .6
-.5:									; if d0 = facedir,x go to .8, d2 = A, A = $121E, call SetSPAFromA, ...
+.5:									; if d0 = facedir,x go to .8, d2 = A, A = SPAgready&$FFFF, ...
 	lda.b d0
 	cmp.w facedir,x
 	beq .8
 	sta.b d2
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	jsl.l SetSPAFromA
 	jmp.w .13
 .6:									; go to stopna
@@ -990,14 +989,14 @@ goalieacc:							; called from other segments
 	lda.w #$0000
 .9:									; goalieturnwait,x = A
 	sta.w goalieturnwait,x
-.10:								; A = goalieflags,x, if a $0002 bit set go to .11, A = $121E, go to .12
+.10:								; A = goalieflags,x, if a $0002 bit set go to .11, ...
 	lda.w goalieflags,x
 	bit.w #$0002
 	bne .11
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	bra .12
-.11:								; A = $14C0
-	lda.w #$14C0
+.11:								; A = SPAgskate&$FFFF
+	lda.w #SPAgskate&$FFFF
 .12:								; call SetSPAFromA, d2 = facedir,x
 	jsl.l SetSPAFromA
 	lda.w facedir,x
@@ -1399,9 +1398,9 @@ assgoalie:							; assignment (asstab entry 7): the goalie
 	bcs .7
 	cmp.w #$00D9
 	bcs GoalieUpdateStateJump
-.7:									; $65 = rtss>>16, a0 = rtss, Y = $0004, if Xpos,x >= 0 go to .8, ...
+.7:									; a0+2 = rtss>>16, a0 = rtss, Y = $0004, if Xpos,x >= 0 go to .8, ...
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss
 	sta.b a0
 	ldy.w #$0004
@@ -1418,8 +1417,7 @@ assgoalie:							; assignment (asstab entry 7): the goalie
 	sta.b d1
 .9:									; go to skateto
 	jml.l skateto
-DATA8_C48B47:						; an rtl no traced code reaches
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 GoalieCheckManualState:				; update the goalie control state before movement
 	lda.w gmclock
 	bne .1
@@ -1434,7 +1432,7 @@ GoalieUpdateStateJump:				; continue into the goalie animation and decision upda
 	jmp.w GoalieUpdateState
 GoalieReturnToCrease:				; skate the goalie back toward the crease
 	lda.w #rtss>>16
-	sta.b $65
+	sta.b a0+2
 	lda.w #rtss
 	sta.b a0
 	ldy.w #$0004
@@ -1466,7 +1464,7 @@ GoalieCheckPadDirection:			; check manual goalie direction and stop when no dire
 GoalieUpdateState:					; update goalie animation, puck holding, saves and computer movement
 	lda.w pf2aip,x
 	bne .1
-	lda.w #$121E
+	lda.w #SPAgready&$FFFF
 	jsl.l SetSPAFromA
 .1:									; if gmclock is not 0 go to .rtl, if temp5,x < 0 go to .4, ...
 	lda.w gmclock
@@ -1587,23 +1585,23 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bmi .rtl2
 .15:								; go to .28
 	jmp.w .28
-.16:								; Y = $0000, if A >= $0014 go to .15, pf2aip,x = $005A, A = $1636, ...
+.16:								; Y = $0000, if A >= $0014 go to .15, pf2aip,x = $005A, ...
 	ldy.w #$0000
 	cmp.w #$0014
 	bcs .15
 	lda.w #$005A
 	sta.w pf2aip,x
-	lda.w #$1636
+	lda.w #SPAgcover&$FFFF
 	jsl.l SetSPAFromA
 .rtl2:								; return
 	rtl
 .17:								; call vtoa, A = d0
 	jsl.l vtoa
 	lda.b d0
-.18:								; facedir,x = A, pfalock,x = A, A = $15C4, call SetSPAFromA, ...
+.18:								; facedir,x = A, pfalock,x = A, A = SPAgpoke&$FFFF, call SetSPAFromA, ...
 	sta.w facedir,x
 	sta.w pfalock,x
-	lda.w #$15C4
+	lda.w #SPAgpoke&$FFFF
 	jsl.l SetSPAFromA
 	lda.w #$00F0
 	sta.w goaliedivewait,x
@@ -1699,9 +1697,9 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 .25:								; call vtoa, A = d0
 	jsl.l vtoa
 	lda.b d0
-.26:								; facedir,x = A, Y = $1552, A = Y, call SetSPAFromA, ...
+.26:								; facedir,x = A, Y = SPAgdive&$FFFF, A = Y, call SetSPAFromA, ...
 	sta.w facedir,x
-	ldy.w #$1552
+	ldy.w #SPAgdive&$FFFF
 	tya
 	jsl.l SetSPAFromA
 	lda.w #$0168
@@ -1720,10 +1718,10 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.w #$001E
 	sta.b crowdhold
 	rtl
-.28:								; if pfgoal,x is not 0 go to .29, $65 = 0, a0 = $07D8, d3 = $010A, ...
+.28:								; if pfgoal,x is not 0 go to .29, a0+2 = 0, a0 = $07D8, d3 = $010A, ...
 	lda.w pfgoal,x
 	bne .29
-	stz.b $65
+	stz.b a0+2
 	lda.w #$07D8
 	sta.b a0
 	lda.w #$010A
@@ -1978,13 +1976,13 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bit.w #$0020
 	beq .58
 	ora.w #$FFC0
-.58:								; A + puckx, A - Xpos,x, d0 = A, $2E = A, ...
+.58:								; A + puckx, A - Xpos,x, d0 = A, r0+2 = A, ...
 	clc
 	adc.w puckx
 	sec
 	sbc.w Xpos,x
 	sta.b d0
-	sta.b $2E
+	sta.b r0+2
 	bit.w #$8000
 	beq .59
 	eor.w #$FFFF
@@ -2046,14 +2044,14 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	lda.w seed
 	and.w #$0001
 	bra .72
-.64:								; if $2E >= 0 go to .67
-	lda.b $2E
+.64:								; if r0+2 >= 0 go to .67
+	lda.b r0+2
 	bpl .67
 .65:								; A = $0007, go to .72
 	lda.w #$0007
 	bra .72
-.66:								; if $2E >= 0 go to .65
-	lda.b $2E
+.66:								; if r0+2 >= 0 go to .65
+	lda.b r0+2
 	bpl .65
 .67:								; A = $0001, go to .72
 	lda.w #$0001
@@ -2127,11 +2125,11 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	bmi .75
 	dec.b d0
 	dec.b d0
-.75:								; d0 * 2, $69 = $00C4, a1 = $932C, Y = d0, ...
+.75:								; d0 * 2, a1 = assgoalie_list, Y = d0, ...
 	asl.b d0
-	lda.w #$00C4
-	sta.b $69
-	lda.w #$932C
+	lda.w #assgoalie_list>>16
+	sta.b a1+2
+	lda.w #assgoalie_list&$FFFF
 	sta.b a1
 	ldy.b d0
 	lda.b [a1],y
@@ -2172,7 +2170,7 @@ GoalieUpdateState:					; update goalie animation, puck holding, saves and comput
 	cmp.w pfteam,y
 	beq .83
 	lda.w SPA,y
-	cmp.w #$1C24
+	cmp.w #SPAshotf&$FFFF
 	bcc .82
 	cmp.w #$1EFB
 	bcs .82

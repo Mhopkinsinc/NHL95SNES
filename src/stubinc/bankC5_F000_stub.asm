@@ -6,9 +6,9 @@ incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
-DATA8_CFF27C = $CFF27C
-DATA8_C60000 = $C60000				; frame source low words
-DATA8_C60848 = $C60848				; source banks and layout indices
+LayoutSizes = $CFF27C
+FrameTileSource = $C60000			; frame source low words
+FrameBankLayout = $C60848			; source banks and layout indices
 SpritePieces = $C19660
 
 incsrc "../bankC5_F000.asm"

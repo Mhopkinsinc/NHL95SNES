@@ -1,6 +1,5 @@
 ; Segment bankC0_9000: the rest of the engine's math as in 94S (the Mul16x8Hi signed forms, Mul16, the
-; divides), then game code (menus and lists) that keeps its address as a name until it is traced, with the
-; cross references on each label.
+; divides), then game code (menus and lists).
 org $C09005
 Mul16x8HiXS:						; X * A (low byte) / 256 into r2+1, X signed
 	phy
@@ -605,12 +604,12 @@ ShootoutShooters:					; pick the shootout shooters of a pad's team: up / down mo
 	cmp.b d0
 	beq .8
 	jmp.w .10
-.8:									; X = a2, $2352 = HomeTeam,x, $2350 = $FFFF, call ShootersSetup, ...
+.8:									; X = a2, setupvis = HomeTeam,x, setuphome = $FFFF, ...
 	ldx.b a2
 	lda.w HomeTeam,x
-	sta.w $2352
+	sta.w setupvis
 	lda.w #$FFFF
-	sta.w $2350
+	sta.w setuphome
 	jsl.l ShootersSetup
 	jsl.l ShootersBackground
 	stz.w curitem
@@ -703,19 +702,19 @@ DrawShootersBack:					; the shooters back with its drawing gone: the eraser box 
 	lda.w #$0003
 	sta.b d1
 	lda.w #$007F
-	sta.b $3A
+	sta.b p0+2
 	stz.b p0
 	lda.w #$0020
 	lda.w #$001C
 	ldx.w #$0000
 	ldy.w #$0000
-	lda.w $249C
+	lda.w charofs2
 	clc
 	adc.w #$0C00
 	rtl
-ShootersBackground:					; the shooters screen background: DrawShootersBack when $2364 is set, d1 =
-									; HomeTeam or VisTeam by a2, then irqline2 $50
-	lda.w $2364
+ShootersBackground:					; the shooters screen background: DrawShootersBack when drawlinesback is
+									; set, d1 = HomeTeam or VisTeam by a2, then irqline2 $50
+	lda.w drawlinesback
 	beq .1
 	jsl.l DrawShootersBack
 .1:									; X = $0058, Y = $0018, d1 = HomeTeam, if a2 = 0 go to .2, ...
@@ -727,17 +726,17 @@ ShootersBackground:					; the shooters screen background: DrawShootersBack when 
 	beq .2
 	lda.w VisTeam
 	sta.b d1
-.2:									; if $2364 = 0 go to .rtl, call WaitFrame, irqline2 = $0050, $2364 = 0
-	lda.w $2364
+.2:									; if drawlinesback = 0 go to .rtl, call WaitFrame, irqline2 = $0050, ...
+	lda.w drawlinesback
 	beq .rtl
 	jsl.l WaitFrame
 	lda.w #$0050
 	sta.w irqline2
-	stz.w $2364
+	stz.w drawlinesback
 .rtl:								; return
 	rtl
 PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), the rows printed
-									; with the cursor row ($1878) marked
+									; with the cursor row (curitem) marked
 	lda.w #$0020
 	sta.b d0
 	lda.w #$0013
@@ -753,9 +752,9 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	sta.b $79
 	lda.w #InitShooters
 	sta.b $77
-	lda.w #$00C0
-	sta.b $71
-	lda.w #$967D
+	lda.w #DefaultShooterList>>16
+	sta.b a3+2
+	lda.w #DefaultShooterList&$FFFF
 	sta.b a3
 	lda.w SelectedPlayerIdx
 	dec a
@@ -766,13 +765,13 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	asl a
 	sta.b d0
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 .1:									; $79 = InitShooters>>16, $77 = InitShooters, d1 = $0005
@@ -795,14 +794,14 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 	lda.b [a3]
 	and.w #$00FF
 	dec a
-	sta.w $2358
+	sta.w matchuphome
 	phx
 	ldx.b a2
 	lda.w HomeTeam,x
 	cmp.w #$0018
 	bcc .2
 	ldx.w #$0000
-	lda.w $2358
+	lda.w matchuphome
 .2:									; pull X
 	plx
 .3:									; printx = $0005, printx = $0008, A = [a3], A and $00FF, ...
@@ -823,11 +822,11 @@ PrintShooterNames:					; redraws the shooter rows: the eraser box ($20 x $13), t
 .4:									; call ShootersBackground, return
 	jsl.l ShootersBackground
 	rtl
-DATA8_C0967D:						; not traced: 1, 2, 3, 4
+DefaultShooterList:					; the default shooter slots 1, 2, 3, 4 when no shooter row is picked
 	db $01,$02,$03,$04
 InitShooters:						; the 8 shooters of team a2 (0 home, 2 visitors) into its shooter list
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.w #$2E35
@@ -835,15 +834,15 @@ InitShooters:						; the 8 shooters of team a2 (0 home, 2 visitors) into its sho
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 	lda.w #$3273
 	sta.b a1
-.1:									; Y = a2, $69 = $007E, d0 = $0007
+.1:									; Y = a2, a1+2 = $007E, d0 = $0007
 	ldy.b a2
 	lda.w #$007E
-	sta.b $69
+	sta.b a1+2
 	lda.w #$0007
 	sta.b d0
 .loop:								; loop: A 8-bit, [a3] = [a1], A 16-bit, a1 + 1, ...
@@ -863,13 +862,13 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	bne .3
 	jsl.l GoalieCount
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #homeshooters
 	sta.b a1
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #awayshooters
 	sta.b a1
 .1:									; A = [a1], A and $00FF, A + 1, if A = d0 go to .2, ...
@@ -895,7 +894,7 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	jsl.l eraser
 	ldx.w #$0001
 	ldy.w #$0001
-	lda.w $249C
+	lda.w charofs2
 	clc
 	adc.w #$0C00
 	jsl.l WaitFrame
@@ -914,13 +913,13 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	lda.b d0
 	sta.w picktop
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #homeshooters
 	sta.b a3
 	lda.b a2
 	beq .4
 	lda.w #$0000
-	sta.b $71
+	sta.b a3+2
 	lda.w #awayshooters
 	sta.b a3
 .4:									; A = a3, A + curitem, a3 = A, A = [a3], ...
@@ -978,9 +977,9 @@ PickShooterRow:						; the pick on a shooter row: the goalie row cycles the goal
 	bit.w #$8080
 	beq .loop
 	jsl.l SetShooter
-.8:									; $2364 = $0001, return
+.8:									; drawlinesback = $0001, return
 	lda.w #$0001
-	sta.w $2364
+	sta.w drawlinesback
 	rtl
 .9:									; A = DispAttribCtr, A + 1, if A - $0010 >= 0 go to .loop, ...
 	lda.w DispAttribCtr
@@ -1048,9 +1047,9 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	sta.w printx
 	lda.w #$0002
 	sta.w printy
-.1:									; $69 = ShooterAttribColumns>>16, a1 = ShooterAttribColumns, ...
+.1:									; a1+2 = ShooterAttribColumns>>16, a1 = ShooterAttribColumns, ...
 	lda.w #ShooterAttribColumns>>16
-	sta.b $69
+	sta.b a1+2
 	lda.w #ShooterAttribColumns
 	sta.b a1
 	lda.w DispAttribCtr
@@ -1067,23 +1066,23 @@ PrintShooterList:					; the shooter list: area cleared, the rating page DispAttr
 	bmi .3
 	dec.b d0
 	bpl .loop
-.3:									; if [a1] >= 0 go to .4, $0806 - 1, go to .1
+.3:									; if [a1] >= 0 go to .4, DispAttribCtr - 1, go to .1
 	lda.b [a1]
 	bpl .4
 	dec.w DispAttribCtr
 	bra .1
-.4:									; printa = $3800, $91 = [a1], Y = $0002, d4 = [a1],y, ...
+.4:									; printa = $3800, d4+2 = [a1], Y = $0002, d4 = [a1],y, ...
 	lda.w #$3800
 	sta.w printa
 	lda.b [a1]
-	sta.b $91
+	sta.b d4+2
 	ldy.w #$0002
 	lda.b [a1],y
 	sta.b d4
 	lda.w picktop
 	cmp.w pickfirst
 	beq .5
-.5:									; A = $1884, A - $1880, A + $0009, if A - $187C >= 0 go to .6
+.5:									; A = picktop, A - pickfirst, A + $0009, if A - listcount >= 0 go to .6
 	lda.w picktop
 	sec
 	sbc.w pickfirst
@@ -1109,9 +1108,9 @@ PrintShooterRows:					; the shooter list's rows from picktop + 1, the row at cur
 	lda.w picktop
 	inc a
 	sta.b a3
-	lda.w #DATA8_C09BC4>>16
+	lda.w #MaxSpeed>>16
 	sta.b $79
-	lda.w #DATA8_C09BC4
+	lda.w #MaxSpeed
 	sta.b $77
 	lda.w #$0008
 	sta.b d1
@@ -1126,7 +1125,7 @@ PrintShooterRows:					; the shooter list's rows from picktop + 1, the row at cur
 	bvc .loop
 .2:									; d1 - 1
 	dec.b d1
-.loop:								; loop: printa = $3800, if d1 is not $1888 go to .3, printa = $2000
+.loop:								; loop: printa = $3800, if d1 is not curplayer go to .3, printa = $2000
 	lda.w #$3800
 	sta.w printa
 	lda.b d1
@@ -1172,16 +1171,16 @@ SetShooter:							; puts the list player at row curplayer into shooter slot curi
 	and.w #$00FF
 	sta.b d0
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #homeshooters
 	sta.b a1
 	lda.b a2
 	beq .1
 	lda.w #$0000
-	sta.b $69
+	sta.b a1+2
 	lda.w #awayshooters
 	sta.b a1
-.1:									; Y = $1878, A 8-bit, A = [a1],y, A 16-bit, ...
+.1:									; Y = curitem, A 8-bit, A = [a1],y, A 16-bit, ...
 	ldy.w curitem
 	sep #$20
 	lda.b [a1],y
@@ -1204,7 +1203,7 @@ SetShooter:							; puts the list player at row curplayer into shooter slot curi
 	sep #$20
 	sta.b [a1],y
 	rep #$20
-.3:									; Y = $1878, A = d0, A 8-bit, [a1],y = A, ...
+.3:									; Y = curitem, A = d0, A 8-bit, [a1],y = A, ...
 	ldy.w curitem
 	lda.b d0
 	sep #$20

@@ -1,11 +1,10 @@
-; Segment bankC4_E000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC4_E000: game code, jump tables and the data tables the code reads with long addresses.
 org $C4DFD6
 StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A wins the
 									; stanley cup, defeating team X in the final game of the playoffs, team
 									; A's logo sprite; returns on start
 	sta.b a0
-	stx.b $65
+	stx.b a0+2
 	jsr.w InitAwardScreen
 	lda.w #$000F
 	sta.b $18
@@ -23,15 +22,15 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	lda.b $08
 	sta.b r1
 	lda.w #$007E
-	sta.b $32
+	sta.b r1+2
 	ldx.w #StanleyCupMap>>16
 	lda.w #StanleyCupMap&$FFFF
 	jsl.l MapSetToWRAM
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	ldx.w #$506D
 	ldy.b $08
 .loop:								; loop: push X, push Y, A = Y, A + $0010, ...
@@ -57,20 +56,20 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	adc.w #$00E0
 	pha
 	adc.w #$0AE0
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0030
 	pea.w $007E
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	lda.w #$0010
@@ -79,7 +78,7 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$50A9
+	ldx.w #TxtCongratulations&$FFFF
 	ldy.w #$0012
 	jsl.l PrintItalicCentred
 	lda.w #$2000
@@ -93,17 +92,17 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	tax
 	jsl.l UnpackText
 	phx
-	ldx.w #$50B4
+	ldx.w #TxtWinsTheStanleyCup&$FFFF
 	jsl.l UnpackText
 	txy
 	plx
 	jsl.l ConcatStringsLong
 	ldy.w #$0015
 	jsl.l PrintBoldCentredStr
-	ldx.w #$50C4
+	ldx.w #TxtDefeating&$FFFF
 	jsl.l UnpackText
 	phx
-	lda.b $65
+	lda.b a0+2
 	asl a
 	tax
 	lda.l $C30000,x
@@ -115,14 +114,14 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	plx
 	jsl.l ConcatStringsLong
 	phx
-	ldx.w #$50CC
+	ldx.w #TxtInTheFinal&$FFFF
 	jsl.l UnpackText
 	txy
 	plx
 	jsl.l ConcatStringsLong
 	ldy.w #$0016
 	jsl.l PrintBoldCentredStr
-	ldx.w #$50D6
+	ldx.w #TxtGameOfThePlayoffs&$FFFF
 	ldy.w #$0017
 	jsl.l PrintBoldCentred
 	jsl.l SendTextMap
@@ -135,9 +134,9 @@ StanleyCupScreen:					; the Stanley Cup screen: the cup, CONGRATULATIONS, team A
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -168,10 +167,10 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w #$00F0
 	sta.b $D1
 	ldy.w #$0001
-	ldx.w #$4C9F
+	ldx.w #TxtScoutingReport&$FFFF
 	jsl.l PrintTitle
-	lda.w #(DATA8_CF05D4+$5)&$FFFF
-	ldx.w #(DATA8_CF05D4+$5)>>16
+	lda.w #(SongLists+$5)&$FFFF
+	ldx.w #(SongLists+$5)>>16
 	jsl.l LoadSounds
 	lda.w #$00A6
 	jsl.l StartSound
@@ -196,7 +195,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w VisTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000E
 	jsl.l PrintThinCentred
@@ -207,7 +206,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	lda.w HomeTeam
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	ldy.w #$000E
 	jsl.l PrintThinCentred
@@ -216,13 +215,15 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	stz.b $24
 	ldx.w #$0070
 	jsl.l SetupHDMA
-	db $03,$21,$1B,$49,$C0,$00		; inline parameters
+	db $03,$21						; inline parameters: DMAP and BBAD
+	dl MenuGradientHDMA				; the HDMA table
+	db $00							; the indirect bank
 	lda.w #$0400
 	sta.b tmp1
 	lda.w #$5800
 	sta.b tmp0
-	lda.w #TiledBackMap&$FFFF
-	ldx.w #TiledBackMap>>16
+	lda.w #MenuBackMap&$FFFF
+	ldx.w #MenuBackMap>>16
 	ldy.w #$2000
 	jsl.l MapSetToVRAM
 	ldy.w #$5000
@@ -262,7 +263,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	sta.b $18
 	lda.w HomeTeam
 	jsl.l CreateSprite
-	stx.b $9D
+	stx.b d7+2
 	inc.b $38,x
 	lda.w #$0025
 	sta.b $1A
@@ -270,7 +271,7 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	sta.b $18
 	lda.w #$0026
 	jsl.l CreateSprite
-	stx.b $99
+	stx.b d6+2
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
@@ -310,9 +311,9 @@ ScoutingReport:						; the pregame scouting report: both teams' names and logos,
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -416,10 +417,10 @@ InitScoutDisplay:					; resets the scouting text pointer, cursor and scrolling d
 	lda.w #$0002
 	sta.w ScoutTextCol
 	lda.w #$0010
-	sta.b $95
+	sta.b d5+2
 	stz.b d5
-	stz.b $69
-	stz.b $69
+	stz.b a1+2
+	stz.b a1+2
 	lda.b $D3
 	clc
 	adc.w #$0440
@@ -453,7 +454,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
-	ldx.b $9D
+	ldx.b d7+2
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
@@ -461,7 +462,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
-	ldx.b $99
+	ldx.b d6+2
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
@@ -482,7 +483,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w HomeRoster+222,y
 	sta.b a0
 	and.w #$00FF
-	sta.b $6D
+	sta.b a2+2
 	tax
 	cmp.w #$00FF
 	beq .3
@@ -495,20 +496,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($6D)
@@ -519,10 +520,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ply
 	bra .4
@@ -538,7 +539,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w VisRoster+222,y
 	sta.b a0
 	and.w #$00FF
-	sta.b $6D
+	sta.b a2+2
 	tax
 	cmp.w #$00FF
 	beq .5
@@ -551,20 +552,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pei ($6D)
@@ -575,10 +576,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	ply
 	bra .6
@@ -600,7 +601,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	pha
 	lda.w #$5DF9
 	sta.b d4
-	stz.b $91
+	stz.b d4+2
 	lda.w #$0001
 	sta.l $7E24DC
 	jsl.l CalcRosterAttribLong
@@ -636,7 +637,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	pha
 	lda.w #$5DF9
 	sta.b d4
-	stz.b $91
+	stz.b d4+2
 	lda.w #$0001
 	sta.l $7E24DC
 	jsl.l CalcRosterAttribLong
@@ -666,7 +667,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w curmatchup
 	asl a
 	tax
-	lda.l DATA8_C35E51,x
+	lda.l PositionLongNames,x
 	tax
 	ldy.w #$0007
 	jsl.l PrintBoldCentred
@@ -675,11 +676,11 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsl.l WaitTransfers
 	jsl.l RestoreWorkBuf
 	rts
-.7:									; a0 = HomeRoster+222, A and $00FF, $6D = A, X = A, ...
+.7:									; a0 = HomeRoster+222, A and $00FF, a2+2 = A, X = A, ...
 	lda.w HomeRoster+222
 	sta.b a0
 	and.w #$00FF
-	sta.b $6D
+	sta.b a2+2
 	tax
 	cmp.w #$00FF
 	beq .8
@@ -691,20 +692,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0040
 	pei ($6D)
@@ -715,19 +716,19 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	bra .9
 .8:									; call ScoutUseHomeTeamLogo
 	jsr.w ScoutUseHomeTeamLogo
-.9:									; a0 = VisRoster+222, A and $00FF, $6D = A, X = A, ...
+.9:									; a0 = VisRoster+222, A and $00FF, a2+2 = A, X = A, ...
 	lda.w VisRoster+222
 	sta.b a0
 	and.w #$00FF
-	sta.b $6D
+	sta.b a2+2
 	tax
 	cmp.w #$00FF
 	beq .10
@@ -739,20 +740,20 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	jsr.w UnpackPlayerPhoto
 	tay
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	phy
-	ldy.b $00
+	ldy.b VRAMQueueSP
 	tsx
-	stx.b $00
-	ldx.b $04
+	stx.b VRAMQueueSP
+	ldx.b CGRAMQueueSP
 	txs
-	sty.b $04
+	sty.b CGRAMQueueSP
 	pea.w $0020
 	pea.w $0050
 	pei ($6D)
@@ -763,10 +764,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lsr a
 	adc.b a2
 	pha
-	lda.b $04
+	lda.b CGRAMQueueSP
 	tsx
 	tcs
-	stx.b $04
+	stx.b CGRAMQueueSP
 	stz.b QueueBusy
 	bra .11
 .10:								; call ScoutUseVisTeamLogo
@@ -782,7 +783,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w #$F0C9
 	sta.b d4
 	lda.w #$0010
-	sta.b $91
+	sta.b d4+2
 	lda.w #$0001
 	sta.l $7E24DC
 	jsl.l CalcRosterAttribLong
@@ -807,7 +808,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w #$F0C9
 	sta.b d4
 	lda.w #$0010
-	sta.b $91
+	sta.b d4+2
 	lda.w #$0001
 	sta.l $7E24DC
 	jsl.l CalcRosterAttribLong
@@ -826,7 +827,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$49B8
+	ldx.w #TxtGoalie&$FFFF
 	ldy.w #$0007
 	jsl.l PrintBoldCentred
 	jsl.l WaitTransfers
@@ -842,10 +843,10 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.w #$047D
 	mvn $7E,$7E
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
@@ -854,16 +855,16 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	pea.w $0370
 	pea.w $007E
 	pea.w ScratchBuf
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b d7
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
-	ldx.b $9D
+	ldx.b d7+2
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
@@ -871,7 +872,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
-	ldx.b $99
+	ldx.b d6+2
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
@@ -880,7 +881,7 @@ ShowMatchups:						; draws matchup 0-6 of the scouting report (the two players, 
 	sta.b $CF
 	lda.w #$00F0
 	sta.b $D1
-	ldx.w #$4ECC
+	ldx.w #TxtOverall&$FFFF
 	ldy.w #$0008
 	jsl.l PrintBoldCentred
 	jsl.l WaitTransfers
@@ -983,8 +984,8 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	ldy.w #$F0C9
 	sty.b d4
 	ldy.w #$0010
-.2:									; $91 = Y, d0 = A, RatingMode = 0, call CalcRosterAttribLong, ...
-	sty.b $91
+.2:									; d4+2 = Y, d0 = A, RatingMode = 0, call CalcRosterAttribLong, ...
+	sty.b d4+2
 	sta.b d0
 	stz.w RatingMode
 	jsl.l CalcRosterAttribLong
@@ -996,7 +997,7 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	sec
 	sbc.b $01,s
 	plx
-	sta.b $65
+	sta.b a0+2
 	ply
 	plx
 	bit.w #$8000
@@ -1017,7 +1018,7 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	sta.w mesarea+4
 	lda.w $0002,y
 	sta.w $0004,y
-	lda.b $65
+	lda.b a0+2
 	cmp.w mesarea
 	bcs .5
 	sta.w mesarea+2
@@ -1025,12 +1026,12 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	asl a
 	sta.w $0002,y
 	bra .10
-.5:									; mesarea+2 = mesarea, $0002,y = $0000,y, mesarea = $65, A = X, ...
+.5:									; mesarea+2 = mesarea, $0002,y = $0000,y, mesarea = a0+2, A = X, ...
 	lda.w mesarea
 	sta.w mesarea+2
 	lda.w $0000,y
 	sta.w $0002,y
-	lda.b $65
+	lda.b a0+2
 	sta.w mesarea
 	txa
 	asl a
@@ -1049,12 +1050,12 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	asl a
 	sta.w $000A,y
 	bra .10
-.8:									; $04FF = $04FD, $000A,y = $0008,y, if $65 < $04FB go to .9, ...
+.8:									; mesarea+10 = mesarea+8, $000A,y = $0008,y, ...
 	lda.w mesarea+8
 	sta.w mesarea+10
 	lda.w $0008,y
 	sta.w $000A,y
-	lda.b $65
+	lda.b a0+2
 	cmp.w mesarea+6
 	bcc .9
 	beq .9
@@ -1063,20 +1064,20 @@ RankScoutingHotColdPlayers:			; ranks a roster's three hottest and coldest playe
 	asl a
 	sta.w $0008,y
 	bra .10
-.9:									; $04FD = $04FB, $0008,y = $0006,y, $04FB = $65, A = X, ...
+.9:									; mesarea+8 = mesarea+6, $0008,y = $0006,y, mesarea+6 = a0+2, A = X, ...
 	lda.w mesarea+6
 	sta.w mesarea+8
 	lda.w $0006,y
 	sta.w $0008,y
-	lda.b $65
+	lda.b a0+2
 	sta.w mesarea+6
 	txa
 	asl a
 	sta.w $0006,y
-.10:								; A = $000C,y, A + $65, $000C,y = A, A = X, ...
+.10:								; A = $000C,y, A + a0+2, $000C,y = A, A = X, ...
 	lda.w $000C,y
 	clc
-	adc.b $65
+	adc.b a0+2
 	sta.w $000C,y
 	txa
 	plx
@@ -1090,8 +1091,8 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 									; a sold out ..., tonight's national hockey league game features the ...,
 									; the hot and cold players
 	jsl.l MarkWorkBuf
-	stz.b $81
-	ldx.w #$4DB9
+	stz.b d0+2
+	ldx.w #TxtWelcomeToASoldOut&$FFFF
 	jsr.w AppendScoutText
 	lda.w HomeTeam
 	asl a
@@ -1106,17 +1107,17 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	stx.b d0
 	jsl.l SkipPackedTextLong
 	jsr.w AppendScoutText
-	ldx.w #$4DC8
+	ldx.w #TxtTonightsGameFeatures&$FFFF
 	jsr.w AppendScoutText
 	plx
 	lda.w HomeTeam
 	beq .1
 	jsr.w AppendScoutText
-.1:									; ScratchBuf,y = $0020, Y + 1, $81 = Y, X = d0, ...
+.1:									; ScratchBuf,y = $0020, Y + 1, d0+2 = Y, X = d0, ...
 	lda.w #$0020
 	sta.w ScratchBuf,y
 	iny
-	sty.b $81
+	sty.b d0+2
 	ldx.b d0
 	jsr.w AppendScoutText
 	lda.w #$6120
@@ -1130,7 +1131,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	iny
 	iny
 	iny
-	sty.b $81
+	sty.b d0+2
 	lda.w VisTeam
 	asl a
 	tax
@@ -1145,13 +1146,13 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	plx
 	lda.w VisTeam
 	bne .2
-	ldx.w #$4720
-.2:									; call AppendScoutText, ScratchBuf,y = $0020, Y + 1, $81 = Y, ...
+	ldx.w #TxtThe&$FFFF
+.2:									; call AppendScoutText, ScratchBuf,y = $0020, Y + 1, d0+2 = Y, ...
 	jsr.w AppendScoutText
 	lda.w #$0020
 	sta.w ScratchBuf,y
 	iny
-	sty.b $81
+	sty.b d0+2
 	ldx.b d0
 	jsr.w AppendScoutText
 	lda.w #$203D
@@ -1164,7 +1165,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	lda.w hotterteam
 	cmp.w #$FFFF
 	beq .4
-	sty.b $81
+	sty.b d0+2
 	asl a
 	tax
 	lda.l $C30000,x
@@ -1172,7 +1173,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	lda.l $C30002,x
 	tax
 	jsr.w AppendScoutText
-	ldx.w #$4DED
+	ldx.w #TxtHasBeenPlaying&$FFFF
 	jsr.w AppendScoutText
 	lda.w hotterteam
 	bpl .3
@@ -1190,9 +1191,9 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	clc
 	adc.w #$000A
 	tay
-.3:									; $81 = Y, X = $4DFA, call AppendScoutText
-	sty.b $81
-	ldx.w #$4DFA
+.3:									; d0+2 = Y, X = TxtWellRecently&$FFFF, call AppendScoutText
+	sty.b d0+2
+	ldx.w #TxtWellRecently&$FFFF
 	jsr.w AppendScoutText
 .4:									; d0 = HomeRoster, A = HomeTeam, X = HomeHotCold, ...
 	lda.w #HomeRoster
@@ -1214,7 +1215,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	sta.w ScratchBuf,y
 	iny
 	iny
-	sty.b $81
+	sty.b d0+2
 	jsl.l RestoreWorkBuf
 	tya
 	jsl.l AllocWorkBuf
@@ -1228,7 +1229,7 @@ BuildScoutingText:					; writes the scouting report's commentary into the text b
 	sta.w $0000,x
 	inx
 	iny
-	cpy.b $81
+	cpy.b d0+2
 	bne .loop
 	rep #$20
 	rts
@@ -1241,7 +1242,7 @@ AppendScoutPlayerTrio:				; appends three player names with separators to the sc
 	sta.w ScratchBuf,y
 	iny
 	iny
-	sty.b $81
+	sty.b d0+2
 	lda.b $01,s
 	tax
 	lda.w $0002,x
@@ -1256,7 +1257,7 @@ AppendScoutPlayerTrio:				; appends three player names with separators to the sc
 	clc
 	adc.w #$0006
 	tay
-	sty.b $81
+	sty.b d0+2
 	plx
 	lda.w $0004,x
 AppendScoutPlayerName:				; appends the roster player name selected by the doubled player index in A
@@ -1272,7 +1273,7 @@ AppendScoutText:					; unpacks text X (UnpackText) and appends it to the scoutin
 									; text buffer
 	jsl.l UnpackText
 AppendScoutString:					; appends the zero-terminated string at X to the scouting text buffer
-	ldy.b $81
+	ldy.b d0+2
 	sep #$20
 .loop:								; loop: if $0000,x = 0 go to .1, ScratchBuf,y = A, X + 1, Y + 1, ...
 	lda.w $0000,x
@@ -1281,9 +1282,9 @@ AppendScoutString:					; appends the zero-terminated string at X to the scouting
 	inx
 	iny
 	bra .loop
-.1:									; A 16-bit, $81 = Y, return
+.1:									; A 16-bit, d0+2 = Y, return
 	rep #$20
-	sty.b $81
+	sty.b d0+2
 	rts
 AppendScoutHotColdParagraph:		; appends a team's name and its hot and cold player trios to the scouting
 									; text
@@ -1297,7 +1298,7 @@ AppendScoutHotColdParagraph:		; appends a team's name and its hot and cold playe
 	iny
 	iny
 	iny
-	sty.b $81
+	sty.b d0+2
 	pla
 	asl a
 	tax
@@ -1310,16 +1311,16 @@ AppendScoutHotColdParagraph:		; appends a team's name and its hot and cold playe
 	sta.w ScratchBuf,y
 	iny
 	iny
-	sty.b $81
+	sty.b d0+2
 	lda.b $01,s
 	jsr.w AppendScoutPlayerTrio
-	ldx.w #$4E06
+	ldx.w #TxtAreOnHotStreaksAnd&$FFFF
 	jsr.w AppendScoutText
 	pla
 	clc
 	adc.w #$0006
 	jsr.w AppendScoutPlayerTrio
-	ldx.w #$4E17
+	ldx.w #TxtAreOffTheirGame&$FFFF
 	jmp.w AppendScoutText
 PrintNextScoutWord:					; prints the next scouting word, wrapping or advancing lines as needed
 	ldx.b $7D
@@ -1343,9 +1344,9 @@ PrintNextScoutWord:					; prints the next scouting word, wrapping or advancing l
 .3:									; if A is not $20 go to .2
 	cmp.b #$20
 	bne .2
-.4:									; A 16-bit, $81 = X, A = X, A - $7D, ...
+.4:									; A 16-bit, d0+2 = X, A = X, A - $7D, ...
 	rep #$20
-	stx.b $81
+	stx.b d0+2
 	txa
 	sec
 	sbc.b $7D
@@ -1375,18 +1376,18 @@ PrintNextScoutWord:					; prints the next scouting word, wrapping or advancing l
 	lda.b #$00
 	sta.w mesarea,y
 	rep #$20
-	lda.b $95
+	lda.b d5+2
 	sta.b $CF
 	ldy.w ScoutTextRow
 	ldx.w #mesarea
 	jsl.l PrintBoldLeftStr
 	clc
-	adc.b $95
+	adc.b d5+2
 	dec a
 	dec a
 	dec a
-	sta.b $95
-	ldx.b $81
+	sta.b d5+2
+	ldx.b d0+2
 	stx.b $7D
 	jsl.l SendTextMap
 	jsl.l WaitTransfers
@@ -1401,7 +1402,7 @@ NextScoutTextLine:					; resets the scouting text column and advances or scrolls
 	lda.w #$0002
 	sta.w ScoutTextCol
 	lda.w #$0010
-	sta.b $95
+	sta.b d5+2
 	lda.w ScoutTextRow
 	inc a
 	cmp.w #$001A
@@ -1424,7 +1425,7 @@ NextScoutTextLine:					; resets the scouting text column and advances or scrolls
 UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pixels into planar
 									; tiles
 	sty.b d2
-	stx.b $36
+	stx.b r2+2
 	sta.b r2
 	lda.b [r2]
 	sta.b d0
@@ -1432,7 +1433,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	pha
 	sta.b r0
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	lda.b r2
 	jsl.l Decompress
 	lda.b $86
@@ -1452,44 +1453,44 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 .1:									; Y = $0000, X = ScratchBuf
 	ldy.w #$0000
 	ldx.w #ScratchBuf
-.2:									; $85 = $0006
+.2:									; d1+2 = $0006
 	lda.w #$0006
-	sta.b $85
-.loop:								; loop: $0000,x = 0, $0010,x = 0, A 8-bit, $81 = [r0],y, ...
+	sta.b d1+2
+.loop:								; loop: $0000,x = 0, $0010,x = 0, A 8-bit, d0+2 = [r0],y, ...
 	stz.w $0000,x
 	stz.w $0010,x
 	sep #$20
 	lda.b [r0],y
-	sta.b $81
+	sta.b d0+2
 	and.b #$80
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$40
 	asl a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$20
 	asl a
 	asl a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$10
 	asl a
 	asl a
 	asl a
 	ora.w $0000,x
 	sta.w $0000,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$08
 	asl a
 	asl a
 	asl a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$04
 	asl a
 	asl a
@@ -1497,7 +1498,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	asl a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$02
 	ror a
 	ror a
@@ -1505,7 +1506,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	ror a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$01
 	ror a
 	ror a
@@ -1514,45 +1515,45 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	sta.w $0000,x
 	iny
 	lda.b [r0],y
-	sta.b $81
+	sta.b d0+2
 	and.b #$80
 	lsr a
 	lsr a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$40
 	lsr a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$20
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$10
 	asl a
 	ora.w $0000,x
 	sta.w $0000,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$08
 	asl a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$04
 	asl a
 	asl a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$02
 	asl a
 	asl a
 	asl a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$01
 	asl a
 	asl a
@@ -1562,7 +1563,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	sta.w $0000,x
 	iny
 	lda.b [r0],y
-	sta.b $81
+	sta.b d0+2
 	and.b #$80
 	lsr a
 	lsr a
@@ -1570,39 +1571,39 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	lsr a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$40
 	lsr a
 	lsr a
 	lsr a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$20
 	lsr a
 	lsr a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$10
 	lsr a
 	ora.w $0000,x
 	sta.w $0000,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$08
 	lsr a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$04
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$02
 	asl a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$01
 	asl a
 	asl a
@@ -1610,14 +1611,14 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	sta.w $0000,x
 	iny
 	lda.b [r0],y
-	sta.b $81
+	sta.b d0+2
 	and.b #$80
 	rol a
 	rol a
 	rol a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$40
 	rol a
 	rol a
@@ -1625,7 +1626,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	rol a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$20
 	lsr a
 	lsr a
@@ -1633,32 +1634,32 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	lsr a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$10
 	lsr a
 	lsr a
 	lsr a
 	ora.w $0000,x
 	sta.w $0000,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$08
 	lsr a
 	lsr a
 	lsr a
 	ora.w $0011,x
 	sta.w $0011,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$04
 	lsr a
 	lsr a
 	ora.w $0010,x
 	sta.w $0010,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$02
 	lsr a
 	ora.w $0001,x
 	sta.w $0001,x
-	lda.b $81
+	lda.b d0+2
 	and.b #$01
 	ora.w $0000,x
 	sta.w $0000,x
@@ -1668,7 +1669,7 @@ UnpackPlayerPhoto:					; decompresses a player photo and converts its packed pix
 	adc.w #$0020
 	tax
 	iny
-	dec.b $85
+	dec.b d1+2
 	beq .3
 	jmp.w .loop
 .3:									; A = X, A - $00BE, X = A, if X = $365E go to .4, ...
@@ -1724,20 +1725,20 @@ ScoutUseVisTeamLogo:				; clears the left photo tiles and shows the visiting tea
 	stz.w mesarea
 	stz.w ScratchBuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0370
 	pea.w $007E
 	lda.w #$0480
 	jsl.l AllocClearWorkBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	ldx.b d7
 	lda.b $22,x
@@ -1752,26 +1753,26 @@ ScoutUseHomeTeamLogo:				; clears the right photo tiles and shows the home team 
 	stz.w mesarea
 	stz.w ScratchBuf
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0480
 	pea.w $0130
 	pea.w $007E
 	lda.w #$0480
 	jsl.l AllocClearWorkBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
-	ldx.b $9D
+	ldx.b d7+2
 	lda.b $22,x
 	ora.w #$0001
 	sta.b $22,x
-	ldx.b $99
+	ldx.b d6+2
 	lda.b $22,x
 	and.w #$FFFE
 	sta.b $22,x
@@ -1846,7 +1847,7 @@ BuildTeamLinesPreserveTemps:		; calls BuildTeamLines while saving and restoring 
 	pei ($2E)
 	jsr.w BuildTeamLines
 	pla
-	sta.w $002E
+	sta.w r0+2
 	pla
 	sta.w r0
 	pla
@@ -1862,7 +1863,7 @@ BuildTeamLinesPreserveTemps:		; calls BuildTeamLines while saving and restoring 
 	pla
 	sta.b $0A
 	pla
-	sta.w $00A5
+	sta.w tmp3
 	pla
 	sta.w tmp2
 	pla

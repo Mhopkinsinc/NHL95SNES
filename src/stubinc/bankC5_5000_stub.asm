@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 SoundVolumeDown = $CF039E
@@ -11,7 +12,7 @@ LoadTeamSongs = $CF0427
 IceRinkMap = $CCEEA5				; the rink map set
 MapTileBlock = $C387D8
 BackupPauseBuffers = $C387FF		; allocate and copy the buffers saved for the pause screen
-DATA8_C3585C = $C3585C
+TeamCityNames = $C3585C
 SendTextMap = $C4C2AA
 UnpackText = $C4C3BA
 RestoreWorkBuf = $C4C536
@@ -45,7 +46,7 @@ AnimateSprites = $C5E9C7
 BCDTable = $C08C76
 BuildSpriteOAM = $C5F0D1
 PushNumberWrap = $C534E8
-CODE_C53A29 = $C53A29
+DrawPeriodBox = $C53A29
 GetPadTeam = $C53ABC
 MapSetToVRAMBody = $C5852B
 MapSetToWRAM = $C5881C
@@ -81,6 +82,16 @@ MeterFontTiles = $C00976
 PauseScreenMap = $C1BA31
 RefsMap = $C2CC6E
 TeamNicknameTiles = $C19B68
-TiledBackMap = $C087F2
+MenuBackMap = $C087F2
+BackdropColour = $C04CA9
+GamePalette0 = $C00EE5
+BlankPauseItems = $C35D41
+PauseInfoItems = $C35CCB
+PauseOptionsItems = $C35D07
+PauseStatsItems = $C35CEF
+PracticeInfoItems = $C35CE1
+PracticeOptionsItems = $C35CFD
+QuitPromptItems = $C35D21
+MenuGradientHDMA = $C0491B
 
 incsrc "../bankC5_5000.asm"

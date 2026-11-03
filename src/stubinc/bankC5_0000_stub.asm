@@ -4,6 +4,7 @@
 hirom
 incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
+incsrc "../frames95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 InitSoundSystem = $CF0000			; sound routine in bankCF_0000
@@ -106,5 +107,7 @@ RandomWord = $C08E48
 ScreenOn = $C08E99
 asstab = $C09A24
 forceblack = $C08E93
+SPAboardfront = $C428F6
+SPAinjury1 = $C42708
 
 incsrc "../bankC5_0000.asm"

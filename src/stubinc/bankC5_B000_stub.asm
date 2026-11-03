@@ -7,10 +7,10 @@ incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
 MapTileBlock = $C387D8
-DATA8_C3585C = $C3585C
-DATA8_C360D4 = $C360D4
+TeamCityNames = $C3585C
+SeasonSchedule = $C360D4
 PlayerList = $C30038
-DATA8_C4C4A6 = $C4C4A6
+ByteBitMasks = $C4C4A6
 SendTextMap = $C4C2AA
 UnpackText = $C4C3BA
 ResetWorkBuf = $C4C530
@@ -56,5 +56,16 @@ BCDDigits4 = $C5A321
 QueueHomePalette = $C5A4B9
 FadeOutWait = $C58A99
 Mul8U = $C08ED9
+LeagueLeadersPage = $C3556D
+SeasonPlayerStatsPage = $C35583
+SeasonTeamStatsPage = $C355F1
+StandingsPage = $C35553
+TxtBSwitchToLinemen = $C355AD
+TxtAssists = $C34B6F
+TxtGoals = $C34B6A
+TxtPoints = $C34B75
+TxtSave = $C3565C
+TxtSaves = $C34B7A
+TxtShots = $C34B9E
 
 incsrc "../bankC5_B000.asm"

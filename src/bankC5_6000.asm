@@ -1,5 +1,4 @@
-; Segment bankC5_6000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_6000: game code, jump tables and the data tables the code reads with long addresses.
 org $C56005
 ConcatStringsLong:					; ConcatStrings for long calls
 	jsr.w ConcatStrings
@@ -221,7 +220,7 @@ MakeDateString:						; the date of season day A as text in mesarea: the day name
 									; the day of the month
 	asl a
 	tax
-	lda.l DATA8_C35F60,x
+	lda.l SeasonDates,x
 	tay
 	and.w #$001F
 	tax
@@ -373,9 +372,9 @@ ShowGameStats:						; pause menu Game Stats: the team stat rows as a scrolling l
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -406,7 +405,7 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	sbc.b a3
 	clc
 	adc.b a0
-	sta.b $65
+	sta.b a0+2
 	tax
 	lda.w #$0010
 	sta.b $CF
@@ -414,29 +413,29 @@ DrawGameStatRow:					; draws row a3 of ShowGameStats' scrolling list: a team sta
 	sta.b $D1
 	lda.l $C30000,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	stz.b a2
 	lda.w #$00B8
 	sta.b $CF
 	lda.w #$00F8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
-	jsr (DATA8_C55D6B,x)
+	jsr (GameStatFormats,x)
 	lda.w #$0002
 	sta.b a2
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$0038
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $C30002,x
 	and.w #$00FF
 	tax
-	jmp (DATA8_C55D6B,x)
+	jmp (GameStatFormats,x)
 ShowPeriodStats:					; pause menu Period Stats: DrawPeriodStats; B switches between goals and
 									; shots, start returns
 	lda.w #$532D
@@ -453,9 +452,9 @@ ShowPeriodStats:					; pause menu Period Stats: DrawPeriodStats; B switches betw
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -493,7 +492,7 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	phy
 	asl a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
 	jsl.l PrintBoldCentred
 	ply
@@ -503,8 +502,8 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	beq .1
 	inc a
 	bra .loop
-.1:									; X = $4C1C, Y = $0018, call PrintBoldCentred, a1 = $4EEF, ...
-	ldx.w #$4C1C
+.1:									; X = TxtTotal&$FFFF, Y = $0018, call PrintBoldCentred, a1 = $4EEF, ...
+	ldx.w #TxtTotal&$FFFF
 	ldy.w #$0018
 	jsl.l PrintBoldCentred
 	lda.w #$4EEF
@@ -514,8 +513,8 @@ DrawPeriodStats:					; the period stats: the periods played and Total, the headi
 	lda.b $7B
 	beq .2
 	ldy.w #$1287
-	ldx.w #$4B9E
-	lda.w #$4EE1
+	ldx.w #TxtShots&$FFFF
+	lda.w #TxtBGoals&$FFFF
 	sta.b a1
 .2:									; a0 = Y, Y = $000F, call PrintItalicCentred, Y = $0011, ...
 	sty.b a0
@@ -583,7 +582,7 @@ ShowPlayerStats:					; pause menu Player Stats: the skaters of team a2 sorted by
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
 	jsr.w SetupScreen
-	lda.w #$533B
+	lda.w #PlayerStatsPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l GetPadTeam
 	stz.b $7D
@@ -652,9 +651,9 @@ ShowPlayerStats:					; pause menu Player Stats: the skaters of team a2 sorted by
 	inc.b $26
 	jsr.w ScrollListArrows
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -765,8 +764,8 @@ SortPlayerStats:					; sorts team a2's skaters by stat column $7D (PlayerStatCol
 	beq .1
 	ldx.w #VisRoster
 	ldy.w #$001A
-.1:									; $A5 = Y, ScratchBuf = $0002,x, $0C = A, tmp1 = A, ...
-	sty.b $A5
+.1:									; tmp3 = Y, ScratchBuf = $0002,x, $0C = A, tmp1 = A, ...
+	sty.b tmp3
 	lda.w $0002,x
 	sta.w ScratchBuf
 	sta.b $0C
@@ -814,14 +813,15 @@ SortPlayerStats:					; sorts team a2's skaters by stat column $7D (PlayerStatCol
 	cpx.b $0E
 	bne .loop3
 	bra .2
-PlayerStatColumn:					; A = stat column $7D of roster player Y (+ $A5 for the away team): goals,
+PlayerStatColumn:					; A = stat column $7D of roster player Y (+ tmp3 for the away team):
+									; goals,
 									; assists, points, shots or penalty minutes
 	tya
 	clc
-	adc.b $A5
+	adc.b tmp3
 	pha
 	ldx.b $7D
-	jmp (DATA8_C566DE,x)
+	jmp (PlayerStatColumns,x)
 StatColGoals:						; PlayerStatColumn's goals column (tmgoals)
 	plx
 	lda.w tmgoals,x
@@ -853,7 +853,8 @@ StatColPenMin:						; PlayerStatColumn's penalty minutes column (ppenmin)
 	lda.w ppenmin,x
 	and.w #$00FF
 	rts
-DATA8_C566DE:						; jump table: the routine for each index
+PlayerStatColumns:					; per player stats column ($7D): its routine: goals, assists, points,
+									; shots, penalty minutes
 	dw StatColGoals,StatColAssists,StatColPoints,StatColShots
 	dw StatColPenMin
 SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2's goalies
@@ -864,8 +865,8 @@ SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2
 	beq .1
 	ldx.w #VisRoster
 	ldy.w #$001A
-.1:									; $A5 = Y, ScratchBuf = 0, $0C = 0, tmp1 = 0, ...
-	sty.b $A5
+.1:									; tmp3 = Y, ScratchBuf = 0, $0C = 0, tmp1 = 0, ...
+	sty.b tmp3
 	stz.w ScratchBuf
 	stz.b $0C
 	stz.b tmp1
@@ -874,21 +875,21 @@ SortGoalieStats:					; starts ShowPlayerStats' order list at ScratchBuf: team a2
 	sta.b tmp0
 	lda.w #$0002
 	sta.b tmp2
-.loop:								; loop: tmp1 + 1, A = tmp1, A + $A5, X = A, ...
+.loop:								; loop: tmp1 + 1, A = tmp1, A + tmp3, X = A, ...
 	inc.b tmp1
 	lda.b tmp1
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmgoals,x
 	and.w #$00FF
 	sta.b $0A
 	ldy.b $0C
 	stz.b $0E
-.loop2:								; loop: A = Y, A + $A5, X = A, A = tmgoals,x, ...
+.loop2:								; loop: A = Y, A + tmp3, X = A, A = tmgoals,x, ...
 	tya
 	clc
-	adc.b $A5
+	adc.b tmp3
 	tax
 	lda.w tmgoals,x
 	and.w #$00FF
@@ -927,14 +928,14 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	asl a
 	tay
 	lda.w ScratchBuf,y
-	sta.b $65
+	sta.b a0+2
 	lda.w #HomeRoster
 	ldx.b a2
 	beq .1
 	lda.w #VisRoster
-.1:									; push A, A = $65, A * 2, A * 2, ...
+.1:									; push A, A = a0+2, A * 2, A * 2, ...
 	pha
-	lda.b $65
+	lda.b a0+2
 	asl a
 	asl a
 	asl a
@@ -946,27 +947,27 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	tax
 	lda.w #$000E
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.b a2
 	beq .2
-	lda.b $65
+	lda.b a0+2
 	clc
 	adc.w #$001A
-	sta.b $65
-.2:									; $CF = $0078, $D1 = $0090, X = $65, A = tmgoals,x, ...
+	sta.b a0+2
+.2:									; $CF = $0078, $D1 = $0090, X = a0+2, A = tmgoals,x, ...
 	lda.w #$0078
 	sta.b $CF
 	lda.w #$0090
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	ldx.w #$0000
 	jsr.w PrintStatCell
 	lda.w #$00A8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.b $7D
 	cmp.w #$FFFF
 	beq PrintGoalieShotsPct
@@ -976,7 +977,7 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	jsr.w PrintStatCell
 	lda.w #$00C0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	pha
@@ -989,14 +990,14 @@ DrawPlayerStatRow:					; draws row a3 of ShowPlayerStats' scrolling list: a play
 	jsr.w PrintStatCell
 	lda.w #$00D8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmpshots,x
 	and.w #$00FF
 	ldx.w #$0006
 	jsr.w PrintStatCell
 	lda.w #$00F0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w ppenmin,x
 	and.w #$00FF
 	ldx.w #$0008
@@ -1015,9 +1016,9 @@ PrintStatCell:						; prints value A (100 as 100) centred on row $6D, highlighte
 	tax
 	lda.l BCDTable,x
 	and.w #$00FF
-.3:									; call BCDText, Y = $6D, X = mesarea, call PrintBoldCentredStr, ...
+.3:									; call BCDText, Y = a2+2, X = mesarea, call PrintBoldCentredStr, ...
 	jsr.w BCDText
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
@@ -1033,13 +1034,13 @@ PrintGoalieShotsPct:				; prints a goalie row's shots against and save percentag
 	jsr.w PrintStatCell
 	lda.w #$00E0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmgoals,x
 	and.w #$00FF
 	ldx.w #$0064
 	jsl.l Mul8U
 	sta.b r2
-	ldx.b $65
+	ldx.b a0+2
 	lda.w tmpshots,x
 	and.w #$00FF
 	sta.b r1
@@ -1055,8 +1056,8 @@ PrintGoalieShotsPct:				; prints a goalie row's shots against and save percentag
 	ldx.w #$8000
 	jmp.w PrintStatCell
 PrintPlayerStatHeads:				; prints the player stats headings (the sort column's name from
-									; DATA8_C56989, the column titles, the sort column highlighted); with $7D
-									; $FFFF the goalie ones (PrintGoalieStatHeads)
+									; StatColumnNames, the column titles, the sort column highlighted); with
+									; $7D $FFFF the goalie ones (PrintGoalieStatHeads)
 	lda.w #$0010
 	sta.b $CF
 	lda.w #$0078
@@ -1072,44 +1073,44 @@ PrintPlayerStatHeads:				; prints the player stats headings (the sort column's n
 	ldy.w #$0020
 	jsl.l ClearRAM7E
 	ldy.w #$000B
-	sty.b $6D
+	sty.b a2+2
 	ldx.b $7D
 	cpx.w #$FFFF
 	bne .1
 	jmp.w PrintGoalieStatHeads
-.1:									; A = DATA8_C56989,x, X = A, Y = $0008, call PrintItalicLeft, ...
-	lda.l DATA8_C56989,x
+.1:									; A = StatColumnNames,x, X = A, Y = $0008, call PrintItalicLeft, ...
+	lda.l StatColumnNames,x
 	tax
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	lda.w #$0020
 	sta.b $CF
-	ldx.w #$4EF6
+	ldx.w #TxtBGoalies&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$0090
 	sta.b $D1
-	ldx.w #$4F71
+	ldx.w #TxtG&$FFFF
 	lda.w #$0000
 	jsr.w PrintStatHead
 	lda.w #$00A8
 	sta.b $D1
-	ldx.w #$4F73
+	ldx.w #TxtA&$FFFF
 	lda.w #$0002
 	jsr.w PrintStatHead
 	lda.w #$00C0
 	sta.b $D1
-	ldx.w #$4F75
+	ldx.w #TxtPt&$FFFF
 	lda.w #$0004
 	jsr.w PrintStatHead
 	lda.w #$00D8
 	sta.b $D1
-	ldx.w #$4F78
+	ldx.w #TxtSh&$FFFF
 	lda.w #$0006
 	jsr.w PrintStatHead
 	lda.w #$00F0
@@ -1122,8 +1123,8 @@ PrintStatHead:						; prints column title X centred on row $6D, highlighted ($24
 	bne .1
 	lda.w #$2400
 	sta.b $D5
-.1:									; Y = $6D, call PrintBoldCentred, $D5 = $2000, $CF = $D1, ...
-	ldy.b $6D
+.1:									; Y = a2+2, call PrintBoldCentred, $D5 = $2000, $CF = $D1, ...
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.w #$2000
 	sta.b $D5
@@ -1131,36 +1132,37 @@ PrintStatHead:						; prints column title X centred on row $6D, highlighted ($24
 	sta.b $CF
 	rts
 PrintGoalieStatHeads:				; prints the goalie stats headings (Goalies, the column titles)
-	ldx.w #$47F8
+	ldx.w #TxtGoalies&$FFFF
 	ldy.w #$0008
 	jsl.l PrintItalicLeft
 	lda.w #$0020
 	sta.b $CF
-	ldx.w #$4EFE
+	ldx.w #TxtBPlayers&$FFFF
 	ldy.w #$0019
 	jsl.l PrintBoldLeft
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$49B8
+	ldx.w #TxtGoalie&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$0090
 	sta.b $D1
-	ldx.w #$4F7D
+	ldx.w #TxtGA&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$00A8
 	sta.b $D1
-	ldx.w #$4F78
+	ldx.w #TxtSh&$FFFF
 	lda.w #$8000
 	jsr.w PrintStatHead
 	lda.w #$00E0
 	sta.b $D1
-	ldx.w #$4F7F
+	ldx.w #TxtPtg&$FFFF
 	lda.w #$8000
 	jmp.w PrintStatHead
-DATA8_C56989:						; not traced: a table read by PrintPlayerStatHeads
-	db $6A,$4B,$6F,$4B,$75,$4B,$9E,$4B,$08,$48
+StatColumnNames:					; per player stats column ($7D): its name, packed text: Goals, Assists,
+									; Points, Shots, Penalties
+	dw TxtGoals&$FFFF,TxtAssists&$FFFF,TxtPoints&$FFFF,TxtShots&$FFFF,TxtPenalties&$FFFF
 ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, Time, Tm, Player,
 									; PM) as a scrolling list, No Penalties when there are none; start returns
 	lda.w #$534D
@@ -1169,23 +1171,23 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	sta.b $CF
 	lda.w #$0030
 	sta.b $D1
-	ldx.w #$4F83
+	ldx.w #TxtPer&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$0060
 	sta.b $D1
-	ldx.w #$4F87
+	ldx.w #TxtTime&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$0080
 	sta.b $D1
-	ldx.w #$4F8B
+	ldx.w #TxtTm&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$00E0
 	sta.b $D1
-	ldx.w #$4F6C
+	ldx.w #TxtPlayer&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w #$00F8
 	sta.b $D1
-	ldx.w #$4F7B
+	ldx.w #TxtPM&$FFFF
 	jsr.w PrintPenaltyHead
 	lda.w PenSumLength
 	asl a
@@ -1198,7 +1200,7 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4C2D
+	ldx.w #TxtNoPenalties&$FFFF
 	ldy.w #$0011
 	jsl.l PrintBoldCentred
 	lda.w #$2000
@@ -1224,11 +1226,11 @@ ShowPenaltySummary:					; pause menu Penalties: the penalties of the game (Per, 
 	lda.b a1
 	beq .3
 	jsr.w ScrollListArrows
-.3:									; call AnimateSprites, $28 = $1D8F, $2A = $1E00, call BuildSpriteOAM, ...
+.3:									; call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1268,7 +1270,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	jsl.l Div16x8U
 	asl a
 	asl a
-	sta.b $65
+	sta.b a0+2
 	tax
 	lda.l RDMPYL
 	beq .2
@@ -1289,7 +1291,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	inc a
 	ldx.w #$00C3
 	jsl.l CopyFlipString2
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldRightStr
 	rts
 .2:									; $D5 = $2400, $CF = $0010, $D1 = $0030, A = PenSum+1,x, ...
@@ -1307,26 +1309,26 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	lsr a
 	lsr a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0060
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum,x
 	and.w #$0FFF
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0080
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+2,x
 	and.w #$0080
 	beq .3
@@ -1334,15 +1336,15 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	bra .4
 .3:									; continue
 	pea.w HomeRoster
-.4:									; call TeamSecondText, Y = $6D, call PrintBoldCentred, $CF = $D1, ...
+.4:									; call TeamSecondText, Y = a2+2, call PrintBoldCentred, $CF = $D1, ...
 	jsr.w TeamSecondText
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00E0
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+2,x
 	and.w #$007F
 	asl a
@@ -1356,13 +1358,13 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	tax
 	lda.w #$000C
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$00F8
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.w PenSum+3,x
 	and.w #$00FF
 	tax
@@ -1372,7 +1374,7 @@ DrawPenaltyRow:						; draws row a3 of ShowPenaltySummary's scrolling list: a pe
 	and.w #$00FF
 	jsr.w BCDText
 	ldx.w #mesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentredStr
 	lda.w #$2000
 	sta.b $D5
@@ -1397,10 +1399,10 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	dec a
 	sta.w tmtimeouts,x
 	jsl.l reenergizeteam
-	ldx.w #$5D41
+	ldx.w #BlankPauseItems&$FFFF
 	jsr.w PrintPauseItems
 	lda.w #$00C3
-	sta.b $2E
+	sta.b r0+2
 	lda.w #$5A08
 	sta.b r0
 	lda.w #$0318
@@ -1413,14 +1415,14 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	ldx.b a2
 	beq .1
 	lda.w VisTeam
-.1:									; A * 2, X = A, A = DATA8_C3585C,x, X = A, ...
+.1:									; A * 2, X = A, A = TeamCityNames,x, X = A, ...
 	asl a
 	tax
-	lda.l DATA8_C3585C,x
+	lda.l TeamCityNames,x
 	tax
 	jsl.l UnpackText
 	lda.w #$007E
-	sta.b $2E
+	sta.b r0+2
 	stx.b r0
 	sep #$20
 	ldy.w #$0000
@@ -1455,19 +1457,19 @@ PauseTimeout:						; pause menu Time Out: when team a2 has one left, takes it, g
 	adc.w #$0414
 	jsr.w PutPauseText
 	dec.b QueueBusy
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	pea.w $0700
 	pea.w $5800
 	pea.w $007E
 	lda.w PauseMapBuf
 	pha
-	lda.b $00
+	lda.b VRAMQueueSP
 	tsx
 	tcs
-	stx.b $00
+	stx.b VRAMQueueSP
 	stz.b QueueBusy
 	jsl.l WaitTransfers
 	ldx.w #$0096
@@ -1501,23 +1503,23 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	jsr.w SetupStatsPage
 	lda.w #$0010
 	sta.b $CF
-	ldx.w #$4F83
+	ldx.w #TxtPer&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$002E
 	sta.b $CF
-	ldx.w #$4F87
+	ldx.w #TxtTime&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$0054
 	sta.b $CF
-	ldx.w #$4F8B
+	ldx.w #TxtTm&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$0080
 	sta.b $CF
-	ldx.w #$4F91
+	ldx.w #TxtGoalAss&$FFFF
 	jsr.w PrintScoringHead
 	lda.w #$00E0
 	sta.b $CF
-	ldx.w #$4F8E
+	ldx.w #TxtPS&$FFFF
 	jsr.w PrintScoringHead
 	lda.w ScoreSumbytes
 	lsr a
@@ -1529,7 +1531,7 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	sta.b $D1
 	lda.w #$2400
 	sta.b $D5
-	ldx.w #$4C43
+	ldx.w #TxtNoScoring&$FFFF
 	ldy.w #$0011
 	jsl.l PrintBoldCentred
 	lda.w #$2000
@@ -1553,11 +1555,11 @@ ShowScoringSummary:					; pause menu Score Summry: the goals of the game (Per, T
 	lda.b a1
 	beq .3
 	jsr.w ScrollListArrows
-.3:									; call AnimateSprites, $28 = $1D8F, $2A = $1E00, call BuildSpriteOAM, ...
+.3:									; call AnimateSprites, $28 = OAMBuf+$1FF, $2A = OAMHighBytes, ...
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh
@@ -1593,10 +1595,10 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	sta.b r1
 	jsl.l Div16x8U
 	asl a
-	sta.b $65
+	sta.b a0+2
 	asl a
-	adc.b $65
-	sta.b $65
+	adc.b a0+2
+	sta.b a0+2
 	tax
 	lda.w ScoreSum+2,x
 	and.w #$0080
@@ -1632,7 +1634,7 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	tax
 	lda.w #$000C
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 .5:									; pull X, return
 	plx
@@ -1652,34 +1654,34 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	lsr a
 	lsr a
 	tax
-	lda.l DATA8_C35E25,x
+	lda.l PerLabels,x
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0050
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203A,x
 	and.w #$0FFF
 	jsr.w TimeTextMSS
-	ldy.b $6D
+	ldy.b a2+2
 	ldx.w #mesarea
 	jsl.l PrintBoldCentredStr
 	lda.b $D1
 	sta.b $CF
 	lda.w #$0068
 	sta.b $D1
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203C,x
 	and.w #$0080
 	jsr.w TeamSecondText
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldCentred
 	lda.w #$0072
 	sta.b $CF
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203D,x
 	and.w #$007F
 	asl a
@@ -1693,24 +1695,24 @@ DrawScoringRow:						; draws row a3 of ShowScoringSummary's scrolling list: a go
 	tax
 	lda.w #$000D
 	jsr.w FitNameToMesarea
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeftStr
 	lda.w #$00E0
 	sta.b $CF
-	ldx.b $65
+	ldx.b a0+2
 	lda.l $7E203C,x
 	and.w #$0007
 	cmp.w #$0005
 	bcc .7
 	lda.w #$0002
-.7:									; A * 2, X = A, if DATA8_C35E2D,x = $FFFF go to .8, X = A, ...
+.7:									; A * 2, X = A, if ScoringStrengthTexts,x = $FFFF go to .8, X = A, ...
 	asl a
 	tax
-	lda.l DATA8_C35E2D,x
+	lda.l ScoringStrengthTexts,x
 	cmp.w #$FFFF
 	beq .8
 	tax
-	ldy.b $6D
+	ldy.b a2+2
 	jsl.l PrintBoldLeft
 .8:									; $D5 = $2000, return
 	lda.w #$2000
@@ -1732,7 +1734,7 @@ TeamRoster:							; pause menu Team Roster: the roster of team a2 (ShowRosterLin
 	jsl.l FadeOutWait
 	jsl.l WaitTransfers
 	jsr.w SetupScreen
-	lda.w #$5369
+	lda.w #TeamRosterPage&$FFFF
 	jsl.l PrintTextPage
 	jsl.l GetPadTeam
 	stz.b $7D
@@ -1760,9 +1762,9 @@ TeamRoster:							; pause menu Team Roster: the roster of team a2 (ShowRosterLin
 	jsl.l ReadMenuPads
 	inc.b $26
 	jsl.l AnimateSprites
-	lda.w #$1D8F
+	lda.w #OAMBuf+$1FF
 	sta.b $28
-	lda.w #$1E00
+	lda.w #OAMHighBytes
 	sta.b $2A
 	jsl.l BuildSpriteOAM
 	jsl.l PackOAMHigh

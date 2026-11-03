@@ -2,8 +2,8 @@
 ; credit's map set (map, tiles, colours as in bankC1_B000).
 org $C2A000
 	incbin "../Extracted/segments/bankC2_A000.bin":0..$DCA	; the rest of CenterIceTiles' stream
-CenterIcePalettes:					; 16 colours per team in team order, for CenterIceTiles; the game
-									; screen setup sends the home team's to CGRAM palette 3
+CenterIcePalettes:					; 16 colours per team in team order, for CenterIceTiles; setupice and
+									; RestoreGameScreen send the home team's to CGRAM palette 6
 	dw $7F72,$1084,$4A52,$6F7B,$7FFF,$4A5B,$35B6,$4A52	; ANH
 	dw $7FFF,$2524,$11A4,$108D,$1089,$1092,$025B,$7ED2
 	dw $7F72,$1084,$4A52,$6F7B,$7FFF,$4A5B,$35B6,$4A52	; BOS

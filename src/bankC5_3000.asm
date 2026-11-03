@@ -1,12 +1,11 @@
-; Segment bankC5_3000: game code (not traced to a job yet: the routines keep their address as a name, with
-; their callers), jump tables and the data tables the code reads with long addresses.
+; Segment bankC5_3000: game code, jump tables and the data tables the code reads with long addresses.
 org $C5308D
 FixLineDefence:						; A = line slot player A if he is a defenceman (roster index $0C up to
-									; $A5, after the forwards), else the first defenceman from $0C not in the
+									; tmp3, after the forwards), else the first defenceman from $0C not in the
 									; line (PlayerInLine)
 	cmp.b $0C
 	bcc .1
-	cmp.b $A5
+	cmp.b tmp3
 	bcc .rts
 .1:									; A = $0C
 	lda.b $0C
@@ -79,7 +78,8 @@ AddRosterPlayer:					; adds player tmp2 to the roster table at tmp1: the count +
 	iny
 	plx
 	rts
-TeamGoalieRange:					; team record A: $A5 = the PlayerList index of its first player, $0A = the
+TeamGoalieRange:					; team record A: tmp3 = the PlayerList index of its first player, $0A =
+									; the
 									; index after its goalies (RecordGoalieCount)
 	tax
 	lda.l $C30000,x
@@ -87,11 +87,11 @@ TeamGoalieRange:					; team record A: $A5 = the PlayerList index of its first pl
 	lsr a
 	sec
 	sbc.w #$001C
-	sta.b $A5
+	sta.b tmp3
 	txa
 	jsr.w RecordGoalieCount
 	clc
-	adc.b $A5
+	adc.b tmp3
 	sta.b $0A
 	rts
 RecordGoalieCount:					; A = the goalie count of the team record at X (A = X on entry): the used
@@ -111,13 +111,13 @@ RecordGoalieCount:					; A = the goalie count of the team record at X (A = X on 
 	bne .loop
 	txa
 	rts
-TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first forward (after
+TeamForwardRange:					; team record A: tmp3 = the PlayerList index of its first forward (after
 									; the goalies), $0A = the index after its forwards (high nibble); no
 									; caller found
 	pha
 	tax
 	jsr.w RecordGoalieCount
-	sta.b $A5
+	sta.b tmp3
 	pla
 	tax
 	lda.l $C30000,x
@@ -126,8 +126,8 @@ TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first f
 	sec
 	sbc.w #$001C
 	clc
-	adc.b $A5
-	sta.b $A5
+	adc.b tmp3
+	sta.b tmp3
 	txa
 	clc
 	adc.l $C30006,x
@@ -138,7 +138,7 @@ TeamForwardRange:					; team record A: $A5 = the PlayerList index of its first f
 	lsr a
 	lsr a
 	lsr a
-	adc.b $A5
+	adc.b tmp3
 	sta.b $0A
 	rts
 UnpackTeamBonuses:					; unpacks the team bonus bytes at X into roster table Y: the nibbles of
@@ -358,7 +358,7 @@ LoadTeamLines:						; copies team a2's lines into RAM through GetTeamLines; OptL
 	ply
 	lda.w OptLine
 	bne .2
-	stz.w $18AA
+	stz.w LCBoxesClosed
 	ldx.b a1
 	lda.w $006C,x
 	sta.w $0000,y
@@ -376,7 +376,8 @@ LoadTeamLines:						; copies team a2's lines into RAM through GetTeamLines; OptL
 	pla
 	sta.b a3
 	rtl
-GetPlayerNumInitial:				; formats TempPlOffset through PlayerShortName while preserving d0 and a2
+GetPlayerNumInitial:				; formats TempPlOffset's player through PlayerShortName, d0 and a2 kept;
+									; 94S code that nothing reaches in 95 (no caller)
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
@@ -389,26 +390,28 @@ GetPlayerNumInitial:				; formats TempPlOffset through PlayerShortName while pre
 	sta.b d0
 	inc.b a2
 	inc.b a2
-.1:									; call PlayerShortName, pull A, $6D = A, pull A, ...
+.1:									; call PlayerShortName, pull A, a2+2 = A, pull A, ...
 	jsl.l PlayerShortName
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
-PlayerShortName:					; from GetPlayerNumInitial and other segments
+PlayerShortName:					; 94S's number, initial and surname of player d0 of team a2, reached only
+									; from GetPlayerNumInitial (no caller); it expects 94S's records (a length
+									; word, the name, the number)
 	pei ($7F)
 	pei ($81)
 	pei ($6B)
 	pei ($6D)
 	pei ($63)
 	pei ($65)
-	jsl.l CODE_C535EF
-	stz.b $69
+	jsl.l GetPlayerRecord
+	stz.b a1+2
 	lda.w #mesarea
 	sta.b a1
 	lda.w #$0002
@@ -429,7 +432,7 @@ PlayerShortName:					; from GetPlayerNumInitial and other segments
 	sta.b [a1]
 	inc.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	lda.b [a0]
@@ -437,8 +440,8 @@ PlayerShortName:					; from GetPlayerNumInitial and other segments
 	clc
 	adc.b a0
 	sta.b a2
-	lda.b $65
-	sta.b $6D
+	lda.b a0+2
+	sta.b a2+2
 	inc.b a0
 	inc.b a0
 	lda.b [a0]
@@ -466,15 +469,15 @@ PlayerShortName:					; from GetPlayerNumInitial and other segments
 	cmp.b a2
 	bne .loop2
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -592,7 +595,7 @@ PutDigits2:							; from PlayerShortName and other segments
 PushNumber:							; a1 = d0 as a decimal string ending at mesareaEnd: the digits backward,
 									; then the length word before them
 	phx
-	stz.b $69
+	stz.b a1+2
 	lda.w #mesareaEnd
 	sta.b a1
 	lda.b d0
@@ -652,12 +655,12 @@ PushNumberWrap:						; a1 = d0 as d1 digits right-aligned after spaces in a buff
 	ldx.w #PushWidthBuf
 	stx.b a1
 	ldx.w #$0000
-	stx.b $69
+	stx.b a1+2
 	plx
 	rtl
 ResetClock:							; sets the period length: gameclock, PerTimeTotal and gmclock from
-									; GetPeriodTime (25 in the shootout, 300 in overtime when $1864 is 0) and
-									; the clock digits
+									; GetPeriodTime (25 in the shootout, 300 in overtime when OptPlayMode is
+									; 0) and the clock digits
 	jsl.l GetPeriodTime
 	lda.w shootoutmode
 	beq .1
@@ -702,7 +705,7 @@ clearTeamStats:						; clears the team stats (keeping both goalies), the penalty
 	sta.w tmgoalie
 	lda.w #$FFFF
 	sta.w tmboxlist
-	sta.w $13F5
+	sta.w tmboxlist+$1A
 	stz.w tmsort
 	lda.w #$000C
 	sta.w tmsort+2
@@ -744,10 +747,12 @@ BenchTeamRoster:					; team a2: tmap 6 and every roster entry on the bench (tmpd
 	dec.b d0
 	bpl .loop
 	rtl
-CODE_C535EF:						; from PlayerShortName and other segments
+GetPlayerRecord:					; 94S's a0 lookup of player d0 of team a2, reached only from
+									; PlayerShortName (never run): the team's offset table entry d0, doubled
+									; and read again; it does not fit 95's packed records
 	ldy.b a2
 	lda.w #$00C3
-	sta.b $65
+	sta.b a0+2
 	lda.w tmdata,y
 	sta.b a0
 	lda.b [a0]
@@ -776,12 +781,10 @@ loadTeamStruct:						; from SetLCmode and other segments
 	sta.b a1
 	stz.b a2
 	rtl
-DATA8_C5362B:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 InitScores:							; an rtl: called where 94S sets random scores for the round's other games
 	rtl
-DATA8_C5362D:						; not traced: data between routines
-	db $6B
+	rtl								; unreached: no code branches, falls or points here
 GetPlayerCount:						; returns team a2 roster count in d0
 	ldy.w #HomeRoster
 	lda.b a2
@@ -1008,33 +1011,36 @@ findpc:								; from FaceoffPads and other segments
 	lda.w #$0008
 	sta.b r0
 	ldy.w puckc
-	bra CODE_C53813
-CODE_C537DE:						; no caller found (not traced)
+	bra findpcSearch
+.1:									; unreached: 94S findpc's puck carrier test (a goalie, a player with no
+									; pad, a locked one or one $28 or more from the puck goes to .2, else
+									; findpcSweepcheck); 95 branches past it to findpcSearch
 	lda.w position,x
-	beq .1
+	beq .2
 	lda.w playerpad,x
-	bmi .1
+	bmi .2
 	lda.w pfalock,x
-	bne .1
+	bne .2
 	lda.w puckdist,x
 	cmp.w #$0028
-	bcs .1
-	jmp.w CODE_C53882
-.1:									; if playerpad,y < 0 go to .2, Y = A, ...
+	bcs .2
+	jmp.w findpcSweepcheck
+.2:									; if playerpad,y < 0 go to .3, Y = A, ...
 	lda.w playerpad,y
-	bmi .2
+	bmi .3
 	tay
 	lda.w padside,y
 	cmp.w padside,x
-	beq CODE_C53813
-.2:									; Y = $0000, if pfgoal,x is not 0 go to .3, Y = $0004
+	beq findpcSearch
+.3:									; Y = $0000, if pfgoal,x is not 0 go to .4, Y = $0004
 	ldy.w #$0000
 	lda.w pfgoal,x
-	bne .3
+	bne .4
 	ldy.w #$0004
-.3:									; r0 = Y
+.4:									; r0 = Y
 	sty.b r0
-CODE_C53813:						; from findpc, CODE_C537DE
+findpcSearch:						; searches the pad team for the eligible skater with the lowest distance
+									; and direction cost
 	lda.w #$0006
 	sta.b d1
 	ldy.b d4
@@ -1053,7 +1059,7 @@ CODE_C53813:						; from findpc, CODE_C537DE
 	bit.w #$1000
 	bne .4
 	lda.w SPA,x
-	cmp.w #$2030
+	cmp.w #SPAcrosscheck&$FFFF
 	bcc .1
 	cmp.w #$21BD
 	bcc .2
@@ -1082,14 +1088,15 @@ CODE_C53813:						; from findpc, CODE_C537DE
 	ldx.b a3
 	lda.b d2
 	cmp.w #$FFFF
-	beq CODE_C538C5
+	beq findpcReturn
 	ldy.b d4
 	lda.b d3
 	cmp.w c1playernum,y
-	bne CODE_C538BF
-CODE_C53882:						; from CODE_C537DE
+	bne findpcAssign
+findpcSweepcheck:					; runs Sweepcheck for the current player unless animation locked,
+									; preserving scratch registers
 	lda.w pfalock,x
-	bne CODE_C538C5
+	bne findpcReturn
 	pei ($8F)
 	pei ($91)
 	pei ($93)
@@ -1102,44 +1109,44 @@ CODE_C53882:						; from CODE_C537DE
 	pei ($69)
 	jsl.l Sweepcheck
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $99
+	sta.b d6+2
 	pla
 	sta.b d6
 	pla
-	sta.b $95
+	sta.b d5+2
 	pla
 	sta.b d5
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
-	bra CODE_C538C5
-CODE_C538BF:						; from CODE_C53813
+	bra findpcReturn
+findpcAssign:						; gives pad d4 to the best candidate through AssignPadPlayer
 	sta.b d0
 	jsl.l AssignPadPlayer
-CODE_C538C5:						; from CODE_C53813, CODE_C53882
+findpcReturn:						; restores the saved d0 through d3 words and returns from findpc
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	rtl
@@ -1266,7 +1273,9 @@ InitGameSprites:					; resets the sprites, creates sprite record $1D (with the a
 	jsl.l UseSpritePalette
 	jsl.l ResetWorkBuf
 	rts
-CODE_C539D7:						; called from other segments
+DrawScoreBox:						; the score box: its frame (Framer, 9 x 3), the visitors' and the home
+									; team's short names (PackTeamSecondText) and their scores (tmscore+2,
+									; tmscore) to the text map by DMA
 	ldx.w #$0009
 	ldy.w #$0003
 	lda.w #$5AF7
@@ -1293,13 +1302,15 @@ CODE_C539D7:						; called from other segments
 	jsr.w PackShortText
 	ldy.w #$5B3C
 	jmp.w QueueVRAMDMALen
-CODE_C53A29:						; called from other segments
+DrawPeriodBox:						; the period box: the clock (showclockdma), the period label (PeriodLabels
+									; by gsp) and its frame (Framer: 10 x 4 with sflags bit $2000, else 10 x
+									; 2)
 	jsl.l showclockdma
 	lda.w gsp
 	asl a
 	asl a
-	adc.w #$3A61
-	ldx.w #$00C5
+	adc.w #PeriodLabels&$FFFF
+	ldx.w #PeriodLabels>>16
 	ldy.w #$5B21
 	jsl.l QueueVRAMDMALen
 	lda.w sflags
@@ -1314,7 +1325,8 @@ CODE_C53A29:						; called from other segments
 	ldy.w #$0004
 	lda.w #$5AC0
 	jml.l Framer
-DATA8_C53A61:						; not traced: data between routines
+PeriodLabels:						; per period (gsp * 4): its scoreboard text for QueueVRAMDMALen: a length
+									; byte (3), then 1st, 2nd, 3rd or OT
 	db $03,$B1,$F3,$F4,$03,$B2,$EE,$E4,$03,$B3,$F2,$E4,$03,$CF,$D4,$A0
 PackTeamSecondTextLong:				; PackTeamSecondText for long calls
 	jsr.w PackTeamSecondText
@@ -1511,39 +1523,39 @@ forcepldata:						; face offs: moves team a2's players straight to their new pos
 	dec.b d4
 	bpl .loop
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $91
+	sta.b d4+2
 	pla
 	sta.b d4
 	pla
-	sta.b $8D
+	sta.b d3+2
 	pla
 	sta.b d3
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3
@@ -1552,9 +1564,9 @@ Setplass:							; from forcepldata and other segments
 	lda.w position,x
 	sta.b d0
 	bmi .rtl
-	lda.w #$00C5
-	sta.b $65
-	lda.w #$3C3F
+	lda.w #PositionAssignments>>16
+	sta.b a0+2
+	lda.w #PositionAssignments&$FFFF
 	sta.b a0
 	ldy.b d0
 	lda.b [a0],y
@@ -1563,7 +1575,8 @@ Setplass:							; from forcepldata and other segments
 	jml.l assreplace
 .rtl:								; return
 	rtl
-DATA8_C53C3F:						; not traced: data between routines
+PositionAssignments:				; per position (position,x): the player's first assignment, an asstab
+									; number (7 assgoalie, 2 assdefd, 3 asswingd, 5 asscenterd)
 	db $07,$02,$02,$03,$05,$03,$05
 setplayer:							; from forcepldata and other segments
 	phx
@@ -2007,31 +2020,31 @@ resetplstuff:						; resets the players of both teams (ResetTeamPlayers for a2 =
 	sta.b a2
 	jsl.l ResetTeamPlayers
 	pla
-	sta.b $71
+	sta.b a3+2
 	pla
 	sta.b a3
 	pla
-	sta.b $6D
+	sta.b a2+2
 	pla
 	sta.b a2
 	pla
-	sta.b $69
+	sta.b a1+2
 	pla
 	sta.b a1
 	pla
-	sta.b $65
+	sta.b a0+2
 	pla
 	sta.b a0
 	pla
-	sta.b $89
+	sta.b d2+2
 	pla
 	sta.b d2
 	pla
-	sta.b $85
+	sta.b d1+2
 	pla
 	sta.b d1
 	pla
-	sta.b $81
+	sta.b d0+2
 	pla
 	sta.b d0
 	ldx.b a3

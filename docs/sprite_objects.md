@@ -20,7 +20,7 @@ operand names it. The only fixed references are long reads of the header in the 
 | $C5F071 | **format-0 decoder without header** (jsr from bank $C5): A = stream address, Y = stream bank, dp $08 = output address in bank $7E; returns Y = output end | sets D = $4300, stream pointer [$12] = $4312-$4314; builds `mvn $7E,<bank> / jmp $F097` in $4320-$4325 for literals (runs in bank $85 so `jmp $4320` hits the DMA registers); `mvn $7E,$7E` for copies; command < $80: cmd+1 literals; $80+: (cmd&$7F)+1 bytes from absolute output offset (word), 0 ends; `jml $C5F0D0` / `rts` with D = 0. Same rules as unpack95.py format 0, minus the 4-byte header. |
 | $C5F0D1 | **build OAM for all sprite objects** (jsl; uses the stack as the OAM write pointer, `tsx / ldx $28 / txs ... pha`) | walks $1AE2,y (count $1B02); frame header via `$28,x`/`$26,x`; piece table `lda.l $C19660,x` (+2 = $C19662, pieces $C19664/$C19665); small loop then large loop; h-flip variant at $C5F234 (`bit #$4000` on obj $36) with `sbc.l $C19660,x`; frame list $28,$2A,$2C... ends at a negative entry ($C5F224) |
 | $C5E9C7 | animation tick for all objects (jsl): `$0E -= $0A`; on underflow reload from $0C and read the script byte at obj $30 + $32; bit 7 = command ($C5EAAF) | callers $C37171, $C4006C, $C4B0FB.., $C4D343 |
-| $C5E851 / $C5E86F | allocate small / large sprite VRAM for the record's maximum counts (from record +7 / +8) | `adc $1B0A / cmp $E3`, `adc $1B0C / cmp $DF`; $C5E86F maps a large slot to a tile through **DATA8_C04AA9** (`lda.l $C04AA9,x`, also at $C5E7F2) |
+| $C5E851 / $C5E86F | allocate small / large sprite VRAM for the record's maximum counts (from record +7 / +8) | `adc $1B0A / cmp $E3`, `adc $1B0C / cmp $DF`; $C5E86F maps a large slot to a tile through **LargeSlotTiles** (`lda.l $C04AA9,x`, also at $C5E7F2) |
 | $C4B567 area | reads the piece-table origin of an object's frame (`lda.l $C19660,x`, negated into $18D2/$18D4) | entry not traced |
 
 ## Data layout (verified against the ROM)
@@ -106,12 +106,12 @@ timer expiry; it does not clear any animation flag. Yield means leave the positi
 | $86 | word speed | SpriteAnimSetSpeed | Store in $0A; next position p + 3 |
 | $87 | byte count n, then n frame bytes | SpriteAnimSetFrames | Widen frames into words starting at $28, append $FFFF, upload the list with UploadSpriteFrames, yield at p + n + 2 |
 | $88 | none | SpriteAnimDelete | Call DeleteSprite with X = object; the encoded JSR/RTL mismatch prevents assuming a valid return (see below) |
-| $89 | byte index | CODE_C5EBB8 | BRK for index >= 4; otherwise read a pointer from UploadSpriteFrames + 2*index and increment the word it addresses through DB, then continue at p + 2 |
+| $89 | byte index | SpriteAnimIncWordUnused | BRK for index >= 4; otherwise read a pointer from UploadSpriteFrames + 2*index and increment the word it addresses through DB, then continue at p + 2 |
 | $8A | byte ignored | SpriteAnimSkipByte | Read and mask the operand, discard it, continue at p + 2 |
 | $8B | none | SpriteAnimToggleHFlip | XOR object $36 with $4000 |
 | $8C | none | SpriteAnimToggleVFlip | XOR object $36 with $8000 |
 | $8D | none | SpriteAnimYield | Yield at p + 1 |
-| $8E | byte index | CODE_C5EC1A | JSR through the word at UploadSpriteFrames + 2*index in the program bank; carry set on return holds at p, clear consumes the operand and continues at p + 2 |
+| $8E | byte index | SpriteAnimCallUnused | JSR through the word at UploadSpriteFrames + 2*index in the program bank; carry set on return holds at p, clear consumes the operand and continues at p + 2 |
 | $8F | none | SpriteAnimHold8F | Jump to SpriteAnimHold |
 | $90 | none | SpriteAnimRestoreScript | Copy saved $20 to $1E, select that script, clear position and timer, set flags $22 bit $4000, continue |
 | $91 | none | SpriteAnimHold | Hold at p |
@@ -152,8 +152,9 @@ not change that saved index (CreateSprite initializes it to zero).
 - $89 and $8E use **code bytes** at UploadSpriteFrames as a pointer table. Its first four words are
   $1886, $B59B, $8510, $B510 (the beginning of `stx / txy / lda / sta / lda`), not an identified data
   table. $89 checks index < 4; $8E has no bound check or proven callee-preservation contract. Their
-  mechanical operations are documented above, but their intended jobs remain unnamed. Neither
-  command occurs in the record scripts in bankC0_8000.
+  mechanical operations are documented above; their intended jobs are not known. Neither command
+  occurs in the record scripts in bankC0_8000, so the handlers are named SpriteAnimIncWordUnused and
+  SpriteAnimCallUnused.
 - $8A and $9D have no persistent effect except consuming one operand byte. No external call is
   present; names such as sound or callback would be speculation.
 
@@ -163,19 +164,19 @@ The source comments in bankC0_8000 describe the commands at each script. The poi
 
 | List | Index | Script | Behavior |
 |---|---|---|---|
-| Sprite28FramesEnd | 0 | SpriteScript_C0853E | Frames 2-12, toggle h flip ($8B), frames 5, 4, 3, 2, toggle h flip ($8B), frame 13, restart ($81) |
+| Sprite28FramesEnd | 0 | Sprite28ShineScript | Frames 2-12, toggle h flip ($8B), frames 5, 4, 3, 2, toggle h flip ($8B), frame 13, restart ($81) |
 | Sprite28FramesEnd | 1 | OneFrameScript | Frame 0, hold ($80) |
-| Sprite28FramesEnd | 2 | SpriteScript_C08551 | Frame 1, hold ($80) |
-| Sprite28FramesEnd | 3 | SpriteScript_C08553 | Frames 14-26, 28, 29, restart ($81); frame 27 is not in this script |
-| Sprite28FramesEnd | 4 | SpriteScript_C08563 | Frame 30, hold ($80) |
-| Sprite28FramesEnd | 5 | SpriteScript_C08565 | Frame 31, hold ($80) |
-| PadNumbersFramesEnd | 0 | SpriteScript_C085C4 | Upload frames 0 + 1 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 1 | SpriteScript_C085C9 | Upload frames 0 + 2 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 2 | SpriteScript_C085CE | Upload frames 0 + 3 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 3 | SpriteScript_C085D3 | Upload frames 0 + 4 together ($87, count 2), then hold ($80) |
-| PadNumbersFramesEnd | 4 | SpriteScript_C085D8 | Upload frames 0 + 5 together ($87, count 2), then hold ($80) |
-| SkaterFramesEnd | 0 | SpriteScript_C08634 | Set speed $0060 ($86), frames 0, 1, 2, hold ($80) |
-| SkaterFramesEnd | 1 | SpriteScript_C0863B | Set speed $0060 ($86), frames 3, 4, 5, hold ($80) |
+| Sprite28FramesEnd | 2 | Sprite28DownArrowScript | Frame 1, hold ($80) |
+| Sprite28FramesEnd | 3 | Sprite28SparkleScript | Frames 14-26, 28, 29, restart ($81); frame 27 is not in this script |
+| Sprite28FramesEnd | 4 | Sprite28CopyrightScript | Frame 30, hold ($80) |
+| Sprite28FramesEnd | 5 | Sprite28RegisteredScript | Frame 31, hold ($80) |
+| PadNumbersFramesEnd | 0 | PadNumber1Script | Upload frames 0 + 1 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 1 | PadNumber2Script | Upload frames 0 + 2 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 2 | PadNumber3Script | Upload frames 0 + 3 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 3 | PadNumber4Script | Upload frames 0 + 4 together ($87, count 2), then hold ($80) |
+| PadNumbersFramesEnd | 4 | PadNumber5Script | Upload frames 0 + 5 together ($87, count 2), then hold ($80) |
+| SkaterFramesEnd | 0 | SkaterSwingScript | Set speed $0060 ($86), frames 0, 1, 2, hold ($80) |
+| SkaterFramesEnd | 1 | SkaterSwing2Script | Set speed $0060 ($86), frames 3, 4, 5, hold ($80) |
 
 Every other record's list has one pointer to OneFrameScript. Frame numbers in this table are decimal;
 command bytes and the speed word are hexadecimal. The five additional words after Sprite28FramesEnd's
@@ -201,7 +202,8 @@ $46B8 palette use per index, $46A8 free palette slots ($1B06, count $1B08).
 
 ## Open questions
 - Render records 0-27 (palette = record index, tiles + pieces) to confirm the team logos and the team order.
-- What records 28-40 are (rec 28: 32 small frames; rec 33-36 big).
+- What records 31-40 are (rec 33-36 big). Record 28 is small symbols (scroll arrows, a shine, a sparkle, the copyright and
+  registered marks); record 30 is the face off box's centre (FaceoffSpriteLeft / FaceoffSpriteRight).
 - The intended contracts of commands $89/$8E and the JSR/RTL mismatch in $88 (literal behavior above).
 - Record +4 (pointer to $04E2 / the 00 byte), +10..+17 (box) and +22: no reader seen.
 - The entry and job of the $C4B567 code that reads the piece origin.

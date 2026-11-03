@@ -6,12 +6,11 @@ incsrc "../inc/snes_regs.asm"
 incsrc "../ram95s.asm"
 
 ; External addresses outside, read from the ROM. Equates only (the full build has the labels).
-DATA8_C3585C = $C3585C
-DATA8_C35F60 = $C35F60
-DATA8_C35F62 = $C35F62
-DATA8_C360D4 = $C360D4
+TeamCityNames = $C3585C
+SeasonDates = $C35F60
+SeasonSchedule = $C360D4
 ClearSeasonData = $C4CFF5
-DATA8_C4C4A6 = $C4C4A6
+ByteBitMasks = $C4C4A6
 SendTextMap = $C4C2AA
 ResetWorkBuf = $C4C530
 ResetTransferQueues = $C4C574
@@ -38,8 +37,8 @@ ScrollListDown = $C55C58
 ScrollListUp = $C55CE6
 BCDText = $C55EC7
 LoadGameRosters = $C52CC1
-DATA8_C5B35D = $C5B35D
-DATA8_C5B363 = $C5B363
+GameSlotOffsets = $C5B35D
+GameSlotRows = $C5B363
 Restart = $C50056
 SaveDayGameStats = $C5E17C
 RestoreDayScores = $C5E336
@@ -82,5 +81,24 @@ SeasonTeamStats = $C5B07C
 SeasonPlayerStats = $C5B0EA
 WonCheckTiles = $C03CF9
 GameSetUp_reenter = $C58D44
+WonCheckPalette = $C03EE2
+CreatePlayerPage = $C35714
+GamesTodayPage = $C3568E
+LeagueMenuPage = $C356A4
+TxtAGameMustBe = $C347A1
+TxtAbcdefghi = $C3490D
+TxtJklmnopqr = $C34914
+TxtLeft = $C349E9
+TxtOkay = $C347B3
+TxtSelected = $C347AB
+TxtStuvwxyz = $C3491B
+TxtCenter = $C349D2
+TxtGoalie = $C349B8
+TxtLeftDefense = $C349BD
+TxtLeftWing = $C349D7
+TxtRightDefense = $C349C7
+TxtRightWing = $C349E0
+MainScreenHDMA = $C04A35
+BG2ScrollHDMA = $C04914
 
 incsrc "../bankC5_A000.asm"

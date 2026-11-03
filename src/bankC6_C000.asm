@@ -1,18 +1,25 @@
 ; Raw planar frame tiles sent directly to VRAM by QueueFrameTiles.
-; Frame poses are not traced; DATA8_ labels identify the transfer sources.
+; The frame groups are in frames95s.asm; FrameTiles<frame> labels mark the transfer sources.
 org $C6C0A8
-DATA8_C6C0A8:						; raw frame tiles for transfer index $07D; pose not traced
+FrameTiles07D:						; the raw tiles of frame $07D (FrameTileSource / FrameBankLayout entry
+									; $07D); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$A8..$2A8
-DATA8_C6C2A8:						; raw frame tiles for transfer index $07E; pose not traced
+FrameTiles07E:						; the raw tiles of frame $07E (FrameTileSource / FrameBankLayout entry
+									; $07E); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$2A8..$508
-DATA8_C6C508:						; raw frame tiles for transfer index $07F; pose not traced
+FrameTiles07F:						; the raw tiles of frame $07F (FrameTileSource / FrameBankLayout entry
+									; $07F); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$508..$708
-DATA8_C6C708:						; raw frame tiles for transfer index $080; pose not traced
+FrameTiles080:						; the raw tiles of frame $080 (FrameTileSource / FrameBankLayout entry
+									; $080); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$708..$968
-DATA8_C6C968:						; raw frame tiles for transfer index $081; pose not traced
+FrameTiles081:						; the raw tiles of frame $081 (FrameTileSource / FrameBankLayout entry
+									; $081); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$968..$BE8
-DATA8_C6CBE8:						; raw frame tiles for transfer index $082; pose not traced
+FrameTiles082:						; the raw tiles of frame $082 (FrameTileSource / FrameBankLayout entry
+									; $082); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$BE8..$E68
-DATA8_C6CE68:						; raw frame tiles for transfer index $083; pose not traced
+FrameTiles083:						; the raw tiles of frame $083 (FrameTileSource / FrameBankLayout entry
+									; $083); pose not traced
 	incbin "../Extracted/segments/bankC6_C000.bin":$E68..$1000
 	incbin "../Extracted/segments/bankC6_D000.bin":$0..$E8

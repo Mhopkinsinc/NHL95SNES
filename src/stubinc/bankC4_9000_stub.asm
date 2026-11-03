@@ -41,5 +41,10 @@ Mul16XS = $C09053
 Mul16x8U = $C08F5E
 Mul16x8XS = $C08F95
 RandomWord = $C08E48
+SPAonetimerf = $C41E48
+SPAonetimerb = $C41EFA
+SPApflip = $C4191A
+SPAshotb = $C41D36
+SPAshotf = $C41C24
 
 incsrc "../bankC4_9000.asm"
