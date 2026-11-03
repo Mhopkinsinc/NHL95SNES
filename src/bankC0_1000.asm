@@ -718,17 +718,18 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	ret
 .commands:							; handlers of commands 1 to $20 (port 3, or a queued command)
 	dw .playSound,.playSamplePitch,.playSampleVolume,.playSamplePacked
-	dw .l0540,.fadeVoicesOut,.fadeVoicesIn,.setMasterVolume
-	dw .stopSequences,.l056B,.l0830,.l0827,.setSequenceVolume,.setTickPeriod,.disableSamples,.enableSamples
+	dw .snapshotDSPUnused,.fadeVoicesOut,.fadeVoicesIn,.setMasterVolume
+	dw .stopSequences,.startSequencePlayback,.pauseAndStopSequencesUnused,.restoreSequenceFlagsUnused,.setSequenceVolume,.setTickPeriod,.disableSamples,.enableSamples
 	dw .stopSamples,.setSampleVolumeScale,.setSampleVolume,.setSamplePitch
 	dw .setPlayingSampleVolume,.setPlayingSamplePitch,.stopSample,.resetSound
-	dw .stopAndReceiveData,.receiveData,.bootrom,.keyOffAll,.reportVoiceAges,.l0540,.l054C,.commandNoOp
+	dw .stopAndReceiveData,.receiveData,.bootrom,.keyOffAll,.reportVoiceAges,.snapshotDSPUnused,.runPortCodeUnused,.commandNoOp
 .events:							; handlers of music events $80 to $83
 	dw .endChannel,.eventNoOp,.setChannelPitchBend,.setChannelVibrato
 .bootrom:							; command 27
 	mov.b SPC_CONTROL,#$80			; boot ROM on
 	pcall $C0
-.l0540:								; command 5, 30
+.snapshotDSPUnused:					; commands 5 and 30, which no CPU code sends: the 128 DSP registers to
+									; $F000, then command 31
 	mov x,#$7F
 .l0542:								; loop
 	mov.b SPC_DSPADDR,x
@@ -736,7 +737,8 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	mov $F000+x,a
 	dec x
 	bpl .l0542
-.l054C:								; command 31
+.runPortCodeUnused:					; command 31, which no CPU code sends: port 3 = $7F, waits for $E5 in port
+									; 1, then calls $00F5 (the ports, then $2F $F9 at $F8)
 	mov.b SPC_PORT3,#$7F
 	mov.b SPC_DSPADDR,#$0F
 	mov a,#$C4
@@ -752,12 +754,13 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	call.w $00F5
 	mov.b SPC_PORT3,#$7E
 	ret
-.l056B:								; command 10; from .playSound
+.startSequencePlayback:				; command 10 and the end of .playSound for a sequence: when sequences are
+									; loaded ($21), sets $15 bit 7 (playing) and clears bit 4 (paused)
 	mov a,$21
 	beq .l0573
 	set1 $15.7
 	clr1 $15.4
-.l0573:								; from .l056B
+.l0573:								; from .startSequencePlayback
 	ret
 .resetSequenceState:				; tcall 15: restarts timer 0, resets the sequence context list, keys off
 									; voices and updates status
@@ -1065,7 +1068,7 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	cmp a,#$80
 	bcc .l0769
 	call .l0602
-	jmp .l056B
+	jmp .startSequencePlayback
 .l0769:								; from .playSound
 	bbs $15.5,.l0728
 	tcall 10
@@ -1198,13 +1201,15 @@ SoundDriver:						; sound CPU program as upload blocks (length, sound RAM addres
 	mov.b SPC_T0TARGET,a
 	mov $11,a
 	ret
-.l0827:								; command 12
+.restoreSequenceFlagsUnused:		; command 12, which no CPU code sends: when paused, $15 = the flags
+									; command 11 saved in $17, bit 4 cleared
 	bbc $15.4,.l082F
 	mov $15,$17
 	clr1 $15.4
-.l082F:								; from .l0827, .l0830
+.l082F:								; from .restoreSequenceFlagsUnused, .pauseAndStopSequencesUnused
 	ret
-.l0830:								; command 11
+.pauseAndStopSequencesUnused:		; command 11, which no CPU code sends: unless paused, saves $15 in $17 and
+									; sets bit 4 (paused), then .stopSequences resets the sequences
 	bbs $15.4,.l082F
 	mov $17,$15
 	set1 $15.4

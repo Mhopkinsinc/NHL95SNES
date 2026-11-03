@@ -388,9 +388,11 @@
   equivalence remains unproven; these are not whole-font DMA loads.
 
 - SoundDriver: CPU uploads and queue sends, sample/sequence starts, volume/pitch controls and data reception are
-  named from the CPU/SPC trace. Commands 5/30 (.l0540) snapshot DSP registers then enter command 31 (.l054C), which
-  executes a host-port handshake; its full host-side contract is not traced. Commands 10-12 (.l056B, .l0830,
-  .l0827) manipulate sequence playback flags; 11 also resets the sequence list, so pause/resume names are deferred.
+  named from the CPU/SPC trace. The CPU only ever queues commands 1, 3, 4, 8, 9 and $15 (QueueSoundCmd's callers;
+  UploadSoundData sends $19). Commands 5 / 30 (.snapshotDSPUnused: the DSP registers to $F000) and 31
+  (.runPortCodeUnused: runs code the host writes into the ports), 11 (.pauseAndStopSequencesUnused: saves the
+  flags, sets $15 bit 4, then resets the sequences) and 12 (.restoreSequenceFlagsUnused) are never sent. Command 10
+  (.startSequencePlayback) is also the end of .playSound for a sequence; $15 bit 7 is playing, bit 4 paused.
   All tcall targets and events are named. setupSequencePointers patches tcall 14 to readRawEventByte (.l0481)
   for a zero first sequence byte, otherwise readPackedEventByte; the old missing-reference question is resolved.
   Remaining auto labels inside SoundDriver are control-flow joins, loops, patched instruction sites and helpers

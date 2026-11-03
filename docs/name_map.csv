@@ -9399,3 +9399,8 @@ $00A5,tmp3,,94S+purpose,"RAM: 95 keeps 94S's direct page register block (d0-d7, 
 $4ABC,SoundInitUnused,,code,"RAM: written once by InitSoundSystem, just before SoundCmdQueue; the queue indexes stay $00-$FF (and $00FF), so no read reaches it",src/ram95s.asm
 $4ABE,SoundInitUnused2,,code,"RAM: written once by InitSoundSystem, just before SoundCmdQueue; no read reaches it",src/ram95s.asm
 $4BC0,SoundUploadUnused,,code,"RAM: written once by UploadSoundDriver, right after SoundCmdQueue's $100 bytes; the queue indexes stay below $100, so no read reaches it",src/ram95s.asm
+$C01449,.snapshotDSPUnused,.l0540,code,"commands 5 and 30 in .commands; no CPU code queues 5 or 30 (QueueSoundCmd's callers send 1, 3, 4, 8, 9 and $15); copies DSP registers $7F-$00 to $F000 and runs on into .l054C",src/bankC0_1000.asm
+$C01455,.runPortCodeUnused,.l054C,code,"command 31 in .commands; no CPU code queues it; it runs code the host writes into the ports",src/bankC0_1000.asm
+$C01474,.startSequencePlayback,.l056B,code,"command 10 in .commands (no CPU code queues it); .playSound jumps here after loading a sequence; the main loop runs sequences only with $15 bit 7 set and bit 4 clear",src/bankC0_1000.asm
+$C01739,.pauseAndStopSequencesUnused,.l0830,code,"command 11 in .commands; no CPU code queues it; it falls into .stopSequences, so the sequence state is reset, not just paused",src/bankC0_1000.asm
+$C01730,.restoreSequenceFlagsUnused,.l0827,code,"command 12 in .commands; no CPU code queues it",src/bankC0_1000.asm
