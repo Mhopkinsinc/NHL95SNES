@@ -13,7 +13,8 @@ ArrowFontTiles:						; pause menu font and arrows; PauseScreenDraw loads the til
 	dw $0C00						; unpacked size in bytes
 	dw $0004						; format 4: literal runs and copies from up to 11 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$282..$83D
-GradientBarTiles:					; 4bpp tiles, packed: bars shaded from dark to light
+GradientBarTiles:					; team-colour name backplates for setup, stats, Games Today and award
+									; screens; MapTileBlock draws two rows of shaded tiles
 	dw $0240						; unpacked size in bytes
 	dw $0002						; format 2: literal runs and copies from up to 10 bits back
 	incbin "../Extracted/segments/bankC0_0000.bin":$841..$976

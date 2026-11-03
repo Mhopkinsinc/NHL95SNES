@@ -1,7 +1,7 @@
 address,name,auto_name,source,note,file
 $C00000,TeamPalettes,,render,"28 rows of 16 colours in team order (Anaheim first, the two all-star teams last), packed format 2 ($0380 bytes); $C4D77F and $C590F0 unpack it to $7F:D80A; $C5A4B9 / $C5A4E2 queue row (team $17C9 / $17CB) to CGRAM palettes 2 / 3",src/bankC0_0000.asm
 $C0027E,ArrowFontTiles,,render,pause menu font and arrows; PauseScreenDraw loads the tiles and PrintPauseItemText selects character tiles in PauseMapBuf,src/bankC0_0000.asm
-$C0083D,GradientBarTiles,,render,"18 4bpp tiles, packed format 2: bars shaded dark to light; unpacked at $C401B7 / $C4D864 / $C559CC / $C59119 and queued for VRAM",src/bankC0_0000.asm
+$C0083D,GradientBarTiles,,render,"team-colour name backplates for setup, stats, Games Today and award screens; MapTileBlock draws two rows of shaded tiles",src/bankC0_0000.asm
 $C00976,MeterFontTiles,,render,"rink HUD font, meter bars and frame pieces; setupice and RestoreGameScreen load it for DrawScoreBox and DrawPeriodBox",src/bankC0_0000.asm
 $C00EE5,GamePalette0,,code,"was UnusedPalette (no operand or pointer is $0EE5); setupice and RestoreGameScreen queue $1E bytes from GamePalette0+2 to CGRAM 1 through pea pairs ($00C0 / $0EE7), then BackdropColour to colour 0",src/bankC0_0000.asm
 $C00F05,SoundRAMClear,,code,"SPC700 program at sound RAM $0020 as IPL upload blocks; $CF001A sends it through $CF004B, then the sound driver stream at $C00F49",src/bankC0_0000.asm
@@ -78,8 +78,8 @@ $7C,DSP_ENDX,,new,"DSP register: voices at the end of their sample",src/inc/spc_
 $C01A39,BoldFontGlyphs,,render,"bold text glyphs for bracket and award headings, stats values and roster lists; rendered per string by DrawText",src/bankC0_2000.asm
 $C01FF9,ItalicFontGlyphs,,render,"italic text glyphs for setup options, name entry and season team stats; lowercase uses a second set overlapping ThinFontGlyphs",src/bankC0_2000.asm
 $C03239,ThinFontGlyphs,,render,"thin text glyphs for team labels on stats, scouting, award and Games Today screens; rendered per string by DrawText",src/bankC0_2000.asm
-$C03CF9,WonCheckTiles,,render,"48 4bpp tiles, packed format 2 ($0600 bytes): a WON label in two sizes, a check mark, framed boxes; $C5ACBE unpacks them to $7E:50DC and queues them for VRAM $0130; the routine at $C5ACAA has no direct caller, so the screen is not traced",src/bankC0_3000.asm
-$C03EE2,WonCheckPalette,,code,"16 colours; $C5ACED queues them to CGRAM $70 (palette 7) with WonCheckTiles",src/bankC0_3000.asm
+$C03CF9,WonCheckTiles,,render,Games Today selection and played-game markers; GamesToday loads the tiles and DrawGameMarks selects the map entries,src/bankC0_3000.asm
+$C03EE2,WonCheckPalette,,code,colours for the Games Today markers in WonCheckTiles; GamesToday sends them to CGRAM palette 7,src/bankC0_3000.asm
 $C03F02,AwayUniformPalettes,,94S,"94S AwayUniformPalettes by purpose (dark jersey colours per team); here interleaved with HomeUniformPalettes, 64 bytes per team, 28 teams then one more pair; $C520C2 / $C55799 add team $17CB * 64 and queue CGRAM palette 3",src/bankC0_3000.asm
 $C03F22,HomeUniformPalettes,,94S,"94S HomeUniformPalettes by purpose (white jersey colours per team); 64 bytes per team; $C520AF / $C55786 add team $17C9 * 64 and queue CGRAM palette 4",src/bankC0_3000.asm
 $C04642,DigitFontTiles,,render,"15 4bpp tiles, packed format 2 ($01E0): 0-9 and D L C R X (the glyphs of 94S SPFsmallfont); $C5211F / $C556C9 unpack them and queue them for VRAM $6360",src/bankC0_4000.asm

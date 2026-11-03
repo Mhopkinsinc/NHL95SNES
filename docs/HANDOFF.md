@@ -290,7 +290,11 @@
   DrawScoreBox / DrawPeriodBox select its text and frame tiles. No one-to-one match to 94S SmallFontTiles or
   BigFontTiles established: shared use on a screen is insufficient to identify these mixed tile sets.
 
-- GradientBarTiles: rendered bars; where they are drawn (VRAM $0640 from $C4D864, $0010 from $C59119) is not traced.
+- GradientBarTiles: team-colour name backplates. SeasonAwards loads VRAM $0640 and maps a bar at $5245;
+  award winner routines reuse it. setoptions, SetupScreen and the playoff exit load $0010; DrawSetupTeams,
+  SetupStatsPage and the roster-management screens use MapTileBlock (9 x 2 tiles), while DrawGameMarks
+  writes the two Games Today team bars directly. No earlier-game asset identity established.
+
 - Home / away: the setup code confirms $17C9 = home, $17CB = away: ExhibitionOptions' "Home Team" line sets HomeTeam
   and its "Visiting Team" line VisTeam; the jerseys agree (white for HomeTeam, as 94S home). The last pair of uniform
   palettes (after the all-star teams) is not traced. The team order is 94S's (the
@@ -332,7 +336,10 @@
 - bankC0_4000: WordListUnused has no reader; MenuGradientHDMA / BracketGradientHDMA follow BG2ScrollHDMA. LargeSlotTiles maps a 16 x 16 sprite slot to
   its first tile; DivisionCodes / DivisionTeamCounts, after DivisionNames, are picked by the same division number.
   DigitFontTiles and LinePieceTiles are named from the rendered tiles; BG3ScrollHDMA1/2 from the HDMA set-up.
-- WonCheckTiles / WonCheckPalette: named from the rendered tiles; the screen is not traced.
+- WonCheckTiles / WonCheckPalette: GamesToday loads them; DrawDayGames and DrawGameInSlot call
+  DrawGameMarks, which chooses the marks using SeasonDay, SRDayPlayed and SRUserGames. Confirmed as the
+  Games Today selection/played markers; earlier-game asset equivalence is unproven.
+
 - Fonts: BoldFontGlyphs draws bracket/award headings, stats values and roster lists; ItalicFontGlyphs draws
   setup options, name entry and season team stats; ThinFontGlyphs draws team labels on stats, scouting,
   awards and Games Today. PrintTextPage dispatches bold/italic by row flags; the Render wrappers set the
