@@ -56,7 +56,7 @@
   LZSS count word and stream), the tiles (tile count word, flags $80, the bits per pixel twice, a zero, then the LZSS count word and
   stream), the colours (palette count byte, colours per palette word, colour count word, the colours). In bank $C1 from
   $C1BA31: the pause screen (Info / Stats / Options tabs, periods, penalty boxes), the faceoff boxes (4 frames of 12 x 10, as
-  94S FaceOffMap), a pad's four buttons with tape-deck symbols ($C373C7, not traced), the playoff bracket with the Stanley
+  94S FaceOffMap), a pad's four buttons with tape-deck symbols (PadButtonsMap, the instant replay legend), the playoff bracket with the Stanley
   Cup (100 x 28), and the city name bars of the 26 teams (12 x 52, it ends in bank $C2 at $C20AB8).
 - asstab (bankC0_A000) holds long pointers to the assignment routines in the order of 94S asstab (95 Genesis reorders
   its table, the SNES one does not); every entry is named from 94S and was checked side by side.
@@ -99,7 +99,8 @@
   holds the names.
 - Per-frame offsets: FrameHotX ($CDF94A, into bank $CE) and FrameHotY ($CE0192) are two more 1060-word tables
   indexed by the frame number (as FrameTileSource). GetFrameHot takes the frame from $0856,y and puts the first in $7F
-  (negated when $08E0,y has bit $0800) and the second, negated, in $83. What the offsets place is not traced.
+  (negated when $08E0,y has bit $0800) and the second, negated, in $83: the stick hot spot, as 94S GetFrameHot
+  (checkpuckcoll_ccx / PuckCollisionStickRange test the stick's reach with it; pucknorm_move and skatetopuck use it).
 - Rink: IceRinkMap ($CCEEA5) is a three-chunk map set like the award pictures, but 32 x 170 tiles (the two rink halves,
   85 rows each), 520 tiles and 4 palettes, to $CD25DF. setupice loads it (MapSetToUnpackbuf); $C55524 finds its tiles chunk.
   It is split at the tiles chunk: IceRinkMap ends bankCC_E000, bankCC_F000 is IceRinkTiles (header and stream start);
