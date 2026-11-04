@@ -1,0 +1,9 @@
+SpriteAnimCommands:					; handlers indexed by the low seven bits of a script command
+	dw SpriteAnimHold,SpriteAnimRestart,SpriteAnimJumpRelative,SpriteAnimSelectScript
+	dw SpriteAnimHold84,SpriteAnimSetReload,SpriteAnimSetSpeed,SpriteAnimSetFrames
+	dw SpriteAnimDelete,SpriteAnimIncWordUnused,SpriteAnimSkipByte,SpriteAnimToggleHFlip
+	dw SpriteAnimToggleVFlip,SpriteAnimYield,SpriteAnimCallUnused,SpriteAnimHold8F
+	dw SpriteAnimRestoreScript,SpriteAnimHold,SpriteAnimHold,SpriteAnimSetHFlip
+	dw SpriteAnimClearHFlip,SpriteAnimSetVFlip,SpriteAnimClearVFlip,SpriteAnimToggleFlips
+	dw SpriteAnimHold,SpriteAnimHold,SpriteAnimHold,SpriteAnimClearFlag4000
+	dw SpriteAnimBranchIfFlagClear,SpriteAnimSkipByteAlt

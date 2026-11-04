@@ -1,0 +1,26 @@
+SmallPieces3:						; three 8 x 8 pieces: their x / y bytes, the tile counter + 2, then
+									; PutSmallPiece3
+	ldx.b $E5
+	lda.l $CF0001,x
+	and.w #$00FF
+	sta.b $E7
+	lda.l $CF0002,x
+	and.w #$00FF
+	sta.b $EF
+	lda.l $CF0003,x
+	and.w #$00FF
+	sta.b $E9
+	lda.l $CF0004,x
+	and.w #$00FF
+	sta.b $F1
+	lda.l $CF0005,x
+	and.w #$00FF
+	sta.b $EB
+	lda.l $CF0006,x
+	and.w #$00FF
+	sta.b $F3
+	lda.b tmp1
+	inc a
+	inc a
+	sta.b tmp1
+	jmp.w PutSmallPiece3

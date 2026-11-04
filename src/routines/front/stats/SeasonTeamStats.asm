@@ -1,0 +1,39 @@
+SeasonTeamStats:					; League Menu Team Stats: the season stats of a team (record, goals, save
+									; and shooting percentages, shots); the pad switches teams
+	jsl.l FadeOutWait
+	ldx.b a0
+	lda.w #$FC18
+	sta.b $05,x
+	sta.b $08,x
+	lda.w #$8000
+	sta.w DMAEnShadow
+	lda.w #$FFFA
+	sta.w BG2VScroll
+	ldy.w #$5C00
+	jsl.l ClearVRAM
+	jsl.l WaitTransfers
+	sep #$20
+	lda.b #$11
+	sta.l TM
+	rep #$20
+	jsl.l ResetWorkBuf
+	jsl.l InitTextMap
+	lda.w #SeasonTeamStatsPage&$FFFF
+	jsl.l PrintTextPage
+	jsl.l WaitTransfers
+	ldy.w #$2801
+	ldx.w #$50A8
+	jsl.l MapTileBlock
+	stz.w HomeTeam
+	stz.b d7
+	jsr.w PrintSeasonTeamStats
+	jsl.l SendTextMap
+	jsl.l WaitTransfers
+	sep #$20
+	lda.b #$17
+	sta.l TM
+	rep #$20
+	lda.w #$0009
+	sta.b d6+2
+	stz.w fadein
+	rts

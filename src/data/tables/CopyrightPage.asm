@@ -1,0 +1,23 @@
+CopyrightPage:						; the copyright screen's text page (CopyrightScreen)
+	dw $0008,$00F8,0,$0000
+	dw TxtCopyright01&$FFFF,$C002
+	dw TxtCopyright02&$FFFF,$C003
+	dw TxtCopyright03&$FFFF,$C004
+	dw TxtCopyright04&$FFFF,$C005
+	dw TxtCopyright05&$FFFF,$C007
+	dw TxtCopyright06&$FFFF,$C008
+	dw TxtCopyright07&$FFFF,$C009
+	dw TxtCopyright08&$FFFF,$C00A
+	dw TxtCopyright09&$FFFF,$C00B
+	dw TxtCopyright10&$FFFF,$C00D
+	dw TxtCopyright11&$FFFF,$C00E
+	dw TxtCopyright12&$FFFF,$C00F
+	dw TxtCopyright13&$FFFF,$C010
+	dw TxtCopyright14&$FFFF,$C011
+	dw TxtCopyright15&$FFFF,$C013
+	dw TxtCopyright16&$FFFF,$C014
+	dw TxtCopyright17&$FFFF,$C015
+	dw TxtCopyright18&$FFFF,$C017
+	dw TxtCopyright19&$FFFF,$C018
+	dw TxtCopyright20&$FFFF,$C019
+	dw 0

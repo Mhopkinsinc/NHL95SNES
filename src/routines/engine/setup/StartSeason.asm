@@ -1,0 +1,63 @@
+StartSeason:						; play mode Season: with a season saved, WARNING A Season is in progress
+									; ... Continue Old / Start New (screen state 13); else straight to the
+									; League Menu (SeasonOptions)
+	lda.l SeasonDay
+	ora.l SRDayPlayed
+	bne .1
+	jmp.w EnterLeagueMenu
+.1:									; Y = $0280, A = $D3, A + $0400, call ClearRAM7E, ...
+	ldy.w #$0280
+	lda.b $D3
+	clc
+	adc.w #$0400
+	jsl.l ClearRAM7E
+	jsl.l SendTextMap
+	lda.w #$8000
+	sta.w DMAEnShadow
+	lda.w #$FFFF
+	sta.w BG3VScroll
+	jsl.l WaitTransfers
+	jsr.w DeleteArrowSprites
+	jsr.w RefreshSprites
+	lda.w #$0005
+	sta.w TextSpaceWidth
+	lda.w #$0008
+	sta.b $CF
+	ldy.w #$0010
+	ldx.w #TxtWarning&$FFFF
+	jsl.l PrintItalicLeft
+	lda.w #$005C
+	sta.b $CF
+	ldy.w #$0010
+	ldx.w #TxtASeasonIsInProgress&$FFFF
+	jsl.l PrintBoldLeft
+	ldy.w #$0011
+	ldx.w #TxtWhenANewSeasonIs&$FFFF
+	jsl.l PrintBoldLeft
+	ldy.w #$0012
+	ldx.w #TxtStartedDataFromThe&$FFFF
+	jsl.l PrintBoldLeft
+	ldy.w #$0013
+	ldx.w #TxtOldSeasonWillBeLost&$FFFF
+	jsl.l PrintBoldLeft
+	lda.w #$0009
+	sta.w TextSpaceWidth
+	lda.w #$0032
+	sta.b $CF
+	ldy.w #$0015
+	ldx.w #TxtContinueOld&$FFFF
+	jsl.l PrintItalicLeft
+	ldy.w #$0018
+	ldx.w #TxtStartNew&$FFFF
+	jsl.l PrintItalicLeft
+	ldx.b a0
+	lda.w #$0028
+	sta.b $05,x
+	lda.w #$00B5
+	sta.b $08,x
+	lda.w #$0018
+	jsr.w SetRowPalette3
+	jsl.l SendTextMap
+	lda.w #$000D
+	sta.b d6+2
+	bra ScreenStateLoop

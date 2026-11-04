@@ -6,14 +6,11 @@
 
 ## 🚧 Current Status
 
-- Bootstrapped: the whole cartridge is 256 segments of 4 KB, each an `incbin` of its ROM bytes, and the build is byte-identical to the retail ROM.
-- Every segment also builds on its own from its stub (`src/stubinc/<segment>_stub.asm`) and is checked against its ROM range.
-- Trial: the cartridge header at the end of bank $C0 is source (`CartHeader` in `src/bankC0_F000.asm`).
-- Segments bankC0_0000 (data: team palettes, packed tile sets, the sound RAM clear program) bankC0_1000 (the SMSG sound driver as
-  SPC700) bankC0_2000 (the text fonts), bankC0_3000 (uniform palettes) bankC0_4000 (tables, two colour hooks, the Tampa Bay photos) bankC0_5000 and
-  bankC0_6000 (the Toronto and Vancouver photos) bankC0_7000 (team songs) and bankC0_8000 / bankC0_9000 (data, the
-  start of the engine: NMI, IRQ, hooks, waits, multiplies, divides, then game code) and bankC0_A000 to bankC0_F000 (tables,
-  sound samples, the vectors and headers) are source: all of bank $C0; the queue is in SEGMENT_AGENT.md.
+- Every byte of the cartridge is source (banks $C0-$CF) and the build is byte-identical to the retail ROM.
+- Aligned layout (on the `claude/project-thread-ggw7zu` branch): `src/banks/` lists each bank's files in ROM order; 1,348
+  routines are in `src/routines/`, in folders named after the NHL95Genesis source files; 1,399 data files are in
+  `src/data/`. Where each routine went and why: `docs/routines95s.csv`.
+- Next: naming against NHL95Genesis and NHL94SNES (see `docs/HANDOFF.md`).
 
 **AI agent or new contributor: start with [START_HERE.md](START_HERE.md).**
 
@@ -28,15 +25,20 @@ Reverse engineered source of NHL '95 for the SNES, assembled with asar 1.91 (the
 
 ## Lineage
 
-NHL '95 SNES is based on [NHL94SNES](https://github.com/abdulahmad/NHL94SNES) (the 94 SNES code base it was built from) and [NHL95Genesis](https://github.com/abdulahmad/NHL95Genesis) (the 95 features). Names come from those two repos, matched by purpose, not by identical code, and the earlier game's name wins: 94S (and through it 93S, 94G, 93G, 92G) first, then 95G for what is new in 95. See SEGMENT_AGENT.md.
+NHL '95 SNES is a separate code base, related to [NHL95Genesis](https://github.com/abdulahmad/NHL95Genesis) (the 95 game) and [NHL94SNES](https://github.com/abdulahmad/NHL94SNES) (the earlier SNES game). The folders and names follow NHL95Genesis; NHL94SNES decides only where NHL95Genesis has nothing (SNES-only engine jobs, data, banks). Names are matched by purpose, not by identical code. The rules are in [docs/RULES.md](docs/RULES.md).
 
 ## Layout
 
-- `src/nhl95snes.asm` includes the segments in ROM order. Each `src/bankXX_YYYY.asm` has one `org` and starts as an `incbin` of `Extracted/segments/bankXX_YYYY.bin`.
-- `src/stubinc/<segment>_stub.asm` builds one segment on its own: `hirom`, the outside labels it uses (equates), then the segment file.
-- `tools/prebuild.py` checks the ROM (path, SHA-1, CRC32, size) and runs `tools/extract.py`, which cuts it into `Extracted/segments/` (gitignored).
-- `tools/verify_segment.sh <segment>` builds one segment from its stub and compares it (and the full build's range) with the ROM; `--all` does every segment.
-- `tools/verify_all.sh` is the clean check: deletes `output/` and `Extracted/`, extracts, builds, checks every segment. Last line MATCH.
+- `src/nhl95snes.asm` includes the RAM and register equates, then `src/banks/bCx_<content>.asm` in ROM order. Each bank
+  file has the bank's `org` and lists its files.
+- `src/routines/<95G file>/<Routine>.asm`: one routine (a fall-through run) per file. The folders mirror NHL95Genesis:
+  `engine/<file>/`, `front/<file>/`, and its top files (`hockey/`, `main/`, `display/`...). SNES-only jobs that 95G does
+  not have keep the NHL94SNES folder (`sound/`, `decompress/`).
+- `src/data/{gfx,sound,text,tables}/`: one asset (or one family of records) per file, as in NHL94SNES.
+- `tools/prebuild.py` checks the ROM (path, SHA-1, CRC32, size) and runs `tools/extract.py`, which cuts it into
+  `Extracted/segments/` (gitignored); the data files `incbin` those cuts.
+- `tools/verify_all.sh` is the clean check: deletes `output/` and `Extracted/`, extracts, builds. Last line MATCH.
+- `tools/inventory95.py` writes `docs/routines95s.csv`; `tools/move95.py` did the move from 4 KB segments to this layout.
 
 ## Build
 
