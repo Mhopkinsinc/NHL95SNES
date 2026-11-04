@@ -34,6 +34,7 @@
 - Next: nothing in the plan. Open, optional: the 14 kept names (reasons in the naming notes); about 38 source comments
   that name 94S to say what 95S lacks or shares (allowed by RULES, not checked by a tool). 93S and 94S `waitxsr` became
   `waitx` in their repos (2026-11-03). `docs/name_map.csv` file column repaired by address (3,949 rows, mostly local labels).
+  2026-11-04: CONTRIBUTING.md rewrite (no push-to-main; live verify is `tools/verify_all.sh`, not `verify_segment.sh`).
 - Unsure: none.
 
 ## Segment work: state (2026-10-31, finished)
